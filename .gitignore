@@ -6,5 +6,7 @@ node_modules/
 coverage/
 dist/
 build/
+target/
+.vite/
 tmp/
 *.log

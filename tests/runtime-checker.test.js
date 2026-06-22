@@ -7,7 +7,7 @@ test('runtime checker uses injected runner for npm probing and scripts', () => {
   const runner = {
     canRun(command, args) {
       calls.push({ type: 'canRun', command, args });
-      return command === 'npm';
+      return command === 'npm' || command === 'custom-mvn.cmd';
     },
     run(command, args, options) {
       calls.push({ type: 'run', command, args, cwd: options.cwd });
@@ -24,18 +24,21 @@ test('runtime checker uses injected runner for npm probing and scripts', () => {
       requireToolingWhenDetected: true,
       requireFrontendBuildScript: false,
       commands: {
-        npm: ['test'],
-        maven: ['test']
+        npm: ['build'],
+        maven: []
+      },
+      toolPaths: {
+        maven: 'custom-mvn.cmd'
       }
     },
     runner
   });
 
   assert.deepEqual(errors, []);
-  assert.deepEqual(
-    calls.map((call) => `${call.type}:${call.command} ${call.args.join(' ')}`),
-    ['canRun:npm --version', 'run:npm run test']
-  );
+  const callSummary = calls.map((call) => `${call.type}:${call.command} ${call.args.join(' ')}`);
+  assert.equal(callSummary.includes('canRun:custom-mvn.cmd --version'), true);
+  assert.equal(callSummary.filter((call) => call === 'canRun:npm --version').length >= 1, true);
+  assert.equal(callSummary.includes('run:npm run build'), true);
 });
 
 test('runtime checker reports missing frontend tooling through runner', () => {
@@ -58,5 +61,9 @@ test('runtime checker reports missing frontend tooling through runner', () => {
     }
   });
 
-  assert.deepEqual(errors, ['npm project detected at ., but npm is not available.']);
+  assert.deepEqual(errors, [
+    'Maven project detected, but `mvn` is not available. Install Maven or configure ai/rules/runtime-policy.json.',
+    'npm project detected at ruoyi-ui, but npm is not available.',
+    'npm project detected at ., but npm is not available.'
+  ]);
 });

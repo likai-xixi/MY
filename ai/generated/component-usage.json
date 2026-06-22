@@ -1,16 +1,3233 @@
 {
   "schemaVersion": 1,
   "generatedBy": "tools/scan-components.js",
-  "adapter": "generic",
+  "adapter": "ruoyi",
   "sharedCatalogs": [
+    {
+      "root": "ruoyi-ui/src/components",
+      "components": [
+        {
+          "id": "@/components/Crontab",
+          "name": "@/components/Crontab",
+          "path": "ruoyi-ui/src/components/Crontab",
+          "exportedFrom": "Crontab",
+          "owner": "ruoyi-platform",
+          "purpose": "Ownership alias for a RuoYi scanned component reference.",
+          "category": "ruoyi-reference",
+          "status": "active",
+          "usedBy": [
+            "ruoyi-ui"
+          ],
+          "aliases": [
+            "@/components/Crontab"
+          ],
+          "props": []
+        },
+        {
+          "id": "@/components/ExcelImportDialog",
+          "name": "@/components/ExcelImportDialog",
+          "path": "ruoyi-ui/src/components/ExcelImportDialog",
+          "exportedFrom": "ExcelImportDialog",
+          "owner": "ruoyi-platform",
+          "purpose": "Ownership alias for a RuoYi scanned component reference.",
+          "category": "ruoyi-reference",
+          "status": "active",
+          "usedBy": [
+            "ruoyi-ui"
+          ],
+          "aliases": [
+            "@/components/ExcelImportDialog"
+          ],
+          "props": []
+        },
+        {
+          "id": "@/components/IconSelect",
+          "name": "@/components/IconSelect",
+          "path": "ruoyi-ui/src/components/IconSelect",
+          "exportedFrom": "IconSelect",
+          "owner": "ruoyi-platform",
+          "purpose": "Ownership alias for a RuoYi scanned component reference.",
+          "category": "ruoyi-reference",
+          "status": "active",
+          "usedBy": [
+            "ruoyi-ui"
+          ],
+          "aliases": [
+            "@/components/IconSelect"
+          ],
+          "props": []
+        },
+        {
+          "id": "@/components/iFrame",
+          "name": "@/components/iFrame",
+          "path": "ruoyi-ui/src/components/iFrame",
+          "exportedFrom": "iFrame",
+          "owner": "ruoyi-platform",
+          "purpose": "Ownership alias for a RuoYi scanned component reference.",
+          "category": "ruoyi-reference",
+          "status": "active",
+          "usedBy": [
+            "ruoyi-ui"
+          ],
+          "aliases": [
+            "@/components/iFrame"
+          ],
+          "props": []
+        },
+        {
+          "id": "@/components/SvgIcon",
+          "name": "@/components/SvgIcon",
+          "path": "ruoyi-ui/src/components/SvgIcon",
+          "exportedFrom": "SvgIcon",
+          "owner": "ruoyi-platform",
+          "purpose": "Ownership alias for a RuoYi scanned component reference.",
+          "category": "ruoyi-reference",
+          "status": "active",
+          "usedBy": [
+            "ruoyi-ui"
+          ],
+          "aliases": [
+            "@/components/SvgIcon"
+          ],
+          "props": []
+        },
+        {
+          "id": "@/components/TreePanel",
+          "name": "@/components/TreePanel",
+          "path": "ruoyi-ui/src/components/TreePanel",
+          "exportedFrom": "TreePanel",
+          "owner": "ruoyi-platform",
+          "purpose": "Ownership alias for a RuoYi scanned component reference.",
+          "category": "ruoyi-reference",
+          "status": "active",
+          "usedBy": [
+            "ruoyi-ui"
+          ],
+          "aliases": [
+            "@/components/TreePanel"
+          ],
+          "props": []
+        },
+        {
+          "id": "@/layout/components/HeaderNotice/DetailView",
+          "name": "@/layout/components/HeaderNotice/DetailView",
+          "path": "ruoyi-ui/src/components/ParentView/index.vue",
+          "exportedFrom": "ParentView/index.vue",
+          "owner": "ruoyi-platform",
+          "purpose": "Ownership alias for a RuoYi scanned component reference.",
+          "category": "ruoyi-reference",
+          "status": "active",
+          "usedBy": [
+            "ruoyi-ui"
+          ],
+          "aliases": [
+            "@/layout/components/HeaderNotice/DetailView"
+          ],
+          "props": []
+        },
+        {
+          "id": "ruoyi-breadcrumb-index",
+          "name": "Breadcrumb / index",
+          "path": "ruoyi-ui/src/components/Breadcrumb/index.vue",
+          "exportedFrom": "Breadcrumb/index.vue",
+          "owner": "ruoyi-platform",
+          "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+          "category": "ruoyi-shared",
+          "status": "active",
+          "usedBy": [
+            "ruoyi-ui"
+          ],
+          "aliases": [
+            "index",
+            "Breadcrumb/index"
+          ],
+          "props": []
+        },
+        {
+          "id": "ruoyi-crontab-day",
+          "name": "Crontab / day",
+          "path": "ruoyi-ui/src/components/Crontab/day.vue",
+          "exportedFrom": "Crontab/day.vue",
+          "owner": "ruoyi-platform",
+          "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+          "category": "ruoyi-shared",
+          "status": "active",
+          "usedBy": [
+            "ruoyi-ui"
+          ],
+          "aliases": [
+            "day",
+            "Crontab/day"
+          ],
+          "props": []
+        },
+        {
+          "id": "ruoyi-crontab-hour",
+          "name": "Crontab / hour",
+          "path": "ruoyi-ui/src/components/Crontab/hour.vue",
+          "exportedFrom": "Crontab/hour.vue",
+          "owner": "ruoyi-platform",
+          "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+          "category": "ruoyi-shared",
+          "status": "active",
+          "usedBy": [
+            "ruoyi-ui"
+          ],
+          "aliases": [
+            "hour",
+            "Crontab/hour"
+          ],
+          "props": []
+        },
+        {
+          "id": "ruoyi-crontab-index",
+          "name": "Crontab / index",
+          "path": "ruoyi-ui/src/components/Crontab/index.vue",
+          "exportedFrom": "Crontab/index.vue",
+          "owner": "ruoyi-platform",
+          "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+          "category": "ruoyi-shared",
+          "status": "active",
+          "usedBy": [
+            "ruoyi-ui"
+          ],
+          "aliases": [
+            "index",
+            "Crontab/index"
+          ],
+          "props": []
+        },
+        {
+          "id": "ruoyi-crontab-min",
+          "name": "Crontab / min",
+          "path": "ruoyi-ui/src/components/Crontab/min.vue",
+          "exportedFrom": "Crontab/min.vue",
+          "owner": "ruoyi-platform",
+          "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+          "category": "ruoyi-shared",
+          "status": "active",
+          "usedBy": [
+            "ruoyi-ui"
+          ],
+          "aliases": [
+            "min",
+            "Crontab/min"
+          ],
+          "props": []
+        },
+        {
+          "id": "ruoyi-crontab-month",
+          "name": "Crontab / month",
+          "path": "ruoyi-ui/src/components/Crontab/month.vue",
+          "exportedFrom": "Crontab/month.vue",
+          "owner": "ruoyi-platform",
+          "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+          "category": "ruoyi-shared",
+          "status": "active",
+          "usedBy": [
+            "ruoyi-ui"
+          ],
+          "aliases": [
+            "month",
+            "Crontab/month"
+          ],
+          "props": []
+        },
+        {
+          "id": "ruoyi-crontab-result",
+          "name": "Crontab / result",
+          "path": "ruoyi-ui/src/components/Crontab/result.vue",
+          "exportedFrom": "Crontab/result.vue",
+          "owner": "ruoyi-platform",
+          "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+          "category": "ruoyi-shared",
+          "status": "active",
+          "usedBy": [
+            "ruoyi-ui"
+          ],
+          "aliases": [
+            "result",
+            "Crontab/result"
+          ],
+          "props": []
+        },
+        {
+          "id": "ruoyi-crontab-second",
+          "name": "Crontab / second",
+          "path": "ruoyi-ui/src/components/Crontab/second.vue",
+          "exportedFrom": "Crontab/second.vue",
+          "owner": "ruoyi-platform",
+          "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+          "category": "ruoyi-shared",
+          "status": "active",
+          "usedBy": [
+            "ruoyi-ui"
+          ],
+          "aliases": [
+            "second",
+            "Crontab/second"
+          ],
+          "props": []
+        },
+        {
+          "id": "ruoyi-crontab-week",
+          "name": "Crontab / week",
+          "path": "ruoyi-ui/src/components/Crontab/week.vue",
+          "exportedFrom": "Crontab/week.vue",
+          "owner": "ruoyi-platform",
+          "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+          "category": "ruoyi-shared",
+          "status": "active",
+          "usedBy": [
+            "ruoyi-ui"
+          ],
+          "aliases": [
+            "week",
+            "Crontab/week"
+          ],
+          "props": []
+        },
+        {
+          "id": "ruoyi-crontab-year",
+          "name": "Crontab / year",
+          "path": "ruoyi-ui/src/components/Crontab/year.vue",
+          "exportedFrom": "Crontab/year.vue",
+          "owner": "ruoyi-platform",
+          "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+          "category": "ruoyi-shared",
+          "status": "active",
+          "usedBy": [
+            "ruoyi-ui"
+          ],
+          "aliases": [
+            "year",
+            "Crontab/year"
+          ],
+          "props": []
+        },
+        {
+          "id": "ruoyi-dict-tag-index",
+          "name": "DictTag / index",
+          "path": "ruoyi-ui/src/components/DictTag/index.vue",
+          "exportedFrom": "DictTag/index.vue",
+          "owner": "ruoyi-platform",
+          "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+          "category": "ruoyi-shared",
+          "status": "active",
+          "usedBy": [
+            "ruoyi-ui"
+          ],
+          "aliases": [
+            "index",
+            "DictTag/index"
+          ],
+          "props": []
+        },
+        {
+          "id": "ruoyi-editor-index",
+          "name": "Editor / index",
+          "path": "ruoyi-ui/src/components/Editor/index.vue",
+          "exportedFrom": "Editor/index.vue",
+          "owner": "ruoyi-platform",
+          "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+          "category": "ruoyi-shared",
+          "status": "active",
+          "usedBy": [
+            "ruoyi-ui"
+          ],
+          "aliases": [
+            "index",
+            "Editor/index"
+          ],
+          "props": []
+        },
+        {
+          "id": "ruoyi-excel-import-dialog-index",
+          "name": "ExcelImportDialog / index",
+          "path": "ruoyi-ui/src/components/ExcelImportDialog/index.vue",
+          "exportedFrom": "ExcelImportDialog/index.vue",
+          "owner": "ruoyi-platform",
+          "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+          "category": "ruoyi-shared",
+          "status": "active",
+          "usedBy": [
+            "ruoyi-ui"
+          ],
+          "aliases": [
+            "index",
+            "ExcelImportDialog/index"
+          ],
+          "props": []
+        },
+        {
+          "id": "ruoyi-file-upload-index",
+          "name": "FileUpload / index",
+          "path": "ruoyi-ui/src/components/FileUpload/index.vue",
+          "exportedFrom": "FileUpload/index.vue",
+          "owner": "ruoyi-platform",
+          "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+          "category": "ruoyi-shared",
+          "status": "active",
+          "usedBy": [
+            "ruoyi-ui"
+          ],
+          "aliases": [
+            "index",
+            "FileUpload/index"
+          ],
+          "props": []
+        },
+        {
+          "id": "ruoyi-hamburger-index",
+          "name": "Hamburger / index",
+          "path": "ruoyi-ui/src/components/Hamburger/index.vue",
+          "exportedFrom": "Hamburger/index.vue",
+          "owner": "ruoyi-platform",
+          "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+          "category": "ruoyi-shared",
+          "status": "active",
+          "usedBy": [
+            "ruoyi-ui"
+          ],
+          "aliases": [
+            "index",
+            "Hamburger/index"
+          ],
+          "props": []
+        },
+        {
+          "id": "ruoyi-header-search-index",
+          "name": "HeaderSearch / index",
+          "path": "ruoyi-ui/src/components/HeaderSearch/index.vue",
+          "exportedFrom": "HeaderSearch/index.vue",
+          "owner": "ruoyi-platform",
+          "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+          "category": "ruoyi-shared",
+          "status": "active",
+          "usedBy": [
+            "ruoyi-ui"
+          ],
+          "aliases": [
+            "index",
+            "HeaderSearch/index"
+          ],
+          "props": []
+        },
+        {
+          "id": "ruoyi-i-frame-index",
+          "name": "iFrame / index",
+          "path": "ruoyi-ui/src/components/iFrame/index.vue",
+          "exportedFrom": "iFrame/index.vue",
+          "owner": "ruoyi-platform",
+          "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+          "category": "ruoyi-shared",
+          "status": "active",
+          "usedBy": [
+            "ruoyi-ui"
+          ],
+          "aliases": [
+            "index",
+            "iFrame/index"
+          ],
+          "props": []
+        },
+        {
+          "id": "ruoyi-icon-select-index",
+          "name": "IconSelect / index",
+          "path": "ruoyi-ui/src/components/IconSelect/index.vue",
+          "exportedFrom": "IconSelect/index.vue",
+          "owner": "ruoyi-platform",
+          "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+          "category": "ruoyi-shared",
+          "status": "active",
+          "usedBy": [
+            "ruoyi-ui"
+          ],
+          "aliases": [
+            "index",
+            "IconSelect/index"
+          ],
+          "props": []
+        },
+        {
+          "id": "ruoyi-icon-select-require-icons",
+          "name": "IconSelect / requireIcons",
+          "path": "ruoyi-ui/src/components/IconSelect/requireIcons.js",
+          "exportedFrom": "IconSelect/requireIcons.js",
+          "owner": "ruoyi-platform",
+          "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+          "category": "ruoyi-shared",
+          "status": "active",
+          "usedBy": [
+            "ruoyi-ui"
+          ],
+          "aliases": [
+            "requireIcons",
+            "IconSelect/requireIcons"
+          ],
+          "props": []
+        },
+        {
+          "id": "ruoyi-image-preview-index",
+          "name": "ImagePreview / index",
+          "path": "ruoyi-ui/src/components/ImagePreview/index.vue",
+          "exportedFrom": "ImagePreview/index.vue",
+          "owner": "ruoyi-platform",
+          "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+          "category": "ruoyi-shared",
+          "status": "active",
+          "usedBy": [
+            "ruoyi-ui"
+          ],
+          "aliases": [
+            "index",
+            "ImagePreview/index"
+          ],
+          "props": []
+        },
+        {
+          "id": "ruoyi-image-upload-index",
+          "name": "ImageUpload / index",
+          "path": "ruoyi-ui/src/components/ImageUpload/index.vue",
+          "exportedFrom": "ImageUpload/index.vue",
+          "owner": "ruoyi-platform",
+          "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+          "category": "ruoyi-shared",
+          "status": "active",
+          "usedBy": [
+            "ruoyi-ui"
+          ],
+          "aliases": [
+            "index",
+            "ImageUpload/index"
+          ],
+          "props": []
+        },
+        {
+          "id": "ruoyi-pagination-index",
+          "name": "Pagination / index",
+          "path": "ruoyi-ui/src/components/Pagination/index.vue",
+          "exportedFrom": "Pagination/index.vue",
+          "owner": "ruoyi-platform",
+          "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+          "category": "ruoyi-shared",
+          "status": "active",
+          "usedBy": [
+            "ruoyi-ui"
+          ],
+          "aliases": [
+            "index",
+            "Pagination/index"
+          ],
+          "props": []
+        },
+        {
+          "id": "ruoyi-parent-view-index",
+          "name": "ParentView / index",
+          "path": "ruoyi-ui/src/components/ParentView/index.vue",
+          "exportedFrom": "ParentView/index.vue",
+          "owner": "ruoyi-platform",
+          "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+          "category": "ruoyi-shared",
+          "status": "active",
+          "usedBy": [
+            "ruoyi-ui"
+          ],
+          "aliases": [
+            "index",
+            "ParentView/index"
+          ],
+          "props": []
+        },
+        {
+          "id": "ruoyi-right-toolbar-index",
+          "name": "RightToolbar / index",
+          "path": "ruoyi-ui/src/components/RightToolbar/index.vue",
+          "exportedFrom": "RightToolbar/index.vue",
+          "owner": "ruoyi-platform",
+          "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+          "category": "ruoyi-shared",
+          "status": "active",
+          "usedBy": [
+            "ruoyi-ui"
+          ],
+          "aliases": [
+            "index",
+            "RightToolbar/index"
+          ],
+          "props": []
+        },
+        {
+          "id": "ruoyi-ruo-yi-doc-index",
+          "name": "RuoYi / Doc / index",
+          "path": "ruoyi-ui/src/components/RuoYi/Doc/index.vue",
+          "exportedFrom": "RuoYi/Doc/index.vue",
+          "owner": "ruoyi-platform",
+          "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+          "category": "ruoyi-shared",
+          "status": "active",
+          "usedBy": [
+            "ruoyi-ui"
+          ],
+          "aliases": [
+            "index",
+            "RuoYi/Doc/index"
+          ],
+          "props": []
+        },
+        {
+          "id": "ruoyi-ruo-yi-git-index",
+          "name": "RuoYi / Git / index",
+          "path": "ruoyi-ui/src/components/RuoYi/Git/index.vue",
+          "exportedFrom": "RuoYi/Git/index.vue",
+          "owner": "ruoyi-platform",
+          "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+          "category": "ruoyi-shared",
+          "status": "active",
+          "usedBy": [
+            "ruoyi-ui"
+          ],
+          "aliases": [
+            "index",
+            "RuoYi/Git/index"
+          ],
+          "props": []
+        },
+        {
+          "id": "ruoyi-screenfull-index",
+          "name": "Screenfull / index",
+          "path": "ruoyi-ui/src/components/Screenfull/index.vue",
+          "exportedFrom": "Screenfull/index.vue",
+          "owner": "ruoyi-platform",
+          "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+          "category": "ruoyi-shared",
+          "status": "active",
+          "usedBy": [
+            "ruoyi-ui"
+          ],
+          "aliases": [
+            "index",
+            "Screenfull/index"
+          ],
+          "props": []
+        },
+        {
+          "id": "ruoyi-size-select-index",
+          "name": "SizeSelect / index",
+          "path": "ruoyi-ui/src/components/SizeSelect/index.vue",
+          "exportedFrom": "SizeSelect/index.vue",
+          "owner": "ruoyi-platform",
+          "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+          "category": "ruoyi-shared",
+          "status": "active",
+          "usedBy": [
+            "ruoyi-ui"
+          ],
+          "aliases": [
+            "index",
+            "SizeSelect/index"
+          ],
+          "props": []
+        },
+        {
+          "id": "ruoyi-svg-icon-index",
+          "name": "SvgIcon / index",
+          "path": "ruoyi-ui/src/components/SvgIcon/index.vue",
+          "exportedFrom": "SvgIcon/index.vue",
+          "owner": "ruoyi-platform",
+          "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+          "category": "ruoyi-shared",
+          "status": "active",
+          "usedBy": [
+            "ruoyi-ui"
+          ],
+          "aliases": [
+            "index",
+            "SvgIcon/index"
+          ],
+          "props": []
+        },
+        {
+          "id": "ruoyi-svg-icon-svgicon",
+          "name": "SvgIcon / svgicon",
+          "path": "ruoyi-ui/src/components/SvgIcon/svgicon.js",
+          "exportedFrom": "SvgIcon/svgicon.js",
+          "owner": "ruoyi-platform",
+          "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+          "category": "ruoyi-shared",
+          "status": "active",
+          "usedBy": [
+            "ruoyi-ui"
+          ],
+          "aliases": [
+            "svgicon",
+            "SvgIcon/svgicon"
+          ],
+          "props": []
+        },
+        {
+          "id": "ruoyi-tree-panel-index",
+          "name": "TreePanel / index",
+          "path": "ruoyi-ui/src/components/TreePanel/index.vue",
+          "exportedFrom": "TreePanel/index.vue",
+          "owner": "ruoyi-platform",
+          "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+          "category": "ruoyi-shared",
+          "status": "active",
+          "usedBy": [
+            "ruoyi-ui"
+          ],
+          "aliases": [
+            "index",
+            "TreePanel/index"
+          ],
+          "props": []
+        },
+        {
+          "id": "ruoyi-ui/src/components/Crontab/index.vue",
+          "name": "ruoyi-ui/src/components/Crontab/index.vue",
+          "path": "ruoyi-ui/src/components/Crontab/index.vue",
+          "exportedFrom": "Crontab/index.vue",
+          "owner": "ruoyi-platform",
+          "purpose": "Ownership alias for a RuoYi scanned component reference.",
+          "category": "ruoyi-reference",
+          "status": "active",
+          "usedBy": [
+            "ruoyi-ui"
+          ],
+          "aliases": [
+            "ruoyi-ui/src/components/Crontab/index.vue"
+          ],
+          "props": []
+        },
+        {
+          "id": "ruoyi-ui/src/components/Editor/index.vue",
+          "name": "ruoyi-ui/src/components/Editor/index.vue",
+          "path": "ruoyi-ui/src/components/Editor/index.vue",
+          "exportedFrom": "Editor/index.vue",
+          "owner": "ruoyi-platform",
+          "purpose": "Ownership alias for a RuoYi scanned component reference.",
+          "category": "ruoyi-reference",
+          "status": "active",
+          "usedBy": [
+            "ruoyi-ui"
+          ],
+          "aliases": [
+            "ruoyi-ui/src/components/Editor/index.vue"
+          ],
+          "props": []
+        },
+        {
+          "id": "ruoyi-ui/src/components/RightToolbar/index.vue",
+          "name": "ruoyi-ui/src/components/RightToolbar/index.vue",
+          "path": "ruoyi-ui/src/components/RightToolbar/index.vue",
+          "exportedFrom": "RightToolbar/index.vue",
+          "owner": "ruoyi-platform",
+          "purpose": "Ownership alias for a RuoYi scanned component reference.",
+          "category": "ruoyi-reference",
+          "status": "active",
+          "usedBy": [
+            "ruoyi-ui"
+          ],
+          "aliases": [
+            "ruoyi-ui/src/components/RightToolbar/index.vue"
+          ],
+          "props": []
+        },
+        {
+          "id": "ruoyi-ui/src/components/TreePanel/index.vue",
+          "name": "ruoyi-ui/src/components/TreePanel/index.vue",
+          "path": "ruoyi-ui/src/components/TreePanel/index.vue",
+          "exportedFrom": "TreePanel/index.vue",
+          "owner": "ruoyi-platform",
+          "purpose": "Ownership alias for a RuoYi scanned component reference.",
+          "category": "ruoyi-reference",
+          "status": "active",
+          "usedBy": [
+            "ruoyi-ui"
+          ],
+          "aliases": [
+            "ruoyi-ui/src/components/TreePanel/index.vue"
+          ],
+          "props": []
+        },
+        {
+          "id": "ruoyi-ui/src/layout/components/HeaderNotice/DetailView.vue",
+          "name": "ruoyi-ui/src/layout/components/HeaderNotice/DetailView.vue",
+          "path": "ruoyi-ui/src/components/ParentView/index.vue",
+          "exportedFrom": "ParentView/index.vue",
+          "owner": "ruoyi-platform",
+          "purpose": "Ownership alias for a RuoYi scanned component reference.",
+          "category": "ruoyi-reference",
+          "status": "active",
+          "usedBy": [
+            "ruoyi-ui"
+          ],
+          "aliases": [
+            "ruoyi-ui/src/layout/components/HeaderNotice/DetailView.vue"
+          ],
+          "props": []
+        },
+        {
+          "id": "ruoyi-ui/src/layout/components/HeaderNotice/index.vue",
+          "name": "ruoyi-ui/src/layout/components/HeaderNotice/index.vue",
+          "path": "ruoyi-ui/src/components/ParentView/index.vue",
+          "exportedFrom": "ParentView/index.vue",
+          "owner": "ruoyi-platform",
+          "purpose": "Ownership alias for a RuoYi scanned component reference.",
+          "category": "ruoyi-reference",
+          "status": "active",
+          "usedBy": [
+            "ruoyi-ui"
+          ],
+          "aliases": [
+            "ruoyi-ui/src/layout/components/HeaderNotice/index.vue"
+          ],
+          "props": []
+        },
+        {
+          "id": "ruoyi-ui/src/layout/components/Navbar.vue",
+          "name": "ruoyi-ui/src/layout/components/Navbar.vue",
+          "path": "ruoyi-ui/src/components/ParentView/index.vue",
+          "exportedFrom": "ParentView/index.vue",
+          "owner": "ruoyi-platform",
+          "purpose": "Ownership alias for a RuoYi scanned component reference.",
+          "category": "ruoyi-reference",
+          "status": "active",
+          "usedBy": [
+            "ruoyi-ui"
+          ],
+          "aliases": [
+            "ruoyi-ui/src/layout/components/Navbar.vue"
+          ],
+          "props": []
+        },
+        {
+          "id": "ruoyi-ui/src/layout/components/Settings/index.vue",
+          "name": "ruoyi-ui/src/layout/components/Settings/index.vue",
+          "path": "ruoyi-ui/src/components/ParentView/index.vue",
+          "exportedFrom": "ParentView/index.vue",
+          "owner": "ruoyi-platform",
+          "purpose": "Ownership alias for a RuoYi scanned component reference.",
+          "category": "ruoyi-reference",
+          "status": "active",
+          "usedBy": [
+            "ruoyi-ui"
+          ],
+          "aliases": [
+            "ruoyi-ui/src/layout/components/Settings/index.vue"
+          ],
+          "props": []
+        },
+        {
+          "id": "ruoyi-ui/src/views/system/role/selectUser.vue",
+          "name": "ruoyi-ui/src/views/system/role/selectUser.vue",
+          "path": "ruoyi-ui/src/components/ParentView/index.vue",
+          "exportedFrom": "ParentView/index.vue",
+          "owner": "ruoyi-platform",
+          "purpose": "Ownership alias for a RuoYi scanned component reference.",
+          "category": "ruoyi-reference",
+          "status": "active",
+          "usedBy": [
+            "ruoyi-ui"
+          ],
+          "aliases": [
+            "ruoyi-ui/src/views/system/role/selectUser.vue"
+          ],
+          "props": []
+        },
+        {
+          "id": "ruoyi-ui/src/views/tool/build/CodeTypeDialog.vue",
+          "name": "ruoyi-ui/src/views/tool/build/CodeTypeDialog.vue",
+          "path": "ruoyi-ui/src/components/ParentView/index.vue",
+          "exportedFrom": "ParentView/index.vue",
+          "owner": "ruoyi-platform",
+          "purpose": "Ownership alias for a RuoYi scanned component reference.",
+          "category": "ruoyi-reference",
+          "status": "active",
+          "usedBy": [
+            "ruoyi-ui"
+          ],
+          "aliases": [
+            "ruoyi-ui/src/views/tool/build/CodeTypeDialog.vue"
+          ],
+          "props": []
+        },
+        {
+          "id": "ruoyi-ui/src/views/tool/build/IconsDialog.vue",
+          "name": "ruoyi-ui/src/views/tool/build/IconsDialog.vue",
+          "path": "ruoyi-ui/src/components/ParentView/index.vue",
+          "exportedFrom": "ParentView/index.vue",
+          "owner": "ruoyi-platform",
+          "purpose": "Ownership alias for a RuoYi scanned component reference.",
+          "category": "ruoyi-reference",
+          "status": "active",
+          "usedBy": [
+            "ruoyi-ui"
+          ],
+          "aliases": [
+            "ruoyi-ui/src/views/tool/build/IconsDialog.vue"
+          ],
+          "props": []
+        },
+        {
+          "id": "ruoyi-ui/src/views/tool/build/TreeNodeDialog.vue",
+          "name": "ruoyi-ui/src/views/tool/build/TreeNodeDialog.vue",
+          "path": "ruoyi-ui/src/components/ParentView/index.vue",
+          "exportedFrom": "ParentView/index.vue",
+          "owner": "ruoyi-platform",
+          "purpose": "Ownership alias for a RuoYi scanned component reference.",
+          "category": "ruoyi-reference",
+          "status": "active",
+          "usedBy": [
+            "ruoyi-ui"
+          ],
+          "aliases": [
+            "ruoyi-ui/src/views/tool/build/TreeNodeDialog.vue"
+          ],
+          "props": []
+        },
+        {
+          "id": "ruoyi-ui/src/views/tool/gen/basicInfoForm.vue",
+          "name": "ruoyi-ui/src/views/tool/gen/basicInfoForm.vue",
+          "path": "ruoyi-ui/src/components/ParentView/index.vue",
+          "exportedFrom": "ParentView/index.vue",
+          "owner": "ruoyi-platform",
+          "purpose": "Ownership alias for a RuoYi scanned component reference.",
+          "category": "ruoyi-reference",
+          "status": "active",
+          "usedBy": [
+            "ruoyi-ui"
+          ],
+          "aliases": [
+            "ruoyi-ui/src/views/tool/gen/basicInfoForm.vue"
+          ],
+          "props": []
+        },
+        {
+          "id": "ruoyi-ui/src/views/tool/gen/createTable.vue",
+          "name": "ruoyi-ui/src/views/tool/gen/createTable.vue",
+          "path": "ruoyi-ui/src/components/ParentView/index.vue",
+          "exportedFrom": "ParentView/index.vue",
+          "owner": "ruoyi-platform",
+          "purpose": "Ownership alias for a RuoYi scanned component reference.",
+          "category": "ruoyi-reference",
+          "status": "active",
+          "usedBy": [
+            "ruoyi-ui"
+          ],
+          "aliases": [
+            "ruoyi-ui/src/views/tool/gen/createTable.vue"
+          ],
+          "props": []
+        },
+        {
+          "id": "ruoyi-ui/src/views/tool/gen/editTable.vue",
+          "name": "ruoyi-ui/src/views/tool/gen/editTable.vue",
+          "path": "ruoyi-ui/src/components/ParentView/index.vue",
+          "exportedFrom": "ParentView/index.vue",
+          "owner": "ruoyi-platform",
+          "purpose": "Ownership alias for a RuoYi scanned component reference.",
+          "category": "ruoyi-reference",
+          "status": "active",
+          "usedBy": [
+            "ruoyi-ui"
+          ],
+          "aliases": [
+            "ruoyi-ui/src/views/tool/gen/editTable.vue"
+          ],
+          "props": []
+        },
+        {
+          "id": "ruoyi-ui/src/views/tool/gen/genInfoForm.vue",
+          "name": "ruoyi-ui/src/views/tool/gen/genInfoForm.vue",
+          "path": "ruoyi-ui/src/components/ParentView/index.vue",
+          "exportedFrom": "ParentView/index.vue",
+          "owner": "ruoyi-platform",
+          "purpose": "Ownership alias for a RuoYi scanned component reference.",
+          "category": "ruoyi-reference",
+          "status": "active",
+          "usedBy": [
+            "ruoyi-ui"
+          ],
+          "aliases": [
+            "ruoyi-ui/src/views/tool/gen/genInfoForm.vue"
+          ],
+          "props": []
+        },
+        {
+          "id": "ruoyi-ui/src/views/tool/gen/importTable.vue",
+          "name": "ruoyi-ui/src/views/tool/gen/importTable.vue",
+          "path": "ruoyi-ui/src/components/ParentView/index.vue",
+          "exportedFrom": "ParentView/index.vue",
+          "owner": "ruoyi-platform",
+          "purpose": "Ownership alias for a RuoYi scanned component reference.",
+          "category": "ruoyi-reference",
+          "status": "active",
+          "usedBy": [
+            "ruoyi-ui"
+          ],
+          "aliases": [
+            "ruoyi-ui/src/views/tool/gen/importTable.vue"
+          ],
+          "props": []
+        }
+      ]
+    },
     {
       "root": "frontend/src/components",
       "components": []
     }
   ],
-  "sharedCatalog": [],
-  "componentRegistry": [],
-  "sharedFiles": [],
-  "moduleComponentFiles": [],
-  "imports": []
+  "sharedCatalog": [
+    {
+      "id": "@/components/Crontab",
+      "name": "@/components/Crontab",
+      "path": "ruoyi-ui/src/components/Crontab",
+      "exportedFrom": "Crontab",
+      "owner": "ruoyi-platform",
+      "purpose": "Ownership alias for a RuoYi scanned component reference.",
+      "category": "ruoyi-reference",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "@/components/Crontab"
+      ],
+      "props": []
+    },
+    {
+      "id": "@/components/ExcelImportDialog",
+      "name": "@/components/ExcelImportDialog",
+      "path": "ruoyi-ui/src/components/ExcelImportDialog",
+      "exportedFrom": "ExcelImportDialog",
+      "owner": "ruoyi-platform",
+      "purpose": "Ownership alias for a RuoYi scanned component reference.",
+      "category": "ruoyi-reference",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "@/components/ExcelImportDialog"
+      ],
+      "props": []
+    },
+    {
+      "id": "@/components/IconSelect",
+      "name": "@/components/IconSelect",
+      "path": "ruoyi-ui/src/components/IconSelect",
+      "exportedFrom": "IconSelect",
+      "owner": "ruoyi-platform",
+      "purpose": "Ownership alias for a RuoYi scanned component reference.",
+      "category": "ruoyi-reference",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "@/components/IconSelect"
+      ],
+      "props": []
+    },
+    {
+      "id": "@/components/iFrame",
+      "name": "@/components/iFrame",
+      "path": "ruoyi-ui/src/components/iFrame",
+      "exportedFrom": "iFrame",
+      "owner": "ruoyi-platform",
+      "purpose": "Ownership alias for a RuoYi scanned component reference.",
+      "category": "ruoyi-reference",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "@/components/iFrame"
+      ],
+      "props": []
+    },
+    {
+      "id": "@/components/SvgIcon",
+      "name": "@/components/SvgIcon",
+      "path": "ruoyi-ui/src/components/SvgIcon",
+      "exportedFrom": "SvgIcon",
+      "owner": "ruoyi-platform",
+      "purpose": "Ownership alias for a RuoYi scanned component reference.",
+      "category": "ruoyi-reference",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "@/components/SvgIcon"
+      ],
+      "props": []
+    },
+    {
+      "id": "@/components/TreePanel",
+      "name": "@/components/TreePanel",
+      "path": "ruoyi-ui/src/components/TreePanel",
+      "exportedFrom": "TreePanel",
+      "owner": "ruoyi-platform",
+      "purpose": "Ownership alias for a RuoYi scanned component reference.",
+      "category": "ruoyi-reference",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "@/components/TreePanel"
+      ],
+      "props": []
+    },
+    {
+      "id": "@/layout/components/HeaderNotice/DetailView",
+      "name": "@/layout/components/HeaderNotice/DetailView",
+      "path": "ruoyi-ui/src/components/ParentView/index.vue",
+      "exportedFrom": "ParentView/index.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Ownership alias for a RuoYi scanned component reference.",
+      "category": "ruoyi-reference",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "@/layout/components/HeaderNotice/DetailView"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-breadcrumb-index",
+      "name": "Breadcrumb / index",
+      "path": "ruoyi-ui/src/components/Breadcrumb/index.vue",
+      "exportedFrom": "Breadcrumb/index.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+      "category": "ruoyi-shared",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "index",
+        "Breadcrumb/index"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-crontab-day",
+      "name": "Crontab / day",
+      "path": "ruoyi-ui/src/components/Crontab/day.vue",
+      "exportedFrom": "Crontab/day.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+      "category": "ruoyi-shared",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "day",
+        "Crontab/day"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-crontab-hour",
+      "name": "Crontab / hour",
+      "path": "ruoyi-ui/src/components/Crontab/hour.vue",
+      "exportedFrom": "Crontab/hour.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+      "category": "ruoyi-shared",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "hour",
+        "Crontab/hour"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-crontab-index",
+      "name": "Crontab / index",
+      "path": "ruoyi-ui/src/components/Crontab/index.vue",
+      "exportedFrom": "Crontab/index.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+      "category": "ruoyi-shared",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "index",
+        "Crontab/index"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-crontab-min",
+      "name": "Crontab / min",
+      "path": "ruoyi-ui/src/components/Crontab/min.vue",
+      "exportedFrom": "Crontab/min.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+      "category": "ruoyi-shared",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "min",
+        "Crontab/min"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-crontab-month",
+      "name": "Crontab / month",
+      "path": "ruoyi-ui/src/components/Crontab/month.vue",
+      "exportedFrom": "Crontab/month.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+      "category": "ruoyi-shared",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "month",
+        "Crontab/month"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-crontab-result",
+      "name": "Crontab / result",
+      "path": "ruoyi-ui/src/components/Crontab/result.vue",
+      "exportedFrom": "Crontab/result.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+      "category": "ruoyi-shared",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "result",
+        "Crontab/result"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-crontab-second",
+      "name": "Crontab / second",
+      "path": "ruoyi-ui/src/components/Crontab/second.vue",
+      "exportedFrom": "Crontab/second.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+      "category": "ruoyi-shared",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "second",
+        "Crontab/second"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-crontab-week",
+      "name": "Crontab / week",
+      "path": "ruoyi-ui/src/components/Crontab/week.vue",
+      "exportedFrom": "Crontab/week.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+      "category": "ruoyi-shared",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "week",
+        "Crontab/week"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-crontab-year",
+      "name": "Crontab / year",
+      "path": "ruoyi-ui/src/components/Crontab/year.vue",
+      "exportedFrom": "Crontab/year.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+      "category": "ruoyi-shared",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "year",
+        "Crontab/year"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-dict-tag-index",
+      "name": "DictTag / index",
+      "path": "ruoyi-ui/src/components/DictTag/index.vue",
+      "exportedFrom": "DictTag/index.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+      "category": "ruoyi-shared",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "index",
+        "DictTag/index"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-editor-index",
+      "name": "Editor / index",
+      "path": "ruoyi-ui/src/components/Editor/index.vue",
+      "exportedFrom": "Editor/index.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+      "category": "ruoyi-shared",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "index",
+        "Editor/index"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-excel-import-dialog-index",
+      "name": "ExcelImportDialog / index",
+      "path": "ruoyi-ui/src/components/ExcelImportDialog/index.vue",
+      "exportedFrom": "ExcelImportDialog/index.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+      "category": "ruoyi-shared",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "index",
+        "ExcelImportDialog/index"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-file-upload-index",
+      "name": "FileUpload / index",
+      "path": "ruoyi-ui/src/components/FileUpload/index.vue",
+      "exportedFrom": "FileUpload/index.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+      "category": "ruoyi-shared",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "index",
+        "FileUpload/index"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-hamburger-index",
+      "name": "Hamburger / index",
+      "path": "ruoyi-ui/src/components/Hamburger/index.vue",
+      "exportedFrom": "Hamburger/index.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+      "category": "ruoyi-shared",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "index",
+        "Hamburger/index"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-header-search-index",
+      "name": "HeaderSearch / index",
+      "path": "ruoyi-ui/src/components/HeaderSearch/index.vue",
+      "exportedFrom": "HeaderSearch/index.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+      "category": "ruoyi-shared",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "index",
+        "HeaderSearch/index"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-i-frame-index",
+      "name": "iFrame / index",
+      "path": "ruoyi-ui/src/components/iFrame/index.vue",
+      "exportedFrom": "iFrame/index.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+      "category": "ruoyi-shared",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "index",
+        "iFrame/index"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-icon-select-index",
+      "name": "IconSelect / index",
+      "path": "ruoyi-ui/src/components/IconSelect/index.vue",
+      "exportedFrom": "IconSelect/index.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+      "category": "ruoyi-shared",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "index",
+        "IconSelect/index"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-icon-select-require-icons",
+      "name": "IconSelect / requireIcons",
+      "path": "ruoyi-ui/src/components/IconSelect/requireIcons.js",
+      "exportedFrom": "IconSelect/requireIcons.js",
+      "owner": "ruoyi-platform",
+      "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+      "category": "ruoyi-shared",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "requireIcons",
+        "IconSelect/requireIcons"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-image-preview-index",
+      "name": "ImagePreview / index",
+      "path": "ruoyi-ui/src/components/ImagePreview/index.vue",
+      "exportedFrom": "ImagePreview/index.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+      "category": "ruoyi-shared",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "index",
+        "ImagePreview/index"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-image-upload-index",
+      "name": "ImageUpload / index",
+      "path": "ruoyi-ui/src/components/ImageUpload/index.vue",
+      "exportedFrom": "ImageUpload/index.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+      "category": "ruoyi-shared",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "index",
+        "ImageUpload/index"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-pagination-index",
+      "name": "Pagination / index",
+      "path": "ruoyi-ui/src/components/Pagination/index.vue",
+      "exportedFrom": "Pagination/index.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+      "category": "ruoyi-shared",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "index",
+        "Pagination/index"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-parent-view-index",
+      "name": "ParentView / index",
+      "path": "ruoyi-ui/src/components/ParentView/index.vue",
+      "exportedFrom": "ParentView/index.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+      "category": "ruoyi-shared",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "index",
+        "ParentView/index"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-right-toolbar-index",
+      "name": "RightToolbar / index",
+      "path": "ruoyi-ui/src/components/RightToolbar/index.vue",
+      "exportedFrom": "RightToolbar/index.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+      "category": "ruoyi-shared",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "index",
+        "RightToolbar/index"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-ruo-yi-doc-index",
+      "name": "RuoYi / Doc / index",
+      "path": "ruoyi-ui/src/components/RuoYi/Doc/index.vue",
+      "exportedFrom": "RuoYi/Doc/index.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+      "category": "ruoyi-shared",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "index",
+        "RuoYi/Doc/index"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-ruo-yi-git-index",
+      "name": "RuoYi / Git / index",
+      "path": "ruoyi-ui/src/components/RuoYi/Git/index.vue",
+      "exportedFrom": "RuoYi/Git/index.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+      "category": "ruoyi-shared",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "index",
+        "RuoYi/Git/index"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-screenfull-index",
+      "name": "Screenfull / index",
+      "path": "ruoyi-ui/src/components/Screenfull/index.vue",
+      "exportedFrom": "Screenfull/index.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+      "category": "ruoyi-shared",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "index",
+        "Screenfull/index"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-size-select-index",
+      "name": "SizeSelect / index",
+      "path": "ruoyi-ui/src/components/SizeSelect/index.vue",
+      "exportedFrom": "SizeSelect/index.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+      "category": "ruoyi-shared",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "index",
+        "SizeSelect/index"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-svg-icon-index",
+      "name": "SvgIcon / index",
+      "path": "ruoyi-ui/src/components/SvgIcon/index.vue",
+      "exportedFrom": "SvgIcon/index.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+      "category": "ruoyi-shared",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "index",
+        "SvgIcon/index"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-svg-icon-svgicon",
+      "name": "SvgIcon / svgicon",
+      "path": "ruoyi-ui/src/components/SvgIcon/svgicon.js",
+      "exportedFrom": "SvgIcon/svgicon.js",
+      "owner": "ruoyi-platform",
+      "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+      "category": "ruoyi-shared",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "svgicon",
+        "SvgIcon/svgicon"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-tree-panel-index",
+      "name": "TreePanel / index",
+      "path": "ruoyi-ui/src/components/TreePanel/index.vue",
+      "exportedFrom": "TreePanel/index.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+      "category": "ruoyi-shared",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "index",
+        "TreePanel/index"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-ui/src/components/Crontab/index.vue",
+      "name": "ruoyi-ui/src/components/Crontab/index.vue",
+      "path": "ruoyi-ui/src/components/Crontab/index.vue",
+      "exportedFrom": "Crontab/index.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Ownership alias for a RuoYi scanned component reference.",
+      "category": "ruoyi-reference",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "ruoyi-ui/src/components/Crontab/index.vue"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-ui/src/components/Editor/index.vue",
+      "name": "ruoyi-ui/src/components/Editor/index.vue",
+      "path": "ruoyi-ui/src/components/Editor/index.vue",
+      "exportedFrom": "Editor/index.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Ownership alias for a RuoYi scanned component reference.",
+      "category": "ruoyi-reference",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "ruoyi-ui/src/components/Editor/index.vue"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-ui/src/components/RightToolbar/index.vue",
+      "name": "ruoyi-ui/src/components/RightToolbar/index.vue",
+      "path": "ruoyi-ui/src/components/RightToolbar/index.vue",
+      "exportedFrom": "RightToolbar/index.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Ownership alias for a RuoYi scanned component reference.",
+      "category": "ruoyi-reference",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "ruoyi-ui/src/components/RightToolbar/index.vue"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-ui/src/components/TreePanel/index.vue",
+      "name": "ruoyi-ui/src/components/TreePanel/index.vue",
+      "path": "ruoyi-ui/src/components/TreePanel/index.vue",
+      "exportedFrom": "TreePanel/index.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Ownership alias for a RuoYi scanned component reference.",
+      "category": "ruoyi-reference",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "ruoyi-ui/src/components/TreePanel/index.vue"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-ui/src/layout/components/HeaderNotice/DetailView.vue",
+      "name": "ruoyi-ui/src/layout/components/HeaderNotice/DetailView.vue",
+      "path": "ruoyi-ui/src/components/ParentView/index.vue",
+      "exportedFrom": "ParentView/index.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Ownership alias for a RuoYi scanned component reference.",
+      "category": "ruoyi-reference",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "ruoyi-ui/src/layout/components/HeaderNotice/DetailView.vue"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-ui/src/layout/components/HeaderNotice/index.vue",
+      "name": "ruoyi-ui/src/layout/components/HeaderNotice/index.vue",
+      "path": "ruoyi-ui/src/components/ParentView/index.vue",
+      "exportedFrom": "ParentView/index.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Ownership alias for a RuoYi scanned component reference.",
+      "category": "ruoyi-reference",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "ruoyi-ui/src/layout/components/HeaderNotice/index.vue"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-ui/src/layout/components/Navbar.vue",
+      "name": "ruoyi-ui/src/layout/components/Navbar.vue",
+      "path": "ruoyi-ui/src/components/ParentView/index.vue",
+      "exportedFrom": "ParentView/index.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Ownership alias for a RuoYi scanned component reference.",
+      "category": "ruoyi-reference",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "ruoyi-ui/src/layout/components/Navbar.vue"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-ui/src/layout/components/Settings/index.vue",
+      "name": "ruoyi-ui/src/layout/components/Settings/index.vue",
+      "path": "ruoyi-ui/src/components/ParentView/index.vue",
+      "exportedFrom": "ParentView/index.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Ownership alias for a RuoYi scanned component reference.",
+      "category": "ruoyi-reference",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "ruoyi-ui/src/layout/components/Settings/index.vue"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-ui/src/views/system/role/selectUser.vue",
+      "name": "ruoyi-ui/src/views/system/role/selectUser.vue",
+      "path": "ruoyi-ui/src/components/ParentView/index.vue",
+      "exportedFrom": "ParentView/index.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Ownership alias for a RuoYi scanned component reference.",
+      "category": "ruoyi-reference",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "ruoyi-ui/src/views/system/role/selectUser.vue"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-ui/src/views/tool/build/CodeTypeDialog.vue",
+      "name": "ruoyi-ui/src/views/tool/build/CodeTypeDialog.vue",
+      "path": "ruoyi-ui/src/components/ParentView/index.vue",
+      "exportedFrom": "ParentView/index.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Ownership alias for a RuoYi scanned component reference.",
+      "category": "ruoyi-reference",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "ruoyi-ui/src/views/tool/build/CodeTypeDialog.vue"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-ui/src/views/tool/build/IconsDialog.vue",
+      "name": "ruoyi-ui/src/views/tool/build/IconsDialog.vue",
+      "path": "ruoyi-ui/src/components/ParentView/index.vue",
+      "exportedFrom": "ParentView/index.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Ownership alias for a RuoYi scanned component reference.",
+      "category": "ruoyi-reference",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "ruoyi-ui/src/views/tool/build/IconsDialog.vue"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-ui/src/views/tool/build/TreeNodeDialog.vue",
+      "name": "ruoyi-ui/src/views/tool/build/TreeNodeDialog.vue",
+      "path": "ruoyi-ui/src/components/ParentView/index.vue",
+      "exportedFrom": "ParentView/index.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Ownership alias for a RuoYi scanned component reference.",
+      "category": "ruoyi-reference",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "ruoyi-ui/src/views/tool/build/TreeNodeDialog.vue"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-ui/src/views/tool/gen/basicInfoForm.vue",
+      "name": "ruoyi-ui/src/views/tool/gen/basicInfoForm.vue",
+      "path": "ruoyi-ui/src/components/ParentView/index.vue",
+      "exportedFrom": "ParentView/index.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Ownership alias for a RuoYi scanned component reference.",
+      "category": "ruoyi-reference",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "ruoyi-ui/src/views/tool/gen/basicInfoForm.vue"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-ui/src/views/tool/gen/createTable.vue",
+      "name": "ruoyi-ui/src/views/tool/gen/createTable.vue",
+      "path": "ruoyi-ui/src/components/ParentView/index.vue",
+      "exportedFrom": "ParentView/index.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Ownership alias for a RuoYi scanned component reference.",
+      "category": "ruoyi-reference",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "ruoyi-ui/src/views/tool/gen/createTable.vue"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-ui/src/views/tool/gen/editTable.vue",
+      "name": "ruoyi-ui/src/views/tool/gen/editTable.vue",
+      "path": "ruoyi-ui/src/components/ParentView/index.vue",
+      "exportedFrom": "ParentView/index.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Ownership alias for a RuoYi scanned component reference.",
+      "category": "ruoyi-reference",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "ruoyi-ui/src/views/tool/gen/editTable.vue"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-ui/src/views/tool/gen/genInfoForm.vue",
+      "name": "ruoyi-ui/src/views/tool/gen/genInfoForm.vue",
+      "path": "ruoyi-ui/src/components/ParentView/index.vue",
+      "exportedFrom": "ParentView/index.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Ownership alias for a RuoYi scanned component reference.",
+      "category": "ruoyi-reference",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "ruoyi-ui/src/views/tool/gen/genInfoForm.vue"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-ui/src/views/tool/gen/importTable.vue",
+      "name": "ruoyi-ui/src/views/tool/gen/importTable.vue",
+      "path": "ruoyi-ui/src/components/ParentView/index.vue",
+      "exportedFrom": "ParentView/index.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Ownership alias for a RuoYi scanned component reference.",
+      "category": "ruoyi-reference",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "ruoyi-ui/src/views/tool/gen/importTable.vue"
+      ],
+      "props": []
+    }
+  ],
+  "componentRegistry": [
+    {
+      "id": "@/components/Crontab",
+      "name": "@/components/Crontab",
+      "path": "ruoyi-ui/src/components/Crontab",
+      "exportedFrom": "Crontab",
+      "owner": "ruoyi-platform",
+      "purpose": "Ownership alias for a RuoYi scanned component reference.",
+      "category": "ruoyi-reference",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "@/components/Crontab"
+      ],
+      "props": []
+    },
+    {
+      "id": "@/components/ExcelImportDialog",
+      "name": "@/components/ExcelImportDialog",
+      "path": "ruoyi-ui/src/components/ExcelImportDialog",
+      "exportedFrom": "ExcelImportDialog",
+      "owner": "ruoyi-platform",
+      "purpose": "Ownership alias for a RuoYi scanned component reference.",
+      "category": "ruoyi-reference",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "@/components/ExcelImportDialog"
+      ],
+      "props": []
+    },
+    {
+      "id": "@/components/IconSelect",
+      "name": "@/components/IconSelect",
+      "path": "ruoyi-ui/src/components/IconSelect",
+      "exportedFrom": "IconSelect",
+      "owner": "ruoyi-platform",
+      "purpose": "Ownership alias for a RuoYi scanned component reference.",
+      "category": "ruoyi-reference",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "@/components/IconSelect"
+      ],
+      "props": []
+    },
+    {
+      "id": "@/components/iFrame",
+      "name": "@/components/iFrame",
+      "path": "ruoyi-ui/src/components/iFrame",
+      "exportedFrom": "iFrame",
+      "owner": "ruoyi-platform",
+      "purpose": "Ownership alias for a RuoYi scanned component reference.",
+      "category": "ruoyi-reference",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "@/components/iFrame"
+      ],
+      "props": []
+    },
+    {
+      "id": "@/components/SvgIcon",
+      "name": "@/components/SvgIcon",
+      "path": "ruoyi-ui/src/components/SvgIcon",
+      "exportedFrom": "SvgIcon",
+      "owner": "ruoyi-platform",
+      "purpose": "Ownership alias for a RuoYi scanned component reference.",
+      "category": "ruoyi-reference",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "@/components/SvgIcon"
+      ],
+      "props": []
+    },
+    {
+      "id": "@/components/TreePanel",
+      "name": "@/components/TreePanel",
+      "path": "ruoyi-ui/src/components/TreePanel",
+      "exportedFrom": "TreePanel",
+      "owner": "ruoyi-platform",
+      "purpose": "Ownership alias for a RuoYi scanned component reference.",
+      "category": "ruoyi-reference",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "@/components/TreePanel"
+      ],
+      "props": []
+    },
+    {
+      "id": "@/layout/components/HeaderNotice/DetailView",
+      "name": "@/layout/components/HeaderNotice/DetailView",
+      "path": "ruoyi-ui/src/components/ParentView/index.vue",
+      "exportedFrom": "ParentView/index.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Ownership alias for a RuoYi scanned component reference.",
+      "category": "ruoyi-reference",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "@/layout/components/HeaderNotice/DetailView"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-breadcrumb-index",
+      "name": "Breadcrumb / index",
+      "path": "ruoyi-ui/src/components/Breadcrumb/index.vue",
+      "exportedFrom": "Breadcrumb/index.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+      "category": "ruoyi-shared",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "index",
+        "Breadcrumb/index"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-crontab-day",
+      "name": "Crontab / day",
+      "path": "ruoyi-ui/src/components/Crontab/day.vue",
+      "exportedFrom": "Crontab/day.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+      "category": "ruoyi-shared",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "day",
+        "Crontab/day"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-crontab-hour",
+      "name": "Crontab / hour",
+      "path": "ruoyi-ui/src/components/Crontab/hour.vue",
+      "exportedFrom": "Crontab/hour.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+      "category": "ruoyi-shared",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "hour",
+        "Crontab/hour"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-crontab-index",
+      "name": "Crontab / index",
+      "path": "ruoyi-ui/src/components/Crontab/index.vue",
+      "exportedFrom": "Crontab/index.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+      "category": "ruoyi-shared",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "index",
+        "Crontab/index"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-crontab-min",
+      "name": "Crontab / min",
+      "path": "ruoyi-ui/src/components/Crontab/min.vue",
+      "exportedFrom": "Crontab/min.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+      "category": "ruoyi-shared",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "min",
+        "Crontab/min"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-crontab-month",
+      "name": "Crontab / month",
+      "path": "ruoyi-ui/src/components/Crontab/month.vue",
+      "exportedFrom": "Crontab/month.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+      "category": "ruoyi-shared",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "month",
+        "Crontab/month"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-crontab-result",
+      "name": "Crontab / result",
+      "path": "ruoyi-ui/src/components/Crontab/result.vue",
+      "exportedFrom": "Crontab/result.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+      "category": "ruoyi-shared",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "result",
+        "Crontab/result"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-crontab-second",
+      "name": "Crontab / second",
+      "path": "ruoyi-ui/src/components/Crontab/second.vue",
+      "exportedFrom": "Crontab/second.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+      "category": "ruoyi-shared",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "second",
+        "Crontab/second"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-crontab-week",
+      "name": "Crontab / week",
+      "path": "ruoyi-ui/src/components/Crontab/week.vue",
+      "exportedFrom": "Crontab/week.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+      "category": "ruoyi-shared",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "week",
+        "Crontab/week"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-crontab-year",
+      "name": "Crontab / year",
+      "path": "ruoyi-ui/src/components/Crontab/year.vue",
+      "exportedFrom": "Crontab/year.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+      "category": "ruoyi-shared",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "year",
+        "Crontab/year"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-dict-tag-index",
+      "name": "DictTag / index",
+      "path": "ruoyi-ui/src/components/DictTag/index.vue",
+      "exportedFrom": "DictTag/index.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+      "category": "ruoyi-shared",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "index",
+        "DictTag/index"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-editor-index",
+      "name": "Editor / index",
+      "path": "ruoyi-ui/src/components/Editor/index.vue",
+      "exportedFrom": "Editor/index.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+      "category": "ruoyi-shared",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "index",
+        "Editor/index"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-excel-import-dialog-index",
+      "name": "ExcelImportDialog / index",
+      "path": "ruoyi-ui/src/components/ExcelImportDialog/index.vue",
+      "exportedFrom": "ExcelImportDialog/index.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+      "category": "ruoyi-shared",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "index",
+        "ExcelImportDialog/index"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-file-upload-index",
+      "name": "FileUpload / index",
+      "path": "ruoyi-ui/src/components/FileUpload/index.vue",
+      "exportedFrom": "FileUpload/index.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+      "category": "ruoyi-shared",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "index",
+        "FileUpload/index"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-hamburger-index",
+      "name": "Hamburger / index",
+      "path": "ruoyi-ui/src/components/Hamburger/index.vue",
+      "exportedFrom": "Hamburger/index.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+      "category": "ruoyi-shared",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "index",
+        "Hamburger/index"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-header-search-index",
+      "name": "HeaderSearch / index",
+      "path": "ruoyi-ui/src/components/HeaderSearch/index.vue",
+      "exportedFrom": "HeaderSearch/index.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+      "category": "ruoyi-shared",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "index",
+        "HeaderSearch/index"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-i-frame-index",
+      "name": "iFrame / index",
+      "path": "ruoyi-ui/src/components/iFrame/index.vue",
+      "exportedFrom": "iFrame/index.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+      "category": "ruoyi-shared",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "index",
+        "iFrame/index"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-icon-select-index",
+      "name": "IconSelect / index",
+      "path": "ruoyi-ui/src/components/IconSelect/index.vue",
+      "exportedFrom": "IconSelect/index.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+      "category": "ruoyi-shared",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "index",
+        "IconSelect/index"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-icon-select-require-icons",
+      "name": "IconSelect / requireIcons",
+      "path": "ruoyi-ui/src/components/IconSelect/requireIcons.js",
+      "exportedFrom": "IconSelect/requireIcons.js",
+      "owner": "ruoyi-platform",
+      "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+      "category": "ruoyi-shared",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "requireIcons",
+        "IconSelect/requireIcons"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-image-preview-index",
+      "name": "ImagePreview / index",
+      "path": "ruoyi-ui/src/components/ImagePreview/index.vue",
+      "exportedFrom": "ImagePreview/index.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+      "category": "ruoyi-shared",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "index",
+        "ImagePreview/index"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-image-upload-index",
+      "name": "ImageUpload / index",
+      "path": "ruoyi-ui/src/components/ImageUpload/index.vue",
+      "exportedFrom": "ImageUpload/index.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+      "category": "ruoyi-shared",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "index",
+        "ImageUpload/index"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-pagination-index",
+      "name": "Pagination / index",
+      "path": "ruoyi-ui/src/components/Pagination/index.vue",
+      "exportedFrom": "Pagination/index.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+      "category": "ruoyi-shared",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "index",
+        "Pagination/index"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-parent-view-index",
+      "name": "ParentView / index",
+      "path": "ruoyi-ui/src/components/ParentView/index.vue",
+      "exportedFrom": "ParentView/index.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+      "category": "ruoyi-shared",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "index",
+        "ParentView/index"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-right-toolbar-index",
+      "name": "RightToolbar / index",
+      "path": "ruoyi-ui/src/components/RightToolbar/index.vue",
+      "exportedFrom": "RightToolbar/index.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+      "category": "ruoyi-shared",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "index",
+        "RightToolbar/index"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-ruo-yi-doc-index",
+      "name": "RuoYi / Doc / index",
+      "path": "ruoyi-ui/src/components/RuoYi/Doc/index.vue",
+      "exportedFrom": "RuoYi/Doc/index.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+      "category": "ruoyi-shared",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "index",
+        "RuoYi/Doc/index"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-ruo-yi-git-index",
+      "name": "RuoYi / Git / index",
+      "path": "ruoyi-ui/src/components/RuoYi/Git/index.vue",
+      "exportedFrom": "RuoYi/Git/index.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+      "category": "ruoyi-shared",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "index",
+        "RuoYi/Git/index"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-screenfull-index",
+      "name": "Screenfull / index",
+      "path": "ruoyi-ui/src/components/Screenfull/index.vue",
+      "exportedFrom": "Screenfull/index.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+      "category": "ruoyi-shared",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "index",
+        "Screenfull/index"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-size-select-index",
+      "name": "SizeSelect / index",
+      "path": "ruoyi-ui/src/components/SizeSelect/index.vue",
+      "exportedFrom": "SizeSelect/index.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+      "category": "ruoyi-shared",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "index",
+        "SizeSelect/index"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-svg-icon-index",
+      "name": "SvgIcon / index",
+      "path": "ruoyi-ui/src/components/SvgIcon/index.vue",
+      "exportedFrom": "SvgIcon/index.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+      "category": "ruoyi-shared",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "index",
+        "SvgIcon/index"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-svg-icon-svgicon",
+      "name": "SvgIcon / svgicon",
+      "path": "ruoyi-ui/src/components/SvgIcon/svgicon.js",
+      "exportedFrom": "SvgIcon/svgicon.js",
+      "owner": "ruoyi-platform",
+      "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+      "category": "ruoyi-shared",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "svgicon",
+        "SvgIcon/svgicon"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-tree-panel-index",
+      "name": "TreePanel / index",
+      "path": "ruoyi-ui/src/components/TreePanel/index.vue",
+      "exportedFrom": "TreePanel/index.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Shared UI component imported with the RuoYi Vue3 base.",
+      "category": "ruoyi-shared",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "index",
+        "TreePanel/index"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-ui/src/components/Crontab/index.vue",
+      "name": "ruoyi-ui/src/components/Crontab/index.vue",
+      "path": "ruoyi-ui/src/components/Crontab/index.vue",
+      "exportedFrom": "Crontab/index.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Ownership alias for a RuoYi scanned component reference.",
+      "category": "ruoyi-reference",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "ruoyi-ui/src/components/Crontab/index.vue"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-ui/src/components/Editor/index.vue",
+      "name": "ruoyi-ui/src/components/Editor/index.vue",
+      "path": "ruoyi-ui/src/components/Editor/index.vue",
+      "exportedFrom": "Editor/index.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Ownership alias for a RuoYi scanned component reference.",
+      "category": "ruoyi-reference",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "ruoyi-ui/src/components/Editor/index.vue"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-ui/src/components/RightToolbar/index.vue",
+      "name": "ruoyi-ui/src/components/RightToolbar/index.vue",
+      "path": "ruoyi-ui/src/components/RightToolbar/index.vue",
+      "exportedFrom": "RightToolbar/index.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Ownership alias for a RuoYi scanned component reference.",
+      "category": "ruoyi-reference",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "ruoyi-ui/src/components/RightToolbar/index.vue"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-ui/src/components/TreePanel/index.vue",
+      "name": "ruoyi-ui/src/components/TreePanel/index.vue",
+      "path": "ruoyi-ui/src/components/TreePanel/index.vue",
+      "exportedFrom": "TreePanel/index.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Ownership alias for a RuoYi scanned component reference.",
+      "category": "ruoyi-reference",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "ruoyi-ui/src/components/TreePanel/index.vue"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-ui/src/layout/components/HeaderNotice/DetailView.vue",
+      "name": "ruoyi-ui/src/layout/components/HeaderNotice/DetailView.vue",
+      "path": "ruoyi-ui/src/components/ParentView/index.vue",
+      "exportedFrom": "ParentView/index.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Ownership alias for a RuoYi scanned component reference.",
+      "category": "ruoyi-reference",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "ruoyi-ui/src/layout/components/HeaderNotice/DetailView.vue"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-ui/src/layout/components/HeaderNotice/index.vue",
+      "name": "ruoyi-ui/src/layout/components/HeaderNotice/index.vue",
+      "path": "ruoyi-ui/src/components/ParentView/index.vue",
+      "exportedFrom": "ParentView/index.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Ownership alias for a RuoYi scanned component reference.",
+      "category": "ruoyi-reference",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "ruoyi-ui/src/layout/components/HeaderNotice/index.vue"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-ui/src/layout/components/Navbar.vue",
+      "name": "ruoyi-ui/src/layout/components/Navbar.vue",
+      "path": "ruoyi-ui/src/components/ParentView/index.vue",
+      "exportedFrom": "ParentView/index.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Ownership alias for a RuoYi scanned component reference.",
+      "category": "ruoyi-reference",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "ruoyi-ui/src/layout/components/Navbar.vue"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-ui/src/layout/components/Settings/index.vue",
+      "name": "ruoyi-ui/src/layout/components/Settings/index.vue",
+      "path": "ruoyi-ui/src/components/ParentView/index.vue",
+      "exportedFrom": "ParentView/index.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Ownership alias for a RuoYi scanned component reference.",
+      "category": "ruoyi-reference",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "ruoyi-ui/src/layout/components/Settings/index.vue"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-ui/src/views/system/role/selectUser.vue",
+      "name": "ruoyi-ui/src/views/system/role/selectUser.vue",
+      "path": "ruoyi-ui/src/components/ParentView/index.vue",
+      "exportedFrom": "ParentView/index.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Ownership alias for a RuoYi scanned component reference.",
+      "category": "ruoyi-reference",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "ruoyi-ui/src/views/system/role/selectUser.vue"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-ui/src/views/tool/build/CodeTypeDialog.vue",
+      "name": "ruoyi-ui/src/views/tool/build/CodeTypeDialog.vue",
+      "path": "ruoyi-ui/src/components/ParentView/index.vue",
+      "exportedFrom": "ParentView/index.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Ownership alias for a RuoYi scanned component reference.",
+      "category": "ruoyi-reference",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "ruoyi-ui/src/views/tool/build/CodeTypeDialog.vue"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-ui/src/views/tool/build/IconsDialog.vue",
+      "name": "ruoyi-ui/src/views/tool/build/IconsDialog.vue",
+      "path": "ruoyi-ui/src/components/ParentView/index.vue",
+      "exportedFrom": "ParentView/index.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Ownership alias for a RuoYi scanned component reference.",
+      "category": "ruoyi-reference",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "ruoyi-ui/src/views/tool/build/IconsDialog.vue"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-ui/src/views/tool/build/TreeNodeDialog.vue",
+      "name": "ruoyi-ui/src/views/tool/build/TreeNodeDialog.vue",
+      "path": "ruoyi-ui/src/components/ParentView/index.vue",
+      "exportedFrom": "ParentView/index.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Ownership alias for a RuoYi scanned component reference.",
+      "category": "ruoyi-reference",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "ruoyi-ui/src/views/tool/build/TreeNodeDialog.vue"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-ui/src/views/tool/gen/basicInfoForm.vue",
+      "name": "ruoyi-ui/src/views/tool/gen/basicInfoForm.vue",
+      "path": "ruoyi-ui/src/components/ParentView/index.vue",
+      "exportedFrom": "ParentView/index.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Ownership alias for a RuoYi scanned component reference.",
+      "category": "ruoyi-reference",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "ruoyi-ui/src/views/tool/gen/basicInfoForm.vue"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-ui/src/views/tool/gen/createTable.vue",
+      "name": "ruoyi-ui/src/views/tool/gen/createTable.vue",
+      "path": "ruoyi-ui/src/components/ParentView/index.vue",
+      "exportedFrom": "ParentView/index.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Ownership alias for a RuoYi scanned component reference.",
+      "category": "ruoyi-reference",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "ruoyi-ui/src/views/tool/gen/createTable.vue"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-ui/src/views/tool/gen/editTable.vue",
+      "name": "ruoyi-ui/src/views/tool/gen/editTable.vue",
+      "path": "ruoyi-ui/src/components/ParentView/index.vue",
+      "exportedFrom": "ParentView/index.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Ownership alias for a RuoYi scanned component reference.",
+      "category": "ruoyi-reference",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "ruoyi-ui/src/views/tool/gen/editTable.vue"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-ui/src/views/tool/gen/genInfoForm.vue",
+      "name": "ruoyi-ui/src/views/tool/gen/genInfoForm.vue",
+      "path": "ruoyi-ui/src/components/ParentView/index.vue",
+      "exportedFrom": "ParentView/index.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Ownership alias for a RuoYi scanned component reference.",
+      "category": "ruoyi-reference",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "ruoyi-ui/src/views/tool/gen/genInfoForm.vue"
+      ],
+      "props": []
+    },
+    {
+      "id": "ruoyi-ui/src/views/tool/gen/importTable.vue",
+      "name": "ruoyi-ui/src/views/tool/gen/importTable.vue",
+      "path": "ruoyi-ui/src/components/ParentView/index.vue",
+      "exportedFrom": "ParentView/index.vue",
+      "owner": "ruoyi-platform",
+      "purpose": "Ownership alias for a RuoYi scanned component reference.",
+      "category": "ruoyi-reference",
+      "status": "active",
+      "usedBy": [
+        "ruoyi-ui"
+      ],
+      "aliases": [
+        "ruoyi-ui/src/views/tool/gen/importTable.vue"
+      ],
+      "props": []
+    }
+  ],
+  "sharedFiles": [
+    {
+      "file": "ruoyi-ui/src/components/Breadcrumb/index.vue",
+      "name": "index"
+    },
+    {
+      "file": "ruoyi-ui/src/components/Crontab/day.vue",
+      "name": "day"
+    },
+    {
+      "file": "ruoyi-ui/src/components/Crontab/hour.vue",
+      "name": "hour"
+    },
+    {
+      "file": "ruoyi-ui/src/components/Crontab/index.vue",
+      "name": "index"
+    },
+    {
+      "file": "ruoyi-ui/src/components/Crontab/min.vue",
+      "name": "min"
+    },
+    {
+      "file": "ruoyi-ui/src/components/Crontab/month.vue",
+      "name": "month"
+    },
+    {
+      "file": "ruoyi-ui/src/components/Crontab/result.vue",
+      "name": "result"
+    },
+    {
+      "file": "ruoyi-ui/src/components/Crontab/second.vue",
+      "name": "second"
+    },
+    {
+      "file": "ruoyi-ui/src/components/Crontab/week.vue",
+      "name": "week"
+    },
+    {
+      "file": "ruoyi-ui/src/components/Crontab/year.vue",
+      "name": "year"
+    },
+    {
+      "file": "ruoyi-ui/src/components/DictTag/index.vue",
+      "name": "index"
+    },
+    {
+      "file": "ruoyi-ui/src/components/Editor/index.vue",
+      "name": "index"
+    },
+    {
+      "file": "ruoyi-ui/src/components/ExcelImportDialog/index.vue",
+      "name": "index"
+    },
+    {
+      "file": "ruoyi-ui/src/components/FileUpload/index.vue",
+      "name": "index"
+    },
+    {
+      "file": "ruoyi-ui/src/components/Hamburger/index.vue",
+      "name": "index"
+    },
+    {
+      "file": "ruoyi-ui/src/components/HeaderSearch/index.vue",
+      "name": "index"
+    },
+    {
+      "file": "ruoyi-ui/src/components/IconSelect/index.vue",
+      "name": "index"
+    },
+    {
+      "file": "ruoyi-ui/src/components/IconSelect/requireIcons.js",
+      "name": "requireIcons"
+    },
+    {
+      "file": "ruoyi-ui/src/components/ImagePreview/index.vue",
+      "name": "index"
+    },
+    {
+      "file": "ruoyi-ui/src/components/ImageUpload/index.vue",
+      "name": "index"
+    },
+    {
+      "file": "ruoyi-ui/src/components/Pagination/index.vue",
+      "name": "index"
+    },
+    {
+      "file": "ruoyi-ui/src/components/ParentView/index.vue",
+      "name": "index"
+    },
+    {
+      "file": "ruoyi-ui/src/components/RightToolbar/index.vue",
+      "name": "index"
+    },
+    {
+      "file": "ruoyi-ui/src/components/RuoYi/Doc/index.vue",
+      "name": "index"
+    },
+    {
+      "file": "ruoyi-ui/src/components/RuoYi/Git/index.vue",
+      "name": "index"
+    },
+    {
+      "file": "ruoyi-ui/src/components/Screenfull/index.vue",
+      "name": "index"
+    },
+    {
+      "file": "ruoyi-ui/src/components/SizeSelect/index.vue",
+      "name": "index"
+    },
+    {
+      "file": "ruoyi-ui/src/components/SvgIcon/index.vue",
+      "name": "index"
+    },
+    {
+      "file": "ruoyi-ui/src/components/SvgIcon/svgicon.js",
+      "name": "svgicon"
+    },
+    {
+      "file": "ruoyi-ui/src/components/TreePanel/index.vue",
+      "name": "index"
+    },
+    {
+      "file": "ruoyi-ui/src/components/iFrame/index.vue",
+      "name": "index"
+    }
+  ],
+  "moduleComponentFiles": [
+    {
+      "file": "ruoyi-ui/src/views/system/role/selectUser.vue",
+      "name": "selectUser",
+      "module": "system"
+    },
+    {
+      "file": "ruoyi-ui/src/views/tool/build/CodeTypeDialog.vue",
+      "name": "CodeTypeDialog",
+      "module": "tool"
+    },
+    {
+      "file": "ruoyi-ui/src/views/tool/build/IconsDialog.vue",
+      "name": "IconsDialog",
+      "module": "tool"
+    },
+    {
+      "file": "ruoyi-ui/src/views/tool/build/TreeNodeDialog.vue",
+      "name": "TreeNodeDialog",
+      "module": "tool"
+    },
+    {
+      "file": "ruoyi-ui/src/views/tool/gen/basicInfoForm.vue",
+      "name": "basicInfoForm",
+      "module": "tool"
+    },
+    {
+      "file": "ruoyi-ui/src/views/tool/gen/createTable.vue",
+      "name": "createTable",
+      "module": "tool"
+    },
+    {
+      "file": "ruoyi-ui/src/views/tool/gen/editTable.vue",
+      "name": "editTable",
+      "module": "tool"
+    },
+    {
+      "file": "ruoyi-ui/src/views/tool/gen/genInfoForm.vue",
+      "name": "genInfoForm",
+      "module": "tool"
+    },
+    {
+      "file": "ruoyi-ui/src/views/tool/gen/importTable.vue",
+      "name": "importTable",
+      "module": "tool"
+    }
+  ],
+  "imports": [
+    {
+      "file": "ruoyi-ui/src/layout/components/Navbar.vue",
+      "module": "",
+      "source": "@/components/Breadcrumb"
+    },
+    {
+      "file": "ruoyi-ui/src/layout/components/Navbar.vue",
+      "module": "",
+      "source": "@/components/Hamburger"
+    },
+    {
+      "file": "ruoyi-ui/src/layout/components/Navbar.vue",
+      "module": "",
+      "source": "@/components/Screenfull"
+    },
+    {
+      "file": "ruoyi-ui/src/layout/components/Navbar.vue",
+      "module": "",
+      "source": "@/components/SizeSelect"
+    },
+    {
+      "file": "ruoyi-ui/src/layout/components/Navbar.vue",
+      "module": "",
+      "source": "@/components/HeaderSearch"
+    },
+    {
+      "file": "ruoyi-ui/src/layout/components/Navbar.vue",
+      "module": "",
+      "source": "@/components/RuoYi/Git"
+    },
+    {
+      "file": "ruoyi-ui/src/layout/components/Navbar.vue",
+      "module": "",
+      "source": "@/components/RuoYi/Doc"
+    },
+    {
+      "file": "ruoyi-ui/src/layout/index.vue",
+      "module": "",
+      "source": "./components/Sidebar/index.vue"
+    },
+    {
+      "file": "ruoyi-ui/src/layout/index.vue",
+      "module": "",
+      "source": "./components"
+    },
+    {
+      "file": "ruoyi-ui/src/main.js",
+      "module": "",
+      "source": "@/components/SvgIcon"
+    },
+    {
+      "file": "ruoyi-ui/src/main.js",
+      "module": "",
+      "source": "@/components/SvgIcon/svgicon"
+    },
+    {
+      "file": "ruoyi-ui/src/main.js",
+      "module": "",
+      "source": "@/components/Pagination"
+    },
+    {
+      "file": "ruoyi-ui/src/main.js",
+      "module": "",
+      "source": "@/components/RightToolbar"
+    },
+    {
+      "file": "ruoyi-ui/src/main.js",
+      "module": "",
+      "source": "@/components/Editor"
+    },
+    {
+      "file": "ruoyi-ui/src/main.js",
+      "module": "",
+      "source": "@/components/FileUpload"
+    },
+    {
+      "file": "ruoyi-ui/src/main.js",
+      "module": "",
+      "source": "@/components/ImageUpload"
+    },
+    {
+      "file": "ruoyi-ui/src/main.js",
+      "module": "",
+      "source": "@/components/ImagePreview"
+    },
+    {
+      "file": "ruoyi-ui/src/main.js",
+      "module": "",
+      "source": "@/components/DictTag"
+    },
+    {
+      "file": "ruoyi-ui/src/store/modules/permission.js",
+      "module": "",
+      "source": "@/components/ParentView"
+    },
+    {
+      "file": "ruoyi-ui/src/store/modules/permission.js",
+      "module": "",
+      "source": "@/layout/components/InnerLink"
+    },
+    {
+      "file": "ruoyi-ui/src/views/monitor/druid/index.vue",
+      "module": "monitor",
+      "source": "@/components/iFrame"
+    },
+    {
+      "file": "ruoyi-ui/src/views/monitor/job/index.vue",
+      "module": "monitor",
+      "source": "@/components/Crontab"
+    },
+    {
+      "file": "ruoyi-ui/src/views/system/menu/index.vue",
+      "module": "system",
+      "source": "@/components/SvgIcon"
+    },
+    {
+      "file": "ruoyi-ui/src/views/system/menu/index.vue",
+      "module": "system",
+      "source": "@/components/IconSelect"
+    },
+    {
+      "file": "ruoyi-ui/src/views/system/notice/index.vue",
+      "module": "system",
+      "source": "@/layout/components/HeaderNotice/DetailView"
+    },
+    {
+      "file": "ruoyi-ui/src/views/system/user/index.vue",
+      "module": "system",
+      "source": "@/components/TreePanel"
+    },
+    {
+      "file": "ruoyi-ui/src/views/system/user/index.vue",
+      "module": "system",
+      "source": "@/components/ExcelImportDialog"
+    },
+    {
+      "file": "ruoyi-ui/src/views/tool/swagger/index.vue",
+      "module": "tool",
+      "source": "@/components/iFrame"
+    }
+  ]
 }

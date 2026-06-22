@@ -1,11 +1,1450 @@
 {
   "schemaVersion": 1,
   "generatedBy": "tools/scan-permissions.js",
-  "adapter": "generic",
+  "adapter": "ruoyi",
   "roots": [
+    "ruoyi-admin/src/main/java",
+    "ruoyi-business/src/main/java",
+    "ruoyi-generator/src/main/java",
+    "ruoyi-quartz/src/main/java",
+    "ruoyi-system/src/main/java",
+    "ruoyi-ui/src",
+    "sql",
+    "ruoyi-admin/sql",
     "backend",
     "frontend/src",
     "db"
   ],
-  "permissions": []
+  "permissions": [
+    {
+      "code": "monitor:cache:list",
+      "module": "monitor",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor/CacheController.java"
+    },
+    {
+      "code": "monitor:cache:list",
+      "module": "monitor",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor/CacheController.java"
+    },
+    {
+      "code": "monitor:cache:list",
+      "module": "monitor",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor/CacheController.java"
+    },
+    {
+      "code": "monitor:cache:list",
+      "module": "monitor",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor/CacheController.java"
+    },
+    {
+      "code": "monitor:cache:list",
+      "module": "monitor",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor/CacheController.java"
+    },
+    {
+      "code": "monitor:cache:list",
+      "module": "monitor",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor/CacheController.java"
+    },
+    {
+      "code": "monitor:cache:list",
+      "module": "monitor",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor/CacheController.java"
+    },
+    {
+      "code": "monitor:server:list",
+      "module": "monitor",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor/ServerController.java"
+    },
+    {
+      "code": "monitor:logininfor:list",
+      "module": "monitor",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor/SysLogininforController.java"
+    },
+    {
+      "code": "monitor:logininfor:export",
+      "module": "monitor",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor/SysLogininforController.java"
+    },
+    {
+      "code": "monitor:logininfor:remove",
+      "module": "monitor",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor/SysLogininforController.java"
+    },
+    {
+      "code": "monitor:logininfor:remove",
+      "module": "monitor",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor/SysLogininforController.java"
+    },
+    {
+      "code": "monitor:logininfor:unlock",
+      "module": "monitor",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor/SysLogininforController.java"
+    },
+    {
+      "code": "monitor:operlog:list",
+      "module": "monitor",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor/SysOperlogController.java"
+    },
+    {
+      "code": "monitor:operlog:export",
+      "module": "monitor",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor/SysOperlogController.java"
+    },
+    {
+      "code": "monitor:operlog:remove",
+      "module": "monitor",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor/SysOperlogController.java"
+    },
+    {
+      "code": "monitor:operlog:remove",
+      "module": "monitor",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor/SysOperlogController.java"
+    },
+    {
+      "code": "monitor:online:list",
+      "module": "monitor",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor/SysUserOnlineController.java"
+    },
+    {
+      "code": "system:config:list",
+      "module": "system",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysConfigController.java"
+    },
+    {
+      "code": "system:config:export",
+      "module": "system",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysConfigController.java"
+    },
+    {
+      "code": "system:config:query",
+      "module": "system",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysConfigController.java"
+    },
+    {
+      "code": "system:config:add",
+      "module": "system",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysConfigController.java"
+    },
+    {
+      "code": "system:config:edit",
+      "module": "system",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysConfigController.java"
+    },
+    {
+      "code": "system:config:remove",
+      "module": "system",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysConfigController.java"
+    },
+    {
+      "code": "system:config:remove",
+      "module": "system",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysConfigController.java"
+    },
+    {
+      "code": "system:dept:list",
+      "module": "system",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysDeptController.java"
+    },
+    {
+      "code": "system:dept:list",
+      "module": "system",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysDeptController.java"
+    },
+    {
+      "code": "system:dept:query",
+      "module": "system",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysDeptController.java"
+    },
+    {
+      "code": "system:dept:add",
+      "module": "system",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysDeptController.java"
+    },
+    {
+      "code": "system:dept:edit",
+      "module": "system",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysDeptController.java"
+    },
+    {
+      "code": "system:dept:edit",
+      "module": "system",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysDeptController.java"
+    },
+    {
+      "code": "system:dept:remove",
+      "module": "system",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysDeptController.java"
+    },
+    {
+      "code": "system:dict:list",
+      "module": "system",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysDictDataController.java"
+    },
+    {
+      "code": "system:dict:export",
+      "module": "system",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysDictDataController.java"
+    },
+    {
+      "code": "system:dict:query",
+      "module": "system",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysDictDataController.java"
+    },
+    {
+      "code": "system:dict:add",
+      "module": "system",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysDictDataController.java"
+    },
+    {
+      "code": "system:dict:edit",
+      "module": "system",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysDictDataController.java"
+    },
+    {
+      "code": "system:dict:remove",
+      "module": "system",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysDictDataController.java"
+    },
+    {
+      "code": "system:dict:list",
+      "module": "system",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysDictTypeController.java"
+    },
+    {
+      "code": "system:dict:export",
+      "module": "system",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysDictTypeController.java"
+    },
+    {
+      "code": "system:dict:query",
+      "module": "system",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysDictTypeController.java"
+    },
+    {
+      "code": "system:dict:add",
+      "module": "system",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysDictTypeController.java"
+    },
+    {
+      "code": "system:dict:edit",
+      "module": "system",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysDictTypeController.java"
+    },
+    {
+      "code": "system:dict:remove",
+      "module": "system",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysDictTypeController.java"
+    },
+    {
+      "code": "system:dict:remove",
+      "module": "system",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysDictTypeController.java"
+    },
+    {
+      "code": "system:menu:list",
+      "module": "system",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysMenuController.java"
+    },
+    {
+      "code": "system:menu:query",
+      "module": "system",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysMenuController.java"
+    },
+    {
+      "code": "system:menu:add",
+      "module": "system",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysMenuController.java"
+    },
+    {
+      "code": "system:menu:edit",
+      "module": "system",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysMenuController.java"
+    },
+    {
+      "code": "system:menu:edit",
+      "module": "system",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysMenuController.java"
+    },
+    {
+      "code": "system:menu:remove",
+      "module": "system",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysMenuController.java"
+    },
+    {
+      "code": "system:notice:list",
+      "module": "system",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysNoticeController.java"
+    },
+    {
+      "code": "system:notice:add",
+      "module": "system",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysNoticeController.java"
+    },
+    {
+      "code": "system:notice:edit",
+      "module": "system",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysNoticeController.java"
+    },
+    {
+      "code": "system:notice:list",
+      "module": "system",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysNoticeController.java"
+    },
+    {
+      "code": "system:notice:remove",
+      "module": "system",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysNoticeController.java"
+    },
+    {
+      "code": "system:post:list",
+      "module": "system",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysPostController.java"
+    },
+    {
+      "code": "system:post:export",
+      "module": "system",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysPostController.java"
+    },
+    {
+      "code": "system:post:query",
+      "module": "system",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysPostController.java"
+    },
+    {
+      "code": "system:post:add",
+      "module": "system",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysPostController.java"
+    },
+    {
+      "code": "system:post:edit",
+      "module": "system",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysPostController.java"
+    },
+    {
+      "code": "system:post:remove",
+      "module": "system",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysPostController.java"
+    },
+    {
+      "code": "system:role:list",
+      "module": "system",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysRoleController.java"
+    },
+    {
+      "code": "system:role:export",
+      "module": "system",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysRoleController.java"
+    },
+    {
+      "code": "system:role:query",
+      "module": "system",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysRoleController.java"
+    },
+    {
+      "code": "system:role:add",
+      "module": "system",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysRoleController.java"
+    },
+    {
+      "code": "system:role:edit",
+      "module": "system",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysRoleController.java"
+    },
+    {
+      "code": "system:role:edit",
+      "module": "system",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysRoleController.java"
+    },
+    {
+      "code": "system:role:edit",
+      "module": "system",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysRoleController.java"
+    },
+    {
+      "code": "system:role:remove",
+      "module": "system",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysRoleController.java"
+    },
+    {
+      "code": "system:role:query",
+      "module": "system",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysRoleController.java"
+    },
+    {
+      "code": "system:role:list",
+      "module": "system",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysRoleController.java"
+    },
+    {
+      "code": "system:role:list",
+      "module": "system",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysRoleController.java"
+    },
+    {
+      "code": "system:role:edit",
+      "module": "system",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysRoleController.java"
+    },
+    {
+      "code": "system:role:edit",
+      "module": "system",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysRoleController.java"
+    },
+    {
+      "code": "system:role:edit",
+      "module": "system",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysRoleController.java"
+    },
+    {
+      "code": "system:role:query",
+      "module": "system",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysRoleController.java"
+    },
+    {
+      "code": "system:user:list",
+      "module": "system",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysUserController.java"
+    },
+    {
+      "code": "system:user:export",
+      "module": "system",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysUserController.java"
+    },
+    {
+      "code": "system:user:import",
+      "module": "system",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysUserController.java"
+    },
+    {
+      "code": "system:user:query",
+      "module": "system",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysUserController.java"
+    },
+    {
+      "code": "system:user:add",
+      "module": "system",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysUserController.java"
+    },
+    {
+      "code": "system:user:edit",
+      "module": "system",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysUserController.java"
+    },
+    {
+      "code": "system:user:remove",
+      "module": "system",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysUserController.java"
+    },
+    {
+      "code": "system:user:edit",
+      "module": "system",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysUserController.java"
+    },
+    {
+      "code": "system:user:query",
+      "module": "system",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysUserController.java"
+    },
+    {
+      "code": "system:user:edit",
+      "module": "system",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysUserController.java"
+    },
+    {
+      "code": "system:user:list",
+      "module": "system",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysUserController.java"
+    },
+    {
+      "code": "tool:gen:list",
+      "module": "tool",
+      "file": "ruoyi-generator/src/main/java/com/ruoyi/generator/controller/GenController.java"
+    },
+    {
+      "code": "tool:gen:query",
+      "module": "tool",
+      "file": "ruoyi-generator/src/main/java/com/ruoyi/generator/controller/GenController.java"
+    },
+    {
+      "code": "tool:gen:list",
+      "module": "tool",
+      "file": "ruoyi-generator/src/main/java/com/ruoyi/generator/controller/GenController.java"
+    },
+    {
+      "code": "tool:gen:list",
+      "module": "tool",
+      "file": "ruoyi-generator/src/main/java/com/ruoyi/generator/controller/GenController.java"
+    },
+    {
+      "code": "tool:gen:import",
+      "module": "tool",
+      "file": "ruoyi-generator/src/main/java/com/ruoyi/generator/controller/GenController.java"
+    },
+    {
+      "code": "tool:gen:edit",
+      "module": "tool",
+      "file": "ruoyi-generator/src/main/java/com/ruoyi/generator/controller/GenController.java"
+    },
+    {
+      "code": "tool:gen:remove",
+      "module": "tool",
+      "file": "ruoyi-generator/src/main/java/com/ruoyi/generator/controller/GenController.java"
+    },
+    {
+      "code": "tool:gen:preview",
+      "module": "tool",
+      "file": "ruoyi-generator/src/main/java/com/ruoyi/generator/controller/GenController.java"
+    },
+    {
+      "code": "tool:gen:code",
+      "module": "tool",
+      "file": "ruoyi-generator/src/main/java/com/ruoyi/generator/controller/GenController.java"
+    },
+    {
+      "code": "tool:gen:code",
+      "module": "tool",
+      "file": "ruoyi-generator/src/main/java/com/ruoyi/generator/controller/GenController.java"
+    },
+    {
+      "code": "tool:gen:edit",
+      "module": "tool",
+      "file": "ruoyi-generator/src/main/java/com/ruoyi/generator/controller/GenController.java"
+    },
+    {
+      "code": "tool:gen:code",
+      "module": "tool",
+      "file": "ruoyi-generator/src/main/java/com/ruoyi/generator/controller/GenController.java"
+    },
+    {
+      "code": "monitor:job:list",
+      "module": "monitor",
+      "file": "ruoyi-quartz/src/main/java/com/ruoyi/quartz/controller/SysJobController.java"
+    },
+    {
+      "code": "monitor:job:export",
+      "module": "monitor",
+      "file": "ruoyi-quartz/src/main/java/com/ruoyi/quartz/controller/SysJobController.java"
+    },
+    {
+      "code": "monitor:job:query",
+      "module": "monitor",
+      "file": "ruoyi-quartz/src/main/java/com/ruoyi/quartz/controller/SysJobController.java"
+    },
+    {
+      "code": "monitor:job:add",
+      "module": "monitor",
+      "file": "ruoyi-quartz/src/main/java/com/ruoyi/quartz/controller/SysJobController.java"
+    },
+    {
+      "code": "monitor:job:edit",
+      "module": "monitor",
+      "file": "ruoyi-quartz/src/main/java/com/ruoyi/quartz/controller/SysJobController.java"
+    },
+    {
+      "code": "monitor:job:remove",
+      "module": "monitor",
+      "file": "ruoyi-quartz/src/main/java/com/ruoyi/quartz/controller/SysJobController.java"
+    },
+    {
+      "code": "monitor:job:list",
+      "module": "monitor",
+      "file": "ruoyi-quartz/src/main/java/com/ruoyi/quartz/controller/SysJobLogController.java"
+    },
+    {
+      "code": "monitor:job:export",
+      "module": "monitor",
+      "file": "ruoyi-quartz/src/main/java/com/ruoyi/quartz/controller/SysJobLogController.java"
+    },
+    {
+      "code": "monitor:job:query",
+      "module": "monitor",
+      "file": "ruoyi-quartz/src/main/java/com/ruoyi/quartz/controller/SysJobLogController.java"
+    },
+    {
+      "code": "monitor:job:remove",
+      "module": "monitor",
+      "file": "ruoyi-quartz/src/main/java/com/ruoyi/quartz/controller/SysJobLogController.java"
+    },
+    {
+      "code": "monitor:job:remove",
+      "module": "monitor",
+      "file": "ruoyi-quartz/src/main/java/com/ruoyi/quartz/controller/SysJobLogController.java"
+    },
+    {
+      "code": "system:user:edit",
+      "module": "platform",
+      "file": "ruoyi-ui/src/router/index.js"
+    },
+    {
+      "code": "system:role:edit",
+      "module": "platform",
+      "file": "ruoyi-ui/src/router/index.js"
+    },
+    {
+      "code": "system:dict:list",
+      "module": "platform",
+      "file": "ruoyi-ui/src/router/index.js"
+    },
+    {
+      "code": "monitor:job:list",
+      "module": "platform",
+      "file": "ruoyi-ui/src/router/index.js"
+    },
+    {
+      "code": "tool:gen:edit",
+      "module": "platform",
+      "file": "ruoyi-ui/src/router/index.js"
+    },
+    {
+      "code": "system:user:add",
+      "module": "system",
+      "file": "ruoyi-ui/src/utils/permission.js"
+    },
+    {
+      "code": "system:user:edit",
+      "module": "system",
+      "file": "ruoyi-ui/src/utils/permission.js"
+    },
+    {
+      "code": "monitor:job:add",
+      "module": "monitor",
+      "file": "ruoyi-ui/src/views/monitor/job/index.vue"
+    },
+    {
+      "code": "monitor:job:edit",
+      "module": "monitor",
+      "file": "ruoyi-ui/src/views/monitor/job/index.vue"
+    },
+    {
+      "code": "monitor:job:remove",
+      "module": "monitor",
+      "file": "ruoyi-ui/src/views/monitor/job/index.vue"
+    },
+    {
+      "code": "monitor:job:export",
+      "module": "monitor",
+      "file": "ruoyi-ui/src/views/monitor/job/index.vue"
+    },
+    {
+      "code": "monitor:job:query",
+      "module": "monitor",
+      "file": "ruoyi-ui/src/views/monitor/job/index.vue"
+    },
+    {
+      "code": "monitor:job:edit",
+      "module": "monitor",
+      "file": "ruoyi-ui/src/views/monitor/job/index.vue"
+    },
+    {
+      "code": "monitor:job:remove",
+      "module": "monitor",
+      "file": "ruoyi-ui/src/views/monitor/job/index.vue"
+    },
+    {
+      "code": "monitor:job:query",
+      "module": "monitor",
+      "file": "ruoyi-ui/src/views/monitor/job/index.vue"
+    },
+    {
+      "code": "monitor:job:remove",
+      "module": "monitor",
+      "file": "ruoyi-ui/src/views/monitor/job/log.vue"
+    },
+    {
+      "code": "monitor:job:remove",
+      "module": "monitor",
+      "file": "ruoyi-ui/src/views/monitor/job/log.vue"
+    },
+    {
+      "code": "monitor:job:export",
+      "module": "monitor",
+      "file": "ruoyi-ui/src/views/monitor/job/log.vue"
+    },
+    {
+      "code": "monitor:job:query",
+      "module": "monitor",
+      "file": "ruoyi-ui/src/views/monitor/job/log.vue"
+    },
+    {
+      "code": "monitor:logininfor:remove",
+      "module": "monitor",
+      "file": "ruoyi-ui/src/views/monitor/logininfor/index.vue"
+    },
+    {
+      "code": "monitor:logininfor:remove",
+      "module": "monitor",
+      "file": "ruoyi-ui/src/views/monitor/logininfor/index.vue"
+    },
+    {
+      "code": "monitor:logininfor:unlock",
+      "module": "monitor",
+      "file": "ruoyi-ui/src/views/monitor/logininfor/index.vue"
+    },
+    {
+      "code": "monitor:logininfor:export",
+      "module": "monitor",
+      "file": "ruoyi-ui/src/views/monitor/logininfor/index.vue"
+    },
+    {
+      "code": "monitor:operlog:remove",
+      "module": "monitor",
+      "file": "ruoyi-ui/src/views/monitor/operlog/index.vue"
+    },
+    {
+      "code": "monitor:operlog:remove",
+      "module": "monitor",
+      "file": "ruoyi-ui/src/views/monitor/operlog/index.vue"
+    },
+    {
+      "code": "monitor:operlog:export",
+      "module": "monitor",
+      "file": "ruoyi-ui/src/views/monitor/operlog/index.vue"
+    },
+    {
+      "code": "monitor:operlog:query",
+      "module": "monitor",
+      "file": "ruoyi-ui/src/views/monitor/operlog/index.vue"
+    },
+    {
+      "code": "system:config:add",
+      "module": "system",
+      "file": "ruoyi-ui/src/views/system/config/index.vue"
+    },
+    {
+      "code": "system:config:edit",
+      "module": "system",
+      "file": "ruoyi-ui/src/views/system/config/index.vue"
+    },
+    {
+      "code": "system:config:remove",
+      "module": "system",
+      "file": "ruoyi-ui/src/views/system/config/index.vue"
+    },
+    {
+      "code": "system:config:export",
+      "module": "system",
+      "file": "ruoyi-ui/src/views/system/config/index.vue"
+    },
+    {
+      "code": "system:config:remove",
+      "module": "system",
+      "file": "ruoyi-ui/src/views/system/config/index.vue"
+    },
+    {
+      "code": "system:config:edit",
+      "module": "system",
+      "file": "ruoyi-ui/src/views/system/config/index.vue"
+    },
+    {
+      "code": "system:config:remove",
+      "module": "system",
+      "file": "ruoyi-ui/src/views/system/config/index.vue"
+    },
+    {
+      "code": "system:dept:add",
+      "module": "system",
+      "file": "ruoyi-ui/src/views/system/dept/index.vue"
+    },
+    {
+      "code": "system:dept:edit",
+      "module": "system",
+      "file": "ruoyi-ui/src/views/system/dept/index.vue"
+    },
+    {
+      "code": "system:dept:edit",
+      "module": "system",
+      "file": "ruoyi-ui/src/views/system/dept/index.vue"
+    },
+    {
+      "code": "system:dept:add",
+      "module": "system",
+      "file": "ruoyi-ui/src/views/system/dept/index.vue"
+    },
+    {
+      "code": "system:dept:remove",
+      "module": "system",
+      "file": "ruoyi-ui/src/views/system/dept/index.vue"
+    },
+    {
+      "code": "system:dict:add",
+      "module": "system",
+      "file": "ruoyi-ui/src/views/system/dict/data.vue"
+    },
+    {
+      "code": "system:dict:edit",
+      "module": "system",
+      "file": "ruoyi-ui/src/views/system/dict/data.vue"
+    },
+    {
+      "code": "system:dict:remove",
+      "module": "system",
+      "file": "ruoyi-ui/src/views/system/dict/data.vue"
+    },
+    {
+      "code": "system:dict:export",
+      "module": "system",
+      "file": "ruoyi-ui/src/views/system/dict/data.vue"
+    },
+    {
+      "code": "system:dict:edit",
+      "module": "system",
+      "file": "ruoyi-ui/src/views/system/dict/data.vue"
+    },
+    {
+      "code": "system:dict:remove",
+      "module": "system",
+      "file": "ruoyi-ui/src/views/system/dict/data.vue"
+    },
+    {
+      "code": "system:dict:add",
+      "module": "system",
+      "file": "ruoyi-ui/src/views/system/dict/index.vue"
+    },
+    {
+      "code": "system:dict:edit",
+      "module": "system",
+      "file": "ruoyi-ui/src/views/system/dict/index.vue"
+    },
+    {
+      "code": "system:dict:remove",
+      "module": "system",
+      "file": "ruoyi-ui/src/views/system/dict/index.vue"
+    },
+    {
+      "code": "system:dict:export",
+      "module": "system",
+      "file": "ruoyi-ui/src/views/system/dict/index.vue"
+    },
+    {
+      "code": "system:dict:remove",
+      "module": "system",
+      "file": "ruoyi-ui/src/views/system/dict/index.vue"
+    },
+    {
+      "code": "system:dict:edit",
+      "module": "system",
+      "file": "ruoyi-ui/src/views/system/dict/index.vue"
+    },
+    {
+      "code": "system:dict:edit",
+      "module": "system",
+      "file": "ruoyi-ui/src/views/system/dict/index.vue"
+    },
+    {
+      "code": "system:dict:remove",
+      "module": "system",
+      "file": "ruoyi-ui/src/views/system/dict/index.vue"
+    },
+    {
+      "code": "system:menu:add",
+      "module": "system",
+      "file": "ruoyi-ui/src/views/system/menu/index.vue"
+    },
+    {
+      "code": "system:menu:edit",
+      "module": "system",
+      "file": "ruoyi-ui/src/views/system/menu/index.vue"
+    },
+    {
+      "code": "system:menu:edit",
+      "module": "system",
+      "file": "ruoyi-ui/src/views/system/menu/index.vue"
+    },
+    {
+      "code": "system:menu:add",
+      "module": "system",
+      "file": "ruoyi-ui/src/views/system/menu/index.vue"
+    },
+    {
+      "code": "system:menu:remove",
+      "module": "system",
+      "file": "ruoyi-ui/src/views/system/menu/index.vue"
+    },
+    {
+      "code": "system:user:list",
+      "module": "system",
+      "file": "ruoyi-ui/src/views/system/menu/index.vue"
+    },
+    {
+      "code": "system:notice:add",
+      "module": "system",
+      "file": "ruoyi-ui/src/views/system/notice/index.vue"
+    },
+    {
+      "code": "system:notice:edit",
+      "module": "system",
+      "file": "ruoyi-ui/src/views/system/notice/index.vue"
+    },
+    {
+      "code": "system:notice:remove",
+      "module": "system",
+      "file": "ruoyi-ui/src/views/system/notice/index.vue"
+    },
+    {
+      "code": "system:notice:list",
+      "module": "system",
+      "file": "ruoyi-ui/src/views/system/notice/index.vue"
+    },
+    {
+      "code": "system:notice:edit",
+      "module": "system",
+      "file": "ruoyi-ui/src/views/system/notice/index.vue"
+    },
+    {
+      "code": "system:notice:remove",
+      "module": "system",
+      "file": "ruoyi-ui/src/views/system/notice/index.vue"
+    },
+    {
+      "code": "system:post:add",
+      "module": "system",
+      "file": "ruoyi-ui/src/views/system/post/index.vue"
+    },
+    {
+      "code": "system:post:edit",
+      "module": "system",
+      "file": "ruoyi-ui/src/views/system/post/index.vue"
+    },
+    {
+      "code": "system:post:remove",
+      "module": "system",
+      "file": "ruoyi-ui/src/views/system/post/index.vue"
+    },
+    {
+      "code": "system:post:export",
+      "module": "system",
+      "file": "ruoyi-ui/src/views/system/post/index.vue"
+    },
+    {
+      "code": "system:post:edit",
+      "module": "system",
+      "file": "ruoyi-ui/src/views/system/post/index.vue"
+    },
+    {
+      "code": "system:post:remove",
+      "module": "system",
+      "file": "ruoyi-ui/src/views/system/post/index.vue"
+    },
+    {
+      "code": "system:role:add",
+      "module": "system",
+      "file": "ruoyi-ui/src/views/system/role/authUser.vue"
+    },
+    {
+      "code": "system:role:remove",
+      "module": "system",
+      "file": "ruoyi-ui/src/views/system/role/authUser.vue"
+    },
+    {
+      "code": "system:role:remove",
+      "module": "system",
+      "file": "ruoyi-ui/src/views/system/role/authUser.vue"
+    },
+    {
+      "code": "system:role:add",
+      "module": "system",
+      "file": "ruoyi-ui/src/views/system/role/index.vue"
+    },
+    {
+      "code": "system:role:edit",
+      "module": "system",
+      "file": "ruoyi-ui/src/views/system/role/index.vue"
+    },
+    {
+      "code": "system:role:remove",
+      "module": "system",
+      "file": "ruoyi-ui/src/views/system/role/index.vue"
+    },
+    {
+      "code": "system:role:export",
+      "module": "system",
+      "file": "ruoyi-ui/src/views/system/role/index.vue"
+    },
+    {
+      "code": "system:role:edit",
+      "module": "system",
+      "file": "ruoyi-ui/src/views/system/role/index.vue"
+    },
+    {
+      "code": "system:role:remove",
+      "module": "system",
+      "file": "ruoyi-ui/src/views/system/role/index.vue"
+    },
+    {
+      "code": "system:role:edit",
+      "module": "system",
+      "file": "ruoyi-ui/src/views/system/role/index.vue"
+    },
+    {
+      "code": "system:role:edit",
+      "module": "system",
+      "file": "ruoyi-ui/src/views/system/role/index.vue"
+    },
+    {
+      "code": "system:user:add",
+      "module": "system",
+      "file": "ruoyi-ui/src/views/system/user/index.vue"
+    },
+    {
+      "code": "system:user:edit",
+      "module": "system",
+      "file": "ruoyi-ui/src/views/system/user/index.vue"
+    },
+    {
+      "code": "system:user:remove",
+      "module": "system",
+      "file": "ruoyi-ui/src/views/system/user/index.vue"
+    },
+    {
+      "code": "system:user:import",
+      "module": "system",
+      "file": "ruoyi-ui/src/views/system/user/index.vue"
+    },
+    {
+      "code": "system:user:export",
+      "module": "system",
+      "file": "ruoyi-ui/src/views/system/user/index.vue"
+    },
+    {
+      "code": "system:user:edit",
+      "module": "system",
+      "file": "ruoyi-ui/src/views/system/user/index.vue"
+    },
+    {
+      "code": "system:user:remove",
+      "module": "system",
+      "file": "ruoyi-ui/src/views/system/user/index.vue"
+    },
+    {
+      "code": "system:user:edit",
+      "module": "system",
+      "file": "ruoyi-ui/src/views/system/user/index.vue"
+    },
+    {
+      "code": "tool:gen:code",
+      "module": "tool",
+      "file": "ruoyi-ui/src/views/tool/gen/index.vue"
+    },
+    {
+      "code": "tool:gen:import",
+      "module": "tool",
+      "file": "ruoyi-ui/src/views/tool/gen/index.vue"
+    },
+    {
+      "code": "tool:gen:edit",
+      "module": "tool",
+      "file": "ruoyi-ui/src/views/tool/gen/index.vue"
+    },
+    {
+      "code": "tool:gen:remove",
+      "module": "tool",
+      "file": "ruoyi-ui/src/views/tool/gen/index.vue"
+    },
+    {
+      "code": "tool:gen:preview",
+      "module": "tool",
+      "file": "ruoyi-ui/src/views/tool/gen/index.vue"
+    },
+    {
+      "code": "tool:gen:edit",
+      "module": "tool",
+      "file": "ruoyi-ui/src/views/tool/gen/index.vue"
+    },
+    {
+      "code": "tool:gen:remove",
+      "module": "tool",
+      "file": "ruoyi-ui/src/views/tool/gen/index.vue"
+    },
+    {
+      "code": "tool:gen:edit",
+      "module": "tool",
+      "file": "ruoyi-ui/src/views/tool/gen/index.vue"
+    },
+    {
+      "code": "tool:gen:code",
+      "module": "tool",
+      "file": "ruoyi-ui/src/views/tool/gen/index.vue"
+    },
+    {
+      "code": "system:user:list",
+      "module": "system",
+      "file": "sql/ry_20260417.sql"
+    },
+    {
+      "code": "system:role:list",
+      "module": "system",
+      "file": "sql/ry_20260417.sql"
+    },
+    {
+      "code": "system:menu:list",
+      "module": "system",
+      "file": "sql/ry_20260417.sql"
+    },
+    {
+      "code": "system:dept:list",
+      "module": "system",
+      "file": "sql/ry_20260417.sql"
+    },
+    {
+      "code": "system:post:list",
+      "module": "system",
+      "file": "sql/ry_20260417.sql"
+    },
+    {
+      "code": "system:dict:list",
+      "module": "system",
+      "file": "sql/ry_20260417.sql"
+    },
+    {
+      "code": "system:config:list",
+      "module": "system",
+      "file": "sql/ry_20260417.sql"
+    },
+    {
+      "code": "system:notice:list",
+      "module": "system",
+      "file": "sql/ry_20260417.sql"
+    },
+    {
+      "code": "monitor:online:list",
+      "module": "system",
+      "file": "sql/ry_20260417.sql"
+    },
+    {
+      "code": "monitor:job:list",
+      "module": "system",
+      "file": "sql/ry_20260417.sql"
+    },
+    {
+      "code": "monitor:druid:list",
+      "module": "system",
+      "file": "sql/ry_20260417.sql"
+    },
+    {
+      "code": "monitor:server:list",
+      "module": "system",
+      "file": "sql/ry_20260417.sql"
+    },
+    {
+      "code": "monitor:cache:list",
+      "module": "system",
+      "file": "sql/ry_20260417.sql"
+    },
+    {
+      "code": "monitor:cache:list",
+      "module": "system",
+      "file": "sql/ry_20260417.sql"
+    },
+    {
+      "code": "tool:build:list",
+      "module": "system",
+      "file": "sql/ry_20260417.sql"
+    },
+    {
+      "code": "tool:gen:list",
+      "module": "system",
+      "file": "sql/ry_20260417.sql"
+    },
+    {
+      "code": "tool:swagger:list",
+      "module": "system",
+      "file": "sql/ry_20260417.sql"
+    },
+    {
+      "code": "monitor:operlog:list",
+      "module": "system",
+      "file": "sql/ry_20260417.sql"
+    },
+    {
+      "code": "monitor:logininfor:list",
+      "module": "system",
+      "file": "sql/ry_20260417.sql"
+    },
+    {
+      "code": "system:user:query",
+      "module": "system",
+      "file": "sql/ry_20260417.sql"
+    },
+    {
+      "code": "system:user:add",
+      "module": "system",
+      "file": "sql/ry_20260417.sql"
+    },
+    {
+      "code": "system:user:edit",
+      "module": "system",
+      "file": "sql/ry_20260417.sql"
+    },
+    {
+      "code": "system:user:remove",
+      "module": "system",
+      "file": "sql/ry_20260417.sql"
+    },
+    {
+      "code": "system:user:export",
+      "module": "system",
+      "file": "sql/ry_20260417.sql"
+    },
+    {
+      "code": "system:user:import",
+      "module": "system",
+      "file": "sql/ry_20260417.sql"
+    },
+    {
+      "code": "system:role:query",
+      "module": "system",
+      "file": "sql/ry_20260417.sql"
+    },
+    {
+      "code": "system:role:add",
+      "module": "system",
+      "file": "sql/ry_20260417.sql"
+    },
+    {
+      "code": "system:role:edit",
+      "module": "system",
+      "file": "sql/ry_20260417.sql"
+    },
+    {
+      "code": "system:role:remove",
+      "module": "system",
+      "file": "sql/ry_20260417.sql"
+    },
+    {
+      "code": "system:role:export",
+      "module": "system",
+      "file": "sql/ry_20260417.sql"
+    },
+    {
+      "code": "system:menu:query",
+      "module": "system",
+      "file": "sql/ry_20260417.sql"
+    },
+    {
+      "code": "system:menu:add",
+      "module": "system",
+      "file": "sql/ry_20260417.sql"
+    },
+    {
+      "code": "system:menu:edit",
+      "module": "system",
+      "file": "sql/ry_20260417.sql"
+    },
+    {
+      "code": "system:menu:remove",
+      "module": "system",
+      "file": "sql/ry_20260417.sql"
+    },
+    {
+      "code": "system:dept:query",
+      "module": "system",
+      "file": "sql/ry_20260417.sql"
+    },
+    {
+      "code": "system:dept:add",
+      "module": "system",
+      "file": "sql/ry_20260417.sql"
+    },
+    {
+      "code": "system:dept:edit",
+      "module": "system",
+      "file": "sql/ry_20260417.sql"
+    },
+    {
+      "code": "system:dept:remove",
+      "module": "system",
+      "file": "sql/ry_20260417.sql"
+    },
+    {
+      "code": "system:post:query",
+      "module": "system",
+      "file": "sql/ry_20260417.sql"
+    },
+    {
+      "code": "system:post:add",
+      "module": "system",
+      "file": "sql/ry_20260417.sql"
+    },
+    {
+      "code": "system:post:edit",
+      "module": "system",
+      "file": "sql/ry_20260417.sql"
+    },
+    {
+      "code": "system:post:remove",
+      "module": "system",
+      "file": "sql/ry_20260417.sql"
+    },
+    {
+      "code": "system:post:export",
+      "module": "system",
+      "file": "sql/ry_20260417.sql"
+    },
+    {
+      "code": "system:dict:query",
+      "module": "system",
+      "file": "sql/ry_20260417.sql"
+    },
+    {
+      "code": "system:dict:add",
+      "module": "system",
+      "file": "sql/ry_20260417.sql"
+    },
+    {
+      "code": "system:dict:edit",
+      "module": "system",
+      "file": "sql/ry_20260417.sql"
+    },
+    {
+      "code": "system:dict:remove",
+      "module": "system",
+      "file": "sql/ry_20260417.sql"
+    },
+    {
+      "code": "system:dict:export",
+      "module": "system",
+      "file": "sql/ry_20260417.sql"
+    },
+    {
+      "code": "system:config:query",
+      "module": "system",
+      "file": "sql/ry_20260417.sql"
+    },
+    {
+      "code": "system:config:add",
+      "module": "system",
+      "file": "sql/ry_20260417.sql"
+    },
+    {
+      "code": "system:config:edit",
+      "module": "system",
+      "file": "sql/ry_20260417.sql"
+    },
+    {
+      "code": "system:config:remove",
+      "module": "system",
+      "file": "sql/ry_20260417.sql"
+    },
+    {
+      "code": "system:config:export",
+      "module": "system",
+      "file": "sql/ry_20260417.sql"
+    },
+    {
+      "code": "system:notice:query",
+      "module": "system",
+      "file": "sql/ry_20260417.sql"
+    },
+    {
+      "code": "system:notice:add",
+      "module": "system",
+      "file": "sql/ry_20260417.sql"
+    },
+    {
+      "code": "system:notice:edit",
+      "module": "system",
+      "file": "sql/ry_20260417.sql"
+    },
+    {
+      "code": "system:notice:remove",
+      "module": "system",
+      "file": "sql/ry_20260417.sql"
+    },
+    {
+      "code": "monitor:operlog:query",
+      "module": "system",
+      "file": "sql/ry_20260417.sql"
+    },
+    {
+      "code": "monitor:operlog:remove",
+      "module": "system",
+      "file": "sql/ry_20260417.sql"
+    },
+    {
+      "code": "monitor:operlog:export",
+      "module": "system",
+      "file": "sql/ry_20260417.sql"
+    },
+    {
+      "code": "monitor:logininfor:query",
+      "module": "system",
+      "file": "sql/ry_20260417.sql"
+    },
+    {
+      "code": "monitor:logininfor:remove",
+      "module": "system",
+      "file": "sql/ry_20260417.sql"
+    },
+    {
+      "code": "monitor:logininfor:export",
+      "module": "system",
+      "file": "sql/ry_20260417.sql"
+    },
+    {
+      "code": "monitor:logininfor:unlock",
+      "module": "system",
+      "file": "sql/ry_20260417.sql"
+    },
+    {
+      "code": "monitor:online:query",
+      "module": "system",
+      "file": "sql/ry_20260417.sql"
+    },
+    {
+      "code": "monitor:job:query",
+      "module": "system",
+      "file": "sql/ry_20260417.sql"
+    },
+    {
+      "code": "monitor:job:add",
+      "module": "system",
+      "file": "sql/ry_20260417.sql"
+    },
+    {
+      "code": "monitor:job:edit",
+      "module": "system",
+      "file": "sql/ry_20260417.sql"
+    },
+    {
+      "code": "monitor:job:remove",
+      "module": "system",
+      "file": "sql/ry_20260417.sql"
+    },
+    {
+      "code": "monitor:job:export",
+      "module": "system",
+      "file": "sql/ry_20260417.sql"
+    },
+    {
+      "code": "tool:gen:query",
+      "module": "system",
+      "file": "sql/ry_20260417.sql"
+    },
+    {
+      "code": "tool:gen:edit",
+      "module": "system",
+      "file": "sql/ry_20260417.sql"
+    },
+    {
+      "code": "tool:gen:remove",
+      "module": "system",
+      "file": "sql/ry_20260417.sql"
+    },
+    {
+      "code": "tool:gen:import",
+      "module": "system",
+      "file": "sql/ry_20260417.sql"
+    },
+    {
+      "code": "tool:gen:preview",
+      "module": "system",
+      "file": "sql/ry_20260417.sql"
+    },
+    {
+      "code": "tool:gen:code",
+      "module": "system",
+      "file": "sql/ry_20260417.sql"
+    }
+  ]
 }

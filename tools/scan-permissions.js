@@ -4,6 +4,11 @@ import { configuredPaths, inferFeatureFromPath, listFilesUnderRoots, readFeature
 
 const PERMISSION_REGEX = /\b[a-z][a-z0-9-]*:[a-z][a-z0-9-]*(?::[a-z][a-z0-9-]*)+\b/g;
 
+function hasRegisteredPermissionPrefix(code, features) {
+  const prefix = String(code).split(':')[0];
+  return (features || []).some((feature) => feature.status !== 'removed' && feature.id === prefix);
+}
+
 export function buildPermissionScan() {
   const config = configuredPaths();
   const features = readFeatureRegistry();
@@ -12,6 +17,9 @@ export function buildPermissionScan() {
   for (const file of files) {
     const text = readSafe(file);
     for (const match of text.matchAll(PERMISSION_REGEX)) {
+      if (!hasRegisteredPermissionPrefix(match[0], features)) {
+        continue;
+      }
       permissions.push({ code: match[0], module: inferFeatureFromPath(file, features), file });
     }
   }

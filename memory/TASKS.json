@@ -1,4 +1,38 @@
 {
   "schemaVersion": 1,
-  "tasks": []
+  "tasks": [
+    {
+      "id": "TASK-0002",
+      "feature": "platform",
+      "title": "Track RuoYi + Vue3 base integration and runtime validation",
+      "status": "verified",
+      "owner": "Codex",
+      "priority": "high",
+      "statusReason": "RuoYi platform base has been merged and registered; baseline closeout cleaned registry names, scanner false positives, duplicate routes, db table false positives, Maven runtime-tool discovery, local runtime smoke validation, remove-feature test timeout root cause, and repeated-half route ownership residue.",
+      "nextStep": "Before production-style claims, add deeper checks for CRUD mutations, import/export, Druid authentication, Swagger behavior, scheduled jobs, production frontend build, and dependency audit remediation.",
+      "blockedBy": [],
+      "verification": [
+        "npm run profile:setup",
+        "npm run scan:all",
+        "npm run finalize:change",
+        "npm run check",
+        "npm run check with Maven resolved from ai/rules/runtime-policy.json",
+        "MySQL sql/ry_20260417.sql and sql/quartz.sql imported into isolated database my_ry_vue_runtime",
+        "Redis DB1 ping returned PONG",
+        "Backend started on http://localhost:18080",
+        "Frontend started on http://127.0.0.1:5173",
+        "Browser verified captcha, login, home, system management, monitor, and code generation",
+        "check:diff and scan:duplicates skip nested dependency/build output directories",
+        "remove-feature apply test fixture and document scan skip nested node_modules, target, dist, build, .vite, coverage, and tmp directories",
+        "ownership sync filters repeated-half routes such as /system/config/system/config and updates graph/ui-graph.json during scan:all",
+        "node --test tests/remove-feature.test.js passed after the pre-fix timeout reproduction",
+        "npm test passed with 76 Node tests",
+        "npm run check passed after npm run scan:all"
+      ],
+      "latestSession": "memory/sessions/2026-06-22-ruoyi-vue3-base.md",
+      "handoverRequired": true,
+      "updatedAt": "2026-06-22",
+      "latestChange": "CR-20260622T015319Z-ruoyi-vue3"
+    }
+  ]
 }

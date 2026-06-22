@@ -1,10 +1,527 @@
 {
   "schemaVersion": 1,
   "generatedBy": "tools/scan-db-schema.js",
-  "adapter": "generic",
+  "adapter": "ruoyi",
   "roots": [
+    "sql",
+    "ruoyi-admin/sql",
+    "ruoyi-business/src/main/resources/mapper",
+    "ruoyi-generator/src/main/resources/mapper",
+    "ruoyi-quartz/src/main/resources/mapper",
+    "ruoyi-system/src/main/resources/mapper",
     "db",
     "backend"
   ],
-  "tables": []
+  "tables": [
+    {
+      "name": "QRTZ_JOB_DETAILS",
+      "module": "",
+      "file": "sql/quartz.sql",
+      "source": "create-table"
+    },
+    {
+      "name": "QRTZ_TRIGGERS",
+      "module": "",
+      "file": "sql/quartz.sql",
+      "source": "create-table"
+    },
+    {
+      "name": "QRTZ_SIMPLE_TRIGGERS",
+      "module": "",
+      "file": "sql/quartz.sql",
+      "source": "create-table"
+    },
+    {
+      "name": "QRTZ_CRON_TRIGGERS",
+      "module": "",
+      "file": "sql/quartz.sql",
+      "source": "create-table"
+    },
+    {
+      "name": "QRTZ_BLOB_TRIGGERS",
+      "module": "",
+      "file": "sql/quartz.sql",
+      "source": "create-table"
+    },
+    {
+      "name": "QRTZ_CALENDARS",
+      "module": "",
+      "file": "sql/quartz.sql",
+      "source": "create-table"
+    },
+    {
+      "name": "QRTZ_PAUSED_TRIGGER_GRPS",
+      "module": "",
+      "file": "sql/quartz.sql",
+      "source": "create-table"
+    },
+    {
+      "name": "QRTZ_FIRED_TRIGGERS",
+      "module": "",
+      "file": "sql/quartz.sql",
+      "source": "create-table"
+    },
+    {
+      "name": "QRTZ_SCHEDULER_STATE",
+      "module": "",
+      "file": "sql/quartz.sql",
+      "source": "create-table"
+    },
+    {
+      "name": "QRTZ_LOCKS",
+      "module": "",
+      "file": "sql/quartz.sql",
+      "source": "create-table"
+    },
+    {
+      "name": "QRTZ_SIMPROP_TRIGGERS",
+      "module": "",
+      "file": "sql/quartz.sql",
+      "source": "create-table"
+    },
+    {
+      "name": "sys_dept",
+      "module": "system",
+      "file": "sql/ry_20260417.sql",
+      "source": "create-table"
+    },
+    {
+      "name": "sys_user",
+      "module": "system",
+      "file": "sql/ry_20260417.sql",
+      "source": "create-table"
+    },
+    {
+      "name": "sys_post",
+      "module": "system",
+      "file": "sql/ry_20260417.sql",
+      "source": "create-table"
+    },
+    {
+      "name": "sys_role",
+      "module": "system",
+      "file": "sql/ry_20260417.sql",
+      "source": "create-table"
+    },
+    {
+      "name": "sys_menu",
+      "module": "system",
+      "file": "sql/ry_20260417.sql",
+      "source": "create-table"
+    },
+    {
+      "name": "sys_user_role",
+      "module": "system",
+      "file": "sql/ry_20260417.sql",
+      "source": "create-table"
+    },
+    {
+      "name": "sys_role_menu",
+      "module": "system",
+      "file": "sql/ry_20260417.sql",
+      "source": "create-table"
+    },
+    {
+      "name": "sys_role_dept",
+      "module": "system",
+      "file": "sql/ry_20260417.sql",
+      "source": "create-table"
+    },
+    {
+      "name": "sys_user_post",
+      "module": "system",
+      "file": "sql/ry_20260417.sql",
+      "source": "create-table"
+    },
+    {
+      "name": "sys_oper_log",
+      "module": "system",
+      "file": "sql/ry_20260417.sql",
+      "source": "create-table"
+    },
+    {
+      "name": "sys_dict_type",
+      "module": "system",
+      "file": "sql/ry_20260417.sql",
+      "source": "create-table"
+    },
+    {
+      "name": "sys_dict_data",
+      "module": "system",
+      "file": "sql/ry_20260417.sql",
+      "source": "create-table"
+    },
+    {
+      "name": "sys_config",
+      "module": "system",
+      "file": "sql/ry_20260417.sql",
+      "source": "create-table"
+    },
+    {
+      "name": "sys_logininfor",
+      "module": "system",
+      "file": "sql/ry_20260417.sql",
+      "source": "create-table"
+    },
+    {
+      "name": "sys_job",
+      "module": "system",
+      "file": "sql/ry_20260417.sql",
+      "source": "create-table"
+    },
+    {
+      "name": "sys_job_log",
+      "module": "system",
+      "file": "sql/ry_20260417.sql",
+      "source": "create-table"
+    },
+    {
+      "name": "sys_notice",
+      "module": "system",
+      "file": "sql/ry_20260417.sql",
+      "source": "create-table"
+    },
+    {
+      "name": "sys_notice_read",
+      "module": "system",
+      "file": "sql/ry_20260417.sql",
+      "source": "create-table"
+    },
+    {
+      "name": "gen_table",
+      "module": "system",
+      "file": "sql/ry_20260417.sql",
+      "source": "create-table"
+    },
+    {
+      "name": "gen_table_column",
+      "module": "system",
+      "file": "sql/ry_20260417.sql",
+      "source": "create-table"
+    },
+    {
+      "name": "sys_dept",
+      "module": "system",
+      "file": "sql/ry_20260417.sql",
+      "source": "sql-reference"
+    },
+    {
+      "name": "sys_user",
+      "module": "system",
+      "file": "sql/ry_20260417.sql",
+      "source": "sql-reference"
+    },
+    {
+      "name": "sys_post",
+      "module": "system",
+      "file": "sql/ry_20260417.sql",
+      "source": "sql-reference"
+    },
+    {
+      "name": "sys_role",
+      "module": "system",
+      "file": "sql/ry_20260417.sql",
+      "source": "sql-reference"
+    },
+    {
+      "name": "sys_menu",
+      "module": "system",
+      "file": "sql/ry_20260417.sql",
+      "source": "sql-reference"
+    },
+    {
+      "name": "sys_user_role",
+      "module": "system",
+      "file": "sql/ry_20260417.sql",
+      "source": "sql-reference"
+    },
+    {
+      "name": "sys_role_menu",
+      "module": "system",
+      "file": "sql/ry_20260417.sql",
+      "source": "sql-reference"
+    },
+    {
+      "name": "sys_role_dept",
+      "module": "system",
+      "file": "sql/ry_20260417.sql",
+      "source": "sql-reference"
+    },
+    {
+      "name": "sys_user_post",
+      "module": "system",
+      "file": "sql/ry_20260417.sql",
+      "source": "sql-reference"
+    },
+    {
+      "name": "sys_dict_type",
+      "module": "system",
+      "file": "sql/ry_20260417.sql",
+      "source": "sql-reference"
+    },
+    {
+      "name": "sys_dict_data",
+      "module": "system",
+      "file": "sql/ry_20260417.sql",
+      "source": "sql-reference"
+    },
+    {
+      "name": "sys_config",
+      "module": "system",
+      "file": "sql/ry_20260417.sql",
+      "source": "sql-reference"
+    },
+    {
+      "name": "sys_job",
+      "module": "system",
+      "file": "sql/ry_20260417.sql",
+      "source": "sql-reference"
+    },
+    {
+      "name": "sys_notice",
+      "module": "system",
+      "file": "sql/ry_20260417.sql",
+      "source": "sql-reference"
+    },
+    {
+      "name": "gen_table_column",
+      "module": "",
+      "file": "ruoyi-generator/src/main/resources/mapper/generator/GenTableColumnMapper.xml",
+      "source": "sql-reference"
+    },
+    {
+      "name": "information_schema",
+      "module": "",
+      "file": "ruoyi-generator/src/main/resources/mapper/generator/GenTableColumnMapper.xml",
+      "source": "sql-reference"
+    },
+    {
+      "name": "gen_table",
+      "module": "",
+      "file": "ruoyi-generator/src/main/resources/mapper/generator/GenTableMapper.xml",
+      "source": "sql-reference"
+    },
+    {
+      "name": "information_schema",
+      "module": "",
+      "file": "ruoyi-generator/src/main/resources/mapper/generator/GenTableMapper.xml",
+      "source": "sql-reference"
+    },
+    {
+      "name": "gen_table_column",
+      "module": "",
+      "file": "ruoyi-generator/src/main/resources/mapper/generator/GenTableMapper.xml",
+      "source": "sql-reference"
+    },
+    {
+      "name": "sys_job_log",
+      "module": "",
+      "file": "ruoyi-quartz/src/main/resources/mapper/quartz/SysJobLogMapper.xml",
+      "source": "sql-reference"
+    },
+    {
+      "name": "sys_job",
+      "module": "",
+      "file": "ruoyi-quartz/src/main/resources/mapper/quartz/SysJobMapper.xml",
+      "source": "sql-reference"
+    },
+    {
+      "name": "sys_config",
+      "module": "system",
+      "file": "ruoyi-system/src/main/resources/mapper/system/SysConfigMapper.xml",
+      "source": "sql-reference"
+    },
+    {
+      "name": "sys_dept",
+      "module": "system",
+      "file": "ruoyi-system/src/main/resources/mapper/system/SysDeptMapper.xml",
+      "source": "sql-reference"
+    },
+    {
+      "name": "sys_role_dept",
+      "module": "system",
+      "file": "ruoyi-system/src/main/resources/mapper/system/SysDeptMapper.xml",
+      "source": "sql-reference"
+    },
+    {
+      "name": "sys_user",
+      "module": "system",
+      "file": "ruoyi-system/src/main/resources/mapper/system/SysDeptMapper.xml",
+      "source": "sql-reference"
+    },
+    {
+      "name": "sys_dict_data",
+      "module": "system",
+      "file": "ruoyi-system/src/main/resources/mapper/system/SysDictDataMapper.xml",
+      "source": "sql-reference"
+    },
+    {
+      "name": "sys_dict_type",
+      "module": "system",
+      "file": "ruoyi-system/src/main/resources/mapper/system/SysDictTypeMapper.xml",
+      "source": "sql-reference"
+    },
+    {
+      "name": "sys_logininfor",
+      "module": "system",
+      "file": "ruoyi-system/src/main/resources/mapper/system/SysLogininforMapper.xml",
+      "source": "sql-reference"
+    },
+    {
+      "name": "sys_menu",
+      "module": "system",
+      "file": "ruoyi-system/src/main/resources/mapper/system/SysMenuMapper.xml",
+      "source": "sql-reference"
+    },
+    {
+      "name": "sys_role_menu",
+      "module": "system",
+      "file": "ruoyi-system/src/main/resources/mapper/system/SysMenuMapper.xml",
+      "source": "sql-reference"
+    },
+    {
+      "name": "sys_user_role",
+      "module": "system",
+      "file": "ruoyi-system/src/main/resources/mapper/system/SysMenuMapper.xml",
+      "source": "sql-reference"
+    },
+    {
+      "name": "sys_role",
+      "module": "system",
+      "file": "ruoyi-system/src/main/resources/mapper/system/SysMenuMapper.xml",
+      "source": "sql-reference"
+    },
+    {
+      "name": "sys_user",
+      "module": "system",
+      "file": "ruoyi-system/src/main/resources/mapper/system/SysMenuMapper.xml",
+      "source": "sql-reference"
+    },
+    {
+      "name": "sys_notice",
+      "module": "system",
+      "file": "ruoyi-system/src/main/resources/mapper/system/SysNoticeMapper.xml",
+      "source": "sql-reference"
+    },
+    {
+      "name": "sys_notice_read",
+      "module": "system",
+      "file": "ruoyi-system/src/main/resources/mapper/system/SysNoticeReadMapper.xml",
+      "source": "sql-reference"
+    },
+    {
+      "name": "sys_notice",
+      "module": "system",
+      "file": "ruoyi-system/src/main/resources/mapper/system/SysNoticeReadMapper.xml",
+      "source": "sql-reference"
+    },
+    {
+      "name": "sys_user",
+      "module": "system",
+      "file": "ruoyi-system/src/main/resources/mapper/system/SysNoticeReadMapper.xml",
+      "source": "sql-reference"
+    },
+    {
+      "name": "sys_dept",
+      "module": "system",
+      "file": "ruoyi-system/src/main/resources/mapper/system/SysNoticeReadMapper.xml",
+      "source": "sql-reference"
+    },
+    {
+      "name": "sys_oper_log",
+      "module": "system",
+      "file": "ruoyi-system/src/main/resources/mapper/system/SysOperLogMapper.xml",
+      "source": "sql-reference"
+    },
+    {
+      "name": "sys_post",
+      "module": "system",
+      "file": "ruoyi-system/src/main/resources/mapper/system/SysPostMapper.xml",
+      "source": "sql-reference"
+    },
+    {
+      "name": "sys_user_post",
+      "module": "system",
+      "file": "ruoyi-system/src/main/resources/mapper/system/SysPostMapper.xml",
+      "source": "sql-reference"
+    },
+    {
+      "name": "sys_user",
+      "module": "system",
+      "file": "ruoyi-system/src/main/resources/mapper/system/SysPostMapper.xml",
+      "source": "sql-reference"
+    },
+    {
+      "name": "sys_role_dept",
+      "module": "system",
+      "file": "ruoyi-system/src/main/resources/mapper/system/SysRoleDeptMapper.xml",
+      "source": "sql-reference"
+    },
+    {
+      "name": "sys_role",
+      "module": "system",
+      "file": "ruoyi-system/src/main/resources/mapper/system/SysRoleMapper.xml",
+      "source": "sql-reference"
+    },
+    {
+      "name": "sys_user_role",
+      "module": "system",
+      "file": "ruoyi-system/src/main/resources/mapper/system/SysRoleMapper.xml",
+      "source": "sql-reference"
+    },
+    {
+      "name": "sys_user",
+      "module": "system",
+      "file": "ruoyi-system/src/main/resources/mapper/system/SysRoleMapper.xml",
+      "source": "sql-reference"
+    },
+    {
+      "name": "sys_dept",
+      "module": "system",
+      "file": "ruoyi-system/src/main/resources/mapper/system/SysRoleMapper.xml",
+      "source": "sql-reference"
+    },
+    {
+      "name": "sys_role_menu",
+      "module": "system",
+      "file": "ruoyi-system/src/main/resources/mapper/system/SysRoleMenuMapper.xml",
+      "source": "sql-reference"
+    },
+    {
+      "name": "sys_user",
+      "module": "system",
+      "file": "ruoyi-system/src/main/resources/mapper/system/SysUserMapper.xml",
+      "source": "sql-reference"
+    },
+    {
+      "name": "sys_dept",
+      "module": "system",
+      "file": "ruoyi-system/src/main/resources/mapper/system/SysUserMapper.xml",
+      "source": "sql-reference"
+    },
+    {
+      "name": "sys_user_role",
+      "module": "system",
+      "file": "ruoyi-system/src/main/resources/mapper/system/SysUserMapper.xml",
+      "source": "sql-reference"
+    },
+    {
+      "name": "sys_role",
+      "module": "system",
+      "file": "ruoyi-system/src/main/resources/mapper/system/SysUserMapper.xml",
+      "source": "sql-reference"
+    },
+    {
+      "name": "sys_user_post",
+      "module": "system",
+      "file": "ruoyi-system/src/main/resources/mapper/system/SysUserPostMapper.xml",
+      "source": "sql-reference"
+    },
+    {
+      "name": "sys_user_role",
+      "module": "system",
+      "file": "ruoyi-system/src/main/resources/mapper/system/SysUserRoleMapper.xml",
+      "source": "sql-reference"
+    }
+  ]
 }

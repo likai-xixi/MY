@@ -1,4 +1,716 @@
 {
   "schemaVersion": 1,
-  "endpoints": []
+  "endpoints": [
+    {
+      "id": "/monitor/cache",
+      "method": "GET",
+      "path": "/monitor/cache",
+      "owner": "monitor",
+      "module": "monitor",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor/CacheController.java",
+      "consumers": []
+    },
+    {
+      "id": "/monitor/cache/clearCacheAll",
+      "method": "DELETE",
+      "path": "/monitor/cache/clearCacheAll",
+      "owner": "monitor",
+      "module": "monitor",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor/CacheController.java",
+      "consumers": []
+    },
+    {
+      "id": "/monitor/cache/clearCacheKey",
+      "method": "DELETE",
+      "path": "/monitor/cache/clearCacheKey/{cacheKey}",
+      "owner": "monitor",
+      "module": "monitor",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor/CacheController.java",
+      "consumers": []
+    },
+    {
+      "id": "/monitor/cache/clearCacheName",
+      "method": "DELETE",
+      "path": "/monitor/cache/clearCacheName/{cacheName}",
+      "owner": "monitor",
+      "module": "monitor",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor/CacheController.java",
+      "consumers": []
+    },
+    {
+      "id": "/monitor/cache/getKeys",
+      "method": "GET",
+      "path": "/monitor/cache/getKeys/{cacheName}",
+      "owner": "monitor",
+      "module": "monitor",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor/CacheController.java",
+      "consumers": []
+    },
+    {
+      "id": "/monitor/cache/getNames",
+      "method": "GET",
+      "path": "/monitor/cache/getNames",
+      "owner": "monitor",
+      "module": "monitor",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor/CacheController.java",
+      "consumers": []
+    },
+    {
+      "id": "/monitor/cache/getValue",
+      "method": "GET",
+      "path": "/monitor/cache/getValue/{cacheName}/{cacheKey}",
+      "owner": "monitor",
+      "module": "monitor",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor/CacheController.java",
+      "consumers": []
+    },
+    {
+      "id": "/monitor/job",
+      "method": "POST",
+      "path": "/monitor/job",
+      "owner": "monitor",
+      "module": "monitor",
+      "source": "ruoyi-quartz/src/main/java/com/ruoyi/quartz/controller/SysJobController.java",
+      "consumers": []
+    },
+    {
+      "id": "/monitor/job/changeStatus",
+      "method": "PUT",
+      "path": "/monitor/job/changeStatus",
+      "owner": "monitor",
+      "module": "monitor",
+      "source": "ruoyi-quartz/src/main/java/com/ruoyi/quartz/controller/SysJobController.java",
+      "consumers": []
+    },
+    {
+      "id": "/monitor/job/list",
+      "method": "GET",
+      "path": "/monitor/job/list",
+      "owner": "monitor",
+      "module": "monitor",
+      "source": "ruoyi-quartz/src/main/java/com/ruoyi/quartz/controller/SysJobController.java",
+      "consumers": []
+    },
+    {
+      "id": "/monitor/job/run",
+      "method": "PUT",
+      "path": "/monitor/job/run",
+      "owner": "monitor",
+      "module": "monitor",
+      "source": "ruoyi-quartz/src/main/java/com/ruoyi/quartz/controller/SysJobController.java",
+      "consumers": []
+    },
+    {
+      "id": "/monitor/jobLog",
+      "method": "POST",
+      "path": "/monitor/jobLog/export",
+      "owner": "monitor",
+      "module": "monitor",
+      "source": "ruoyi-quartz/src/main/java/com/ruoyi/quartz/controller/SysJobLogController.java",
+      "consumers": []
+    },
+    {
+      "id": "/monitor/jobLog/clean",
+      "method": "DELETE",
+      "path": "/monitor/jobLog/clean",
+      "owner": "monitor",
+      "module": "monitor",
+      "source": "ruoyi-quartz/src/main/java/com/ruoyi/quartz/controller/SysJobLogController.java",
+      "consumers": []
+    },
+    {
+      "id": "/monitor/jobLog/list",
+      "method": "GET",
+      "path": "/monitor/jobLog/list",
+      "owner": "monitor",
+      "module": "monitor",
+      "source": "ruoyi-quartz/src/main/java/com/ruoyi/quartz/controller/SysJobLogController.java",
+      "consumers": []
+    },
+    {
+      "id": "/monitor/logininfor",
+      "method": "POST",
+      "path": "/monitor/logininfor/export",
+      "owner": "monitor",
+      "module": "monitor",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor/SysLogininforController.java",
+      "consumers": []
+    },
+    {
+      "id": "/monitor/logininfor/clean",
+      "method": "DELETE",
+      "path": "/monitor/logininfor/clean",
+      "owner": "monitor",
+      "module": "monitor",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor/SysLogininforController.java",
+      "consumers": []
+    },
+    {
+      "id": "/monitor/logininfor/list",
+      "method": "GET",
+      "path": "/monitor/logininfor/list",
+      "owner": "monitor",
+      "module": "monitor",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor/SysLogininforController.java",
+      "consumers": []
+    },
+    {
+      "id": "/monitor/logininfor/unlock",
+      "method": "GET",
+      "path": "/monitor/logininfor/unlock/{userName}",
+      "owner": "monitor",
+      "module": "monitor",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor/SysLogininforController.java",
+      "consumers": []
+    },
+    {
+      "id": "/monitor/online",
+      "method": "DELETE",
+      "path": "/monitor/online/{tokenId}",
+      "owner": "monitor",
+      "module": "monitor",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor/SysUserOnlineController.java",
+      "consumers": []
+    },
+    {
+      "id": "/monitor/online/list",
+      "method": "GET",
+      "path": "/monitor/online/list",
+      "owner": "monitor",
+      "module": "monitor",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor/SysUserOnlineController.java",
+      "consumers": []
+    },
+    {
+      "id": "/monitor/operlog",
+      "method": "POST",
+      "path": "/monitor/operlog/export",
+      "owner": "monitor",
+      "module": "monitor",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor/SysOperlogController.java",
+      "consumers": []
+    },
+    {
+      "id": "/monitor/operlog/clean",
+      "method": "DELETE",
+      "path": "/monitor/operlog/clean",
+      "owner": "monitor",
+      "module": "monitor",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor/SysOperlogController.java",
+      "consumers": []
+    },
+    {
+      "id": "/monitor/operlog/list",
+      "method": "GET",
+      "path": "/monitor/operlog/list",
+      "owner": "monitor",
+      "module": "monitor",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor/SysOperlogController.java",
+      "consumers": []
+    },
+    {
+      "id": "/monitor/server",
+      "method": "GET",
+      "path": "/monitor/server",
+      "owner": "monitor",
+      "module": "monitor",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor/ServerController.java",
+      "consumers": []
+    },
+    {
+      "id": "/system/config",
+      "method": "POST",
+      "path": "/system/config",
+      "owner": "system",
+      "module": "system",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysConfigController.java",
+      "consumers": []
+    },
+    {
+      "id": "/system/config/configKey",
+      "method": "GET",
+      "path": "/system/config/configKey/{configKey}",
+      "owner": "system",
+      "module": "system",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysConfigController.java",
+      "consumers": []
+    },
+    {
+      "id": "/system/config/list",
+      "method": "GET",
+      "path": "/system/config/list",
+      "owner": "system",
+      "module": "system",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysConfigController.java",
+      "consumers": []
+    },
+    {
+      "id": "/system/config/refreshCache",
+      "method": "DELETE",
+      "path": "/system/config/refreshCache",
+      "owner": "system",
+      "module": "system",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysConfigController.java",
+      "consumers": []
+    },
+    {
+      "id": "/system/dept",
+      "method": "POST",
+      "path": "/system/dept",
+      "owner": "system",
+      "module": "system",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysDeptController.java",
+      "consumers": []
+    },
+    {
+      "id": "/system/dept/list",
+      "method": "GET",
+      "path": "/system/dept/list",
+      "owner": "system",
+      "module": "system",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysDeptController.java",
+      "consumers": []
+    },
+    {
+      "id": "/system/dept/list/exclude",
+      "method": "GET",
+      "path": "/system/dept/list/exclude/{deptId}",
+      "owner": "system",
+      "module": "system",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysDeptController.java",
+      "consumers": []
+    },
+    {
+      "id": "/system/dept/updateSort",
+      "method": "PUT",
+      "path": "/system/dept/updateSort",
+      "owner": "system",
+      "module": "system",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysDeptController.java",
+      "consumers": []
+    },
+    {
+      "id": "/system/dict/data",
+      "method": "POST",
+      "path": "/system/dict/data",
+      "owner": "system",
+      "module": "system",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysDictDataController.java",
+      "consumers": []
+    },
+    {
+      "id": "/system/dict/data/list",
+      "method": "GET",
+      "path": "/system/dict/data/list",
+      "owner": "system",
+      "module": "system",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysDictDataController.java",
+      "consumers": []
+    },
+    {
+      "id": "/system/dict/data/type",
+      "method": "GET",
+      "path": "/system/dict/data/type/{dictType}",
+      "owner": "system",
+      "module": "system",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysDictDataController.java",
+      "consumers": []
+    },
+    {
+      "id": "/system/dict/type",
+      "method": "POST",
+      "path": "/system/dict/type",
+      "owner": "system",
+      "module": "system",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysDictTypeController.java",
+      "consumers": []
+    },
+    {
+      "id": "/system/dict/type/list",
+      "method": "GET",
+      "path": "/system/dict/type/list",
+      "owner": "system",
+      "module": "system",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysDictTypeController.java",
+      "consumers": []
+    },
+    {
+      "id": "/system/dict/type/optionselect",
+      "method": "GET",
+      "path": "/system/dict/type/optionselect",
+      "owner": "system",
+      "module": "system",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysDictTypeController.java",
+      "consumers": []
+    },
+    {
+      "id": "/system/dict/type/refreshCache",
+      "method": "DELETE",
+      "path": "/system/dict/type/refreshCache",
+      "owner": "system",
+      "module": "system",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysDictTypeController.java",
+      "consumers": []
+    },
+    {
+      "id": "/system/menu",
+      "method": "POST",
+      "path": "/system/menu",
+      "owner": "system",
+      "module": "system",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysMenuController.java",
+      "consumers": []
+    },
+    {
+      "id": "/system/menu/list",
+      "method": "GET",
+      "path": "/system/menu/list",
+      "owner": "system",
+      "module": "system",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysMenuController.java",
+      "consumers": []
+    },
+    {
+      "id": "/system/menu/roleMenuTreeselect",
+      "method": "GET",
+      "path": "/system/menu/roleMenuTreeselect/{roleId}",
+      "owner": "system",
+      "module": "system",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysMenuController.java",
+      "consumers": []
+    },
+    {
+      "id": "/system/menu/treeselect",
+      "method": "GET",
+      "path": "/system/menu/treeselect",
+      "owner": "system",
+      "module": "system",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysMenuController.java",
+      "consumers": []
+    },
+    {
+      "id": "/system/menu/updateSort",
+      "method": "PUT",
+      "path": "/system/menu/updateSort",
+      "owner": "system",
+      "module": "system",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysMenuController.java",
+      "consumers": []
+    },
+    {
+      "id": "/system/notice",
+      "method": "POST",
+      "path": "/system/notice",
+      "owner": "system",
+      "module": "system",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysNoticeController.java",
+      "consumers": []
+    },
+    {
+      "id": "/system/notice/list",
+      "method": "GET",
+      "path": "/system/notice/list",
+      "owner": "system",
+      "module": "system",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysNoticeController.java",
+      "consumers": []
+    },
+    {
+      "id": "/system/notice/listTop",
+      "method": "GET",
+      "path": "/system/notice/listTop",
+      "owner": "system",
+      "module": "system",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysNoticeController.java",
+      "consumers": []
+    },
+    {
+      "id": "/system/notice/markRead",
+      "method": "POST",
+      "path": "/system/notice/markRead",
+      "owner": "system",
+      "module": "system",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysNoticeController.java",
+      "consumers": []
+    },
+    {
+      "id": "/system/notice/markReadAll",
+      "method": "POST",
+      "path": "/system/notice/markReadAll",
+      "owner": "system",
+      "module": "system",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysNoticeController.java",
+      "consumers": []
+    },
+    {
+      "id": "/system/notice/readUsers/list",
+      "method": "GET",
+      "path": "/system/notice/readUsers/list",
+      "owner": "system",
+      "module": "system",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysNoticeController.java",
+      "consumers": []
+    },
+    {
+      "id": "/system/post",
+      "method": "POST",
+      "path": "/system/post",
+      "owner": "system",
+      "module": "system",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysPostController.java",
+      "consumers": []
+    },
+    {
+      "id": "/system/post/list",
+      "method": "GET",
+      "path": "/system/post/list",
+      "owner": "system",
+      "module": "system",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysPostController.java",
+      "consumers": []
+    },
+    {
+      "id": "/system/role",
+      "method": "POST",
+      "path": "/system/role",
+      "owner": "system",
+      "module": "system",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysRoleController.java",
+      "consumers": []
+    },
+    {
+      "id": "/system/role/authUser/allocatedList",
+      "method": "GET",
+      "path": "/system/role/authUser/allocatedList",
+      "owner": "system",
+      "module": "system",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysRoleController.java",
+      "consumers": []
+    },
+    {
+      "id": "/system/role/authUser/cancel",
+      "method": "PUT",
+      "path": "/system/role/authUser/cancel",
+      "owner": "system",
+      "module": "system",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysRoleController.java",
+      "consumers": []
+    },
+    {
+      "id": "/system/role/authUser/cancelAll",
+      "method": "PUT",
+      "path": "/system/role/authUser/cancelAll",
+      "owner": "system",
+      "module": "system",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysRoleController.java",
+      "consumers": []
+    },
+    {
+      "id": "/system/role/authUser/selectAll",
+      "method": "PUT",
+      "path": "/system/role/authUser/selectAll",
+      "owner": "system",
+      "module": "system",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysRoleController.java",
+      "consumers": []
+    },
+    {
+      "id": "/system/role/authUser/unallocatedList",
+      "method": "GET",
+      "path": "/system/role/authUser/unallocatedList",
+      "owner": "system",
+      "module": "system",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysRoleController.java",
+      "consumers": []
+    },
+    {
+      "id": "/system/role/changeStatus",
+      "method": "PUT",
+      "path": "/system/role/changeStatus",
+      "owner": "system",
+      "module": "system",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysRoleController.java",
+      "consumers": []
+    },
+    {
+      "id": "/system/role/dataScope",
+      "method": "PUT",
+      "path": "/system/role/dataScope",
+      "owner": "system",
+      "module": "system",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysRoleController.java",
+      "consumers": []
+    },
+    {
+      "id": "/system/role/deptTree",
+      "method": "GET",
+      "path": "/system/role/deptTree/{roleId}",
+      "owner": "system",
+      "module": "system",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysRoleController.java",
+      "consumers": []
+    },
+    {
+      "id": "/system/role/list",
+      "method": "GET",
+      "path": "/system/role/list",
+      "owner": "system",
+      "module": "system",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysRoleController.java",
+      "consumers": []
+    },
+    {
+      "id": "/system/user",
+      "method": "POST",
+      "path": "/system/user",
+      "owner": "system",
+      "module": "system",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysUserController.java",
+      "consumers": []
+    },
+    {
+      "id": "/system/user/authRole",
+      "method": "PUT",
+      "path": "/system/user/authRole",
+      "owner": "system",
+      "module": "system",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysUserController.java",
+      "consumers": []
+    },
+    {
+      "id": "/system/user/changeStatus",
+      "method": "PUT",
+      "path": "/system/user/changeStatus",
+      "owner": "system",
+      "module": "system",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysUserController.java",
+      "consumers": []
+    },
+    {
+      "id": "/system/user/deptTree",
+      "method": "GET",
+      "path": "/system/user/deptTree",
+      "owner": "system",
+      "module": "system",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysUserController.java",
+      "consumers": []
+    },
+    {
+      "id": "/system/user/list",
+      "method": "GET",
+      "path": "/system/user/list",
+      "owner": "system",
+      "module": "system",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysUserController.java",
+      "consumers": []
+    },
+    {
+      "id": "/system/user/profile",
+      "method": "GET",
+      "path": "/system/user/profile",
+      "owner": "system",
+      "module": "system",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysProfileController.java",
+      "consumers": []
+    },
+    {
+      "id": "/system/user/profile/avatar",
+      "method": "POST",
+      "path": "/system/user/profile/avatar",
+      "owner": "system",
+      "module": "system",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysProfileController.java",
+      "consumers": []
+    },
+    {
+      "id": "/system/user/profile/updatePwd",
+      "method": "PUT",
+      "path": "/system/user/profile/updatePwd",
+      "owner": "system",
+      "module": "system",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysProfileController.java",
+      "consumers": []
+    },
+    {
+      "id": "/system/user/resetPwd",
+      "method": "PUT",
+      "path": "/system/user/resetPwd",
+      "owner": "system",
+      "module": "system",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysUserController.java",
+      "consumers": []
+    },
+    {
+      "id": "/tool/gen",
+      "method": "PUT",
+      "path": "/tool/gen",
+      "owner": "tool",
+      "module": "tool",
+      "source": "ruoyi-generator/src/main/java/com/ruoyi/generator/controller/GenController.java",
+      "consumers": []
+    },
+    {
+      "id": "/tool/gen/createTable",
+      "method": "POST",
+      "path": "/tool/gen/createTable",
+      "owner": "tool",
+      "module": "tool",
+      "source": "ruoyi-generator/src/main/java/com/ruoyi/generator/controller/GenController.java",
+      "consumers": []
+    },
+    {
+      "id": "/tool/gen/db/list",
+      "method": "GET",
+      "path": "/tool/gen/db/list",
+      "owner": "tool",
+      "module": "tool",
+      "source": "ruoyi-generator/src/main/java/com/ruoyi/generator/controller/GenController.java",
+      "consumers": []
+    },
+    {
+      "id": "/tool/gen/genCode",
+      "method": "GET",
+      "path": "/tool/gen/genCode/{tableName}",
+      "owner": "tool",
+      "module": "tool",
+      "source": "ruoyi-generator/src/main/java/com/ruoyi/generator/controller/GenController.java",
+      "consumers": []
+    },
+    {
+      "id": "/tool/gen/importTable",
+      "method": "POST",
+      "path": "/tool/gen/importTable",
+      "owner": "tool",
+      "module": "tool",
+      "source": "ruoyi-generator/src/main/java/com/ruoyi/generator/controller/GenController.java",
+      "consumers": []
+    },
+    {
+      "id": "/tool/gen/list",
+      "method": "GET",
+      "path": "/tool/gen/list",
+      "owner": "tool",
+      "module": "tool",
+      "source": "ruoyi-generator/src/main/java/com/ruoyi/generator/controller/GenController.java",
+      "consumers": []
+    },
+    {
+      "id": "/tool/gen/preview",
+      "method": "GET",
+      "path": "/tool/gen/preview/{tableId}",
+      "owner": "tool",
+      "module": "tool",
+      "source": "ruoyi-generator/src/main/java/com/ruoyi/generator/controller/GenController.java",
+      "consumers": []
+    },
+    {
+      "id": "/tool/gen/synchDb",
+      "method": "GET",
+      "path": "/tool/gen/synchDb/{tableName}",
+      "owner": "tool",
+      "module": "tool",
+      "source": "ruoyi-generator/src/main/java/com/ruoyi/generator/controller/GenController.java",
+      "consumers": []
+    }
+  ]
 }

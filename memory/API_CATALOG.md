@@ -1,1 +1,554 @@
 # API Catalog
+
+## /monitor/cache
+
+- Method: `GET`
+- Path: `/monitor/cache`
+- Owner: `monitor`
+- Module: `monitor`
+
+## /monitor/cache/clearCacheAll
+
+- Method: `DELETE`
+- Path: `/monitor/cache/clearCacheAll`
+- Owner: `monitor`
+- Module: `monitor`
+
+## /monitor/cache/clearCacheKey
+
+- Method: `DELETE`
+- Path: `/monitor/cache/clearCacheKey/{cacheKey}`
+- Owner: `monitor`
+- Module: `monitor`
+
+## /monitor/cache/clearCacheName
+
+- Method: `DELETE`
+- Path: `/monitor/cache/clearCacheName/{cacheName}`
+- Owner: `monitor`
+- Module: `monitor`
+
+## /monitor/cache/getKeys
+
+- Method: `GET`
+- Path: `/monitor/cache/getKeys/{cacheName}`
+- Owner: `monitor`
+- Module: `monitor`
+
+## /monitor/cache/getNames
+
+- Method: `GET`
+- Path: `/monitor/cache/getNames`
+- Owner: `monitor`
+- Module: `monitor`
+
+## /monitor/cache/getValue
+
+- Method: `GET`
+- Path: `/monitor/cache/getValue/{cacheName}/{cacheKey}`
+- Owner: `monitor`
+- Module: `monitor`
+
+## /monitor/job
+
+- Method: `POST`
+- Path: `/monitor/job`
+- Owner: `monitor`
+- Module: `monitor`
+
+## /monitor/job/changeStatus
+
+- Method: `PUT`
+- Path: `/monitor/job/changeStatus`
+- Owner: `monitor`
+- Module: `monitor`
+
+## /monitor/job/list
+
+- Method: `GET`
+- Path: `/monitor/job/list`
+- Owner: `monitor`
+- Module: `monitor`
+
+## /monitor/job/run
+
+- Method: `PUT`
+- Path: `/monitor/job/run`
+- Owner: `monitor`
+- Module: `monitor`
+
+## /monitor/jobLog
+
+- Method: `POST`
+- Path: `/monitor/jobLog/export`
+- Owner: `monitor`
+- Module: `monitor`
+
+## /monitor/jobLog/clean
+
+- Method: `DELETE`
+- Path: `/monitor/jobLog/clean`
+- Owner: `monitor`
+- Module: `monitor`
+
+## /monitor/jobLog/list
+
+- Method: `GET`
+- Path: `/monitor/jobLog/list`
+- Owner: `monitor`
+- Module: `monitor`
+
+## /monitor/logininfor
+
+- Method: `POST`
+- Path: `/monitor/logininfor/export`
+- Owner: `monitor`
+- Module: `monitor`
+
+## /monitor/logininfor/clean
+
+- Method: `DELETE`
+- Path: `/monitor/logininfor/clean`
+- Owner: `monitor`
+- Module: `monitor`
+
+## /monitor/logininfor/list
+
+- Method: `GET`
+- Path: `/monitor/logininfor/list`
+- Owner: `monitor`
+- Module: `monitor`
+
+## /monitor/logininfor/unlock
+
+- Method: `GET`
+- Path: `/monitor/logininfor/unlock/{userName}`
+- Owner: `monitor`
+- Module: `monitor`
+
+## /monitor/online
+
+- Method: `DELETE`
+- Path: `/monitor/online/{tokenId}`
+- Owner: `monitor`
+- Module: `monitor`
+
+## /monitor/online/list
+
+- Method: `GET`
+- Path: `/monitor/online/list`
+- Owner: `monitor`
+- Module: `monitor`
+
+## /monitor/operlog
+
+- Method: `POST`
+- Path: `/monitor/operlog/export`
+- Owner: `monitor`
+- Module: `monitor`
+
+## /monitor/operlog/clean
+
+- Method: `DELETE`
+- Path: `/monitor/operlog/clean`
+- Owner: `monitor`
+- Module: `monitor`
+
+## /monitor/operlog/list
+
+- Method: `GET`
+- Path: `/monitor/operlog/list`
+- Owner: `monitor`
+- Module: `monitor`
+
+## /monitor/server
+
+- Method: `GET`
+- Path: `/monitor/server`
+- Owner: `monitor`
+- Module: `monitor`
+
+## /system/config
+
+- Method: `POST`
+- Path: `/system/config`
+- Owner: `system`
+- Module: `system`
+
+## /system/config/configKey
+
+- Method: `GET`
+- Path: `/system/config/configKey/{configKey}`
+- Owner: `system`
+- Module: `system`
+
+## /system/config/list
+
+- Method: `GET`
+- Path: `/system/config/list`
+- Owner: `system`
+- Module: `system`
+
+## /system/config/refreshCache
+
+- Method: `DELETE`
+- Path: `/system/config/refreshCache`
+- Owner: `system`
+- Module: `system`
+
+## /system/dept
+
+- Method: `POST`
+- Path: `/system/dept`
+- Owner: `system`
+- Module: `system`
+
+## /system/dept/list
+
+- Method: `GET`
+- Path: `/system/dept/list`
+- Owner: `system`
+- Module: `system`
+
+## /system/dept/list/exclude
+
+- Method: `GET`
+- Path: `/system/dept/list/exclude/{deptId}`
+- Owner: `system`
+- Module: `system`
+
+## /system/dept/updateSort
+
+- Method: `PUT`
+- Path: `/system/dept/updateSort`
+- Owner: `system`
+- Module: `system`
+
+## /system/dict/data
+
+- Method: `POST`
+- Path: `/system/dict/data`
+- Owner: `system`
+- Module: `system`
+
+## /system/dict/data/list
+
+- Method: `GET`
+- Path: `/system/dict/data/list`
+- Owner: `system`
+- Module: `system`
+
+## /system/dict/data/type
+
+- Method: `GET`
+- Path: `/system/dict/data/type/{dictType}`
+- Owner: `system`
+- Module: `system`
+
+## /system/dict/type
+
+- Method: `POST`
+- Path: `/system/dict/type`
+- Owner: `system`
+- Module: `system`
+
+## /system/dict/type/list
+
+- Method: `GET`
+- Path: `/system/dict/type/list`
+- Owner: `system`
+- Module: `system`
+
+## /system/dict/type/optionselect
+
+- Method: `GET`
+- Path: `/system/dict/type/optionselect`
+- Owner: `system`
+- Module: `system`
+
+## /system/dict/type/refreshCache
+
+- Method: `DELETE`
+- Path: `/system/dict/type/refreshCache`
+- Owner: `system`
+- Module: `system`
+
+## /system/menu
+
+- Method: `POST`
+- Path: `/system/menu`
+- Owner: `system`
+- Module: `system`
+
+## /system/menu/list
+
+- Method: `GET`
+- Path: `/system/menu/list`
+- Owner: `system`
+- Module: `system`
+
+## /system/menu/roleMenuTreeselect
+
+- Method: `GET`
+- Path: `/system/menu/roleMenuTreeselect/{roleId}`
+- Owner: `system`
+- Module: `system`
+
+## /system/menu/treeselect
+
+- Method: `GET`
+- Path: `/system/menu/treeselect`
+- Owner: `system`
+- Module: `system`
+
+## /system/menu/updateSort
+
+- Method: `PUT`
+- Path: `/system/menu/updateSort`
+- Owner: `system`
+- Module: `system`
+
+## /system/notice
+
+- Method: `POST`
+- Path: `/system/notice`
+- Owner: `system`
+- Module: `system`
+
+## /system/notice/list
+
+- Method: `GET`
+- Path: `/system/notice/list`
+- Owner: `system`
+- Module: `system`
+
+## /system/notice/listTop
+
+- Method: `GET`
+- Path: `/system/notice/listTop`
+- Owner: `system`
+- Module: `system`
+
+## /system/notice/markRead
+
+- Method: `POST`
+- Path: `/system/notice/markRead`
+- Owner: `system`
+- Module: `system`
+
+## /system/notice/markReadAll
+
+- Method: `POST`
+- Path: `/system/notice/markReadAll`
+- Owner: `system`
+- Module: `system`
+
+## /system/notice/readUsers/list
+
+- Method: `GET`
+- Path: `/system/notice/readUsers/list`
+- Owner: `system`
+- Module: `system`
+
+## /system/post
+
+- Method: `POST`
+- Path: `/system/post`
+- Owner: `system`
+- Module: `system`
+
+## /system/post/list
+
+- Method: `GET`
+- Path: `/system/post/list`
+- Owner: `system`
+- Module: `system`
+
+## /system/role
+
+- Method: `POST`
+- Path: `/system/role`
+- Owner: `system`
+- Module: `system`
+
+## /system/role/authUser/allocatedList
+
+- Method: `GET`
+- Path: `/system/role/authUser/allocatedList`
+- Owner: `system`
+- Module: `system`
+
+## /system/role/authUser/cancel
+
+- Method: `PUT`
+- Path: `/system/role/authUser/cancel`
+- Owner: `system`
+- Module: `system`
+
+## /system/role/authUser/cancelAll
+
+- Method: `PUT`
+- Path: `/system/role/authUser/cancelAll`
+- Owner: `system`
+- Module: `system`
+
+## /system/role/authUser/selectAll
+
+- Method: `PUT`
+- Path: `/system/role/authUser/selectAll`
+- Owner: `system`
+- Module: `system`
+
+## /system/role/authUser/unallocatedList
+
+- Method: `GET`
+- Path: `/system/role/authUser/unallocatedList`
+- Owner: `system`
+- Module: `system`
+
+## /system/role/changeStatus
+
+- Method: `PUT`
+- Path: `/system/role/changeStatus`
+- Owner: `system`
+- Module: `system`
+
+## /system/role/dataScope
+
+- Method: `PUT`
+- Path: `/system/role/dataScope`
+- Owner: `system`
+- Module: `system`
+
+## /system/role/deptTree
+
+- Method: `GET`
+- Path: `/system/role/deptTree/{roleId}`
+- Owner: `system`
+- Module: `system`
+
+## /system/role/list
+
+- Method: `GET`
+- Path: `/system/role/list`
+- Owner: `system`
+- Module: `system`
+
+## /system/user
+
+- Method: `POST`
+- Path: `/system/user`
+- Owner: `system`
+- Module: `system`
+
+## /system/user/authRole
+
+- Method: `PUT`
+- Path: `/system/user/authRole`
+- Owner: `system`
+- Module: `system`
+
+## /system/user/changeStatus
+
+- Method: `PUT`
+- Path: `/system/user/changeStatus`
+- Owner: `system`
+- Module: `system`
+
+## /system/user/deptTree
+
+- Method: `GET`
+- Path: `/system/user/deptTree`
+- Owner: `system`
+- Module: `system`
+
+## /system/user/list
+
+- Method: `GET`
+- Path: `/system/user/list`
+- Owner: `system`
+- Module: `system`
+
+## /system/user/profile
+
+- Method: `GET`
+- Path: `/system/user/profile`
+- Owner: `system`
+- Module: `system`
+
+## /system/user/profile/avatar
+
+- Method: `POST`
+- Path: `/system/user/profile/avatar`
+- Owner: `system`
+- Module: `system`
+
+## /system/user/profile/updatePwd
+
+- Method: `PUT`
+- Path: `/system/user/profile/updatePwd`
+- Owner: `system`
+- Module: `system`
+
+## /system/user/resetPwd
+
+- Method: `PUT`
+- Path: `/system/user/resetPwd`
+- Owner: `system`
+- Module: `system`
+
+## /tool/gen
+
+- Method: `PUT`
+- Path: `/tool/gen`
+- Owner: `tool`
+- Module: `tool`
+
+## /tool/gen/createTable
+
+- Method: `POST`
+- Path: `/tool/gen/createTable`
+- Owner: `tool`
+- Module: `tool`
+
+## /tool/gen/db/list
+
+- Method: `GET`
+- Path: `/tool/gen/db/list`
+- Owner: `tool`
+- Module: `tool`
+
+## /tool/gen/genCode
+
+- Method: `GET`
+- Path: `/tool/gen/genCode/{tableName}`
+- Owner: `tool`
+- Module: `tool`
+
+## /tool/gen/importTable
+
+- Method: `POST`
+- Path: `/tool/gen/importTable`
+- Owner: `tool`
+- Module: `tool`
+
+## /tool/gen/list
+
+- Method: `GET`
+- Path: `/tool/gen/list`
+- Owner: `tool`
+- Module: `tool`
+
+## /tool/gen/preview
+
+- Method: `GET`
+- Path: `/tool/gen/preview/{tableId}`
+- Owner: `tool`
+- Module: `tool`
+
+## /tool/gen/synchDb
+
+- Method: `GET`
+- Path: `/tool/gen/synchDb/{tableName}`
+- Owner: `tool`
+- Module: `tool`

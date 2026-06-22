@@ -4,14 +4,20 @@
   "name": "RuoYi Vue Project",
   "backend": {
     "controllerRoots": [
-      "ruoyi-admin/src/main/java/**/controller/**/<Feature>Controller.java"
+      "ruoyi-admin/src/main/java/**/controller/**/<Feature>Controller.java",
+      "ruoyi-generator/src/main/java/**/controller/**/<Feature>Controller.java",
+      "ruoyi-quartz/src/main/java/**/controller/**/<Feature>Controller.java"
     ],
     "businessRoots": [
       "ruoyi-business/src/main/java/**/<featureId>/**",
+      "ruoyi-generator/src/main/java/**/<featureId>/**",
+      "ruoyi-quartz/src/main/java/**/<featureId>/**",
       "ruoyi-system/src/main/java/**/<featureId>/**"
     ],
     "mapperXmlRoots": [
       "ruoyi-business/src/main/resources/mapper/**/<Feature>Mapper.xml",
+      "ruoyi-generator/src/main/resources/mapper/**/<Feature>Mapper.xml",
+      "ruoyi-quartz/src/main/resources/mapper/**/<Feature>Mapper.xml",
       "ruoyi-system/src/main/resources/mapper/**/<Feature>Mapper.xml"
     ],
     "sharedRoots": [

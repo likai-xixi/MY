@@ -5,10 +5,20 @@ import os from 'node:os';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
-import { collectFeatureImpact, parseArgs, renderImpactText } from '../scripts/remove-feature.js';
+import { collectFeatureImpact, parseArgs, renderImpactText, shouldSkipRemovalDocScanPath } from '../scripts/remove-feature.js';
 import { readJson } from '../tools/common.js';
 
 const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const SKIPPED_FIXTURE_DIR_NAMES = new Set([
+  '.git',
+  '.vite',
+  'build',
+  'coverage',
+  'dist',
+  'node_modules',
+  'target',
+  'tmp'
+]);
 
 function firstActiveFeature() {
   try {
@@ -23,6 +33,10 @@ function toPosix(filePath) {
   return filePath.split(path.sep).join('/');
 }
 
+function hasSkippedFixtureSegment(relativePath) {
+  return relativePath.split('/').some((segment) => SKIPPED_FIXTURE_DIR_NAMES.has(segment));
+}
+
 function copyProjectFixture() {
   const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'remove-feature-apply-'));
   fs.cpSync(projectRoot, tempRoot, {
@@ -31,11 +45,9 @@ function copyProjectFixture() {
       const relative = toPosix(path.relative(projectRoot, source));
       return relative === ''
         || (
-          !relative.startsWith('node_modules/')
-          && relative !== 'node_modules'
-          && !relative.startsWith('.git/')
-          && relative !== '.git'
+          !hasSkippedFixtureSegment(relative)
           && !relative.startsWith('ai/deletions/')
+          && relative !== 'ai/deletions'
         );
     }
   });
@@ -222,6 +234,21 @@ test('feature removal dry-run creates deterministic impact list for the active s
   assert.ok(impact.updateFiles.includes('memory/HANDOVER.md'));
   assert.ok(impact.updateFiles.includes('memory/CHANGELOG.md'));
   assert.ok(impact.qaCommands.includes('npm run check'));
+});
+
+test('feature removal doc scan skips nested dependency and build output directories', () => {
+  for (const file of [
+    'ruoyi-ui/node_modules/pkg/index.js',
+    'ruoyi-admin/target/classes/application.yml',
+    'ruoyi-ui/.vite/deps/chunk.js',
+    'nested/dist/app.js',
+    'nested/build/app.js',
+    'coverage/lcov.info',
+    'tmp/remove-feature/file.md'
+  ]) {
+    assert.equal(shouldSkipRemovalDocScanPath(file), true, file);
+  }
+  assert.equal(shouldSkipRemovalDocScanPath('features/system.md'), false);
 });
 
 

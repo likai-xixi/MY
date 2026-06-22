@@ -62,6 +62,7 @@
     "check:ownership": "node tools/ownership-checker.js",
     "check:runtime": "node tools/runtime-checker.js",
     "sync:ownership": "node tools/ownership-syncer.js",
+    "build": "npm run build:graph",
     "sync:ownership:check": "node tools/ownership-syncer.js --check"
   },
   "engines": {

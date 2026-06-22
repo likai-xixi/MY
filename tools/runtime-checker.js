@@ -25,6 +25,17 @@ function canRun(command, args = ['--version'], runner = defaultProcessRunner) {
   return runner.canRun(command, args);
 }
 
+function toolCommand(tool, policy) {
+  const configured = policy.toolPaths?.[tool];
+  if (configured) {
+    return configured;
+  }
+  if (tool === 'maven') {
+    return 'mvn';
+  }
+  return tool;
+}
+
 function runCommand(command, args, cwd, runner = defaultProcessRunner) {
   const result = runner.run(command, args, {
     cwd: projectPath(cwd || '.'),
@@ -76,7 +87,7 @@ function readPackageJson(dir) {
   }
 }
 
-export function validateFrontendProject({ dir, packageManager, execute, policy, runner = defaultProcessRunner }) {
+export function validateFrontendProject({ dir, packageManager, command = packageManager, execute, policy, runner = defaultProcessRunner }) {
   const errors = [];
   const pkg = readPackageJson(dir);
   const scripts = pkg.scripts || {};
@@ -89,7 +100,7 @@ export function validateFrontendProject({ dir, packageManager, execute, policy, 
         errors.push(`${dir}/package.json is missing script: ${script}.`);
         continue;
       }
-      const failure = runCommand(packageManager, ['run', script], dir, runner);
+      const failure = runCommand(command, ['run', script], dir, runner);
       if (failure) {
         errors.push(failure);
       }
@@ -98,11 +109,11 @@ export function validateFrontendProject({ dir, packageManager, execute, policy, 
   return errors;
 }
 
-export function validateMavenProject({ dir, execute, policy, runner = defaultProcessRunner }) {
+export function validateMavenProject({ dir, command = 'mvn', execute, policy, runner = defaultProcessRunner }) {
   const errors = [];
   if (execute) {
     for (const goal of policy.commands?.maven || ['test']) {
-      const failure = runCommand('mvn', [goal], dir, runner);
+      const failure = runCommand(command, [goal], dir, runner);
       if (failure) {
         errors.push(failure);
       }
@@ -126,23 +137,25 @@ export function validateRuntimeReadiness({
   const mavenProjects = detectMavenProjects();
   const frontendProjects = detectFrontendProjects();
   const shouldExecute = execute || policy.executeCommandsByDefault === true;
+  const mavenCommand = toolCommand('maven', policy);
 
-  if (mavenProjects.length > 0 && policy.requireToolingWhenDetected !== false && !canRun('mvn', ['--version'], runner)) {
+  if (mavenProjects.length > 0 && policy.requireToolingWhenDetected !== false && !canRun(mavenCommand, ['--version'], runner)) {
     errors.push('Maven project detected, but `mvn` is not available. Install Maven or configure ai/rules/runtime-policy.json.');
   }
 
   for (const dir of frontendProjects) {
     const manager = detectPackageManager(dir);
-    if (policy.requireToolingWhenDetected !== false && !canRun(manager, ['--version'], runner)) {
+    const managerCommand = toolCommand(manager, policy);
+    if (policy.requireToolingWhenDetected !== false && !canRun(managerCommand, ['--version'], runner)) {
       errors.push(`${manager} project detected at ${dir}, but ${manager} is not available.`);
       continue;
     }
-    errors.push(...validateFrontendProject({ dir, packageManager: manager, execute: shouldExecute, policy, runner }));
+    errors.push(...validateFrontendProject({ dir, packageManager: manager, command: managerCommand, execute: shouldExecute, policy, runner }));
   }
 
-  if (mavenProjects.length > 0 && canRun('mvn', ['--version'], runner)) {
+  if (mavenProjects.length > 0 && canRun(mavenCommand, ['--version'], runner)) {
     for (const dir of mavenProjects) {
-      errors.push(...validateMavenProject({ dir, execute: shouldExecute, policy, runner }));
+      errors.push(...validateMavenProject({ dir, command: mavenCommand, execute: shouldExecute, policy, runner }));
     }
   }
 

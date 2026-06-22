@@ -4,7 +4,6 @@ import {
   finish,
   formatJson,
   isCli,
-  listFiles,
   projectPath,
   readJson,
   readText,
@@ -48,6 +47,16 @@ const REMOVAL_DOC_ALLOWLIST = [
   'memory/PROJECT_STATE.md'
 ];
 
+const DOC_SCAN_IGNORED_DIR_NAMES = new Set([
+  '.git',
+  '.vite',
+  'build',
+  'coverage',
+  'dist',
+  'node_modules',
+  'target',
+  'tmp'
+]);
 
 const FEATURE_PATH_FIELDS = [
   'backendModules',
@@ -92,7 +101,11 @@ function extensionOf(file) {
 }
 
 function pathExists(relativePath) {
-  return fs.existsSync(projectPath(relativePath));
+  try {
+    return fs.existsSync(projectPath(relativePath));
+  } catch {
+    return false;
+  }
 }
 
 function removePath(relativePath) {
@@ -211,18 +224,47 @@ function tokenSet({ slug, registryFeature, apiEndpointIds, uiScreenIds, extraTok
   ]));
 }
 
+export function shouldSkipRemovalDocScanPath(relativePath = '') {
+  return String(relativePath)
+    .replace(/\\/g, '/')
+    .split('/')
+    .filter(Boolean)
+    .some((segment) => DOC_SCAN_IGNORED_DIR_NAMES.has(segment));
+}
+
+function listDocScanFiles(relativeDir = '.') {
+  const base = projectPath(relativeDir);
+  if (!fs.existsSync(base)) {
+    return [];
+  }
+  const root = projectPath('.');
+  const files = [];
+  const walk = (dir) => {
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      const full = path.join(dir, entry.name);
+      const relative = path.relative(root, full).split(path.sep).join('/');
+      if (entry.isDirectory()) {
+        if (!shouldSkipRemovalDocScanPath(relative)) {
+          walk(full);
+        }
+        continue;
+      }
+      if (!shouldSkipRemovalDocScanPath(relative) && TEXT_EXTENSIONS.has(extensionOf(relative))) {
+        files.push(relative);
+      }
+    }
+  };
+  walk(base);
+  return files.sort();
+}
+
 function scanDocReferences({ tokens }) {
   const needles = [...tokens].filter(Boolean);
   if (needles.length === 0) {
     return [];
   }
 
-  return listFiles('.', (file) => {
-    if (file.startsWith('node_modules/') || file.startsWith('.git/')) {
-      return false;
-    }
-    return TEXT_EXTENSIONS.has(extensionOf(file));
-  }).filter((file) => {
+  return listDocScanFiles('.').filter((file) => {
     const text = readText(file);
     return needles.some((needle) => text.includes(needle));
   });

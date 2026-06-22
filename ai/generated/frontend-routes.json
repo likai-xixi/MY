@@ -1,10 +1,413 @@
 {
   "schemaVersion": 1,
   "generatedBy": "tools/scan-frontend-routes.js",
-  "adapter": "generic",
+  "adapter": "ruoyi",
   "roots": [
+    "ruoyi-ui/src/views",
+    "ruoyi-ui/src/api",
     "frontend/src/modules"
   ],
-  "modules": [],
-  "routes": []
+  "modules": [
+    "monitor",
+    "platform",
+    "system",
+    "tool",
+    "error",
+    "redirect",
+    "register.vue"
+  ],
+  "routes": [
+    {
+      "module": "error",
+      "route": "/error/401",
+      "api": [],
+      "states": [],
+      "file": "ruoyi-ui/src/views/error/401.vue",
+      "source": "ruoyi-view"
+    },
+    {
+      "module": "error",
+      "route": "/error/404",
+      "api": [],
+      "states": [],
+      "file": "ruoyi-ui/src/views/error/404.vue",
+      "source": "ruoyi-view"
+    },
+    {
+      "module": "platform",
+      "route": "/lock",
+      "api": [],
+      "states": [],
+      "file": "ruoyi-ui/src/views/lock.vue",
+      "source": "ruoyi-view"
+    },
+    {
+      "module": "platform",
+      "route": "/login",
+      "api": [],
+      "states": [],
+      "file": "ruoyi-ui/src/views/login.vue",
+      "source": "ruoyi-view"
+    },
+    {
+      "module": "monitor",
+      "route": "/monitor/cache",
+      "api": [],
+      "states": [],
+      "file": "ruoyi-ui/src/views/monitor/cache/index.vue",
+      "source": "ruoyi-view"
+    },
+    {
+      "module": "monitor",
+      "route": "/monitor/cache/list",
+      "api": [],
+      "states": [],
+      "file": "ruoyi-ui/src/views/monitor/cache/list.vue",
+      "source": "ruoyi-view"
+    },
+    {
+      "module": "monitor",
+      "route": "/monitor/druid",
+      "api": [],
+      "states": [],
+      "file": "ruoyi-ui/src/views/monitor/druid/index.vue",
+      "source": "ruoyi-view"
+    },
+    {
+      "module": "monitor",
+      "route": "/monitor/job/detail",
+      "api": [],
+      "states": [],
+      "file": "ruoyi-ui/src/views/monitor/job/detail.vue",
+      "source": "ruoyi-view"
+    },
+    {
+      "module": "monitor",
+      "route": "/monitor/job",
+      "api": [],
+      "states": [],
+      "file": "ruoyi-ui/src/views/monitor/job/index.vue",
+      "source": "ruoyi-view"
+    },
+    {
+      "module": "monitor",
+      "route": "/monitor/job/log",
+      "api": [],
+      "states": [],
+      "file": "ruoyi-ui/src/views/monitor/job/log.vue",
+      "source": "ruoyi-view"
+    },
+    {
+      "module": "monitor",
+      "route": "/monitor/logininfor",
+      "api": [],
+      "states": [],
+      "file": "ruoyi-ui/src/views/monitor/logininfor/index.vue",
+      "source": "ruoyi-view"
+    },
+    {
+      "module": "monitor",
+      "route": "/monitor/online",
+      "api": [],
+      "states": [],
+      "file": "ruoyi-ui/src/views/monitor/online/index.vue",
+      "source": "ruoyi-view"
+    },
+    {
+      "module": "monitor",
+      "route": "/monitor/operlog/detail",
+      "api": [],
+      "states": [],
+      "file": "ruoyi-ui/src/views/monitor/operlog/detail.vue",
+      "source": "ruoyi-view"
+    },
+    {
+      "module": "monitor",
+      "route": "/monitor/operlog",
+      "api": [],
+      "states": [],
+      "file": "ruoyi-ui/src/views/monitor/operlog/index.vue",
+      "source": "ruoyi-view"
+    },
+    {
+      "module": "monitor",
+      "route": "/monitor/server",
+      "api": [],
+      "states": [],
+      "file": "ruoyi-ui/src/views/monitor/server/index.vue",
+      "source": "ruoyi-view"
+    },
+    {
+      "module": "redirect",
+      "route": "/redirect",
+      "api": [],
+      "states": [],
+      "file": "ruoyi-ui/src/views/redirect/index.vue",
+      "source": "ruoyi-view"
+    },
+    {
+      "module": "register.vue",
+      "route": "/register",
+      "api": [],
+      "states": [],
+      "file": "ruoyi-ui/src/views/register.vue",
+      "source": "ruoyi-view"
+    },
+    {
+      "module": "system",
+      "route": "/system/config",
+      "api": [],
+      "states": [],
+      "file": "ruoyi-ui/src/views/system/config/index.vue",
+      "source": "ruoyi-view"
+    },
+    {
+      "module": "system",
+      "route": "/system/dept",
+      "api": [],
+      "states": [],
+      "file": "ruoyi-ui/src/views/system/dept/index.vue",
+      "source": "ruoyi-view"
+    },
+    {
+      "module": "system",
+      "route": "/system/dict/data",
+      "api": [],
+      "states": [],
+      "file": "ruoyi-ui/src/views/system/dict/data.vue",
+      "source": "ruoyi-view"
+    },
+    {
+      "module": "system",
+      "route": "/system/dict/detail",
+      "api": [],
+      "states": [],
+      "file": "ruoyi-ui/src/views/system/dict/detail.vue",
+      "source": "ruoyi-view"
+    },
+    {
+      "module": "system",
+      "route": "/system/dict",
+      "api": [],
+      "states": [],
+      "file": "ruoyi-ui/src/views/system/dict/index.vue",
+      "source": "ruoyi-view"
+    },
+    {
+      "module": "system",
+      "route": "/system/menu",
+      "api": [],
+      "states": [],
+      "file": "ruoyi-ui/src/views/system/menu/index.vue",
+      "source": "ruoyi-view"
+    },
+    {
+      "module": "system",
+      "route": "/system/notice/ReadUsers",
+      "api": [],
+      "states": [],
+      "file": "ruoyi-ui/src/views/system/notice/ReadUsers.vue",
+      "source": "ruoyi-view"
+    },
+    {
+      "module": "system",
+      "route": "/system/notice",
+      "api": [],
+      "states": [],
+      "file": "ruoyi-ui/src/views/system/notice/index.vue",
+      "source": "ruoyi-view"
+    },
+    {
+      "module": "system",
+      "route": "/system/post",
+      "api": [],
+      "states": [],
+      "file": "ruoyi-ui/src/views/system/post/index.vue",
+      "source": "ruoyi-view"
+    },
+    {
+      "module": "system",
+      "route": "/system/role/authUser",
+      "api": [],
+      "states": [],
+      "file": "ruoyi-ui/src/views/system/role/authUser.vue",
+      "source": "ruoyi-view"
+    },
+    {
+      "module": "system",
+      "route": "/system/role",
+      "api": [],
+      "states": [],
+      "file": "ruoyi-ui/src/views/system/role/index.vue",
+      "source": "ruoyi-view"
+    },
+    {
+      "module": "system",
+      "route": "/system/role/selectUser",
+      "api": [],
+      "states": [],
+      "file": "ruoyi-ui/src/views/system/role/selectUser.vue",
+      "source": "ruoyi-view"
+    },
+    {
+      "module": "system",
+      "route": "/system/user/authRole",
+      "api": [],
+      "states": [],
+      "file": "ruoyi-ui/src/views/system/user/authRole.vue",
+      "source": "ruoyi-view"
+    },
+    {
+      "module": "system",
+      "route": "/system/user",
+      "api": [],
+      "states": [],
+      "file": "ruoyi-ui/src/views/system/user/index.vue",
+      "source": "ruoyi-view"
+    },
+    {
+      "module": "system",
+      "route": "/system/user/profile",
+      "api": [],
+      "states": [],
+      "file": "ruoyi-ui/src/views/system/user/profile/index.vue",
+      "source": "ruoyi-view"
+    },
+    {
+      "module": "system",
+      "route": "/system/user/profile/resetPwd",
+      "api": [],
+      "states": [],
+      "file": "ruoyi-ui/src/views/system/user/profile/resetPwd.vue",
+      "source": "ruoyi-view"
+    },
+    {
+      "module": "system",
+      "route": "/system/user/profile/userAvatar",
+      "api": [],
+      "states": [],
+      "file": "ruoyi-ui/src/views/system/user/profile/userAvatar.vue",
+      "source": "ruoyi-view"
+    },
+    {
+      "module": "system",
+      "route": "/system/user/profile/userInfo",
+      "api": [],
+      "states": [],
+      "file": "ruoyi-ui/src/views/system/user/profile/userInfo.vue",
+      "source": "ruoyi-view"
+    },
+    {
+      "module": "system",
+      "route": "/system/user/view",
+      "api": [],
+      "states": [],
+      "file": "ruoyi-ui/src/views/system/user/view.vue",
+      "source": "ruoyi-view"
+    },
+    {
+      "module": "tool",
+      "route": "/tool/build/CodeTypeDialog",
+      "api": [],
+      "states": [],
+      "file": "ruoyi-ui/src/views/tool/build/CodeTypeDialog.vue",
+      "source": "ruoyi-view"
+    },
+    {
+      "module": "tool",
+      "route": "/tool/build/DraggableItem",
+      "api": [],
+      "states": [],
+      "file": "ruoyi-ui/src/views/tool/build/DraggableItem.vue",
+      "source": "ruoyi-view"
+    },
+    {
+      "module": "tool",
+      "route": "/tool/build/IconsDialog",
+      "api": [],
+      "states": [],
+      "file": "ruoyi-ui/src/views/tool/build/IconsDialog.vue",
+      "source": "ruoyi-view"
+    },
+    {
+      "module": "tool",
+      "route": "/tool/build/RightPanel",
+      "api": [],
+      "states": [],
+      "file": "ruoyi-ui/src/views/tool/build/RightPanel.vue",
+      "source": "ruoyi-view"
+    },
+    {
+      "module": "tool",
+      "route": "/tool/build/TreeNodeDialog",
+      "api": [],
+      "states": [],
+      "file": "ruoyi-ui/src/views/tool/build/TreeNodeDialog.vue",
+      "source": "ruoyi-view"
+    },
+    {
+      "module": "tool",
+      "route": "/tool/build",
+      "api": [],
+      "states": [],
+      "file": "ruoyi-ui/src/views/tool/build/index.vue",
+      "source": "ruoyi-view"
+    },
+    {
+      "module": "tool",
+      "route": "/tool/gen/basicInfoForm",
+      "api": [],
+      "states": [],
+      "file": "ruoyi-ui/src/views/tool/gen/basicInfoForm.vue",
+      "source": "ruoyi-view"
+    },
+    {
+      "module": "tool",
+      "route": "/tool/gen/createTable",
+      "api": [],
+      "states": [],
+      "file": "ruoyi-ui/src/views/tool/gen/createTable.vue",
+      "source": "ruoyi-view"
+    },
+    {
+      "module": "tool",
+      "route": "/tool/gen/editTable",
+      "api": [],
+      "states": [],
+      "file": "ruoyi-ui/src/views/tool/gen/editTable.vue",
+      "source": "ruoyi-view"
+    },
+    {
+      "module": "tool",
+      "route": "/tool/gen/genInfoForm",
+      "api": [],
+      "states": [],
+      "file": "ruoyi-ui/src/views/tool/gen/genInfoForm.vue",
+      "source": "ruoyi-view"
+    },
+    {
+      "module": "tool",
+      "route": "/tool/gen/importTable",
+      "api": [],
+      "states": [],
+      "file": "ruoyi-ui/src/views/tool/gen/importTable.vue",
+      "source": "ruoyi-view"
+    },
+    {
+      "module": "tool",
+      "route": "/tool/gen",
+      "api": [],
+      "states": [],
+      "file": "ruoyi-ui/src/views/tool/gen/index.vue",
+      "source": "ruoyi-view"
+    },
+    {
+      "module": "tool",
+      "route": "/tool/swagger",
+      "api": [],
+      "states": [],
+      "file": "ruoyi-ui/src/views/tool/swagger/index.vue",
+      "source": "ruoyi-view"
+    }
+  ]
 }

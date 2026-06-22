@@ -47,6 +47,18 @@ function normalize(value = '') {
   return String(value).replace(/\\/g, '/').replace(/^\.\//, '').replace(/\/+$/g, '');
 }
 
+export function hasRepeatedRoutePath(value = '') {
+  const segments = normalize(value)
+    .replace(/^\/+|\/+$/g, '')
+    .split('/')
+    .filter(Boolean);
+  if (segments.length < 4 || segments.length % 2 !== 0) {
+    return false;
+  }
+  const midpoint = segments.length / 2;
+  return segments.slice(0, midpoint).every((segment, index) => segment === segments[index + midpoint]);
+}
+
 function activeFeaturesById(features = readFeatureRegistry()) {
   return new Map((features || []).filter((feature) => feature.status !== 'removed').map((feature) => [feature.id, feature]));
 }
@@ -70,11 +82,19 @@ function inferFeature(file, text = '', features = readFeatureRegistry()) {
   return '';
 }
 
+function hasRegisteredPermissionPrefix(code, features) {
+  const prefix = String(code).split(':')[0];
+  return (features || []).some((feature) => feature.status !== 'removed' && feature.id === prefix);
+}
+
 function addValue(bucket, featureId, field, value) {
   if (!featureId || !field || !value) {
     return;
   }
   const normalized = normalize(value);
+  if (field === 'routes' && hasRepeatedRoutePath(normalized)) {
+    return;
+  }
   bucket[featureId] ||= Object.fromEntries(OWNERSHIP_ARRAY_FIELDS.map((key) => [key, []]));
   bucket[featureId][field].push(normalized);
 }
@@ -157,6 +177,9 @@ function scanLiveOwnership(features) {
       addValue(bucket, featureId, 'components', file);
     }
     for (const match of text.matchAll(PERMISSION_REGEX)) {
+      if (!hasRegisteredPermissionPrefix(match[0], features)) {
+        continue;
+      }
       addValue(bucket, featureId, 'permissions', match[0]);
       addValue(bucket, featureId, 'permissionFiles', file);
     }
@@ -272,7 +295,8 @@ function mergeSorted(existing = [], discovered = []) {
 
 function syncTopLevelAndOwnership(feature, discovered) {
   for (const field of OWNERSHIP_ARRAY_FIELDS) {
-    feature[field] = mergeSorted(feature[field], discovered[field]);
+    const merged = mergeSorted(feature[field], discovered[field]);
+    feature[field] = field === 'routes' ? merged.filter((route) => !hasRepeatedRoutePath(route)) : merged;
   }
   feature.ownership ||= {};
   for (const key of OWNERSHIP_KEYS) {
@@ -296,6 +320,12 @@ function syncTopLevelAndOwnership(feature, discovered) {
   feature.ownership.domainObjects = mergeSorted(feature.ownership.domainObjects, feature.domainObjects || []);
 }
 
+function buildNextUiGraph() {
+  const graph = readJsonOrDefault('graph/ui-graph.json', { schemaVersion: 1, screens: [] });
+  graph.screens = (graph.screens || []).filter((screen) => !hasRepeatedRoutePath(screen.route));
+  return graph;
+}
+
 function buildNextRegistry() {
   const registry = readJsonOrDefault('ai/registry/features.json', { schemaVersion: 1, features: [] });
   const features = registry.features || [];
@@ -317,6 +347,7 @@ export function runOwnershipSync({ checkMode = false } = {}) {
   const errors = [];
   const next = buildNextRegistry();
   writeOrCheck('ai/registry/features.json', formatJson(next), checkMode, errors);
+  writeOrCheck('graph/ui-graph.json', formatJson(buildNextUiGraph()), checkMode, errors);
   return errors;
 }
 

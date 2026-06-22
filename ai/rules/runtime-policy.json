@@ -5,6 +5,9 @@
   "requireToolingWhenDetected": true,
   "requireFrontendBuildScript": true,
   "executeCommandsByDefault": false,
+  "toolPaths": {
+    "maven": "C:/Users/11131/.cache/codex-tools/apache-maven-3.9.9/bin/mvn.cmd"
+  },
   "commands": {
     "maven": [
       "test"

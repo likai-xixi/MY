@@ -27,4 +27,22 @@
 - Removed feature `inventory` (Inventory) from feature registry, module registry, graph outputs, active task memory, project state, and handoff trail.
 - Rebuilt generated scans and graph memory after the removal pass.## 2026-06-22 — remove-apply
 - Applied feature deletion for `inventory` (Inventory) and updated registry, graph, scans, memory, changelog, and handover.
-- Feature: `inventory`.
+- Feature: `inventory`.## 2026-06-22 — profile-setup
+- 接入 RuoYi + Vue3 项目底座，保留 Codex 治理目录，锁定 RuoYi profile，并刷新扫描、图谱和记忆。
+- Feature: `project-base`.## 2026-06-22 — profile-setup
+- 接入 RuoYi + Vue3 项目底座，登记 RuoYi 内置模块和共享组件 ownership，锁定 RuoYi profile，并刷新扫描、图谱和记忆。
+- Feature: `project-base`.## 2026-06-22 — profile-setup
+- 接入 RuoYi + Vue3 项目底座，登记内置模块和共享组件 ownership，补齐 RuoYi quartz/generator 扫描根，锁定 RuoYi profile，并刷新扫描、图谱和记忆。
+- Feature: `project-base`.## 2026-06-22 — profile-setup
+- Updated change record, registry, graph, generated scans, memory, and handover.
+- Feature: `project-base`.## 2026-06-22 — profile-setup
+- Updated change record, registry, graph, generated scans, memory, and handover.
+- Feature: `project-base`.## 2026-06-22 — profile-setup
+- Updated change record, registry, graph, generated scans, memory, and handover.
+- Feature: `project-base`.## 2026-06-22 — profile-setup
+- Updated change record, registry, graph, generated scans, memory, and handover.
+- Feature: `project-base`.## 2026-06-22 — profile
+- Updated change record, registry, graph, generated scans, memory, and handover.
+- Feature: `project-base`.## 2026-06-22 — profile
+- Updated change record, registry, graph, generated scans, memory, and handover.
+- Feature: `project-base`.

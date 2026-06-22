@@ -56,6 +56,8 @@ export function configuredPaths() {
       backendScanRoots: [
         'ruoyi-admin/src/main/java',
         'ruoyi-business/src/main/java',
+        'ruoyi-generator/src/main/java',
+        'ruoyi-quartz/src/main/java',
         'ruoyi-system/src/main/java',
         'backend/modules'
       ],
@@ -76,6 +78,8 @@ export function configuredPaths() {
         'sql',
         'ruoyi-admin/sql',
         'ruoyi-business/src/main/resources/mapper',
+        'ruoyi-generator/src/main/resources/mapper',
+        'ruoyi-quartz/src/main/resources/mapper',
         'ruoyi-system/src/main/resources/mapper',
         'db',
         'backend'
@@ -83,6 +87,8 @@ export function configuredPaths() {
       permissionScanRoots: [
         'ruoyi-admin/src/main/java',
         'ruoyi-business/src/main/java',
+        'ruoyi-generator/src/main/java',
+        'ruoyi-quartz/src/main/java',
         'ruoyi-system/src/main/java',
         'ruoyi-ui/src',
         'sql',
@@ -211,6 +217,7 @@ function fileMatchesFeaturePath(file, featurePath) {
 
 export function inferFeatureFromPath(file, features = readFeatureRegistry()) {
   const normalized = normalizePath(file);
+  let bestMatch = null;
   for (const feature of features) {
     const ownedPaths = unique([
       feature.featureBrief,
@@ -222,9 +229,18 @@ export function inferFeatureFromPath(file, features = readFeatureRegistry()) {
       ...(feature.menuSqlFiles || []),
       ...(feature.permissionFiles || [])
     ]);
-    if (ownedPaths.some((ownedPath) => fileMatchesFeaturePath(normalized, ownedPath))) {
-      return feature.id;
+    for (const ownedPath of ownedPaths) {
+      const candidate = normalizePath(ownedPath);
+      if (!fileMatchesFeaturePath(normalized, candidate)) {
+        continue;
+      }
+      if (!bestMatch || candidate.length > bestMatch.path.length) {
+        bestMatch = { id: feature.id, path: candidate };
+      }
     }
+  }
+  if (bestMatch) {
+    return bestMatch.id;
   }
 
   const pathParts = normalized.split('/');

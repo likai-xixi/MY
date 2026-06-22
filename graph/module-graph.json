@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "generatedBy": "scripts/build-graph.js",
-  "adapter": "generic",
+  "adapter": "ruoyi",
   "nodes": [
     {
       "id": "agents",
@@ -56,6 +56,72 @@
       "type": "business",
       "path": "features",
       "description": "Business feature briefs and acceptance criteria."
+    },
+    {
+      "id": "feature:monitor",
+      "type": "feature",
+      "path": "features/monitor.md",
+      "description": "Monitor Management feature brief."
+    },
+    {
+      "id": "feature:platform",
+      "type": "feature",
+      "path": "features/platform.md",
+      "description": "Platform Base feature brief."
+    },
+    {
+      "id": "feature:system",
+      "type": "feature",
+      "path": "features/system.md",
+      "description": "System Management feature brief."
+    },
+    {
+      "id": "feature:tool",
+      "type": "feature",
+      "path": "features/tool.md",
+      "description": "Tool Management feature brief."
+    },
+    {
+      "id": "backend:monitor",
+      "type": "backend-module",
+      "path": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor",
+      "description": "Monitor backend module."
+    },
+    {
+      "id": "backend:system",
+      "type": "backend-module",
+      "path": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system",
+      "description": "System backend module."
+    },
+    {
+      "id": "backend:tool",
+      "type": "backend-module",
+      "path": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/tool",
+      "description": "Tool backend module."
+    },
+    {
+      "id": "frontend:monitor",
+      "type": "frontend-module",
+      "path": "ruoyi-ui/src/views/monitor",
+      "description": "Monitor frontend module."
+    },
+    {
+      "id": "frontend:platform",
+      "type": "frontend-module",
+      "path": "ruoyi-ui/src/views/login.vue",
+      "description": "Platform frontend module."
+    },
+    {
+      "id": "frontend:system",
+      "type": "frontend-module",
+      "path": "ruoyi-ui/src/views/system",
+      "description": "System frontend module."
+    },
+    {
+      "id": "frontend:tool",
+      "type": "frontend-module",
+      "path": "ruoyi-ui/src/views/tool",
+      "description": "Tool frontend module."
     }
   ],
   "edges": [
@@ -113,6 +179,96 @@
       "from": "features",
       "to": "frontend",
       "type": "drives"
+    },
+    {
+      "from": "features",
+      "to": "feature:monitor",
+      "type": "contains"
+    },
+    {
+      "from": "features",
+      "to": "feature:platform",
+      "type": "contains"
+    },
+    {
+      "from": "features",
+      "to": "feature:system",
+      "type": "contains"
+    },
+    {
+      "from": "features",
+      "to": "feature:tool",
+      "type": "contains"
+    },
+    {
+      "from": "backend",
+      "to": "backend:monitor",
+      "type": "contains"
+    },
+    {
+      "from": "feature:monitor",
+      "to": "backend:monitor",
+      "type": "implements"
+    },
+    {
+      "from": "backend",
+      "to": "backend:system",
+      "type": "contains"
+    },
+    {
+      "from": "feature:system",
+      "to": "backend:system",
+      "type": "implements"
+    },
+    {
+      "from": "backend",
+      "to": "backend:tool",
+      "type": "contains"
+    },
+    {
+      "from": "feature:tool",
+      "to": "backend:tool",
+      "type": "implements"
+    },
+    {
+      "from": "frontend",
+      "to": "frontend:monitor",
+      "type": "contains"
+    },
+    {
+      "from": "feature:monitor",
+      "to": "frontend:monitor",
+      "type": "implements"
+    },
+    {
+      "from": "frontend",
+      "to": "frontend:platform",
+      "type": "contains"
+    },
+    {
+      "from": "feature:platform",
+      "to": "frontend:platform",
+      "type": "implements"
+    },
+    {
+      "from": "frontend",
+      "to": "frontend:system",
+      "type": "contains"
+    },
+    {
+      "from": "feature:system",
+      "to": "frontend:system",
+      "type": "implements"
+    },
+    {
+      "from": "frontend",
+      "to": "frontend:tool",
+      "type": "contains"
+    },
+    {
+      "from": "feature:tool",
+      "to": "frontend:tool",
+      "type": "implements"
     }
   ]
 }

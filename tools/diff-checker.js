@@ -27,13 +27,28 @@ function extensionOf(file) {
   return index === -1 ? file : file.slice(index);
 }
 
+const GENERATED_DIRS = new Set([
+  '.git',
+  '.vite',
+  'build',
+  'coverage',
+  'dist',
+  'node_modules',
+  'target',
+  'tmp'
+]);
+
+function isGeneratedPath(file) {
+  return file.replace(/\\/g, '/').split('/').some((part) => GENERATED_DIRS.has(part));
+}
+
 function unique(items) {
   return [...new Set(items.filter(Boolean))];
 }
 
 function runGit(args) {
   try {
-    return execFileSync('git', args, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim();
+    return execFileSync('git', ['-c', 'core.quotepath=false', ...args], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim();
   } catch {
     return '';
   }
@@ -152,7 +167,7 @@ export function checkTextHygiene() {
   const errors = [];
   const files = [
     ...listFiles('.', (file) => {
-      if (file.startsWith('node_modules/') || file.startsWith('.git/')) {
+      if (isGeneratedPath(file)) {
         return false;
       }
       return TEXT_EXTENSIONS.has(extensionOf(file));

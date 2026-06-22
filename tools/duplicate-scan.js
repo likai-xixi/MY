@@ -1,9 +1,24 @@
 import { finish, isCli, listFiles, readText } from './common.js';
 
+const GENERATED_DIRS = new Set([
+  '.git',
+  '.vite',
+  'build',
+  'coverage',
+  'dist',
+  'node_modules',
+  'target',
+  'tmp'
+]);
+
+function isGeneratedPath(file) {
+  return file.replace(/\\/g, '/').split('/').some((part) => GENERATED_DIRS.has(part));
+}
+
 export function scanDuplicates() {
   const errors = [];
   const files = listFiles('.', (file) => {
-    if (file.startsWith('node_modules/') || file.startsWith('.git/')) {
+    if (isGeneratedPath(file)) {
       return false;
     }
     return /\.(md|js|jsx|json|ya?ml|ts|tsx|vue|java|sh|css|scss)$/.test(file) || file === '.gitattributes' || file === '.editorconfig';

@@ -1,16 +1,84 @@
 {
   "schemaVersion": 1,
-  "adapter": "generic",
-  "locked": false,
-  "templateSetup": true,
+  "adapter": "ruoyi",
+  "locked": true,
+  "adoptedAt": "2026-06-22T01:56:43.231Z",
+  "signals": {
+    "hasRuoYiAdmin": true,
+    "hasRuoYiUi": true,
+    "hasVue": true,
+    "hasMaven": true,
+    "hasMyBatisXml": true
+  },
+  "adapterRules": {
+    "schemaVersion": 1,
+    "id": "ruoyi",
+    "name": "RuoYi Vue Project",
+    "backend": {
+      "controllerRoots": [
+        "ruoyi-admin/src/main/java/**/controller/**/<Feature>Controller.java",
+        "ruoyi-generator/src/main/java/**/controller/**/<Feature>Controller.java",
+        "ruoyi-quartz/src/main/java/**/controller/**/<Feature>Controller.java"
+      ],
+      "businessRoots": [
+        "ruoyi-business/src/main/java/**/<featureId>/**",
+        "ruoyi-generator/src/main/java/**/<featureId>/**",
+        "ruoyi-quartz/src/main/java/**/<featureId>/**",
+        "ruoyi-system/src/main/java/**/<featureId>/**"
+      ],
+      "mapperXmlRoots": [
+        "ruoyi-business/src/main/resources/mapper/**/<Feature>Mapper.xml",
+        "ruoyi-generator/src/main/resources/mapper/**/<Feature>Mapper.xml",
+        "ruoyi-quartz/src/main/resources/mapper/**/<Feature>Mapper.xml",
+        "ruoyi-system/src/main/resources/mapper/**/<Feature>Mapper.xml"
+      ],
+      "sharedRoots": [
+        "ruoyi-common",
+        "ruoyi-framework"
+      ]
+    },
+    "frontend": {
+      "viewRoots": [
+        "ruoyi-ui/src/views/**/<featureId>/**",
+        "ruoyi-ui/src/views/**/<featureId>.vue"
+      ],
+      "apiRoots": [
+        "ruoyi-ui/src/api/**/<featureId>.js",
+        "ruoyi-ui/src/api/**/<featureId>.ts"
+      ],
+      "sharedComponentRoots": [
+        "ruoyi-ui/src/components"
+      ]
+    },
+    "menuAndPermission": {
+      "sqlRoots": [
+        "sql/**/*.sql",
+        "ruoyi-admin/sql/**/*.sql"
+      ],
+      "menuTables": [
+        "sys_menu"
+      ],
+      "permissionPatterns": [
+        "@PreAuthorize(\"@ss.hasPermi('<permission>')\")",
+        "v-hasPermi=\"['<permission>']\""
+      ]
+    },
+    "registry": {
+      "featureIdField": "id",
+      "featureNameField": "name",
+      "idFormat": "lowercase ASCII kebab-case",
+      "displayNameMayBeChinese": true
+    },
+    "scannerPolicy": {
+      "generatedDuringProfileSetup": true,
+      "businessWorkCanEditScanner": false,
+      "ruleUpgradeMode": "rule-change"
+    }
+  },
   "ruleOwnership": {
     "scannerCanBeGeneratedDuringProfileSetup": true,
     "scannerCanBeEditedDuringBusinessWork": false,
     "ruleUpgradeRequiresChangeMode": "rule-change"
   },
-  "adapterRules": {
-    "id": "generic",
-    "featureIdFormat": "lowercase ASCII kebab-case",
-    "featureNameCanUseDisplayLanguage": true
-  }
+  "lockedAt": "2026-06-22T02:08:27.511Z"
 }

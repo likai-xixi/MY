@@ -27,7 +27,7 @@ function scanSqlTables(file, text, features) {
   while ((match = createRegex.exec(text))) {
     tables.push({ name: match[1], module, file, source: 'create-table' });
   }
-  const mapperRegex = /\b(?:from|join|update|into|delete\s+from|truncate\s+table)\s+[`"]?([a-zA-Z0-9_]+)[`"]?/gi;
+  const mapperRegex = /(?<!<)\b(?:from|join|update|into|delete\s+from|truncate\s+table)\s+[`"]?([a-zA-Z0-9_]+)[`"]?/gi;
   while ((match = mapperRegex.exec(text))) {
     tables.push({ name: match[1], module, file, source: 'sql-reference' });
   }

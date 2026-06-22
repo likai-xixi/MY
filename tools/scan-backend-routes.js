@@ -25,7 +25,9 @@ function extractFirstString(args = '') {
 function scanJavaRoutes(file, text, features) {
   const routes = [];
   const module = inferFeatureFromPath(file, features);
-  const classPrefix = text.match(/@RequestMapping\s*\(\s*(?:value\s*=\s*)?["']([^"']+)["']/)?.[1] || '';
+  const classMapping = /@RequestMapping\s*\(\s*(?:value\s*=\s*)?["']([^"']+)["']/.exec(text);
+  const classPrefix = classMapping?.[1] || '';
+  const classMappingIndex = classMapping?.index ?? -1;
   const mappingRegex = /@(GetMapping|PostMapping|PutMapping|DeleteMapping|PatchMapping|RequestMapping)\s*(?:\(([^)]*)\))?/g;
   let match;
   while ((match = mappingRegex.exec(text))) {
@@ -34,6 +36,9 @@ function scanJavaRoutes(file, text, features) {
     const rawPath = extractFirstString(args);
     const methodOverride = args.match(/method\s*=\s*RequestMethod\.([A-Z]+)/)?.[1];
     const method = methodOverride || JAVA_MAPPING_METHODS[annotation];
+    if (annotation === 'RequestMapping' && match.index === classMappingIndex) {
+      continue;
+    }
     if (!rawPath && annotation === 'RequestMapping') {
       continue;
     }

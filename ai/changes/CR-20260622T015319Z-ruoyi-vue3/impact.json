@@ -1,0 +1,202 @@
+{
+  "schemaVersion": 1,
+  "mode": "profile",
+  "feature": {
+    "id": "project-base",
+    "name": "RuoYi + Vue3 project base",
+    "status": "setup"
+  },
+  "source": {
+    "backend": {
+      "repository": "https://gitee.com/y_project/RuoYi-Vue.git",
+      "branch": "springboot3",
+      "commit": "b99039b6094b138bc6f8ef5c2b51eed4b8418bfe",
+      "stagingPath": "D:/Project/MY-staging/20260622T095501/RuoYi-Vue-springboot3"
+    },
+    "frontend": {
+      "repository": "https://github.com/yangzongzhuan/RuoYi-Vue3.git",
+      "branch": "master",
+      "commit": "3863cf391a7feba4a2b15b923d7d2dd6b9f62c77",
+      "stagingPath": "D:/Project/MY-staging/20260622T095501/RuoYi-Vue3"
+    }
+  },
+  "protectedFromSourceMerge": [
+    "AGENTS.md",
+    "ai",
+    "memory",
+    "scripts",
+    "tools",
+    ".codex",
+    "docs"
+  ],
+  "baselineCloseout": {
+    "purpose": "Close the RuoYi + Vue3 base-line without adding business features.",
+    "runtimePolicy": "Resolve Maven through ai/rules/runtime-policy.json so npm run check works in a fresh terminal.",
+    "registryCleanup": [
+      "Set monitor/platform/system/tool display names to clear Chinese names.",
+      "Remove false permissions such as a:a:a, b:b:b, unlock-btn:hover:not, and user-info-head:hover:after.",
+      "Remove duplicated class-level route artifacts such as /monitor/cache/monitor/cache and /tool/gen/tool/gen.",
+      "Remove db table false positives such as id from Mapper XML tag parsing."
+    ],
+    "scannerFixes": [
+      "tools/scan-backend-routes.js skips class-level @RequestMapping when building method routes.",
+      "tools/scan-permissions.js and tools/ownership-syncer.js only keep permissions whose prefix matches an active feature id.",
+      "tools/scan-db-schema.js ignores XML tag attributes such as <update id=...> when scanning table references.",
+      "tools/runtime-checker.js reads configured tool paths from runtime policy."
+    ]
+  },
+  "runtimeValidation": {
+    "purpose": "Verify the imported RuoYi + Vue3 base can run locally without starting new business development.",
+    "database": {
+      "container": "mj-mysql",
+      "image": "mysql:8.0",
+      "database": "my_ry_vue_runtime",
+      "sqlFiles": [
+        "sql/ry_20260417.sql",
+        "sql/quartz.sql"
+      ],
+      "tablesCount": 31,
+      "verifiedMenus": [
+        "系统管理",
+        "系统监控",
+        "系统工具",
+        "服务监控",
+        "代码生成"
+      ]
+    },
+    "redis": {
+      "container": "mj-redis",
+      "image": "redis:7",
+      "database": 1,
+      "ping": "PONG"
+    },
+    "ports": {
+      "backend": 18080,
+      "frontend": 5173,
+      "reason": "Default ports 8080 and 80 were already occupied by another local RuoYi runtime."
+    },
+    "frontendProxy": {
+      "file": "ruoyi-ui/vite.config.js",
+      "setting": "RUOYI_API_BASE",
+      "defaultPreserved": "http://localhost:8080",
+      "runtimeValue": "http://localhost:18080"
+    },
+    "browser": {
+      "baseUrl": "http://127.0.0.1:5173",
+      "verified": [
+        "captcha image",
+        "login page",
+        "login redirect to /index",
+        "home page",
+        "system user page /system/user",
+        "monitor server page /monitor/server",
+        "code generation page /tool/gen"
+      ],
+      "screenshot": "ai/changes/CR-20260622T015319Z-ruoyi-vue3/runtime-evidence/browser-tool-gen.png"
+    },
+    "remainingRisks": [
+      "Local smoke validation is not production deployment evidence.",
+      "CRUD mutations, import/export, Druid authentication, Swagger behavior, scheduled jobs, and production frontend build remain unverified.",
+      "ruoyi-ui npm install reported 8 vulnerabilities and no forced dependency rewrite was applied."
+    ]
+  },
+  "mergePlan": {
+    "backendRoots": [
+      "pom.xml",
+      "bin",
+      "doc",
+      "ruoyi-admin",
+      "ruoyi-common",
+      "ruoyi-framework",
+      "ruoyi-generator",
+      "ruoyi-quartz",
+      "ruoyi-system",
+      "sql",
+      "ry.bat",
+      "ry.sh"
+    ],
+    "frontendRoot": "ruoyi-ui",
+    "skippedSourceRoots": [
+      ".git",
+      ".github",
+      ".gitignore",
+      "LICENSE",
+      "README.md",
+      "ruoyi-ui from backend repository"
+    ]
+  },
+  "affected": {
+    "backendModules": [
+      "ruoyi-admin",
+      "ruoyi-common",
+      "ruoyi-framework",
+      "ruoyi-generator",
+      "ruoyi-quartz",
+      "ruoyi-system"
+    ],
+    "frontendModules": [
+      "ruoyi-ui"
+    ],
+    "docs": [
+      ".gitignore",
+      "doc",
+      "memory/HANDOVER.md",
+      "memory/CHANGELOG.md",
+      "memory/MODULE_MAP.md",
+      "memory/API_CATALOG.md",
+      "memory/PROJECT_STATE.md",
+      "memory/TASKS.json"
+    ],
+    "generatedScans": [
+      "ai/generated/backend-routes.json",
+      "ai/generated/frontend-routes.json",
+      "ai/generated/api-clients.json",
+      "ai/generated/db-schema.json",
+      "ai/generated/permissions.json",
+      "ai/generated/component-usage.json",
+      "graph/module-graph.json",
+      "graph/api-graph.json",
+      "graph/ui-graph.json",
+      "graph/render-graph.mmd"
+    ]
+  },
+  "allowedEditRoots": [
+    ".gitignore",
+    "pom.xml",
+    "package.json",
+    "bin",
+    "doc",
+    "ruoyi-admin",
+    "ruoyi-common",
+    "ruoyi-framework",
+    "ruoyi-generator",
+    "ruoyi-quartz",
+    "ruoyi-system",
+    "ruoyi-ui",
+    "sql",
+    "ry.bat",
+    "ry.sh",
+    "scripts/remove-feature.js",
+    "ai/changes",
+    "ai/project-profile.json",
+    "ai/adapters/ruoyi.json",
+    "ai/rules/runtime-policy.json",
+    "ai/generated",
+    "ai/registry",
+    "features",
+    "graph",
+    "memory",
+    "tests",
+    "tools/diff-checker.js",
+    "tools/duplicate-scan.js",
+    "tools/runtime-checker.js",
+    "tools/scan-backend-routes.js",
+    "tools/scan-db-schema.js",
+    "tools/scan-permissions.js",
+    "tools/ownership-syncer.js",
+    "tools/project-config.js",
+    "tools/ownership-checker.js",
+    "tools/boundary-lint.js"
+  ],
+  "blockers": []
+}

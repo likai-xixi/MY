@@ -43,8 +43,34 @@ function unique(items) {
   return [...new Set((items || []).filter(Boolean))];
 }
 
+const FILE_PATH_PREFIXES = [
+  'ai/',
+  'backend/',
+  'bin/',
+  'doc/',
+  'docs/',
+  'features/',
+  'frontend/',
+  'graph/',
+  'memory/',
+  'prompts/',
+  'ruoyi-',
+  'scripts/',
+  'sql/',
+  'templates/',
+  'tests/',
+  'tools/'
+];
+
 function isPathLike(value = '') {
-  return value.includes('/') || /\.(md|js|ts|tsx|jsx|vue|java|xml|sql|json|yml|yaml)$/i.test(value);
+  const normalized = String(value).replace(/\\/g, '/').replace(/^\.\//, '');
+  if (!normalized || normalized.startsWith('/') || normalized.startsWith('@/') || normalized.includes('://')) {
+    return false;
+  }
+  if (FILE_PATH_PREFIXES.some((prefix) => normalized.startsWith(prefix))) {
+    return true;
+  }
+  return /^(pom\.xml|ry\.bat|ry\.sh)$/.test(normalized) || /\.(md|js|ts|tsx|jsx|vue|java|xml|sql|json|yml|yaml)$/i.test(normalized);
 }
 
 function ensureArray(object, key, label, errors) {

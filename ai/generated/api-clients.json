@@ -1,10 +1,852 @@
 {
   "schemaVersion": 1,
   "generatedBy": "tools/scan-api-clients.js",
-  "adapter": "generic",
+  "adapter": "ruoyi",
   "roots": [
+    "ruoyi-ui/src",
     "frontend/src"
   ],
-  "calls": [],
+  "calls": [
+    {
+      "module": "login",
+      "file": "ruoyi-ui/src/api/login.js",
+      "path": "/login",
+      "method": "POST",
+      "source": "request-object"
+    },
+    {
+      "module": "login",
+      "file": "ruoyi-ui/src/api/login.js",
+      "path": "/register",
+      "method": "POST",
+      "source": "request-object"
+    },
+    {
+      "module": "login",
+      "file": "ruoyi-ui/src/api/login.js",
+      "path": "/getInfo",
+      "method": "GET",
+      "source": "request-object"
+    },
+    {
+      "module": "login",
+      "file": "ruoyi-ui/src/api/login.js",
+      "path": "/unlockscreen",
+      "method": "POST",
+      "source": "request-object"
+    },
+    {
+      "module": "login",
+      "file": "ruoyi-ui/src/api/login.js",
+      "path": "/logout",
+      "method": "POST",
+      "source": "request-object"
+    },
+    {
+      "module": "login",
+      "file": "ruoyi-ui/src/api/login.js",
+      "path": "/captchaImage",
+      "method": "GET",
+      "source": "request-object"
+    },
+    {
+      "module": "menu",
+      "file": "ruoyi-ui/src/api/menu.js",
+      "path": "/getRouters",
+      "method": "GET",
+      "source": "request-object"
+    },
+    {
+      "module": "monitor",
+      "file": "ruoyi-ui/src/api/monitor/cache.js",
+      "path": "/monitor/cache",
+      "method": "GET",
+      "source": "request-object"
+    },
+    {
+      "module": "monitor",
+      "file": "ruoyi-ui/src/api/monitor/cache.js",
+      "path": "/monitor/cache/getNames",
+      "method": "GET",
+      "source": "request-object"
+    },
+    {
+      "module": "monitor",
+      "file": "ruoyi-ui/src/api/monitor/cache.js",
+      "path": "/monitor/cache/getKeys/",
+      "method": "GET",
+      "source": "request-object"
+    },
+    {
+      "module": "monitor",
+      "file": "ruoyi-ui/src/api/monitor/cache.js",
+      "path": "/monitor/cache/getValue/",
+      "method": "GET",
+      "source": "request-object"
+    },
+    {
+      "module": "monitor",
+      "file": "ruoyi-ui/src/api/monitor/cache.js",
+      "path": "/monitor/cache/clearCacheName/",
+      "method": "DELETE",
+      "source": "request-object"
+    },
+    {
+      "module": "monitor",
+      "file": "ruoyi-ui/src/api/monitor/cache.js",
+      "path": "/monitor/cache/clearCacheKey/",
+      "method": "DELETE",
+      "source": "request-object"
+    },
+    {
+      "module": "monitor",
+      "file": "ruoyi-ui/src/api/monitor/cache.js",
+      "path": "/monitor/cache/clearCacheAll",
+      "method": "DELETE",
+      "source": "request-object"
+    },
+    {
+      "module": "monitor",
+      "file": "ruoyi-ui/src/api/monitor/job.js",
+      "path": "/monitor/job/list",
+      "method": "GET",
+      "source": "request-object"
+    },
+    {
+      "module": "monitor",
+      "file": "ruoyi-ui/src/api/monitor/job.js",
+      "path": "/monitor/job/",
+      "method": "GET",
+      "source": "request-object"
+    },
+    {
+      "module": "monitor",
+      "file": "ruoyi-ui/src/api/monitor/job.js",
+      "path": "/monitor/job",
+      "method": "POST",
+      "source": "request-object"
+    },
+    {
+      "module": "monitor",
+      "file": "ruoyi-ui/src/api/monitor/job.js",
+      "path": "/monitor/job",
+      "method": "PUT",
+      "source": "request-object"
+    },
+    {
+      "module": "monitor",
+      "file": "ruoyi-ui/src/api/monitor/job.js",
+      "path": "/monitor/job/",
+      "method": "DELETE",
+      "source": "request-object"
+    },
+    {
+      "module": "monitor",
+      "file": "ruoyi-ui/src/api/monitor/job.js",
+      "path": "/monitor/job/changeStatus",
+      "method": "PUT",
+      "source": "request-object"
+    },
+    {
+      "module": "monitor",
+      "file": "ruoyi-ui/src/api/monitor/job.js",
+      "path": "/monitor/job/run",
+      "method": "PUT",
+      "source": "request-object"
+    },
+    {
+      "module": "monitor",
+      "file": "ruoyi-ui/src/api/monitor/jobLog.js",
+      "path": "/monitor/jobLog/list",
+      "method": "GET",
+      "source": "request-object"
+    },
+    {
+      "module": "monitor",
+      "file": "ruoyi-ui/src/api/monitor/jobLog.js",
+      "path": "/monitor/jobLog/",
+      "method": "DELETE",
+      "source": "request-object"
+    },
+    {
+      "module": "monitor",
+      "file": "ruoyi-ui/src/api/monitor/jobLog.js",
+      "path": "/monitor/jobLog/clean",
+      "method": "DELETE",
+      "source": "request-object"
+    },
+    {
+      "module": "monitor",
+      "file": "ruoyi-ui/src/api/monitor/logininfor.js",
+      "path": "/monitor/logininfor/list",
+      "method": "GET",
+      "source": "request-object"
+    },
+    {
+      "module": "monitor",
+      "file": "ruoyi-ui/src/api/monitor/logininfor.js",
+      "path": "/monitor/logininfor/",
+      "method": "DELETE",
+      "source": "request-object"
+    },
+    {
+      "module": "monitor",
+      "file": "ruoyi-ui/src/api/monitor/logininfor.js",
+      "path": "/monitor/logininfor/unlock/",
+      "method": "GET",
+      "source": "request-object"
+    },
+    {
+      "module": "monitor",
+      "file": "ruoyi-ui/src/api/monitor/logininfor.js",
+      "path": "/monitor/logininfor/clean",
+      "method": "DELETE",
+      "source": "request-object"
+    },
+    {
+      "module": "monitor",
+      "file": "ruoyi-ui/src/api/monitor/online.js",
+      "path": "/monitor/online/list",
+      "method": "GET",
+      "source": "request-object"
+    },
+    {
+      "module": "monitor",
+      "file": "ruoyi-ui/src/api/monitor/online.js",
+      "path": "/monitor/online/",
+      "method": "DELETE",
+      "source": "request-object"
+    },
+    {
+      "module": "monitor",
+      "file": "ruoyi-ui/src/api/monitor/operlog.js",
+      "path": "/monitor/operlog/list",
+      "method": "GET",
+      "source": "request-object"
+    },
+    {
+      "module": "monitor",
+      "file": "ruoyi-ui/src/api/monitor/operlog.js",
+      "path": "/monitor/operlog/",
+      "method": "DELETE",
+      "source": "request-object"
+    },
+    {
+      "module": "monitor",
+      "file": "ruoyi-ui/src/api/monitor/operlog.js",
+      "path": "/monitor/operlog/clean",
+      "method": "DELETE",
+      "source": "request-object"
+    },
+    {
+      "module": "monitor",
+      "file": "ruoyi-ui/src/api/monitor/server.js",
+      "path": "/monitor/server",
+      "method": "GET",
+      "source": "request-object"
+    },
+    {
+      "module": "system",
+      "file": "ruoyi-ui/src/api/system/config.js",
+      "path": "/system/config/list",
+      "method": "GET",
+      "source": "request-object"
+    },
+    {
+      "module": "system",
+      "file": "ruoyi-ui/src/api/system/config.js",
+      "path": "/system/config/",
+      "method": "GET",
+      "source": "request-object"
+    },
+    {
+      "module": "system",
+      "file": "ruoyi-ui/src/api/system/config.js",
+      "path": "/system/config/configKey/",
+      "method": "GET",
+      "source": "request-object"
+    },
+    {
+      "module": "system",
+      "file": "ruoyi-ui/src/api/system/config.js",
+      "path": "/system/config",
+      "method": "POST",
+      "source": "request-object"
+    },
+    {
+      "module": "system",
+      "file": "ruoyi-ui/src/api/system/config.js",
+      "path": "/system/config",
+      "method": "PUT",
+      "source": "request-object"
+    },
+    {
+      "module": "system",
+      "file": "ruoyi-ui/src/api/system/config.js",
+      "path": "/system/config/",
+      "method": "DELETE",
+      "source": "request-object"
+    },
+    {
+      "module": "system",
+      "file": "ruoyi-ui/src/api/system/config.js",
+      "path": "/system/config/refreshCache",
+      "method": "DELETE",
+      "source": "request-object"
+    },
+    {
+      "module": "system",
+      "file": "ruoyi-ui/src/api/system/dept.js",
+      "path": "/system/dept/list",
+      "method": "GET",
+      "source": "request-object"
+    },
+    {
+      "module": "system",
+      "file": "ruoyi-ui/src/api/system/dept.js",
+      "path": "/system/dept/list/exclude/",
+      "method": "GET",
+      "source": "request-object"
+    },
+    {
+      "module": "system",
+      "file": "ruoyi-ui/src/api/system/dept.js",
+      "path": "/system/dept/",
+      "method": "GET",
+      "source": "request-object"
+    },
+    {
+      "module": "system",
+      "file": "ruoyi-ui/src/api/system/dept.js",
+      "path": "/system/dept",
+      "method": "POST",
+      "source": "request-object"
+    },
+    {
+      "module": "system",
+      "file": "ruoyi-ui/src/api/system/dept.js",
+      "path": "/system/dept",
+      "method": "PUT",
+      "source": "request-object"
+    },
+    {
+      "module": "system",
+      "file": "ruoyi-ui/src/api/system/dept.js",
+      "path": "/system/dept/updateSort",
+      "method": "PUT",
+      "source": "request-object"
+    },
+    {
+      "module": "system",
+      "file": "ruoyi-ui/src/api/system/dept.js",
+      "path": "/system/dept/",
+      "method": "DELETE",
+      "source": "request-object"
+    },
+    {
+      "module": "system",
+      "file": "ruoyi-ui/src/api/system/dict/data.js",
+      "path": "/system/dict/data/list",
+      "method": "GET",
+      "source": "request-object"
+    },
+    {
+      "module": "system",
+      "file": "ruoyi-ui/src/api/system/dict/data.js",
+      "path": "/system/dict/data/",
+      "method": "GET",
+      "source": "request-object"
+    },
+    {
+      "module": "system",
+      "file": "ruoyi-ui/src/api/system/dict/data.js",
+      "path": "/system/dict/data/type/",
+      "method": "GET",
+      "source": "request-object"
+    },
+    {
+      "module": "system",
+      "file": "ruoyi-ui/src/api/system/dict/data.js",
+      "path": "/system/dict/data",
+      "method": "POST",
+      "source": "request-object"
+    },
+    {
+      "module": "system",
+      "file": "ruoyi-ui/src/api/system/dict/data.js",
+      "path": "/system/dict/data",
+      "method": "PUT",
+      "source": "request-object"
+    },
+    {
+      "module": "system",
+      "file": "ruoyi-ui/src/api/system/dict/data.js",
+      "path": "/system/dict/data/",
+      "method": "DELETE",
+      "source": "request-object"
+    },
+    {
+      "module": "system",
+      "file": "ruoyi-ui/src/api/system/dict/type.js",
+      "path": "/system/dict/type/list",
+      "method": "GET",
+      "source": "request-object"
+    },
+    {
+      "module": "system",
+      "file": "ruoyi-ui/src/api/system/dict/type.js",
+      "path": "/system/dict/type/",
+      "method": "GET",
+      "source": "request-object"
+    },
+    {
+      "module": "system",
+      "file": "ruoyi-ui/src/api/system/dict/type.js",
+      "path": "/system/dict/type",
+      "method": "POST",
+      "source": "request-object"
+    },
+    {
+      "module": "system",
+      "file": "ruoyi-ui/src/api/system/dict/type.js",
+      "path": "/system/dict/type",
+      "method": "PUT",
+      "source": "request-object"
+    },
+    {
+      "module": "system",
+      "file": "ruoyi-ui/src/api/system/dict/type.js",
+      "path": "/system/dict/type/",
+      "method": "DELETE",
+      "source": "request-object"
+    },
+    {
+      "module": "system",
+      "file": "ruoyi-ui/src/api/system/dict/type.js",
+      "path": "/system/dict/type/refreshCache",
+      "method": "DELETE",
+      "source": "request-object"
+    },
+    {
+      "module": "system",
+      "file": "ruoyi-ui/src/api/system/dict/type.js",
+      "path": "/system/dict/type/optionselect",
+      "method": "GET",
+      "source": "request-object"
+    },
+    {
+      "module": "system",
+      "file": "ruoyi-ui/src/api/system/menu.js",
+      "path": "/system/menu/list",
+      "method": "GET",
+      "source": "request-object"
+    },
+    {
+      "module": "system",
+      "file": "ruoyi-ui/src/api/system/menu.js",
+      "path": "/system/menu/",
+      "method": "GET",
+      "source": "request-object"
+    },
+    {
+      "module": "system",
+      "file": "ruoyi-ui/src/api/system/menu.js",
+      "path": "/system/menu/treeselect",
+      "method": "GET",
+      "source": "request-object"
+    },
+    {
+      "module": "system",
+      "file": "ruoyi-ui/src/api/system/menu.js",
+      "path": "/system/menu/roleMenuTreeselect/",
+      "method": "GET",
+      "source": "request-object"
+    },
+    {
+      "module": "system",
+      "file": "ruoyi-ui/src/api/system/menu.js",
+      "path": "/system/menu",
+      "method": "POST",
+      "source": "request-object"
+    },
+    {
+      "module": "system",
+      "file": "ruoyi-ui/src/api/system/menu.js",
+      "path": "/system/menu",
+      "method": "PUT",
+      "source": "request-object"
+    },
+    {
+      "module": "system",
+      "file": "ruoyi-ui/src/api/system/menu.js",
+      "path": "/system/menu/updateSort",
+      "method": "PUT",
+      "source": "request-object"
+    },
+    {
+      "module": "system",
+      "file": "ruoyi-ui/src/api/system/menu.js",
+      "path": "/system/menu/",
+      "method": "DELETE",
+      "source": "request-object"
+    },
+    {
+      "module": "system",
+      "file": "ruoyi-ui/src/api/system/notice.js",
+      "path": "/system/notice/list",
+      "method": "GET",
+      "source": "request-object"
+    },
+    {
+      "module": "system",
+      "file": "ruoyi-ui/src/api/system/notice.js",
+      "path": "/system/notice/",
+      "method": "GET",
+      "source": "request-object"
+    },
+    {
+      "module": "system",
+      "file": "ruoyi-ui/src/api/system/notice.js",
+      "path": "/system/notice",
+      "method": "POST",
+      "source": "request-object"
+    },
+    {
+      "module": "system",
+      "file": "ruoyi-ui/src/api/system/notice.js",
+      "path": "/system/notice",
+      "method": "PUT",
+      "source": "request-object"
+    },
+    {
+      "module": "system",
+      "file": "ruoyi-ui/src/api/system/notice.js",
+      "path": "/system/notice/",
+      "method": "DELETE",
+      "source": "request-object"
+    },
+    {
+      "module": "system",
+      "file": "ruoyi-ui/src/api/system/notice.js",
+      "path": "/system/notice/listTop",
+      "method": "GET",
+      "source": "request-object"
+    },
+    {
+      "module": "system",
+      "file": "ruoyi-ui/src/api/system/notice.js",
+      "path": "/system/notice/markRead",
+      "method": "POST",
+      "source": "request-object"
+    },
+    {
+      "module": "system",
+      "file": "ruoyi-ui/src/api/system/notice.js",
+      "path": "/system/notice/markReadAll",
+      "method": "POST",
+      "source": "request-object"
+    },
+    {
+      "module": "system",
+      "file": "ruoyi-ui/src/api/system/notice.js",
+      "path": "/system/notice/readUsers/list",
+      "method": "GET",
+      "source": "request-object"
+    },
+    {
+      "module": "system",
+      "file": "ruoyi-ui/src/api/system/post.js",
+      "path": "/system/post/list",
+      "method": "GET",
+      "source": "request-object"
+    },
+    {
+      "module": "system",
+      "file": "ruoyi-ui/src/api/system/post.js",
+      "path": "/system/post/",
+      "method": "GET",
+      "source": "request-object"
+    },
+    {
+      "module": "system",
+      "file": "ruoyi-ui/src/api/system/post.js",
+      "path": "/system/post",
+      "method": "POST",
+      "source": "request-object"
+    },
+    {
+      "module": "system",
+      "file": "ruoyi-ui/src/api/system/post.js",
+      "path": "/system/post",
+      "method": "PUT",
+      "source": "request-object"
+    },
+    {
+      "module": "system",
+      "file": "ruoyi-ui/src/api/system/post.js",
+      "path": "/system/post/",
+      "method": "DELETE",
+      "source": "request-object"
+    },
+    {
+      "module": "system",
+      "file": "ruoyi-ui/src/api/system/role.js",
+      "path": "/system/role/list",
+      "method": "GET",
+      "source": "request-object"
+    },
+    {
+      "module": "system",
+      "file": "ruoyi-ui/src/api/system/role.js",
+      "path": "/system/role/",
+      "method": "GET",
+      "source": "request-object"
+    },
+    {
+      "module": "system",
+      "file": "ruoyi-ui/src/api/system/role.js",
+      "path": "/system/role",
+      "method": "POST",
+      "source": "request-object"
+    },
+    {
+      "module": "system",
+      "file": "ruoyi-ui/src/api/system/role.js",
+      "path": "/system/role",
+      "method": "PUT",
+      "source": "request-object"
+    },
+    {
+      "module": "system",
+      "file": "ruoyi-ui/src/api/system/role.js",
+      "path": "/system/role/dataScope",
+      "method": "PUT",
+      "source": "request-object"
+    },
+    {
+      "module": "system",
+      "file": "ruoyi-ui/src/api/system/role.js",
+      "path": "/system/role/changeStatus",
+      "method": "PUT",
+      "source": "request-object"
+    },
+    {
+      "module": "system",
+      "file": "ruoyi-ui/src/api/system/role.js",
+      "path": "/system/role/",
+      "method": "DELETE",
+      "source": "request-object"
+    },
+    {
+      "module": "system",
+      "file": "ruoyi-ui/src/api/system/role.js",
+      "path": "/system/role/authUser/allocatedList",
+      "method": "GET",
+      "source": "request-object"
+    },
+    {
+      "module": "system",
+      "file": "ruoyi-ui/src/api/system/role.js",
+      "path": "/system/role/authUser/unallocatedList",
+      "method": "GET",
+      "source": "request-object"
+    },
+    {
+      "module": "system",
+      "file": "ruoyi-ui/src/api/system/role.js",
+      "path": "/system/role/authUser/cancel",
+      "method": "PUT",
+      "source": "request-object"
+    },
+    {
+      "module": "system",
+      "file": "ruoyi-ui/src/api/system/role.js",
+      "path": "/system/role/authUser/cancelAll",
+      "method": "PUT",
+      "source": "request-object"
+    },
+    {
+      "module": "system",
+      "file": "ruoyi-ui/src/api/system/role.js",
+      "path": "/system/role/authUser/selectAll",
+      "method": "PUT",
+      "source": "request-object"
+    },
+    {
+      "module": "system",
+      "file": "ruoyi-ui/src/api/system/role.js",
+      "path": "/system/role/deptTree/",
+      "method": "GET",
+      "source": "request-object"
+    },
+    {
+      "module": "system",
+      "file": "ruoyi-ui/src/api/system/user.js",
+      "path": "/system/user/list",
+      "method": "GET",
+      "source": "request-object"
+    },
+    {
+      "module": "system",
+      "file": "ruoyi-ui/src/api/system/user.js",
+      "path": "/system/user/",
+      "method": "GET",
+      "source": "request-object"
+    },
+    {
+      "module": "system",
+      "file": "ruoyi-ui/src/api/system/user.js",
+      "path": "/system/user",
+      "method": "POST",
+      "source": "request-object"
+    },
+    {
+      "module": "system",
+      "file": "ruoyi-ui/src/api/system/user.js",
+      "path": "/system/user",
+      "method": "PUT",
+      "source": "request-object"
+    },
+    {
+      "module": "system",
+      "file": "ruoyi-ui/src/api/system/user.js",
+      "path": "/system/user/",
+      "method": "DELETE",
+      "source": "request-object"
+    },
+    {
+      "module": "system",
+      "file": "ruoyi-ui/src/api/system/user.js",
+      "path": "/system/user/resetPwd",
+      "method": "PUT",
+      "source": "request-object"
+    },
+    {
+      "module": "system",
+      "file": "ruoyi-ui/src/api/system/user.js",
+      "path": "/system/user/changeStatus",
+      "method": "PUT",
+      "source": "request-object"
+    },
+    {
+      "module": "system",
+      "file": "ruoyi-ui/src/api/system/user.js",
+      "path": "/system/user/profile",
+      "method": "GET",
+      "source": "request-object"
+    },
+    {
+      "module": "system",
+      "file": "ruoyi-ui/src/api/system/user.js",
+      "path": "/system/user/profile",
+      "method": "PUT",
+      "source": "request-object"
+    },
+    {
+      "module": "system",
+      "file": "ruoyi-ui/src/api/system/user.js",
+      "path": "/system/user/profile/updatePwd",
+      "method": "PUT",
+      "source": "request-object"
+    },
+    {
+      "module": "system",
+      "file": "ruoyi-ui/src/api/system/user.js",
+      "path": "/system/user/profile/avatar",
+      "method": "POST",
+      "source": "request-object"
+    },
+    {
+      "module": "system",
+      "file": "ruoyi-ui/src/api/system/user.js",
+      "path": "/system/user/authRole/",
+      "method": "GET",
+      "source": "request-object"
+    },
+    {
+      "module": "system",
+      "file": "ruoyi-ui/src/api/system/user.js",
+      "path": "/system/user/authRole",
+      "method": "PUT",
+      "source": "request-object"
+    },
+    {
+      "module": "system",
+      "file": "ruoyi-ui/src/api/system/user.js",
+      "path": "/system/user/deptTree",
+      "method": "GET",
+      "source": "request-object"
+    },
+    {
+      "module": "tool",
+      "file": "ruoyi-ui/src/api/tool/gen.js",
+      "path": "/tool/gen/list",
+      "method": "GET",
+      "source": "request-object"
+    },
+    {
+      "module": "tool",
+      "file": "ruoyi-ui/src/api/tool/gen.js",
+      "path": "/tool/gen/db/list",
+      "method": "GET",
+      "source": "request-object"
+    },
+    {
+      "module": "tool",
+      "file": "ruoyi-ui/src/api/tool/gen.js",
+      "path": "/tool/gen/",
+      "method": "GET",
+      "source": "request-object"
+    },
+    {
+      "module": "tool",
+      "file": "ruoyi-ui/src/api/tool/gen.js",
+      "path": "/tool/gen",
+      "method": "PUT",
+      "source": "request-object"
+    },
+    {
+      "module": "tool",
+      "file": "ruoyi-ui/src/api/tool/gen.js",
+      "path": "/tool/gen/importTable",
+      "method": "POST",
+      "source": "request-object"
+    },
+    {
+      "module": "tool",
+      "file": "ruoyi-ui/src/api/tool/gen.js",
+      "path": "/tool/gen/createTable",
+      "method": "POST",
+      "source": "request-object"
+    },
+    {
+      "module": "tool",
+      "file": "ruoyi-ui/src/api/tool/gen.js",
+      "path": "/tool/gen/preview/",
+      "method": "GET",
+      "source": "request-object"
+    },
+    {
+      "module": "tool",
+      "file": "ruoyi-ui/src/api/tool/gen.js",
+      "path": "/tool/gen/",
+      "method": "DELETE",
+      "source": "request-object"
+    },
+    {
+      "module": "tool",
+      "file": "ruoyi-ui/src/api/tool/gen.js",
+      "path": "/tool/gen/genCode/",
+      "method": "GET",
+      "source": "request-object"
+    },
+    {
+      "module": "tool",
+      "file": "ruoyi-ui/src/api/tool/gen.js",
+      "path": "/tool/gen/synchDb/",
+      "method": "GET",
+      "source": "request-object"
+    }
+  ],
   "moduleContracts": []
 }
