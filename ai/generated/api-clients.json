@@ -6,12 +6,5 @@
     "frontend/src"
   ],
   "calls": [],
-  "moduleContracts": [
-    {
-      "module": "inventory",
-      "api": "inventory.list",
-      "file": "frontend/src/modules/inventory/module.ts",
-      "source": "module-contract"
-    }
-  ]
+  "moduleContracts": []
 }

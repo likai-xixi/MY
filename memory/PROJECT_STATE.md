@@ -6,15 +6,15 @@ Maintain a chat-driven Codex App development template that lets the user add, up
 
 ## Status
 
-The scaffold is ready as a governance layer for a real backend/frontend project. Business implementation remains intentionally minimal and uses the inventory module as an example feature.
+The governance layer is ready for a real backend/frontend project. Feature ownership is tracked through registry, graph, generated scans, change records, memory, and handover files.
 
-## Active Feature
+## Active Features
 
-`features/inventory.md`
+- none
 
 ## Active Task
 
-`TASK-0001` in `memory/TASKS.json`
+`none` in `memory/TASKS.json`
 
 ## Latest Session
 
@@ -22,17 +22,14 @@ The scaffold is ready as a governance layer for a real backend/frontend project.
 
 ## Next Actions
 
-- Place this scaffold at the root of the real project that Codex App will edit.
-- Tell Codex to read `AGENTS.md` and run `npm run resume` before business work.
+- Open the project in Codex App.
+- Ask Codex to read `AGENTS.md` and run `npm run resume` before business work.
 - Use chat requests for `新增功能`, `功能迭代`, `删除功能预分析`, and `确认删除`.
-- Add runtime-specific backend, frontend, database, and UI tests when the real stack is selected.
+- Run `npm run check` before trusting any completion claim.
 
 ## Open Questions
 
-- Which backend framework will the real project use?
-- Which frontend framework will the real project use?
-- Which database and migration tool will own table changes?
-- Which UI component library will become the shared component base?
+- Which runtime-specific backend, frontend, database, and browser checks should be added for the real stack?
 
 ## Last Verification
 

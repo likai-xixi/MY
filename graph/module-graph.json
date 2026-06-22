@@ -56,24 +56,6 @@
       "type": "business",
       "path": "features",
       "description": "Business feature briefs and acceptance criteria."
-    },
-    {
-      "id": "feature:inventory",
-      "type": "feature",
-      "path": "features/inventory.md",
-      "description": "Inventory List feature brief."
-    },
-    {
-      "id": "backend:inventory",
-      "type": "backend-module",
-      "path": "backend/modules/inventory",
-      "description": "Inventory backend module."
-    },
-    {
-      "id": "frontend:inventory",
-      "type": "frontend-module",
-      "path": "frontend/src/modules/inventory",
-      "description": "Inventory frontend module."
     }
   ],
   "edges": [
@@ -131,31 +113,6 @@
       "from": "features",
       "to": "frontend",
       "type": "drives"
-    },
-    {
-      "from": "features",
-      "to": "feature:inventory",
-      "type": "contains"
-    },
-    {
-      "from": "backend",
-      "to": "backend:inventory",
-      "type": "contains"
-    },
-    {
-      "from": "feature:inventory",
-      "to": "backend:inventory",
-      "type": "implements"
-    },
-    {
-      "from": "frontend",
-      "to": "frontend:inventory",
-      "type": "contains"
-    },
-    {
-      "from": "feature:inventory",
-      "to": "frontend:inventory",
-      "type": "implements"
     }
   ]
 }

@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "feature": "inventory",
+  "files": [
+    "features/inventory.md",
+    "backend/modules/inventory",
+    "frontend/src/modules/inventory",
+    "frontend/src/modules/inventory/module.ts",
+    "ai/contracts/inventory.api.md",
+    "ai/contracts/inventory.ui.md",
+    "ai/contracts/inventory.db.md",
+    "ai/contracts/inventory.permission.md",
+    "ai/contracts/inventory.delete-ownership.md"
+  ]
+}

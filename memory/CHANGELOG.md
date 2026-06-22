@@ -19,4 +19,12 @@
 - Enhanced Codex App chat workflow governance with single ai:do entry, open update lifecycle, ownership auto-sync, RuoYi scanner coverage, runtime gate, and deletion rollback bundles.
 - Feature: `template-governance`.## 2026-06-22 — baseline
 - Hardened Windows runner, deletion closure, component governance, backend boundaries, source-truth checks, and CI matrix.
-- Feature: `template-governance`.
+- Feature: `template-governance`.## 2026-06-22 — remove-dry-run
+- Prepared deletion dry-run impact list for `inventory` (Inventory). No business files were deleted.
+- Feature: `inventory`.
+## 2026-06-22 — Feature Removal
+
+- Removed feature `inventory` (Inventory) from feature registry, module registry, graph outputs, active task memory, project state, and handoff trail.
+- Rebuilt generated scans and graph memory after the removal pass.## 2026-06-22 — remove-apply
+- Applied feature deletion for `inventory` (Inventory) and updated registry, graph, scans, memory, changelog, and handover.
+- Feature: `inventory`.

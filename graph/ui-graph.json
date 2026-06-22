@@ -1,20 +1,4 @@
 {
   "schemaVersion": 1,
-  "screens": [
-    {
-      "id": "frontend.inventory",
-      "route": "/inventory",
-      "owner": "frontend-agent",
-      "module": "inventory",
-      "usesApi": [
-        "inventory.list"
-      ],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    }
-  ]
+  "screens": []
 }

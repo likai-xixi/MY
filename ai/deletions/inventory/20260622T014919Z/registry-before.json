@@ -1,0 +1,159 @@
+{
+  "schemaVersion": 1,
+  "features": {
+    "schemaVersion": 1,
+    "description": "Machine-readable feature ledger used by Codex before adding, changing, or removing business behavior.",
+    "features": [
+      {
+        "id": "inventory",
+        "name": "Inventory",
+        "status": "active",
+        "featureBrief": "features/inventory.md",
+        "backendModules": [
+          "backend/modules/inventory"
+        ],
+        "frontendModules": [
+          "frontend/src/modules/inventory"
+        ],
+        "apis": [
+          "inventory.list"
+        ],
+        "screens": [
+          "frontend.inventory"
+        ],
+        "dbTables": [],
+        "permissions": [],
+        "components": [],
+        "routes": [
+          "/inventory"
+        ],
+        "tests": [],
+        "docs": [
+          "ai/contracts/inventory.api.md",
+          "ai/contracts/inventory.db.md",
+          "ai/contracts/inventory.delete-ownership.md",
+          "ai/contracts/inventory.permission.md",
+          "ai/contracts/inventory.ui.md",
+          "features/inventory.md",
+          "graph/api-graph.json",
+          "graph/ui-graph.json",
+          "memory/API_CATALOG.md"
+        ],
+        "lastChangedBy": "CR-2026-06-21-000",
+        "updatedAt": "2026-06-21",
+        "aliases": [
+          "Inventory",
+          "库存管理",
+          "库存"
+        ],
+        "controllers": [],
+        "services": [],
+        "mappers": [],
+        "domainObjects": [],
+        "apiClients": [
+          "frontend/src/modules/inventory/module.ts"
+        ],
+        "sqlFiles": [],
+        "mapperXmlFiles": [],
+        "menuSqlFiles": [],
+        "permissionFiles": [],
+        "ownership": {
+          "backend": [
+            "backend/modules/inventory"
+          ],
+          "frontend": [
+            "frontend/src/modules/inventory"
+          ],
+          "api": [
+            "inventory.list"
+          ],
+          "ui": [
+            "frontend.inventory"
+          ],
+          "database": [],
+          "permissions": [],
+          "menus": [],
+          "components": [],
+          "tests": [],
+          "docs": [
+            "ai/contracts/inventory.api.md",
+            "ai/contracts/inventory.db.md",
+            "ai/contracts/inventory.delete-ownership.md",
+            "ai/contracts/inventory.permission.md",
+            "ai/contracts/inventory.ui.md",
+            "features/inventory.md",
+            "graph/api-graph.json",
+            "graph/ui-graph.json",
+            "memory/API_CATALOG.md"
+          ],
+          "apiClients": [
+            "frontend/src/modules/inventory/module.ts"
+          ],
+          "controllers": [],
+          "services": [],
+          "mappers": [],
+          "domainObjects": []
+        }
+      }
+    ]
+  },
+  "modules": {
+    "schemaVersion": 1,
+    "description": "Module ownership registry generated and maintained with the module graph.",
+    "modules": [
+      {
+        "id": "inventory",
+        "type": "business-feature",
+        "feature": "inventory",
+        "backendPath": "backend/modules/inventory",
+        "frontendPath": "frontend/src/modules/inventory",
+        "owner": "workflow"
+      }
+    ]
+  },
+  "db": {
+    "schemaVersion": 1,
+    "description": "Database object ledger. Add tables, migrations, seed data, and ownership here when a real stack is introduced.",
+    "tables": []
+  },
+  "permissions": {
+    "schemaVersion": 1,
+    "description": "Permission ledger. Add menu and operation permission codes here before binding them to UI or backend checks.",
+    "permissions": []
+  },
+  "apiGraph": {
+    "schemaVersion": 1,
+    "endpoints": [
+      {
+        "id": "inventory.list",
+        "method": "GET",
+        "path": "/api/inventory/items",
+        "owner": "backend-agent",
+        "module": "inventory",
+        "consumers": [
+          "frontend.inventory"
+        ]
+      }
+    ]
+  },
+  "uiGraph": {
+    "schemaVersion": 1,
+    "screens": [
+      {
+        "id": "frontend.inventory",
+        "route": "/inventory",
+        "owner": "frontend-agent",
+        "module": "inventory",
+        "usesApi": [
+          "inventory.list"
+        ],
+        "states": [
+          "loading",
+          "empty",
+          "success",
+          "error"
+        ]
+      }
+    ]
+  }
+}

@@ -5,8 +5,6 @@
   "roots": [
     "backend/modules"
   ],
-  "modules": [
-    "inventory"
-  ],
+  "modules": [],
   "routes": []
 }

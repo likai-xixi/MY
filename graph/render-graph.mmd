@@ -8,9 +8,6 @@ graph TD
   backend["backend"]
   frontend["frontend"]
   features["features"]
-  feature_inventory["features/inventory.md"]
-  backend_inventory["backend/modules/inventory"]
-  frontend_inventory["frontend/src/modules/inventory"]
   agents -->|updates| memory
   agents -->|routes-work| backend
   agents -->|routes-work| frontend
@@ -22,8 +19,3 @@ graph TD
   tools -->|validates| ai
   features -->|drives| backend
   features -->|drives| frontend
-  features -->|contains| feature_inventory
-  backend -->|contains| backend_inventory
-  feature_inventory -->|implements| backend_inventory
-  frontend -->|contains| frontend_inventory
-  feature_inventory -->|implements| frontend_inventory
