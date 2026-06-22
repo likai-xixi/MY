@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "description": "Shared component capability ledger. Codex must read this before creating frontend components. An empty ledger is only valid while no shared component files exist; shared component files must also appear in the active component catalog.",
+  "requiredFields": [
+    "id",
+    "name",
+    "path",
+    "owner",
+    "purpose",
+    "category",
+    "status",
+    "usedBy"
+  ],
+  "searchFields": [
+    "id",
+    "name",
+    "aliases",
+    "purpose",
+    "props",
+    "category",
+    "fingerprint"
+  ],
+  "exceptionPolicy": "Module-local component exceptions live in ai/changes/<current>/component-exception.md. Shared root files are not exempt from registry plus catalog registration.",
+  "components": []
+}

@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "name": "module-boundary-policy",
+  "backend": {
+    "businessRoot": "backend/modules/<feature>",
+    "allowedLayers": [
+      "api",
+      "service",
+      "domain",
+      "repository"
+    ],
+    "allowedModuleSubdirectories": [
+      "api",
+      "service",
+      "domain",
+      "repository"
+    ],
+    "moduleSubdirectoryWhitelist": [],
+    "rootCodeWhitelist": [
+      "backend/main.java"
+    ],
+    "rootCodeRule": "Backend business code must live under backend/modules/<feature>/{api,service,domain,repository}/. Root-level backend code is allowed only for explicitly registered non-business bootstrap placeholders.",
+    "commonRule": "backend/common may contain cross-module utilities only; it must not own feature behavior."
+  },
+  "apiFactSources": {
+    "graph": "graph/api-graph.json",
+    "catalog": "memory/API_CATALOG.md",
+    "generatedBackendRoutes": "ai/generated/backend-routes.json",
+    "realBackendRouteSources": [
+      "java-annotation",
+      "js-router"
+    ],
+    "allowMissingGeneratedRouteWhenTemplateSetup": true
+  },
+  "frontend": {
+    "businessRoot": "frontend/src/modules/<feature>",
+    "sharedComponents": "frontend/src/components"
+  }
+}

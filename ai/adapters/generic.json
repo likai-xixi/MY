@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "id": "generic",
+  "name": "Generic Modular Project",
+  "backend": {
+    "moduleRoots": [
+      "backend/modules/<featureId>"
+    ],
+    "sharedRoots": [
+      "backend/common"
+    ]
+  },
+  "frontend": {
+    "moduleRoots": [
+      "frontend/src/modules/<featureId>"
+    ],
+    "sharedComponentRoots": [
+      "frontend/src/components"
+    ]
+  },
+  "registry": {
+    "featureIdField": "id",
+    "featureNameField": "name",
+    "idFormat": "lowercase ASCII kebab-case"
+  },
+  "scannerPolicy": {
+    "generatedDuringProfileSetup": true,
+    "businessWorkCanEditScanner": false,
+    "ruleUpgradeMode": "rule-change"
+  }
+}

@@ -1,0 +1,5 @@
+{
+  "schemaVersion": 1,
+  "description": "Database object ledger. Add tables, migrations, seed data, and ownership here when a real stack is introduced.",
+  "tables": []
+}

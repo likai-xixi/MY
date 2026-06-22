@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "name": "deletion-policy",
+  "rules": [
+    "Deletion starts with dry-run only.",
+    "Apply deletion only after the user explicitly confirms the feature name.",
+    "After deletion, Codex must run an orphan scan for the removed feature token.",
+    "Registry, graph, generated scan files, memory, changelog, and handover must be updated after deletion."
+  ]
+}

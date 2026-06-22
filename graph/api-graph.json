@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "endpoints": [
+    {
+      "id": "inventory.list",
+      "method": "GET",
+      "path": "/api/inventory/items",
+      "owner": "backend-agent",
+      "module": "inventory",
+      "consumers": [
+        "frontend.inventory"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "schemaVersion": 1,
+  "components": [],
+  "description": "Shared component catalog. Register reusable UI controls before Codex creates new module-local components. An empty catalog is only valid while this shared root contains no component files.",
+  "requiredForSharedFiles": true,
+  "pairedRegistry": "ai/registry/components.json",
+  "exceptionPolicy": "Explicit component exceptions apply to module-local duplication checks only; shared root component files must be listed here and in ai/registry/components.json."
+}

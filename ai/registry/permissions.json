@@ -1,0 +1,5 @@
+{
+  "schemaVersion": 1,
+  "description": "Permission ledger. Add menu and operation permission codes here before binding them to UI or backend checks.",
+  "permissions": []
+}

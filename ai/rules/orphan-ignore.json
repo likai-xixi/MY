@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "description": "Paths ignored by removed-feature orphan scans because they contain workflow examples, templates, or reusable governance code rather than active business ownership.",
+  "prefixes": [
+    "node_modules/",
+    ".git/",
+    ".codex/skills/",
+    "ai/changes/",
+    "docs/",
+    "prompts/",
+    "scripts/",
+    "tools/",
+    "tests/",
+    "memory/sessions/",
+    "ai/deletions/"
+  ],
+  "files": [
+    "AGENTS.md",
+    "README.md",
+    "START_HERE_CN.md",
+    "memory/CHANGELOG.md",
+    "memory/HANDOVER.md",
+    "ai/registry/feature-id-dictionary.json"
+  ]
+}

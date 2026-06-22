@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "adapter": "generic",
+  "locked": false,
+  "templateSetup": true,
+  "ruleOwnership": {
+    "scannerCanBeGeneratedDuringProfileSetup": true,
+    "scannerCanBeEditedDuringBusinessWork": false,
+    "ruleUpgradeRequiresChangeMode": "rule-change"
+  },
+  "adapterRules": {
+    "id": "generic",
+    "featureIdFormat": "lowercase ASCII kebab-case",
+    "featureNameCanUseDisplayLanguage": true
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "name": "component-policy",
+  "rules": [
+    "Before creating a frontend component, Codex must read ai/registry/components.json and every active component catalog.",
+    "Reusable controls belong in the shared component root and must be exported or registered before use.",
+    "Component registry entries should include id, name, aliases, purpose, props, path/exportedFrom, usedBy, and status/lifecycle.",
+    "Feature modules may contain feature-specific components only.",
+    "Generic controls such as table, form, modal, drawer, upload, picker, search, pagination, and date range are blocked in module-local components unless ai/changes/<current>/component-exception.md explicitly lists the file.",
+    "If an existing component covers the same purpose, Codex must reuse it instead of creating a duplicate."
+  ]
+}

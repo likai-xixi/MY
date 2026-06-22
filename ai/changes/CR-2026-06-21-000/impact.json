@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "feature": {
+    "id": "template-governance",
+    "name": "Codex Auto Dev OS",
+    "status": "active"
+  },
+  "mode": "baseline",
+  "affected": {
+    "governance": [
+      "AGENTS.md",
+      "package.json",
+      "scripts",
+      "tools",
+      "ai/rules",
+      "ai/adapters",
+      "ai/project-profile.json"
+    ],
+    "backend": [
+      "backend/modules/inventory"
+    ],
+    "frontend": [
+      "frontend/src/modules/inventory"
+    ],
+    "apis": [
+      "inventory.list"
+    ],
+    "screens": [
+      "frontend.inventory"
+    ],
+    "docs": [
+      "features/inventory.md",
+      "memory/API_CATALOG.md",
+      "memory/HANDOVER.md"
+    ]
+  },
+  "blockers": [],
+  "allowedEditRoots": [
+    ".codex/skills",
+    ".github/workflows",
+    "AGENTS.md",
+    "README.md",
+    "START_HERE_CN.md",
+    "ai/adapters",
+    "ai/changes",
+    "ai/contracts",
+    "ai/generated",
+    "ai/project-profile.json",
+    "ai/registry",
+    "ai/rules",
+    "backend/modules/inventory",
+    "docs",
+    "features",
+    "frontend/src/components",
+    "frontend/src/modules/inventory",
+    "graph",
+    "memory",
+    "package.json",
+    "scripts",
+    "tests",
+    "tools"
+  ],
+  "requiredCommands": [
+    "npm run close:change",
+    "npm run check"
+  ]
+}

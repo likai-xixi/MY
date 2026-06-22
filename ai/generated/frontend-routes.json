@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "generatedBy": "tools/scan-frontend-routes.js",
+  "adapter": "generic",
+  "roots": [
+    "frontend/src/modules"
+  ],
+  "modules": [
+    "inventory"
+  ],
+  "routes": [
+    {
+      "module": "inventory",
+      "route": "/inventory",
+      "api": "inventory.list",
+      "states": [
+        "loading",
+        "empty",
+        "success",
+        "error"
+      ],
+      "file": "frontend/src/modules/inventory/module.ts",
+      "source": "module-contract"
+    }
+  ]
+}

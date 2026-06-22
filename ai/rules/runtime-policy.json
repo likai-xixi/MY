@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "description": "Runtime verification policy. Template setup skips hard runtime execution; locked real projects must provide runnable backend/frontend checks.",
+  "skipWhenTemplateSetup": true,
+  "requireToolingWhenDetected": true,
+  "requireFrontendBuildScript": true,
+  "executeCommandsByDefault": false,
+  "commands": {
+    "maven": [
+      "test"
+    ],
+    "npm": [
+      "build"
+    ],
+    "pnpm": [
+      "build"
+    ],
+    "yarn": [
+      "build"
+    ]
+  },
+  "notes": [
+    "Use `npm run check:runtime -- --execute` after attaching a real project to run detected build/test commands.",
+    "Keep this file under ai/rules so Codex must use rule-change mode before weakening runtime gates."
+  ]
+}

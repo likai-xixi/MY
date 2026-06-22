@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "tasks": [
+    {
+      "id": "TASK-0001",
+      "feature": "inventory",
+      "title": "Use the scaffold as the Codex App governance root for the first real business feature",
+      "status": "todo",
+      "owner": "workflow",
+      "priority": "normal",
+      "statusReason": "The final template is ready and waits for a real backend/frontend stack and first production feature.",
+      "nextStep": "Open the project in Codex App, ask Codex to run resume, then request a feature through chat.",
+      "blockedBy": [],
+      "verification": [
+        "npm run check"
+      ],
+      "latestSession": "memory/sessions/2026-06-21-final-template.md",
+      "handoverRequired": true,
+      "updatedAt": "2026-06-21"
+    }
+  ]
+}

@@ -1,0 +1,161 @@
+{
+  "schemaVersion": 1,
+  "generatedBy": "scripts/build-graph.js",
+  "adapter": "generic",
+  "nodes": [
+    {
+      "id": "agents",
+      "type": "governance",
+      "path": "agents",
+      "description": "Role contracts used by Codex App."
+    },
+    {
+      "id": "memory",
+      "type": "governance",
+      "path": "memory",
+      "description": "Persistent project state, handoff, changelog, module map, and API catalog."
+    },
+    {
+      "id": "graph",
+      "type": "governance",
+      "path": "graph",
+      "description": "Structured module, API, and UI relationship data."
+    },
+    {
+      "id": "tools",
+      "type": "governance",
+      "path": "tools",
+      "description": "Local validation and repository hygiene commands."
+    },
+    {
+      "id": "ai",
+      "type": "governance",
+      "path": "ai",
+      "description": "Machine-readable Codex registries, change records, generated scans, and rules."
+    },
+    {
+      "id": "scripts",
+      "type": "governance",
+      "path": "scripts",
+      "description": "Generated artifact helpers."
+    },
+    {
+      "id": "backend",
+      "type": "business",
+      "path": "backend",
+      "description": "Backend business modules."
+    },
+    {
+      "id": "frontend",
+      "type": "business",
+      "path": "frontend",
+      "description": "Frontend business modules."
+    },
+    {
+      "id": "features",
+      "type": "business",
+      "path": "features",
+      "description": "Business feature briefs and acceptance criteria."
+    },
+    {
+      "id": "feature:inventory",
+      "type": "feature",
+      "path": "features/inventory.md",
+      "description": "Inventory List feature brief."
+    },
+    {
+      "id": "backend:inventory",
+      "type": "backend-module",
+      "path": "backend/modules/inventory",
+      "description": "Inventory backend module."
+    },
+    {
+      "id": "frontend:inventory",
+      "type": "frontend-module",
+      "path": "frontend/src/modules/inventory",
+      "description": "Inventory frontend module."
+    }
+  ],
+  "edges": [
+    {
+      "from": "agents",
+      "to": "memory",
+      "type": "updates"
+    },
+    {
+      "from": "agents",
+      "to": "backend",
+      "type": "routes-work"
+    },
+    {
+      "from": "agents",
+      "to": "frontend",
+      "type": "routes-work"
+    },
+    {
+      "from": "scripts",
+      "to": "graph",
+      "type": "generates"
+    },
+    {
+      "from": "scripts",
+      "to": "memory",
+      "type": "generates"
+    },
+    {
+      "from": "scripts",
+      "to": "ai",
+      "type": "generates"
+    },
+    {
+      "from": "tools",
+      "to": "agents",
+      "type": "validates"
+    },
+    {
+      "from": "tools",
+      "to": "graph",
+      "type": "validates"
+    },
+    {
+      "from": "tools",
+      "to": "ai",
+      "type": "validates"
+    },
+    {
+      "from": "features",
+      "to": "backend",
+      "type": "drives"
+    },
+    {
+      "from": "features",
+      "to": "frontend",
+      "type": "drives"
+    },
+    {
+      "from": "features",
+      "to": "feature:inventory",
+      "type": "contains"
+    },
+    {
+      "from": "backend",
+      "to": "backend:inventory",
+      "type": "contains"
+    },
+    {
+      "from": "feature:inventory",
+      "to": "backend:inventory",
+      "type": "implements"
+    },
+    {
+      "from": "frontend",
+      "to": "frontend:inventory",
+      "type": "contains"
+    },
+    {
+      "from": "feature:inventory",
+      "to": "frontend:inventory",
+      "type": "implements"
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "name": "codex-session-policy",
+  "rules": [
+    "A new Codex session must run npm run resume before editing business code.",
+    "Codex must classify the user request as add-feature, update-feature, remove-feature-dry-run, or remove-feature-apply.",
+    "Codex must create or update a change record under ai/changes before implementation.",
+    "Codex must not mark work complete until registry, graph, memory, docs, and verification evidence are updated."
+  ]
+}

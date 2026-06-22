@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "description": "Module ownership registry generated and maintained with the module graph.",
+  "modules": [
+    {
+      "id": "inventory",
+      "type": "business-feature",
+      "feature": "inventory",
+      "backendPath": "backend/modules/inventory",
+      "frontendPath": "frontend/src/modules/inventory",
+      "owner": "workflow"
+    }
+  ]
+}

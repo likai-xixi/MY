@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "protectedPaths": [
+    ".codex/skills/",
+    ".github/workflows/",
+    "AGENTS.md",
+    "package.json",
+    "scripts/",
+    "tools/",
+    "ai/rules/",
+    "ai/adapters/",
+    "ai/project-profile.json"
+  ],
+  "businessModesCannotEditProtectedPaths": true,
+  "allowedGovernanceModes": [
+    "baseline",
+    "governance",
+    "profile",
+    "rules",
+    "rule-change",
+    "template"
+  ],
+  "profileSetup": {
+    "scannerCanBeGeneratedDuringProfileSetup": true,
+    "scannerCanBeEditedDuringBusinessWork": false,
+    "ruleUpgradeRequiresChangeMode": "rule-change"
+  }
+}
