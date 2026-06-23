@@ -64,7 +64,6 @@
           <el-button link type="primary" @click="handleView(scope.row)">{{ scope.row.customerName }}</el-button>
         </template>
       </el-table-column>
-      <el-table-column label="客户简称" align="center" prop="shortName" width="130" :show-overflow-tooltip="true" />
       <el-table-column label="客户类型" align="center" prop="customerType" width="110">
         <template #default="scope">{{ optionLabel(customerTypeOptions, scope.row.customerType) }}</template>
       </el-table-column>
@@ -118,7 +117,7 @@
               </el-col>
               <el-col :span="12">
                 <el-form-item label="客户简称" prop="shortName">
-                  <el-input v-model="form.shortName" placeholder="请输入客户简称" maxlength="50" />
+                  <el-input v-model="form.shortName" placeholder="选填，不填则同客户名称" maxlength="50" />
                 </el-form-item>
               </el-col>
               <el-col :span="12">
@@ -779,8 +778,8 @@ function handleUpdate(row) {
     form.value.addresses = form.value.addresses || []
     hydrateCustomerArea()
     hydrateAddressAreas()
-    form.value.syncDefaultContact = !hasDefaultContact()
-    form.value.syncDefaultAddress = !hasDefaultAddress() && hasBaseAddressForSync()
+    form.value.syncDefaultContact = true
+    form.value.syncDefaultAddress = true
     editTab.value = "base"
     open.value = true
     title.value = "修改客户"

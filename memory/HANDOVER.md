@@ -1,62 +1,52 @@
 # Handover
-
 ## Summary
-
-Current change record: `ai/changes/CR-20260623T031118Z-handoff-gate`.
-
-The current governance stabilization patch is verified. It improves first-batch handoff gate usability without entering customer-management business development and without implementing query routing, `check:fast`, CI, scan parallelism, or runtime policy changes.
-
-Latest closeout: the existing handoff integrity checker is now wired into the main `npm run check` gate through `npm run check:change`.
-
+客户管理列表隐藏客户简称列
+Current change record: `ai/changes/CR-20260623T071949Z-change`.
 ## Impact
-
-The patch affects governance scripts, checker tests, resume tests, current change evidence, and project handoff memory. `finalize:change` now preserves real verification/handover files and accepts explicit status/evidence; `change-handoff-integrity-checker` has additional failure-scenario coverage and small validator enhancements; `resume` no longer lists verified/done/closed/completed tasks as Open Tasks.
-
-`package.json` now exposes `check:handover-integrity`, keeps `check:change-handoff` as a compatibility alias, defines `check:change` as handoff integrity plus closeout, and routes `npm run check` through `check:change`.
-
-No customer business paths were modified. `TASK-CUSTOMER.latestChange` remains `CR-20260622T150304Z-change`; this change is synced to the platform task.
-
+Current change `CR-20260623T071949Z-change` is limited to the customer management UI list display and customer feature brief. The customer list no longer shows a separate customer short-name column by default. Customer short name remains available for search, add/edit maintenance, export flow, and later business references. No backend, API path, permission code, database schema, funds, sample rebate, deposit, owner transfer, contact, phone, area, or default contact/address behavior was changed.
 ## Changed Files
-
-- `scripts/finalize-change.js`
-- `scripts/resume.js`
-- `tools/change-handoff-integrity-checker.js`
-- `tests/change-handoff-integrity-checker.test.js`
-- `tests/package-scripts.test.js`
-- `tests/resume.test.js`
-- `package.json`
-- `ai/changes/CR-20260623T031118Z-handoff-gate/`
+- `ai/changes/CR-20260623T055820Z-change/boundary-exception.md`
+- `ai/changes/CR-20260623T055820Z-change/changed-files.json`
+- `ai/changes/CR-20260623T055820Z-change/component-exception.md`
+- `ai/changes/CR-20260623T055820Z-change/handover.md`
+- `ai/changes/CR-20260623T055820Z-change/impact.json`
+- `ai/changes/CR-20260623T055820Z-change/plan.md`
+- `ai/changes/CR-20260623T055820Z-change/request.md`
+- `ai/changes/CR-20260623T055820Z-change/verification.md`
+- `ai/changes/CR-20260623T071949Z-change/boundary-exception.md`
+- `ai/changes/CR-20260623T071949Z-change/changed-files.json`
+- `ai/changes/CR-20260623T071949Z-change/component-exception.md`
+- `ai/changes/CR-20260623T071949Z-change/handover.md`
+- `ai/changes/CR-20260623T071949Z-change/impact.json`
+- `ai/changes/CR-20260623T071949Z-change/plan.md`
+- `ai/changes/CR-20260623T071949Z-change/request.md`
+- `ai/changes/CR-20260623T071949Z-change/verification.md`
 - `ai/changes/CURRENT_CHANGE.json`
-- `memory/CHANGELOG.md`
-- `memory/HANDOVER.md`
-- `memory/TASKS.json`
-- `memory/sessions/2026-06-23-governance-handoff-gate-stabilization.md`
-
+- `ai/contracts/customer.api.md`
+- `ai/contracts/customer.db.md`
+- `ai/contracts/customer.delete-ownership.md`
+- `ai/contracts/customer.permission.md`
+- `ai/contracts/customer.ui.md`
+- `ai/generated/api-clients.json`
+- `ai/generated/backend-routes.json`
+- `ai/generated/component-usage.json`
+- `ai/generated/db-schema.json`
+- `ai/generated/frontend-routes.json`
+- `ai/generated/permissions.json`
+- `ai/registry/features.json`
+- `ai/registry/modules.json`
+- plus 22 additional files in the current change record.
 ## Commands
-
-- `node --test tests/change-handoff-integrity-checker.test.js` passed with 13 tests.
-- `node --test tests/resume.test.js` passed with 5 tests.
-- `node --test tests/package-scripts.test.js` passed with 7 tests.
-- `node --check scripts/finalize-change.js` passed.
-- `node --check scripts/resume.js` passed.
-- `node --check tools/change-handoff-integrity-checker.js` passed.
-- `npm test` passed with 96 tests after scoped current-change RuoYi exception notes were added.
-- `npm run check:change-handoff` passed.
-- `npm run close:change` passed.
-- `npm run check` passed, including 96 Node tests.
-- Final standalone `npm test` passed with 96 tests.
-- Gate-integration closeout passed `node --test tests/package-scripts.test.js` with 8 tests, `npm run check:handover-integrity`, `npm run check:change`, `npm run check`, and final standalone `npm test` with 97 tests.
-
+- `npm run resume`
+- `npm run ai:do -- "功能迭代：客户管理"`
+- `npm run impact -- 客户管理`
+- `npm --prefix ruoyi-ui run build:prod`
+- `npm run scan:all`
+- `npm run finalize:change -- --summary "客户管理列表隐藏客户简称列"`
+- `npm run check`
 ## Verification
-
-The final full governance gate passed. Earlier failures were handled during this same change: one `npm test` attempt timed out at 120 seconds before producing a result, and the next full run failed only because the new current change lacked scoped RuoYi exception notes required by existing boundary/component tests. Adding those current-change notes fixed the failures; subsequent targeted tests, `npm test`, `npm run check:change-handoff`, `npm run close:change`, `npm run check`, and final `npm test` all passed.
-
-The later gate-integration closeout confirmed `npm run check` now invokes `npm run check:change`, and `check:change` invokes `check:handover-integrity` before `close:change`.
-
+Static UI verification checks confirmed the customer list no longer contains an independent `label="客户简称"` table column and does not render `scope.row.shortName` under customer name. Customer name still calls `handleView(scope.row)`. Search still binds `queryParams.shortName`, add/edit still binds `form.shortName`, and the short-name placeholder is `选填，不填则同客户名称`. Production build, `npm run scan:all`, and `npm run check` are the closeout checks for this slice.
 ## Risks
-
-This patch does not exercise backend/frontend business runtime behavior. The new comment-only semantic bypass is deliberately conservative: it only bypasses semantic gates when diff text shows changed lines are comments; absent diff text still falls back to strict path-based checking.
-
+- Browser runtime was not launched for this small UI slice. Remaining confidence comes from source inspection, static assertions, production build, generated scans, and the governance gate.
 ## Next Actions
-
-No immediate action is required. Use `npm run resume` for the next task; verified tasks should now be absent from Open Tasks.
+- None for this slice after the final governance gate passes. Keep future customer iterations inside a new change record and do not mix sales order, shipment, automatic deduction, finance settlement, DXF, workstation client, or mini-program scope into customer management.

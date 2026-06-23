@@ -71,4 +71,10 @@
 - Change: `ai/changes/CR-20260623T031118Z-handoff-gate`.
 - 治理增强：稳定第一批 handoff gate 使用体验
 - Feature: `platform`.
-- Closeout: wired the handoff integrity checker into the main `npm run check` gate through `check:handover-integrity` and `check:change`; retained `check:change-handoff` as a compatibility alias.
+- Closeout: wired the handoff integrity checker into the main `npm run check` gate through `check:handover-integrity` and `check:change`; retained `check:change-handoff` as a compatibility alias.## 2026-06-23 — update
+- Change: `ai/changes/CR-20260623T055820Z-change`.
+- 客户管理编辑同步选项默认勾选
+- Feature: `customer`.## 2026-06-23 — update
+- Change: `ai/changes/CR-20260623T071949Z-change`.
+- 客户管理列表隐藏客户简称列
+- Feature: `customer`.

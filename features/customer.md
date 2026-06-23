@@ -29,6 +29,7 @@
 - 菜单、权限、SQL ownership、API/UI/DB/permission graph 和 registry 登记。
 - 客户编码、字典展示、省市区选择和列表显示体验优化。
 - 新增/编辑弹窗使用完整中国省市区三级行政区划数据源，覆盖省、直辖市、自治区、地级市/州/盟、区/县/县级市，并同时保存行政区划 code 与中文名称。
+- 客户简称保留为选填字段，不填时仍由服务端保存为客户名称；客户列表默认不再显示客户简称列，客户简称搜索条件和新增/编辑维护入口保留。
 - 新增客户时，基础信息自动派生默认联系人和默认收货地址；编辑客户时仅在用户勾选同步选项后同步到默认联系人/默认收货地址。
 
 ## Non-goals
@@ -64,6 +65,8 @@
 - Customer master and customer shipping addresses now include nullable `province_code`, `city_code`, and `district_code` columns. Historical rows that only have Chinese names are not forcibly backfilled; edit forms try name-based matching and write codes on the next confirmed save.
 - If a user selects only part of a province/city/district path, save is blocked with a clear validation message requiring selection down to district/county.
 - Customer short name is optional. If it is empty on create or update, the service saves the customer name as the short name.
+- Customer short name remains available as an optional search and add/edit field, with add/edit placeholder copy explaining that an empty value falls back to customer name.
+- Customer list no longer displays a separate short-name column by default, to reduce duplicate display when `shortName` equals or closely matches `customerName`.
 - Customer code list cells use fixed width, no wrapping, overflow ellipsis, and tooltip.
 - Customer list shows province/city/district as Chinese names with overflow tooltip.
 - Creating a customer auto-creates one default contact from master `contact_name/contact_phone/wechat` when no meaningful submitted contact exists. If the master contact name is empty but the phone exists, the generated child contact uses `默认联系人`.
@@ -104,6 +107,7 @@ Funds are modeled as account plus flow plus batch/policy records. Balance, froze
 - 客户可以新增、编辑、查询、停用、导出。
 - 新客户自动生成 `KHyyyyMM` monthly sequence code, and same-month inserts increment without duplicate `customer_code`.
 - 客户列表、详情 and Excel export display customer type and level labels instead of raw enum values.
+- 客户列表默认不显示独立的客户简称列；客户名称仍保持单行点击详情，客户简称搜索条件和新增/编辑维护入口保留。
 - 新增/编辑客户 can select province/city/district through a searchable complete cascader, edit forms echo existing province/city/district by code or historical Chinese names, and saved records include both area codes and Chinese names while list/detail/export values remain Chinese names.
 - 河南省下可选择完整地级市/示范区，不再只有郑州、洛阳；浙江、山东、广东、北京、上海均可正常选择到区县。
 - Empty short name is automatically filled from customer name on create and update.
