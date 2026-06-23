@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "id": "2026-06-23-handoff-integrity-checker",
+  "title": "handoff integrity checker",
+  "reason": "Add a stronger closeout gate for change handoff evidence, changed-files coverage, memory sync, and semantic scan notes.",
+  "status": "proposed",
+  "requiredChangeMode": "rule-change",
+  "checklist": [
+    "Explain old rule and new rule.",
+    "List affected scanners and registries.",
+    "List sample files proving the project base needs this rule.",
+    "Run npm run check after the rule proposal is accepted."
+  ]
+}

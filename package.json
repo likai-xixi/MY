@@ -26,6 +26,7 @@
     "resume": "node scripts/resume.js",
     "start:change": "node scripts/start-change.js",
     "close:change": "node scripts/close-change.js",
+    "check:change-handoff": "node tools/change-handoff-integrity-checker.js",
     "impact": "node tools/impact-analyzer.js",
     "feature:remove": "node scripts/remove-feature.js",
     "ai:add": "node scripts/chat-feature.js add",

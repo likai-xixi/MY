@@ -8,8 +8,8 @@
       "status": "verified",
       "owner": "Codex",
       "priority": "high",
-      "statusReason": "RuoYi platform base has been merged and registered; baseline closeout cleaned registry names, scanner false positives, duplicate routes, db table false positives, Maven runtime-tool discovery, local runtime smoke validation, remove-feature test timeout root cause, and repeated-half route ownership residue.",
-      "nextStep": "Before production-style claims, add deeper checks for CRUD mutations, import/export, Druid authentication, Swagger behavior, scheduled jobs, production frontend build, and dependency audit remediation.",
+      "statusReason": "Governance change CR-20260623T015344Z-governance-handoff-integrity-checker adds first-batch change handoff integrity checks without changing customer business code.",
+      "nextStep": "Use npm run resume for the next task; future changes must keep verification evidence, changed-files coverage, handover, changelog, TASKS, and semantic scan notes synchronized before closeout.",
       "blockedBy": [],
       "verification": [
         "npm run profile:setup",
@@ -27,12 +27,21 @@
         "ownership sync filters repeated-half routes such as /system/config/system/config and updates graph/ui-graph.json during scan:all",
         "node --test tests/remove-feature.test.js passed after the pre-fix timeout reproduction",
         "npm test passed with 76 Node tests",
-        "npm run check passed after npm run scan:all"
+        "npm run check passed after npm run scan:all",
+        "node --test tests/change-handoff-integrity-checker.test.js passed for CR-20260623T015344Z-governance-handoff-integrity-checker",
+        "node --test tests/package-scripts.test.js passed for CR-20260623T015344Z-governance-handoff-integrity-checker",
+        "npm test passed with 81 Node tests for CR-20260623T015344Z-governance-handoff-integrity-checker",
+        "npm run check passed for CR-20260623T015344Z-governance-handoff-integrity-checker",
+        "pre-commit closeout node --test tests/change-handoff-integrity-checker.test.js passed with 5 tests for CR-20260623T015344Z-governance-handoff-integrity-checker",
+        "pre-commit closeout npm run check:change-handoff passed for CR-20260623T015344Z-governance-handoff-integrity-checker",
+        "pre-commit closeout npm run close:change passed for CR-20260623T015344Z-governance-handoff-integrity-checker",
+        "pre-commit closeout npm run check passed for CR-20260623T015344Z-governance-handoff-integrity-checker",
+        "pre-commit closeout standalone npm test passed with 81 Node tests for CR-20260623T015344Z-governance-handoff-integrity-checker"
       ],
-      "latestSession": "memory/sessions/2026-06-22-ruoyi-vue3-base.md",
+      "latestSession": "memory/sessions/2026-06-23-governance-handoff-integrity.md",
       "handoverRequired": true,
-      "updatedAt": "2026-06-22",
-      "latestChange": "CR-20260622T015319Z-ruoyi-vue3"
+      "updatedAt": "2026-06-23",
+      "latestChange": "CR-20260623T015344Z-governance-handoff-integrity-checker"
     },
     {
       "id": "TASK-CUSTOMER",

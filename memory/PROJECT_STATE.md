@@ -8,6 +8,8 @@ Maintain a chat-driven Codex App development template attached to a RuoYi + Vue3
 
 The governance layer is attached to a RuoYi Spring Boot backend and RuoYi Vue3 frontend base. Feature ownership is tracked through registry, graph, generated scans, change records, memory, and handover files. Customer runtime validation has now been performed against a real local MySQL/Redis/browser stack, the customer closeout deviations have been resolved, the customer code/dictionary/address-cascader UX iteration has been browser-validated, and the customer province/city/district Cascader uses a complete generated China region dataset. Customer follow-up `CR-20260622T124645Z-change` added administrative division code fields to customer master and shipping addresses. Current customer follow-up `CR-20260622T150304Z-change` adds and verifies transactional default contact/default shipping-address generation on customer create and explicit edit-time sync checkboxes so master-data edits do not blindly overwrite child records.
 
+Current governance change `CR-20260623T015344Z-governance-handoff-integrity-checker` adds the first batch of change handoff integrity checks. This is a governance/platform task and does not modify customer business code, customer SQL ownership, customer API clients, customer Vue screens, mapper XML, or controllers.
+
 ## Active Features
 
 - `customer` — 客户管理 module implemented and registered under the locked RuoYi adapter.
@@ -18,7 +20,7 @@ The governance layer is attached to a RuoYi Spring Boot backend and RuoYi Vue3 f
 
 ## Latest Session
 
-`memory/sessions/2026-06-22-customer.md`
+`memory/sessions/2026-06-23-governance-handoff-integrity.md`
 
 ## Next Actions
 

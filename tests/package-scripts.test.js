@@ -5,6 +5,7 @@ import { resolveCommand, runProcess } from '../tools/process-runner.js';
 
 test('node-backed package scripts point to existing files', () => {
   const pkg = readJson('package.json');
+  assert.equal(pkg.scripts['check:change-handoff'], 'node tools/change-handoff-integrity-checker.js');
   for (const [name, command] of Object.entries(pkg.scripts)) {
     if (command.startsWith('node --')) {
       continue;

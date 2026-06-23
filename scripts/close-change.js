@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import { ensure, finish, isCli, projectPath, readJson, readText } from '../tools/common.js';
+import { validateChangeHandoffIntegrity } from '../tools/change-handoff-integrity-checker.js';
 import { isAllowedByRoot } from '../tools/diff-checker.js';
 
 const REQUIRED_FILES = [
@@ -63,6 +64,7 @@ export function validateChangeClose({ id = currentChangeId() } = {}) {
   ensure(hasEvidence(verification), `${dir}/verification.md must include verification evidence.`, errors);
   const handover = readText(`${dir}/handover.md`);
   ensure(handover.trim().length > 20, `${dir}/handover.md must include a useful handover.`, errors);
+  errors.push(...validateChangeHandoffIntegrity({ id }));
   return errors;
 }
 

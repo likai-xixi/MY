@@ -105,6 +105,12 @@ function buildChangeHandover({ summary, changedFiles, commands, risks = [], next
     '',
     summary || 'Change record prepared by the chat-driven workflow.',
     '',
+    '## Impact',
+    '',
+    changedFiles.length
+      ? `This change affects ${changedFiles.length} recorded path(s). See changed-files.json for the complete coverage list.`
+      : 'No file impact has been recorded yet.',
+    '',
     '## Changed Files',
     '',
     ...markdownList(changedFiles),
@@ -139,6 +145,12 @@ function buildMemoryHandover({ id, summary, changedFiles, commands, risks = [], 
     '',
     `Current change record: \`ai/changes/${id}\`.`,
     '',
+    '## Impact',
+    '',
+    changedFiles.length
+      ? `Current change \`${id}\` affects ${changedFiles.length} recorded path(s). See \`ai/changes/${id}/changed-files.json\` for exact coverage.`
+      : `Current change \`${id}\` has no recorded file impact yet.`,
+    '',
     '## Changed Files',
     '',
     ...markdownList(changedFiles.slice(0, 30)),
@@ -163,7 +175,7 @@ function buildMemoryHandover({ id, summary, changedFiles, commands, risks = [], 
   ].filter((line) => line !== '').join('\n') + '\n';
 }
 
-function appendChangelog({ summary, featureId, mode }, errors) {
+function appendChangelog({ id, summary, featureId, mode }, errors) {
   const file = 'memory/CHANGELOG.md';
   const current = pathExists(file) ? readText(file).trimEnd() : '# Changelog';
   const today = new Date().toISOString().slice(0, 10);
@@ -171,6 +183,7 @@ function appendChangelog({ summary, featureId, mode }, errors) {
     '',
     `## ${today} — ${mode || 'change'}`,
     '',
+    `- Change: \`ai/changes/${id}\`.`,
     `- ${summary || 'Updated change record, registry, graph, generated scans, memory, and handover.'}`,
     featureId ? `- Feature: \`${featureId}\`.` : '',
     ''
@@ -235,7 +248,7 @@ export function finalizeChange({
 
   if (updateMemory) {
     writeOrCheck('memory/HANDOVER.md', buildMemoryHandover({ id, summary, changedFiles: safeFiles, commands, risks, nextActions }), false, errors);
-    appendChangelog({ summary, featureId, mode }, errors);
+    appendChangelog({ id, summary, featureId, mode }, errors);
     updateTaskMemory({ featureId, mode }, errors);
   }
   return errors;

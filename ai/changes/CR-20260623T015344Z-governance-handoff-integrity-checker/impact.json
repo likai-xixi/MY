@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "mode": "governance",
+  "feature": {
+    "id": "platform",
+    "name": "Governance Platform",
+    "status": "active"
+  },
+  "affected": {
+    "docs": [
+      "memory/HANDOVER.md",
+      "memory/CHANGELOG.md",
+      "memory/PROJECT_STATE.md",
+      "memory/TASKS.json"
+    ],
+    "tests": [
+      "tests/change-handoff-integrity-checker.test.js",
+      "tests/package-scripts.test.js"
+    ],
+    "governance": [
+      "package.json",
+      "scripts/close-change.js",
+      "scripts/finalize-change.js",
+      "scripts/generate-handover.js",
+      "tools/change-handoff-integrity-checker.js",
+      "ai/rule-proposals/2026-06-23-handoff-integrity-checker.json"
+    ]
+  },
+  "allowedEditRoots": [
+    "package.json",
+    "scripts/close-change.js",
+    "scripts/finalize-change.js",
+    "scripts/generate-handover.js",
+    "tools/change-handoff-integrity-checker.js",
+    "tests/change-handoff-integrity-checker.test.js",
+    "tests/package-scripts.test.js",
+    "ai/changes",
+    "ai/rule-proposals",
+    "memory/HANDOVER.md",
+    "memory/CHANGELOG.md",
+    "memory/PROJECT_STATE.md",
+    "memory/TASKS.json",
+    "memory/sessions"
+  ],
+  "blockers": []
+}

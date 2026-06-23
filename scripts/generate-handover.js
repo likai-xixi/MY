@@ -2,6 +2,7 @@ import { ensure, fileExists, finish, hasHeading, isCli, readText, writeOrCheck }
 
 export const REQUIRED_HANDOVER_HEADINGS = [
   '## Summary',
+  '## Impact',
   '## Changed Files',
   '## Commands',
   '## Verification',
@@ -29,6 +30,10 @@ export function handoverTemplate() {
     '## Summary',
     '',
     'Describe what changed.',
+    '',
+    '## Impact',
+    '',
+    'Describe the affected code, data, registry, graph, memory, and runtime surfaces.',
     '',
     '## Changed Files',
     '',

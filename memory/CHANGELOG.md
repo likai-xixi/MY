@@ -63,4 +63,8 @@
 - 客户管理省市区行政区划编码补齐
 - Feature: `customer`.## 2026-06-22 — update
 - 客户管理默认联系人和默认收货地址自动生成及同步
-- Feature: `customer`.
+- Feature: `customer`.## 2026-06-23 — governance
+- Change: `ai/changes/CR-20260623T015344Z-governance-handoff-integrity-checker`.
+- Governance handoff integrity checker
+- Pre-commit closeout reran `node --test tests/change-handoff-integrity-checker.test.js`, `npm run check:change-handoff`, `npm run close:change`, `npm run check`, and standalone `npm test`; all passed.
+- Feature: `platform`.
