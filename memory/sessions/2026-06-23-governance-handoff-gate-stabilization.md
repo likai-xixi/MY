@@ -20,6 +20,7 @@ This was not customer-management business development. The patch stayed limited 
 - `tests/change-handoff-integrity-checker.test.js`
 - `tests/package-scripts.test.js`
 - `tests/resume.test.js`
+- `package.json`
 - `ai/changes/CR-20260623T031118Z-handoff-gate/`
 - `memory/HANDOVER.md`
 - `memory/CHANGELOG.md`
@@ -38,13 +39,17 @@ This was not customer-management business development. The patch stayed limited 
 - `npm run check:change-handoff`
 - `npm run close:change`
 - `npm run check`
+- `npm run check:handover-integrity`
+- `npm run check:change`
 
 ## Verification
 
 - `finalize:change` preserves non-template verification/handover files and accepts `--status`, `--evidence`, and `--force-verification`.
 - `change-handoff-integrity-checker` now covers missing current id, missing/empty verification, vague handover, UI/DB/component semantic evidence failures, governance task sync mistakes, and markdown/comment-only non-semantic changes.
 - `resume` excludes `done`, `verified`, `closed`, and `completed` tasks from Open Tasks and latest-session priority.
+- `npm run check` now routes through `npm run check:change`, and `check:change` runs `check:handover-integrity` before `close:change`.
 Targeted tests, syntax checks, `npm test`, `npm run check:change-handoff`, `npm run close:change`, `npm run check`, and final standalone `npm test` passed. The final `npm test` run passed with 96 tests.
+The gate-integration closeout passed `node --test tests/package-scripts.test.js`, `npm run check:handover-integrity`, `npm run check:change`, `npm run check`, and final standalone `npm test`; the final test run passed with 97 tests.
 
 ## Risks
 

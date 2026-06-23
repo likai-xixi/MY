@@ -24,11 +24,18 @@ Status: verified
 - `npm run close:change` passed.
 - `npm run check` passed, including `close:change`, `check:diff`, `check:runtime`, and 96 Node tests.
 - Final standalone `npm test` passed with 96 tests.
+- Handoff main-gate closeout on 2026-06-23 added `check:handover-integrity` and `check:change`, then rewired `npm run check` to call `npm run check:change` instead of calling `close:change` directly.
+- `node --test tests/package-scripts.test.js` passed with 8 tests and now asserts that the main check invokes the handover integrity/change gate.
+- `npm run check:handover-integrity` passed.
+- `npm run check:change` passed and ran `check:handover-integrity` before `close:change`.
+- `npm run check` passed after the main gate rewrite; the command output showed `npm run check:change` running before rule-lock/diff/runtime/test gates, and the embedded `npm test` passed with 97 tests.
+- Final standalone `npm test` passed with 97 tests.
 
 ## Evidence
 
 - `finalize:change` now detects template verification/handover content, preserves existing non-template `verification.md` and `handover.md`, accepts `--status` and `--evidence`, and only overwrites real verification when `--force-verification` is passed.
 - `change-handoff-integrity-checker` now has controlled fixture coverage for missing current change id, missing/empty verification, vague handover, UI/DB/component semantic coverage, governance task mis-sync to `TASK-CUSTOMER`, and markdown/comment-only non-semantic changes.
 - `resume` now treats `done`, `verified`, `closed`, and `completed` as closed statuses for Open Tasks and latest-session selection.
+- `package.json` now exposes `check:handover-integrity` as the canonical checker command, keeps `check:change-handoff` as a compatibility alias, and routes `check` through `check:change`.
 - `memory/TASKS.json` synced this governance change to the platform task. `TASK-CUSTOMER.latestChange` remains `CR-20260622T150304Z-change`.
 - Customer business diff guard produced no customer-path output after the implementation changes.

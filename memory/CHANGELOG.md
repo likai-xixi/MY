@@ -71,3 +71,4 @@
 - Change: `ai/changes/CR-20260623T031118Z-handoff-gate`.
 - 治理增强：稳定第一批 handoff gate 使用体验
 - Feature: `platform`.
+- Closeout: wired the handoff integrity checker into the main `npm run check` gate through `check:handover-integrity` and `check:change`; retained `check:change-handoff` as a compatibility alias.

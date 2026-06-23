@@ -10,7 +10,8 @@ import { resolveCommand, runProcess } from '../tools/process-runner.js';
 
 test('node-backed package scripts point to existing files', () => {
   const pkg = readJson('package.json');
-  assert.equal(pkg.scripts['check:change-handoff'], 'node tools/change-handoff-integrity-checker.js');
+  assert.equal(pkg.scripts['check:handover-integrity'], 'node tools/change-handoff-integrity-checker.js');
+  assert.equal(pkg.scripts['check:change-handoff'], 'npm run check:handover-integrity');
   for (const [name, command] of Object.entries(pkg.scripts)) {
     if (command.startsWith('node --')) {
       continue;
@@ -21,6 +22,14 @@ test('node-backed package scripts point to existing files', () => {
     }
     assert.equal(fileExists(match[1]), true, `${name} points to missing ${match[1]}`);
   }
+});
+
+test('main check runs handover integrity before closing a change', () => {
+  const pkg = readJson('package.json');
+  assert.match(pkg.scripts.check, /npm run check:(change|handover-integrity)/);
+  assert.ok(pkg.scripts.check.includes('npm run check:change'));
+  assert.ok(pkg.scripts['check:change'].includes('check:handover-integrity'));
+  assert.ok(pkg.scripts['check:change'].includes('close:change'));
 });
 
 test('Windows package manager commands resolve to command shims without executing npm', () => {
