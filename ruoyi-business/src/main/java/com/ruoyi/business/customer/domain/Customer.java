@@ -25,6 +25,12 @@ public class Customer extends BaseEntity
     @Excel(name = "客户简称")
     private String shortName;
 
+    @Excel(name = "客户性质", readConverterExp = "REAL=真实客户,PUBLIC=公共客户")
+    private String customerNature;
+
+    @Excel(name = "公共客户渠道", readConverterExp = "DIRECT_SALE=厂内自销,SELF_MEDIA=自媒体")
+    private String publicChannel;
+
     @Excel(name = "客户类型", readConverterExp = "DEALER=经销商,PROJECT=工程客户,RETAIL=散户,STORE=门店,OTHER=其他")
     private String customerType;
 
@@ -113,6 +119,26 @@ public class Customer extends BaseEntity
     public void setShortName(String shortName)
     {
         this.shortName = shortName;
+    }
+
+    public String getCustomerNature()
+    {
+        return customerNature;
+    }
+
+    public void setCustomerNature(String customerNature)
+    {
+        this.customerNature = customerNature;
+    }
+
+    public String getPublicChannel()
+    {
+        return publicChannel;
+    }
+
+    public void setPublicChannel(String publicChannel)
+    {
+        this.publicChannel = publicChannel;
     }
 
     public String getCustomerType()
@@ -342,6 +368,8 @@ public class Customer extends BaseEntity
             .append("customerId", getCustomerId())
             .append("customerCode", getCustomerCode())
             .append("customerName", getCustomerName())
+            .append("customerNature", getCustomerNature())
+            .append("publicChannel", getPublicChannel())
             .append("ownerUserName", getOwnerUserName())
             .append("status", getStatus())
             .toString();

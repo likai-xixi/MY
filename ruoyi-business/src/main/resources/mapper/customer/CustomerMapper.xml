@@ -9,6 +9,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="customerCode" column="customer_code" />
         <result property="customerName" column="customer_name" />
         <result property="shortName" column="short_name" />
+        <result property="customerNature" column="customer_nature" />
+        <result property="publicChannel" column="public_channel" />
         <result property="customerType" column="customer_type" />
         <result property="customerLevel" column="customer_level" />
         <result property="contactName" column="contact_name" />
@@ -123,8 +125,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="depositBatchNo" column="deposit_batch_no" />
         <result property="customerId" column="customer_id" />
         <result property="depositType" column="deposit_type" />
-        <result property="sourceOrderId" column="source_order_id" />
-        <result property="sourceOrderNo" column="source_order_no" />
+        <result property="receiptNo" column="receipt_no" />
         <result property="depositAmount" column="deposit_amount" />
         <result property="usedAmount" column="used_amount" />
         <result property="remainingAmount" column="remaining_amount" />
@@ -165,7 +166,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectCustomerVo">
-        select customer_id, customer_code, customer_name, short_name, customer_type, customer_level,
+        select customer_id, customer_code, customer_name, short_name, customer_nature, public_channel, customer_type, customer_level,
                contact_name, contact_phone, wechat, province, province_code, city, city_code, district, district_code, address,
                owner_user_id, owner_user_name, owner_dept_id, owner_dept_name,
                status, del_flag, create_by, create_time, update_by, update_time, remark
@@ -180,6 +181,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="shortName != null and shortName != ''">and short_name like concat('%', #{shortName}, '%')</if>
             <if test="contactName != null and contactName != ''">and contact_name like concat('%', #{contactName}, '%')</if>
             <if test="contactPhone != null and contactPhone != ''">and contact_phone like concat('%', #{contactPhone}, '%')</if>
+            <if test="customerNature != null and customerNature != ''">and customer_nature = #{customerNature}</if>
+            <if test="publicChannel != null and publicChannel != ''">and public_channel = #{publicChannel}</if>
             <if test="customerType != null and customerType != ''">and customer_type = #{customerType}</if>
             <if test="customerLevel != null and customerLevel != ''">and customer_level = #{customerLevel}</if>
             <if test="ownerUserId != null">and owner_user_id = #{ownerUserId}</if>
@@ -223,12 +226,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <insert id="insertCustomer" parameterType="Customer" useGeneratedKeys="true" keyProperty="customerId">
         insert into customer(
-            customer_code, customer_name, short_name, customer_type, customer_level,
+            customer_code, customer_name, short_name, customer_nature, public_channel, customer_type, customer_level,
             contact_name, contact_phone, wechat, province, province_code, city, city_code, district, district_code, address,
             owner_user_id, owner_user_name, owner_dept_id, owner_dept_name,
             status, del_flag, create_by, create_time, remark
         ) values (
-            #{customerCode}, #{customerName}, #{shortName}, #{customerType}, #{customerLevel},
+            #{customerCode}, #{customerName}, #{shortName}, #{customerNature}, #{publicChannel}, #{customerType}, #{customerLevel},
             #{contactName}, #{contactPhone}, #{wechat}, #{province}, #{provinceCode}, #{city}, #{cityCode}, #{district}, #{districtCode}, #{address},
             #{ownerUserId}, #{ownerUserName}, #{ownerDeptId}, #{ownerDeptName},
             #{status}, #{delFlag}, #{createBy}, sysdate(), #{remark}
@@ -240,22 +243,24 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <set>
             <if test="customerName != null and customerName != ''">customer_name = #{customerName},</if>
             <if test="shortName != null">short_name = #{shortName},</if>
-            <if test="customerType != null">customer_type = #{customerType},</if>
-            <if test="customerLevel != null">customer_level = #{customerLevel},</if>
-            <if test="contactName != null">contact_name = #{contactName},</if>
-            <if test="contactPhone != null">contact_phone = #{contactPhone},</if>
-            <if test="wechat != null">wechat = #{wechat},</if>
-            <if test="province != null">province = #{province},</if>
-            <if test="provinceCode != null">province_code = #{provinceCode},</if>
-            <if test="city != null">city = #{city},</if>
-            <if test="cityCode != null">city_code = #{cityCode},</if>
-            <if test="district != null">district = #{district},</if>
-            <if test="districtCode != null">district_code = #{districtCode},</if>
-            <if test="address != null">address = #{address},</if>
-            <if test="ownerUserId != null">owner_user_id = #{ownerUserId},</if>
-            <if test="ownerUserName != null">owner_user_name = #{ownerUserName},</if>
-            <if test="ownerDeptId != null">owner_dept_id = #{ownerDeptId},</if>
-            <if test="ownerDeptName != null">owner_dept_name = #{ownerDeptName},</if>
+            <if test="customerNature != null">customer_nature = #{customerNature},</if>
+            <if test="customerNature != null">public_channel = #{publicChannel},</if>
+            <if test="customerNature != null">customer_type = #{customerType},</if>
+            <if test="customerNature != null">customer_level = #{customerLevel},</if>
+            <if test="customerNature != null">contact_name = #{contactName},</if>
+            <if test="customerNature != null">contact_phone = #{contactPhone},</if>
+            <if test="customerNature != null">wechat = #{wechat},</if>
+            <if test="customerNature != null">province = #{province},</if>
+            <if test="customerNature != null">province_code = #{provinceCode},</if>
+            <if test="customerNature != null">city = #{city},</if>
+            <if test="customerNature != null">city_code = #{cityCode},</if>
+            <if test="customerNature != null">district = #{district},</if>
+            <if test="customerNature != null">district_code = #{districtCode},</if>
+            <if test="customerNature != null">address = #{address},</if>
+            <if test="customerNature != null">owner_user_id = #{ownerUserId},</if>
+            <if test="customerNature != null">owner_user_name = #{ownerUserName},</if>
+            <if test="customerNature != null">owner_dept_id = #{ownerDeptId},</if>
+            <if test="customerNature != null">owner_dept_name = #{ownerDeptName},</if>
             <if test="status != null">status = #{status},</if>
             <if test="remark != null">remark = #{remark},</if>
             <if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
@@ -314,7 +319,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </insert>
 
     <select id="selectFundAccountsByCustomerId" parameterType="Long" resultMap="CustomerFundAccountResult">
-        select * from customer_fund_account where customer_id = #{customerId} order by field(account_type, 'LONG_TERM_DEPOSIT', 'ROLLING_ORDER_DEPOSIT', 'SAMPLE_REBATE')
+        select * from customer_fund_account where customer_id = #{customerId} order by field(account_type, 'CUSTOMER_DEPOSIT', 'SAMPLE_REBATE')
     </select>
 
     <select id="selectFundAccount" resultMap="CustomerFundAccountResult">
@@ -350,9 +355,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <insert id="insertDepositBatch" parameterType="CustomerDepositBatch" useGeneratedKeys="true" keyProperty="depositBatchId">
-        insert into customer_deposit_batch(deposit_batch_no, customer_id, deposit_type, source_order_id, source_order_no,
+        insert into customer_deposit_batch(deposit_batch_no, customer_id, deposit_type, receipt_no,
             deposit_amount, used_amount, remaining_amount, status, start_time, settle_time, remark, create_by, create_time)
-        values(#{depositBatchNo}, #{customerId}, #{depositType}, #{sourceOrderId}, #{sourceOrderNo},
+        values(#{depositBatchNo}, #{customerId}, #{depositType}, #{receiptNo},
             #{depositAmount}, #{usedAmount}, #{remainingAmount}, #{status}, #{startTime}, #{settleTime}, #{remark}, #{createBy}, sysdate())
     </insert>
 

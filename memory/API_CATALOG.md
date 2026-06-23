@@ -559,6 +559,7 @@
 - Path: `/business/customer/list`
 - Owner: `customer`
 - Module: `customer`
+- Notes: Lists customer master data and supports filtering by `customerNature` (`REAL` or `PUBLIC`) and `publicChannel` (`DIRECT_SALE` or `SELF_MEDIA`). Public customers are classification customers only.
 
 ## /business/customer/export
 
@@ -587,7 +588,7 @@
 - Path: `/business/customer`
 - Owner: `customer`
 - Module: `customer`
-- Notes: Creates customer master data. When no meaningful submitted contact/address exists, the service transaction auto-creates a default contact from master contact fields and a default shipping address from master address fields.
+- Notes: Creates customer master data. `customerNature` defaults to `REAL`; `PUBLIC` requires `publicChannel`. Real customers can auto-create default contact/address from master fields. Public customers do not auto-create contacts or shipping addresses and are used only for order classification.
 
 ## /business/customer:update
 
@@ -595,7 +596,7 @@
 - Path: `/business/customer`
 - Owner: `customer`
 - Module: `customer`
-- Notes: Updates customer master data. Request-only booleans `syncDefaultContact` and `syncDefaultAddress` opt into syncing master fields to the current default child record or creating it when missing; omitted/false flags must not blindly overwrite child records.
+- Notes: Updates customer master data. Real-customer request-only booleans `syncDefaultContact` and `syncDefaultAddress` opt into syncing master fields to the current default child record or creating it when missing. Public customers clear real-customer contact/address/owner fields and do not sync or create default child records.
 
 ## /business/customer/changeStatus
 
@@ -638,6 +639,7 @@
 - Path: `/business/customer/{customerId}/fund/accounts`
 - Owner: `customer`
 - Module: `customer`
+- Notes: Real customers expose `CUSTOMER_DEPOSIT` and `SAMPLE_REBATE` accounts. Public customers do not expose customer-level deposit accounts.
 
 ## /business/customer/{customerId}/fund/deposit
 
@@ -645,6 +647,7 @@
 - Path: `/business/customer/{customerId}/fund/deposit`
 - Owner: `customer`
 - Module: `customer`
+- Notes: Records one unified customer deposit against `CUSTOMER_DEPOSIT`, creates a `customer_deposit_batch`, and writes a `customer_fund_flow` with related business type `CUSTOMER_DEPOSIT_BATCH`. Public customers are rejected with a service error because order-specific deposits belong to the future sales-order module.
 
 ## /business/customer/{customerId}/fund/flows
 
@@ -659,6 +662,7 @@
 - Path: `/business/customer/{customerId}/fund/deposit-batches`
 - Owner: `customer`
 - Module: `customer`
+- Notes: Returns unified `CUSTOMER_DEPOSIT` batches; legacy long-term or rolling-order deposit types are not part of the current model.
 
 ## /business/customer/{customerId}/sample-policy
 
@@ -666,6 +670,7 @@
 - Path: `/business/customer/{customerId}/sample-policy`
 - Owner: `customer`
 - Module: `customer`
+- Notes: Real customers may use customer-level sample policy. Public customers return a disabled/no-support policy view.
 
 ## /business/customer/{customerId}/sample-policy:update
 
@@ -673,6 +678,7 @@
 - Path: `/business/customer/{customerId}/sample-policy`
 - Owner: `customer`
 - Module: `customer`
+- Notes: Saves sample policy for real customers only. Public customers are rejected because they do not enable customer-level sample policy.
 
 ## /business/customer/{customerId}/sample-rebate:create
 
@@ -680,6 +686,7 @@
 - Path: `/business/customer/{customerId}/sample-rebate`
 - Owner: `customer`
 - Module: `customer`
+- Notes: Creates sample rebate records for real customers only and keeps sample rebate in `SAMPLE_REBATE`, separate from customer deposit.
 
 ## /business/customer/{customerId}/sample-rebate
 

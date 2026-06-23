@@ -14,6 +14,7 @@ Feature ID: `customer`
 - `业务管理` parent menu and `客户管理` child page are documented in `sql/customer.ownership.md`.
 - Customer page route is `/customer`, component is `customer/index`.
 - Normal customer edit permission does not grant fund adjustment permission.
+- This iteration does not add permission codes. Public customer restrictions are enforced by customer service validation while continuing to use the existing customer, fund, and sample-policy permissions.
 
 ## Verification
 

@@ -7,6 +7,16 @@
       <el-form-item label="客户简称" prop="shortName">
         <el-input v-model="queryParams.shortName" placeholder="请输入客户简称" clearable style="width: 180px" @keyup.enter="handleQuery" />
       </el-form-item>
+      <el-form-item label="客户性质" prop="customerNature">
+        <el-select v-model="queryParams.customerNature" placeholder="请选择" clearable style="width: 140px" @change="handleQueryNatureChange">
+          <el-option v-for="item in customerNatureOptions" :key="item.value" :label="item.label" :value="item.value" />
+        </el-select>
+      </el-form-item>
+      <el-form-item v-if="queryParams.customerNature === 'PUBLIC'" label="公共渠道" prop="publicChannel">
+        <el-select v-model="queryParams.publicChannel" placeholder="请选择" clearable style="width: 150px">
+          <el-option v-for="item in publicChannelOptions" :key="item.value" :label="item.label" :value="item.value" />
+        </el-select>
+      </el-form-item>
       <el-form-item label="联系人" prop="contactName">
         <el-input v-model="queryParams.contactName" placeholder="请输入联系人" clearable style="width: 180px" @keyup.enter="handleQuery" />
       </el-form-item>
@@ -63,6 +73,15 @@
         <template #default="scope">
           <el-button link type="primary" @click="handleView(scope.row)">{{ scope.row.customerName }}</el-button>
         </template>
+      </el-table-column>
+      <el-table-column label="客户性质" align="center" prop="customerNature" width="110">
+        <template #default="scope">
+          <el-tag v-if="scope.row.customerNature === 'PUBLIC'" type="warning">公共客户</el-tag>
+          <span v-else>真实客户</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="公共渠道" align="center" prop="publicChannel" width="110">
+        <template #default="scope">{{ optionLabel(publicChannelOptions, scope.row.publicChannel) }}</template>
       </el-table-column>
       <el-table-column label="客户类型" align="center" prop="customerType" width="110">
         <template #default="scope">{{ optionLabel(customerTypeOptions, scope.row.customerType) }}</template>
@@ -121,6 +140,28 @@
                 </el-form-item>
               </el-col>
               <el-col :span="12">
+                <el-form-item label="客户性质" prop="customerNature">
+                  <el-radio-group v-model="form.customerNature" @change="handleFormNatureChange">
+                    <el-radio-button v-for="item in customerNatureOptions" :key="item.value" :label="item.value">{{ item.label }}</el-radio-button>
+                  </el-radio-group>
+                </el-form-item>
+              </el-col>
+              <el-col v-if="isPublicCustomerForm" :span="12">
+                <el-form-item label="公共渠道" prop="publicChannel">
+                  <el-select v-model="form.publicChannel" placeholder="请选择公共渠道" style="width: 100%">
+                    <el-option v-for="item in publicChannelOptions" :key="item.value" :label="item.label" :value="item.value" />
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col v-if="isPublicCustomerForm" :span="24">
+                <el-alert
+                  title="公共客户仅用于订单归类，实际购买人、联系电话、收货地址、接待业务员请在销售订单中填写。"
+                  type="warning"
+                  :closable="false"
+                  show-icon
+                />
+              </el-col>
+              <el-col :span="12">
                 <el-form-item label="客户类型" prop="customerType">
                   <el-select v-model="form.customerType" placeholder="请选择客户类型" style="width: 100%">
                     <el-option v-for="item in customerTypeOptions" :key="item.value" :label="item.label" :value="item.value" />
@@ -134,29 +175,29 @@
                   </el-select>
                 </el-form-item>
               </el-col>
-              <el-col :span="12">
+              <el-col v-if="!isPublicCustomerForm" :span="12">
                 <el-form-item label="主联系人" prop="contactName">
                   <el-input v-model="form.contactName" placeholder="请输入联系人" maxlength="30" />
                 </el-form-item>
               </el-col>
-              <el-col :span="12">
+              <el-col v-if="!isPublicCustomerForm" :span="12">
                 <el-form-item label="联系电话" prop="contactPhone">
                   <el-input v-model="form.contactPhone" placeholder="请输入联系电话" maxlength="30" />
                 </el-form-item>
               </el-col>
-              <el-col :span="12">
+              <el-col v-if="!isPublicCustomerForm" :span="12">
                 <el-form-item label="微信号" prop="wechat">
                   <el-input v-model="form.wechat" placeholder="请输入微信号" maxlength="50" />
                 </el-form-item>
               </el-col>
-              <el-col :span="12">
+              <el-col v-if="!isPublicCustomerForm" :span="12">
                 <el-form-item label="归属业务员" prop="ownerUserId">
                   <el-select v-model="form.ownerUserId" filterable remote clearable reserve-keyword :remote-method="loadSalesmen" placeholder="请选择业务员" style="width: 100%">
                     <el-option v-for="item in salesmanOptions" :key="item.userId" :label="salesmanLabel(item)" :value="item.userId" />
                   </el-select>
                 </el-form-item>
               </el-col>
-              <el-col :span="24">
+              <el-col v-if="!isPublicCustomerForm" :span="24">
                 <el-form-item label="省市区" prop="areaPath">
                   <el-cascader
                     v-model="form.areaPath"
@@ -170,7 +211,7 @@
                   />
                 </el-form-item>
               </el-col>
-              <el-col :span="24">
+              <el-col v-if="!isPublicCustomerForm" :span="24">
                 <el-form-item label="详细地址" prop="address">
                   <el-input v-model="form.address" placeholder="请输入详细地址" maxlength="200" />
                 </el-form-item>
@@ -180,7 +221,7 @@
                   <el-input v-model="form.remark" type="textarea" placeholder="请输入备注" />
                 </el-form-item>
               </el-col>
-              <el-col v-if="form.customerId" :span="24">
+              <el-col v-if="form.customerId && !isPublicCustomerForm" :span="24">
                 <el-form-item label="同步选项">
                   <div class="sync-options">
                     <div class="sync-option">
@@ -198,7 +239,7 @@
               </el-col>
             </el-row>
           </el-tab-pane>
-          <el-tab-pane label="联系人" name="contacts">
+          <el-tab-pane v-if="!isPublicCustomerForm" label="联系人" name="contacts">
             <el-button type="primary" plain icon="Plus" @click="addContact">新增联系人</el-button>
             <el-table :data="form.contacts" class="mt8">
               <el-table-column label="默认" width="70" align="center">
@@ -233,7 +274,7 @@
               </el-table-column>
             </el-table>
           </el-tab-pane>
-          <el-tab-pane label="收货地址" name="addresses">
+          <el-tab-pane v-if="!isPublicCustomerForm" label="收货地址" name="addresses">
             <el-button type="primary" plain icon="Plus" @click="addAddress">新增地址</el-button>
             <el-table :data="form.addresses" class="mt8">
               <el-table-column label="默认" width="70" align="center">
@@ -285,21 +326,31 @@
     <el-drawer v-model="detailOpen" :title="detailTitle" size="78%" append-to-body>
       <el-tabs v-model="detailTab" v-if="detail.customer">
         <el-tab-pane label="基础信息" name="base">
+          <el-alert
+            v-if="isPublicDetail"
+            title="公共客户仅用于订单归类，实际购买人、联系电话、收货地址、接待业务员请在销售订单中填写。"
+            type="warning"
+            show-icon
+            :closable="false"
+            class="public-customer-tip"
+          />
           <el-descriptions :column="3" border>
             <el-descriptions-item label="客户编码">{{ detail.customer.customerCode }}</el-descriptions-item>
             <el-descriptions-item label="客户名称">{{ detail.customer.customerName }}</el-descriptions-item>
+            <el-descriptions-item label="客户性质">{{ optionLabel(customerNatureOptions, detail.customer.customerNature) }}</el-descriptions-item>
+            <el-descriptions-item v-if="detail.customer.customerNature === 'PUBLIC'" label="公共渠道">{{ optionLabel(publicChannelOptions, detail.customer.publicChannel) }}</el-descriptions-item>
             <el-descriptions-item label="客户类型">{{ optionLabel(customerTypeOptions, detail.customer.customerType) }}</el-descriptions-item>
             <el-descriptions-item label="客户等级">{{ optionLabel(customerLevelOptions, detail.customer.customerLevel) }}</el-descriptions-item>
-            <el-descriptions-item label="主联系人">{{ detail.customer.contactName }}</el-descriptions-item>
-            <el-descriptions-item label="联系电话">{{ detail.customer.contactPhone }}</el-descriptions-item>
-            <el-descriptions-item label="业务员">{{ detail.customer.ownerUserName }}</el-descriptions-item>
-            <el-descriptions-item label="部门">{{ detail.customer.ownerDeptName }}</el-descriptions-item>
+            <el-descriptions-item v-if="!isPublicDetail" label="主联系人">{{ detail.customer.contactName }}</el-descriptions-item>
+            <el-descriptions-item v-if="!isPublicDetail" label="联系电话">{{ detail.customer.contactPhone }}</el-descriptions-item>
+            <el-descriptions-item v-if="!isPublicDetail" label="业务员">{{ detail.customer.ownerUserName }}</el-descriptions-item>
+            <el-descriptions-item v-if="!isPublicDetail" label="部门">{{ detail.customer.ownerDeptName }}</el-descriptions-item>
             <el-descriptions-item label="状态">{{ detail.customer.status === '0' ? '正常' : '停用' }}</el-descriptions-item>
-            <el-descriptions-item label="地址" :span="3">{{ fullAddress(detail.customer) }}</el-descriptions-item>
+            <el-descriptions-item v-if="!isPublicDetail" label="地址" :span="3">{{ fullAddress(detail.customer) }}</el-descriptions-item>
             <el-descriptions-item label="备注" :span="3">{{ detail.customer.remark }}</el-descriptions-item>
           </el-descriptions>
         </el-tab-pane>
-        <el-tab-pane label="联系人" name="contacts">
+        <el-tab-pane v-if="!isPublicDetail" label="联系人" name="contacts">
           <el-table :data="detail.customer.contacts || []">
             <el-table-column label="默认" prop="isDefault" width="80" />
             <el-table-column label="联系人" prop="contactName" />
@@ -310,7 +361,7 @@
             <el-table-column label="备注" prop="remark" />
           </el-table>
         </el-tab-pane>
-        <el-tab-pane label="收货地址" name="addresses">
+        <el-tab-pane v-if="!isPublicDetail" label="收货地址" name="addresses">
           <el-table :data="detail.customer.addresses || []">
             <el-table-column label="默认" prop="isDefault" width="80" />
             <el-table-column label="收货人" prop="receiverName" />
@@ -323,6 +374,14 @@
           </el-table>
         </el-tab-pane>
         <el-tab-pane label="资金与政策" name="fund">
+          <el-alert
+            v-if="isPublicDetail"
+            title="公共客户不启用客户级定金，订单收款请在销售订单中记录本单定金。"
+            type="warning"
+            :closable="false"
+            show-icon
+          />
+          <template v-else>
           <el-row :gutter="12" class="fund-row">
             <el-col :span="8" v-for="account in detail.fundAccounts || []" :key="account.accountType">
               <el-card shadow="never">
@@ -334,8 +393,7 @@
             </el-col>
           </el-row>
           <div class="detail-actions">
-            <el-button type="primary" plain icon="Money" @click="handleFundEntry('LONG_TERM_DEPOSIT')" v-hasPermi="['business:customer:fund:add']">录入长期定金</el-button>
-            <el-button type="primary" plain icon="Money" @click="handleFundEntry('ROLLING_ORDER_DEPOSIT')" v-hasPermi="['business:customer:fund:add']">录入滚动定金</el-button>
+            <el-button type="primary" plain icon="Money" @click="handleFundEntry" v-hasPermi="['business:customer:fund:add']">录入定金</el-button>
             <el-button type="success" plain icon="Plus" @click="handleSampleRebate" v-hasPermi="['business:customer:fund:add']">生成样品返现</el-button>
           </div>
           <el-divider content-position="left">样品支持政策</el-divider>
@@ -409,6 +467,7 @@
             <el-table-column label="时间" prop="occurTime" width="160" />
             <el-table-column label="备注" prop="remark" min-width="160" />
           </el-table>
+          </template>
         </el-tab-pane>
         <el-tab-pane label="操作日志" name="logs">
           <el-table :data="detail.ownerLogs || []">
@@ -443,17 +502,11 @@
 
     <el-dialog :title="fundTitle" v-model="fundOpen" width="520px" append-to-body>
       <el-form :model="fundForm" label-width="118px">
-        <el-form-item label="账户类型">
-          <el-select v-model="fundForm.accountType" disabled style="width: 100%">
-            <el-option label="长期定金" value="LONG_TERM_DEPOSIT" />
-            <el-option label="滚动订单定金" value="ROLLING_ORDER_DEPOSIT" />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="收取金额">
+        <el-form-item label="收款金额">
           <el-input-number v-model="fundForm.amount" :precision="2" :min="0" style="width: 100%" />
         </el-form-item>
-        <el-form-item label="来源订单号">
-          <el-input v-model="fundForm.sourceOrderNo" />
+        <el-form-item label="收款凭证号">
+          <el-input v-model="fundForm.receiptNo" placeholder="选填" maxlength="64" />
         </el-form-item>
         <el-form-item label="备注">
           <el-input v-model="fundForm.remark" type="textarea" />
@@ -504,6 +557,14 @@ const customerLevelOptions = [
   { label: "C", value: "C" },
   { label: "普通", value: "NORMAL" }
 ]
+const customerNatureOptions = [
+  { label: "真实客户", value: "REAL" },
+  { label: "公共客户", value: "PUBLIC" }
+]
+const publicChannelOptions = [
+  { label: "厂内自销", value: "DIRECT_SALE" },
+  { label: "自媒体", value: "SELF_MEDIA" }
+]
 const contactRoleOptions = ["老板", "采购", "财务", "收货人", "跟单员", "其他"].map(item => ({ label: item, value: item }))
 const supportModeOptions = [
   { label: "不支持", value: "NONE" },
@@ -540,6 +601,8 @@ const data = reactive({
     pageSize: 10,
     customerName: undefined,
     shortName: undefined,
+    customerNature: undefined,
+    publicChannel: undefined,
     contactName: undefined,
     contactPhone: undefined,
     customerType: undefined,
@@ -559,6 +622,9 @@ const data = reactive({
 })
 
 const { queryParams, form, transferForm, fundForm, rebateForm, rules } = toRefs(data)
+
+const isPublicCustomerForm = computed(() => form.value.customerNature === "PUBLIC")
+const isPublicDetail = computed(() => detail.value.customer?.customerNature === "PUBLIC")
 
 function optionLabel(options, value) {
   return options.find(item => item.value === value)?.label || value || ""
@@ -596,8 +662,7 @@ function buildDeptOptions(users) {
 
 function accountTypeLabel(type) {
   return {
-    LONG_TERM_DEPOSIT: "长期定金",
-    ROLLING_ORDER_DEPOSIT: "滚动订单定金",
+    CUSTOMER_DEPOSIT: "定金",
     SAMPLE_REBATE: "样品返现"
   }[type] || type
 }
@@ -611,14 +676,14 @@ function fullAddress(row) {
 }
 
 const syncDefaultContactHint = computed(() => {
-  if (!form.value.customerId || hasDefaultContact()) {
+  if (isPublicCustomerForm.value || !form.value.customerId || hasDefaultContact()) {
     return ""
   }
   return form.value.syncDefaultContact ? "当前没有默认联系人，保存时将自动创建默认联系人" : "当前没有默认联系人，勾选后保存会自动创建默认联系人"
 })
 
 const syncDefaultAddressHint = computed(() => {
-  if (!form.value.customerId || hasDefaultAddress()) {
+  if (isPublicCustomerForm.value || !form.value.customerId || hasDefaultAddress()) {
     return ""
   }
   if (!hasBaseAddressForSync()) {
@@ -679,6 +744,9 @@ function isPartialAreaPath(areaPath) {
 }
 
 function validateAreaSelections() {
+  if (isPublicCustomerForm.value) {
+    return true
+  }
   if (isPartialAreaPath(form.value.areaPath)) {
     proxy.$modal.msgError("省市区请选择完整到区县")
     editTab.value = "base"
@@ -694,6 +762,29 @@ function validateAreaSelections() {
 }
 
 function prepareCustomerBeforeSave() {
+  if (isPublicCustomerForm.value) {
+    form.value.contactName = undefined
+    form.value.contactPhone = undefined
+    form.value.wechat = undefined
+    form.value.province = undefined
+    form.value.provinceCode = undefined
+    form.value.city = undefined
+    form.value.cityCode = undefined
+    form.value.district = undefined
+    form.value.districtCode = undefined
+    form.value.areaPath = []
+    form.value.address = undefined
+    form.value.ownerUserId = undefined
+    form.value.ownerUserName = undefined
+    form.value.ownerDeptId = undefined
+    form.value.ownerDeptName = undefined
+    form.value.syncDefaultContact = false
+    form.value.syncDefaultAddress = false
+    form.value.contacts = []
+    form.value.addresses = []
+  } else {
+    form.value.publicChannel = undefined
+  }
   if (!form.value.shortName) {
     form.value.shortName = form.value.customerName
   }
@@ -728,6 +819,12 @@ function handleQuery() {
   getList()
 }
 
+function handleQueryNatureChange(value) {
+  if (value !== "PUBLIC") {
+    queryParams.value.publicChannel = undefined
+  }
+}
+
 function resetQuery() {
   proxy.resetForm("queryRef")
   handleQuery()
@@ -738,6 +835,8 @@ function reset() {
     customerId: undefined,
     customerName: undefined,
     shortName: undefined,
+    customerNature: "REAL",
+    publicChannel: undefined,
     customerType: "DEALER",
     customerLevel: "NORMAL",
     contactName: undefined,
@@ -774,16 +873,30 @@ function handleUpdate(row) {
   const customerId = row.customerId || ids.value[0]
   getCustomer(customerId).then(response => {
     form.value = response.data.customer
+    form.value.customerNature = form.value.customerNature || "REAL"
     form.value.contacts = form.value.contacts || []
     form.value.addresses = form.value.addresses || []
     hydrateCustomerArea()
     hydrateAddressAreas()
-    form.value.syncDefaultContact = true
-    form.value.syncDefaultAddress = true
+    form.value.syncDefaultContact = !isPublicCustomerForm.value
+    form.value.syncDefaultAddress = !isPublicCustomerForm.value
     editTab.value = "base"
     open.value = true
     title.value = "修改客户"
   })
+}
+
+function handleFormNatureChange(value) {
+  if (value === "PUBLIC") {
+    form.value.publicChannel = form.value.publicChannel || "DIRECT_SALE"
+    form.value.contacts = []
+    form.value.addresses = []
+    form.value.syncDefaultContact = false
+    form.value.syncDefaultAddress = false
+    editTab.value = "base"
+  } else {
+    form.value.publicChannel = undefined
+  }
 }
 
 function handleView(row) {
@@ -809,6 +922,11 @@ function cancel() {
 function submitForm() {
   proxy.$refs["customerRef"].validate(valid => {
     if (!valid) return
+    if (isPublicCustomerForm.value && !form.value.publicChannel) {
+      proxy.$modal.msgError("请选择公共客户渠道")
+      editTab.value = "base"
+      return
+    }
     if (!validateAreaSelections()) return
     prepareCustomerBeforeSave()
     duplicateWarning({
@@ -915,14 +1033,18 @@ function submitTransfer() {
   })
 }
 
-function handleFundEntry(accountType) {
-  fundForm.value = { accountType, amount: 0, sourceOrderNo: "", remark: "" }
-  fundTitle.value = accountType === "LONG_TERM_DEPOSIT" ? "录入长期定金" : "录入滚动订单定金"
+function handleFundEntry() {
+  fundForm.value = { amount: 0, receiptNo: "", remark: "" }
+  fundTitle.value = "录入定金"
   fundOpen.value = true
 }
 
 function submitFundEntry() {
-  addFundDeposit(currentCustomerId.value, fundForm.value).then(() => {
+  addFundDeposit(currentCustomerId.value, {
+    amount: fundForm.value.amount,
+    receiptNo: fundForm.value.receiptNo,
+    remark: fundForm.value.remark
+  }).then(() => {
     proxy.$modal.msgSuccess("录入成功")
     fundOpen.value = false
     loadDetail(currentCustomerId.value)

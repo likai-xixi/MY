@@ -15,6 +15,8 @@ The route is the RuoYi menu route produced by parent path `business` plus child 
 
 ## Display Rules
 
+- Customer list search includes customer nature (`REAL`/`PUBLIC`) and public channel (`DIRECT_SALE`/`SELF_MEDIA`) filters.
+- Public customers are marked with a visible tag in the list.
 - Customer code column uses a fixed width, no wrapping, overflow ellipsis, and Element Plus overflow tooltip.
 - Customer name stays clickable and opens the existing detail drawer.
 - Customer list displays province/city/district Chinese names in a tooltip-enabled column.
@@ -30,11 +32,15 @@ The route is the RuoYi menu route produced by parent path `business` plus child 
 - Save payloads persist both `province_code`, `city_code`, `district_code` and Chinese `province`, `city`, `district` for customer master data and shipping addresses.
 - Customer detail, list, and export continue showing Chinese province/city/district names, not raw codes.
 - Customer short name remains optional; when it is blank, backend save fills it from customer name.
-- New customer creation does not require users to duplicate master contact/address fields into child tabs. When master contact/phone/WeChat and detail address are present, the backend creates the default contact and default shipping address transactionally.
+- Add/edit customer dialogs expose customer nature. Public customer dialogs show public channel and the notice: `公共客户仅用于订单归类，实际购买人、联系电话、收货地址、接待业务员请在销售订单中填写。`
+- Public customer editing hides contact, shipping-address, fixed-owner, and sync controls. Public customer detail hides customer-level deposit/sample policy actions and shows the public-customer fund notice.
+- New real-customer creation does not require users to duplicate master contact/address fields into child tabs. When master contact/phone/WeChat and detail address are present, the backend creates the default contact and default shipping address transactionally.
 - The edit dialog base tab exposes two explicit sync options:
-  - `同步到默认联系人`: syncs master contact, phone, and WeChat to the default contact. It is unchecked when a default contact exists and checked by default when none exists.
-  - `同步到默认收货地址`: syncs master contact, phone, province/city/district code/name fields, and detail address to the default shipping address. It is unchecked when a default address exists and checked by default only when no default address exists and the master address is complete.
+  - `同步到默认联系人`: syncs master contact, phone, and WeChat to the default contact. It is checked by default when editing real customers and can be manually cancelled before save.
+  - `同步到默认收货地址`: syncs master contact, phone, province/city/district code/name fields, and detail address to the default shipping address. It is checked by default when editing real customers and can be manually cancelled before save.
 - If users do not check the sync options during edit, changing master contact/address fields must not overwrite existing default child records.
+- Funds and policy display only `定金` and `样品返现`. The UI must not show old long-term or rolling deposit labels.
+- Deposit entry dialog captures `收款金额`, optional `收款凭证号`, and `备注`; it must not show account-type selection or source-order fields.
 - The accepted page route is `/business/customer`; `/customer` remains outside the runtime contract.
 
 ## Shared Component Rule
@@ -48,4 +54,4 @@ The route is the RuoYi menu route produced by parent path `business` plus child 
 - `npm run scan:frontend-routes`
 - `npm run check:components`
 - `npm run check:component-similarity`
-- Browser validation on `/business/customer` for complete Henan data, Zhejiang/Shandong/Guangdong/Beijing/Shanghai selection, add/edit echo/save, customer/address code persistence, historical name-only compatibility, list/detail/export Chinese names, default contact/address auto-create, edit sync/no-sync behavior, and parsed XLSX export labels.
+- Browser validation on `/business/customer` for REAL/PUBLIC create/edit, public customer hidden child/fund controls, unified deposit display, complete area selection for real customers, default contact/address auto-create, edit sync/no-sync behavior, and parsed XLSX export labels.

@@ -6,6 +6,7 @@ import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -47,6 +48,18 @@ public class CustomerServiceImpl implements ICustomerService
     private static final String DELETED = "2";
     private static final String YES = "Y";
     private static final String NO = "N";
+    private static final String REAL = "REAL";
+    private static final String PUBLIC = "PUBLIC";
+    private static final String DIRECT_SALE = "DIRECT_SALE";
+    private static final String SELF_MEDIA = "SELF_MEDIA";
+    private static final String CUSTOMER_DEPOSIT = "CUSTOMER_DEPOSIT";
+    private static final String SAMPLE_REBATE = "SAMPLE_REBATE";
+    private static final String SAMPLE_REBATE_GENERATE = "SAMPLE_REBATE_GENERATE";
+    private static final String DEPOSIT_IN = "DEPOSIT_IN";
+    private static final String DEPOSIT_DEDUCT = "DEPOSIT_DEDUCT";
+    private static final String DEPOSIT_REFUND = "DEPOSIT_REFUND";
+    private static final String DEPOSIT_ADJUST = "DEPOSIT_ADJUST";
+    private static final String DEPOSIT_REVERSE = "DEPOSIT_REVERSE";
     private static final BigDecimal ZERO = BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP);
     private static final String CUSTOMER_CODE_PREFIX = "KH";
     private static final int CUSTOMER_CODE_MIN_SEQUENCE_WIDTH = 6;
@@ -77,8 +90,16 @@ public class CustomerServiceImpl implements ICustomerService
         Customer customer = customerMapper.selectCustomerById(customerId);
         if (customer != null)
         {
-            customer.setContacts(customerMapper.selectContactsByCustomerId(customerId));
-            customer.setAddresses(customerMapper.selectAddressesByCustomerId(customerId));
+            if (isPublicCustomer(customer))
+            {
+                customer.setContacts(Collections.emptyList());
+                customer.setAddresses(Collections.emptyList());
+            }
+            else
+            {
+                customer.setContacts(customerMapper.selectContactsByCustomerId(customerId));
+                customer.setAddresses(customerMapper.selectAddressesByCustomerId(customerId));
+            }
         }
         return customer;
     }
@@ -101,6 +122,7 @@ public class CustomerServiceImpl implements ICustomerService
     @Transactional
     public int insertCustomer(Customer customer)
     {
+        normalizeCustomerForSave(customer);
         fillDefaultShortName(customer);
         if (StringUtils.isEmpty(customer.getStatus()))
         {
@@ -135,7 +157,7 @@ public class CustomerServiceImpl implements ICustomerService
         int rows = customerMapper.insertCustomer(customer);
         prepareCreateDefaultChildren(customer);
         replaceChildren(customer);
-        initFundAccounts(customer.getCustomerId(), customer.getCreateBy());
+        initFundAccounts(customer, customer.getCreateBy());
         return rows;
     }
 
@@ -143,6 +165,7 @@ public class CustomerServiceImpl implements ICustomerService
     @Transactional
     public int updateCustomer(Customer customer)
     {
+        normalizeCustomerForSave(customer);
         fillDefaultShortName(customer);
         fillOwnerSnapshot(customer);
         int rows = customerMapper.updateCustomer(customer);
@@ -229,7 +252,12 @@ public class CustomerServiceImpl implements ICustomerService
     @Override
     public List<CustomerFundAccount> selectFundAccounts(Long customerId)
     {
-        initFundAccounts(customerId, null);
+        Customer customer = requiredCustomer(customerId);
+        if (isPublicCustomer(customer))
+        {
+            return Collections.emptyList();
+        }
+        initFundAccounts(customer, null);
         return customerMapper.selectFundAccountsByCustomerId(customerId);
     }
 
@@ -237,7 +265,15 @@ public class CustomerServiceImpl implements ICustomerService
     @Transactional
     public CustomerFundFlow recordFundEntry(Long customerId, CustomerFundEntry entry, Long operatorId, String operatorName)
     {
-        requiredCustomer(customerId);
+        Customer customer = requiredCustomer(customerId);
+        if (isPublicCustomer(customer))
+        {
+            throw new ServiceException("公共客户不启用客户级定金，请在销售订单中记录本单定金。");
+        }
+        if (entry == null)
+        {
+            entry = new CustomerFundEntry();
+        }
         BigDecimal amount = normalizeAmount(entry.getAmount());
         if (amount.compareTo(BigDecimal.ZERO) <= 0)
         {
@@ -250,7 +286,7 @@ public class CustomerServiceImpl implements ICustomerService
         BigDecimal afterBalance = beforeBalance.add(amount);
         BigDecimal frozen = money(account.getFrozenAmount());
         BigDecimal available = money(account.getAvailableAmount());
-        if ("SAMPLE_REBATE".equals(accountType))
+        if (SAMPLE_REBATE.equals(accountType))
         {
             available = available.add(amount);
         }
@@ -276,14 +312,13 @@ public class CustomerServiceImpl implements ICustomerService
         flow.setRemark(entry.getRemark());
         flow.setCreateBy(operatorName);
 
-        if (!"SAMPLE_REBATE".equals(accountType))
+        if (!SAMPLE_REBATE.equals(accountType))
         {
             CustomerDepositBatch batch = new CustomerDepositBatch();
             batch.setDepositBatchNo(nextNo("DEP"));
             batch.setCustomerId(customerId);
             batch.setDepositType(resolveDepositType(accountType, entry.getDepositType()));
-            batch.setSourceOrderId(entry.getSourceOrderId());
-            batch.setSourceOrderNo(entry.getSourceOrderNo());
+            batch.setReceiptNo(entry.getReceiptNo());
             batch.setDepositAmount(amount);
             batch.setUsedAmount(ZERO);
             batch.setRemainingAmount(amount);
@@ -315,6 +350,15 @@ public class CustomerServiceImpl implements ICustomerService
     @Override
     public CustomerSamplePolicy selectSamplePolicy(Long customerId)
     {
+        Customer customer = requiredCustomer(customerId);
+        if (isPublicCustomer(customer))
+        {
+            CustomerSamplePolicy policy = new CustomerSamplePolicy();
+            policy.setCustomerId(customerId);
+            policy.setSupportMode("NONE");
+            policy.setStatus("1");
+            return policy;
+        }
         CustomerSamplePolicy policy = customerMapper.selectSamplePolicyByCustomerId(customerId);
         if (policy == null)
         {
@@ -330,7 +374,7 @@ public class CustomerServiceImpl implements ICustomerService
     @Transactional
     public int saveSamplePolicy(CustomerSamplePolicy policy)
     {
-        requiredCustomer(policy.getCustomerId());
+        assertRealCustomerFeature(policy.getCustomerId(), "公共客户不启用客户级样品政策。");
         CustomerSamplePolicy existing = customerMapper.selectSamplePolicyByCustomerId(policy.getCustomerId());
         if (StringUtils.isEmpty(policy.getStatus()))
         {
@@ -343,7 +387,7 @@ public class CustomerServiceImpl implements ICustomerService
     @Transactional
     public SampleRebateRecord createSampleRebateRecord(SampleRebateRecord record, Long operatorId, String operatorName)
     {
-        requiredCustomer(record.getCustomerId());
+        assertRealCustomerFeature(record.getCustomerId(), "公共客户不启用客户级样品返现。");
         fillSampleRebateAmounts(record);
         record.setUsedAmount(ZERO);
         record.setRemainingAmount(money(record.getRebateAmount()));
@@ -352,10 +396,10 @@ public class CustomerServiceImpl implements ICustomerService
         customerMapper.insertSampleRebateRecord(record);
 
         CustomerFundEntry entry = new CustomerFundEntry();
-        entry.setAccountType("SAMPLE_REBATE");
-        entry.setFlowType("SAMPLE_REBATE_GENERATE");
+        entry.setAccountType(SAMPLE_REBATE);
+        entry.setFlowType(SAMPLE_REBATE_GENERATE);
         entry.setAmount(record.getRebateAmount());
-        entry.setRelatedBizType("SAMPLE_REBATE");
+        entry.setRelatedBizType(SAMPLE_REBATE);
         entry.setRelatedBizId(record.getRebateRecordId());
         entry.setRelatedBizNo(record.getSampleOrderNo());
         entry.setRemark(record.getRemark());
@@ -377,6 +421,11 @@ public class CustomerServiceImpl implements ICustomerService
         }
         customerMapper.deleteContactsByCustomerId(customer.getCustomerId());
         List<CustomerContact> contacts = customer.getContacts();
+        if (isPublicCustomer(customer))
+        {
+            customerMapper.deleteAddressesByCustomerId(customer.getCustomerId());
+            return;
+        }
         normalizeDefaultContact(contacts);
         if (contacts != null)
         {
@@ -414,6 +463,10 @@ public class CustomerServiceImpl implements ICustomerService
 
     private void prepareCreateDefaultChildren(Customer customer)
     {
+        if (isPublicCustomer(customer))
+        {
+            return;
+        }
         if (shouldCreateDefaultContact(customer))
         {
             ensureContacts(customer).add(buildDefaultContact(customer));
@@ -426,6 +479,10 @@ public class CustomerServiceImpl implements ICustomerService
 
     private void prepareUpdateDefaultChildren(Customer customer)
     {
+        if (isPublicCustomer(customer))
+        {
+            return;
+        }
         if (Boolean.TRUE.equals(customer.getSyncDefaultContact()))
         {
             syncDefaultContact(customer);
@@ -668,15 +725,14 @@ public class CustomerServiceImpl implements ICustomerService
         customer.setOwnerDeptName(dept == null ? null : dept.getDeptName());
     }
 
-    private void initFundAccounts(Long customerId, String operator)
+    private void initFundAccounts(Customer customer, String operator)
     {
-        if (customerId == null)
+        if (customer == null || customer.getCustomerId() == null || isPublicCustomer(customer))
         {
             return;
         }
-        ensureFundAccount(customerId, "LONG_TERM_DEPOSIT", operator);
-        ensureFundAccount(customerId, "ROLLING_ORDER_DEPOSIT", operator);
-        ensureFundAccount(customerId, "SAMPLE_REBATE", operator);
+        ensureFundAccount(customer.getCustomerId(), CUSTOMER_DEPOSIT, operator);
+        ensureFundAccount(customer.getCustomerId(), SAMPLE_REBATE, operator);
     }
 
     private CustomerFundAccount ensureFundAccount(Long customerId, String accountType, String operator)
@@ -737,6 +793,73 @@ public class CustomerServiceImpl implements ICustomerService
         return monthPrefix + sequence;
     }
 
+    private void normalizeCustomerForSave(Customer customer)
+    {
+        if (customer == null)
+        {
+            return;
+        }
+        if (StringUtils.isEmpty(customer.getCustomerNature()))
+        {
+            customer.setCustomerNature(REAL);
+        }
+        if (!REAL.equals(customer.getCustomerNature()) && !PUBLIC.equals(customer.getCustomerNature()))
+        {
+            throw new ServiceException("客户性质不合法");
+        }
+        if (isPublicCustomer(customer))
+        {
+            validatePublicChannel(customer.getPublicChannel());
+            customer.setCustomerType("OTHER");
+            if (StringUtils.isEmpty(customer.getCustomerLevel()))
+            {
+                customer.setCustomerLevel("NORMAL");
+            }
+            customer.setContactName(null);
+            customer.setContactPhone(null);
+            customer.setWechat(null);
+            customer.setProvince(null);
+            customer.setProvinceCode(null);
+            customer.setCity(null);
+            customer.setCityCode(null);
+            customer.setDistrict(null);
+            customer.setDistrictCode(null);
+            customer.setAddress(null);
+            customer.setOwnerUserId(null);
+            customer.setOwnerUserName(null);
+            customer.setOwnerDeptId(null);
+            customer.setOwnerDeptName(null);
+            customer.setSyncDefaultContact(false);
+            customer.setSyncDefaultAddress(false);
+            customer.setContacts(Collections.emptyList());
+            customer.setAddresses(Collections.emptyList());
+            return;
+        }
+        customer.setPublicChannel(null);
+    }
+
+    private void validatePublicChannel(String publicChannel)
+    {
+        if (!DIRECT_SALE.equals(publicChannel) && !SELF_MEDIA.equals(publicChannel))
+        {
+            throw new ServiceException("公共客户渠道不合法");
+        }
+    }
+
+    private boolean isPublicCustomer(Customer customer)
+    {
+        return customer != null && PUBLIC.equals(customer.getCustomerNature());
+    }
+
+    private void assertRealCustomerFeature(Long customerId, String message)
+    {
+        Customer customer = requiredCustomer(customerId);
+        if (isPublicCustomer(customer))
+        {
+            throw new ServiceException(message);
+        }
+    }
+
     private void fillDefaultShortName(Customer customer)
     {
         if (customer != null && StringUtils.isEmpty(customer.getShortName()))
@@ -790,7 +913,11 @@ public class CustomerServiceImpl implements ICustomerService
 
     private String normalizeAccountType(String accountType)
     {
-        if ("LONG_TERM_DEPOSIT".equals(accountType) || "ROLLING_ORDER_DEPOSIT".equals(accountType) || "SAMPLE_REBATE".equals(accountType))
+        if (StringUtils.isEmpty(accountType))
+        {
+            return CUSTOMER_DEPOSIT;
+        }
+        if (CUSTOMER_DEPOSIT.equals(accountType) || SAMPLE_REBATE.equals(accountType))
         {
             return accountType;
         }
@@ -801,26 +928,40 @@ public class CustomerServiceImpl implements ICustomerService
     {
         if (StringUtils.isNotEmpty(flowType))
         {
-            return flowType;
+            if (CUSTOMER_DEPOSIT.equals(accountType) && isDepositFlowType(flowType))
+            {
+                return flowType;
+            }
+            if (SAMPLE_REBATE.equals(accountType) && SAMPLE_REBATE_GENERATE.equals(flowType))
+            {
+                return flowType;
+            }
+            throw new ServiceException("资金流水类型不合法");
         }
-        if ("LONG_TERM_DEPOSIT".equals(accountType))
+        if (CUSTOMER_DEPOSIT.equals(accountType))
         {
-            return "LONG_TERM_DEPOSIT_IN";
+            return DEPOSIT_IN;
         }
-        if ("ROLLING_ORDER_DEPOSIT".equals(accountType))
-        {
-            return "ROLLING_ORDER_DEPOSIT_IN";
-        }
-        return "SAMPLE_REBATE_GENERATE";
+        return SAMPLE_REBATE_GENERATE;
     }
 
     private String resolveDepositType(String accountType, String depositType)
     {
-        if (StringUtils.isNotEmpty(depositType))
+        if (!CUSTOMER_DEPOSIT.equals(accountType))
         {
-            return depositType;
+            throw new ServiceException("定金账户类型不合法");
         }
-        return "LONG_TERM_DEPOSIT".equals(accountType) ? "LONG_TERM" : "ROLLING_ORDER";
+        if (StringUtils.isNotEmpty(depositType) && !CUSTOMER_DEPOSIT.equals(depositType))
+        {
+            throw new ServiceException("定金类型不合法");
+        }
+        return CUSTOMER_DEPOSIT;
+    }
+
+    private boolean isDepositFlowType(String flowType)
+    {
+        return DEPOSIT_IN.equals(flowType) || DEPOSIT_DEDUCT.equals(flowType) || DEPOSIT_REFUND.equals(flowType)
+            || DEPOSIT_ADJUST.equals(flowType) || DEPOSIT_REVERSE.equals(flowType);
     }
 
     private void fillSampleRebateAmounts(SampleRebateRecord record)

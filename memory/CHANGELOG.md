@@ -49,6 +49,25 @@
 - 新增客户管理功能
 - Feature: `customer`.
 
+## 2026-06-23 - update
+
+- Change: `ai/changes/CR-20260623T105432Z-change`.
+- 客户管理公共客户与统一定金模型。
+- Customer nature is final as `REAL` or `PUBLIC`; public channels are `DIRECT_SALE` and `SELF_MEDIA`.
+- Customer-level deposit is unified as `CUSTOMER_DEPOSIT`; sample rebate remains `SAMPLE_REBATE`.
+- Public customers do not enable customer-level deposits, contacts, shipping addresses, fixed owner salesmen, sample policies, or sample rebates.
+- Sales order, shipment, finance, automatic deduction, receipt claiming, reconciliation, and old-data migration remain out of scope.
+- Feature: `customer`.
+
+## 2026-06-23 - runtime-validation
+
+- Change: `ai/changes/CR-20260623T105432Z-change`.
+- Rebuilt the development customer tables from final `sql/customer.ownership.md` DDL and initialized `PUB_DIRECT_SALE` / `PUB_SELF_MEDIA`.
+- Runtime-validated `/business/customer` for REAL/PUBLIC add, edit, detail, default contact/address behavior, unified REAL customer deposit, and PUBLIC customer-level fund-policy rejection.
+- Added the missing PUBLIC detail order-classification notice in `ruoyi-ui/src/views/customer/index.vue`.
+- Verified no legacy `长期定金`, `滚动定金`, `来源订单号`, `LONG_TERM_DEPOSIT`, or `ROLLING_ORDER_DEPOSIT` text remains in the customer scope.
+- Feature: `customer`.
+
 ## 2026-06-22 — customer
 
 - Implemented the RuoYi `customer` business module with customer archive CRUD/status/export, contacts, shipping addresses, owner assignment and transfer logs, fund accounts/flows, deposit entry, sample policy, rebate records, and SQL/menu/permission ownership.
@@ -77,4 +96,7 @@
 - Feature: `customer`.## 2026-06-23 — update
 - Change: `ai/changes/CR-20260623T071949Z-change`.
 - 客户管理列表隐藏客户简称列
+- Feature: `customer`.## 2026-06-23 — update
+- Change: `ai/changes/CR-20260623T105432Z-change`.
+- 客户管理公共客户与统一定金模型运行验收
 - Feature: `customer`.

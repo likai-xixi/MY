@@ -34,9 +34,18 @@ Runtime API client: `ruoyi-ui/src/api/customer.js`.
 
 ## Fund Boundary
 
-The API client exposes fund deposit and sample rebate entry points only. It must not expose direct account-balance update calls.
+The API client exposes customer-level deposit and sample rebate entry points only. It must not expose direct account-balance update calls.
+
+- `addFundDeposit(customerId, data)` keeps the path `/business/customer/{customerId}/fund/deposit`.
+- New deposit entries use `CUSTOMER_DEPOSIT`. The frontend may omit `accountType`; the backend defaults deposit entries to `CUSTOMER_DEPOSIT`.
+- Public customers must not show customer-level deposit entry UI and are rejected by the backend if called directly.
 
 ## Address Fields
+
+Customer create/update/detail/list calls carry `customerNature` and `publicChannel`.
+
+- `REAL`: real customer with contacts, shipping addresses, owner, customer-level deposit, sample policy, and sample rebate.
+- `PUBLIC`: public customer used only for order classification; actual buyer, phone, shipping address, receiving salesperson, and source channel are reserved for the later sales-order module.
 
 Customer create/update/detail calls carry both administrative division codes and Chinese names for customer master and shipping addresses:
 
@@ -51,6 +60,7 @@ The customer UI displays Chinese names and uses codes only for stable Cascader e
 Customer create/update requests may include child rows in `contacts` and `addresses`.
 
 - On `POST /business/customer`, if no meaningful child contact/address is submitted, the backend creates default child records from master customer fields in the same transaction.
+- For `customerNature=PUBLIC`, the backend does not create default contact or shipping-address rows.
 - On `PUT /business/customer`, the UI sends `syncDefaultContact` and `syncDefaultAddress` only as request intent fields. They are not database columns.
 - `syncDefaultContact=true` syncs master contact, phone, and WeChat to the default contact, or creates it when missing.
 - `syncDefaultAddress=true` syncs master contact, phone, province/city/district code/name fields, and detail address to the default shipping address, or creates it when missing.

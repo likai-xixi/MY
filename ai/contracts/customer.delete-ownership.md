@@ -12,7 +12,7 @@ Feature ID: `customer`
 
 - Backend: controller, service, service impl, mapper, domain objects, mapper XML, `ruoyi-business` Maven module wiring.
 - Frontend: `/customer` page, `ruoyi-ui/src/api/customer.js`, customer screen contract docs.
-- Data: all nine customer-owned tables, SQL ownership file, menu and permission rows.
+- Data: all nine customer-owned tables, SQL ownership file, public customer seed rows, menu and permission rows.
 - Graph and memory: API graph, UI graph, module graph, API catalog, feature registry, module registry, DB registry, permission registry, memory and handover.
 
 ## Removal Rule

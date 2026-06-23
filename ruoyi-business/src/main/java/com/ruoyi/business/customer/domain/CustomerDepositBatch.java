@@ -16,8 +16,7 @@ public class CustomerDepositBatch extends BaseEntity
     private String depositBatchNo;
     private Long customerId;
     private String depositType;
-    private Long sourceOrderId;
-    private String sourceOrderNo;
+    private String receiptNo;
     private BigDecimal depositAmount;
     private BigDecimal usedAmount;
     private BigDecimal remainingAmount;
@@ -37,10 +36,8 @@ public class CustomerDepositBatch extends BaseEntity
     public void setCustomerId(Long customerId) { this.customerId = customerId; }
     public String getDepositType() { return depositType; }
     public void setDepositType(String depositType) { this.depositType = depositType; }
-    public Long getSourceOrderId() { return sourceOrderId; }
-    public void setSourceOrderId(Long sourceOrderId) { this.sourceOrderId = sourceOrderId; }
-    public String getSourceOrderNo() { return sourceOrderNo; }
-    public void setSourceOrderNo(String sourceOrderNo) { this.sourceOrderNo = sourceOrderNo; }
+    public String getReceiptNo() { return receiptNo; }
+    public void setReceiptNo(String receiptNo) { this.receiptNo = receiptNo; }
     public BigDecimal getDepositAmount() { return depositAmount; }
     public void setDepositAmount(BigDecimal depositAmount) { this.depositAmount = depositAmount; }
     public BigDecimal getUsedAmount() { return usedAmount; }
