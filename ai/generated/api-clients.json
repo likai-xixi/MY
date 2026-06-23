@@ -8,6 +8,83 @@
   ],
   "calls": [
     {
+      "module": "customer",
+      "file": "ruoyi-ui/src/api/customer.js",
+      "path": "/business/customer/list",
+      "method": "GET",
+      "source": "request-object"
+    },
+    {
+      "module": "customer",
+      "file": "ruoyi-ui/src/api/customer.js",
+      "path": "/business/customer/",
+      "method": "GET",
+      "source": "request-object"
+    },
+    {
+      "module": "customer",
+      "file": "ruoyi-ui/src/api/customer.js",
+      "path": "/business/customer/duplicate-warning",
+      "method": "GET",
+      "source": "request-object"
+    },
+    {
+      "module": "customer",
+      "file": "ruoyi-ui/src/api/customer.js",
+      "path": "/business/customer",
+      "method": "POST",
+      "source": "request-object"
+    },
+    {
+      "module": "customer",
+      "file": "ruoyi-ui/src/api/customer.js",
+      "path": "/business/customer",
+      "method": "PUT",
+      "source": "request-object"
+    },
+    {
+      "module": "customer",
+      "file": "ruoyi-ui/src/api/customer.js",
+      "path": "/business/customer/",
+      "method": "DELETE",
+      "source": "request-object"
+    },
+    {
+      "module": "customer",
+      "file": "ruoyi-ui/src/api/customer.js",
+      "path": "/business/customer/changeStatus",
+      "method": "PUT",
+      "source": "request-object"
+    },
+    {
+      "module": "customer",
+      "file": "ruoyi-ui/src/api/customer.js",
+      "path": "/business/customer/salesmen",
+      "method": "GET",
+      "source": "request-object"
+    },
+    {
+      "module": "customer",
+      "file": "ruoyi-ui/src/api/customer.js",
+      "path": "/business/customer/transferOwner",
+      "method": "PUT",
+      "source": "request-object"
+    },
+    {
+      "module": "customer",
+      "file": "ruoyi-ui/src/api/customer.js",
+      "path": "/business/customer/",
+      "method": "POST",
+      "source": "request-object"
+    },
+    {
+      "module": "customer",
+      "file": "ruoyi-ui/src/api/customer.js",
+      "path": "/business/customer/",
+      "method": "PUT",
+      "source": "request-object"
+    },
+    {
       "module": "login",
       "file": "ruoyi-ui/src/api/login.js",
       "path": "/login",

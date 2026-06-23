@@ -1,0 +1,2 @@
+﻿address_id	customer_code	receiver_name	receiver_phone	province_code	province	city_code	city	district_code	district	detail_address	logistics_line	is_default
+5	KH202606000004	收货验证员	13800138000	370000	山东省	370100	济南市	370102	历下区	历下区泉城路1号	山东线	Y

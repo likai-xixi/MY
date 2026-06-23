@@ -711,6 +711,177 @@
       "module": "tool",
       "source": "ruoyi-generator/src/main/java/com/ruoyi/generator/controller/GenController.java",
       "consumers": []
+    },
+    {
+      "id": "/business/customer/list",
+      "method": "GET",
+      "path": "/business/customer/list",
+      "owner": "customer",
+      "module": "customer",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
+      "consumers": ["customer:customer"]
+    },
+    {
+      "id": "/business/customer/export",
+      "method": "POST",
+      "path": "/business/customer/export",
+      "owner": "customer",
+      "module": "customer",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
+      "consumers": ["customer:customer"]
+    },
+    {
+      "id": "/business/customer/{customerId}",
+      "method": "GET",
+      "path": "/business/customer/{customerId}",
+      "owner": "customer",
+      "module": "customer",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
+      "consumers": ["customer:customer"]
+    },
+    {
+      "id": "/business/customer/duplicate-warning",
+      "method": "GET",
+      "path": "/business/customer/duplicate-warning",
+      "owner": "customer",
+      "module": "customer",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
+      "consumers": ["customer:customer"]
+    },
+    {
+      "id": "/business/customer",
+      "method": "POST",
+      "path": "/business/customer",
+      "owner": "customer",
+      "module": "customer",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
+      "consumers": ["customer:customer"]
+    },
+    {
+      "id": "/business/customer:update",
+      "method": "PUT",
+      "path": "/business/customer",
+      "owner": "customer",
+      "module": "customer",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
+      "consumers": ["customer:customer"]
+    },
+    {
+      "id": "/business/customer/changeStatus",
+      "method": "PUT",
+      "path": "/business/customer/changeStatus",
+      "owner": "customer",
+      "module": "customer",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
+      "consumers": ["customer:customer"]
+    },
+    {
+      "id": "/business/customer/{customerIds}",
+      "method": "DELETE",
+      "path": "/business/customer/{customerIds}",
+      "owner": "customer",
+      "module": "customer",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
+      "consumers": ["customer:customer"]
+    },
+    {
+      "id": "/business/customer/salesmen",
+      "method": "GET",
+      "path": "/business/customer/salesmen",
+      "owner": "customer",
+      "module": "customer",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
+      "consumers": ["customer:customer"]
+    },
+    {
+      "id": "/business/customer/transferOwner",
+      "method": "PUT",
+      "path": "/business/customer/transferOwner",
+      "owner": "customer",
+      "module": "customer",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
+      "consumers": ["customer:customer"]
+    },
+    {
+      "id": "/business/customer/{customerId}/owner-log",
+      "method": "GET",
+      "path": "/business/customer/{customerId}/owner-log",
+      "owner": "customer",
+      "module": "customer",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
+      "consumers": ["customer:customer"]
+    },
+    {
+      "id": "/business/customer/{customerId}/fund/accounts",
+      "method": "GET",
+      "path": "/business/customer/{customerId}/fund/accounts",
+      "owner": "customer",
+      "module": "customer",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
+      "consumers": ["customer:customer"]
+    },
+    {
+      "id": "/business/customer/{customerId}/fund/deposit",
+      "method": "POST",
+      "path": "/business/customer/{customerId}/fund/deposit",
+      "owner": "customer",
+      "module": "customer",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
+      "consumers": ["customer:customer"]
+    },
+    {
+      "id": "/business/customer/{customerId}/fund/flows",
+      "method": "GET",
+      "path": "/business/customer/{customerId}/fund/flows",
+      "owner": "customer",
+      "module": "customer",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
+      "consumers": ["customer:customer"]
+    },
+    {
+      "id": "/business/customer/{customerId}/fund/deposit-batches",
+      "method": "GET",
+      "path": "/business/customer/{customerId}/fund/deposit-batches",
+      "owner": "customer",
+      "module": "customer",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
+      "consumers": ["customer:customer"]
+    },
+    {
+      "id": "/business/customer/{customerId}/sample-policy",
+      "method": "GET",
+      "path": "/business/customer/{customerId}/sample-policy",
+      "owner": "customer",
+      "module": "customer",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
+      "consumers": ["customer:customer"]
+    },
+    {
+      "id": "/business/customer/{customerId}/sample-policy:update",
+      "method": "PUT",
+      "path": "/business/customer/{customerId}/sample-policy",
+      "owner": "customer",
+      "module": "customer",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
+      "consumers": ["customer:customer"]
+    },
+    {
+      "id": "/business/customer/{customerId}/sample-rebate:create",
+      "method": "POST",
+      "path": "/business/customer/{customerId}/sample-rebate",
+      "owner": "customer",
+      "module": "customer",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
+      "consumers": ["customer:customer"]
+    },
+    {
+      "id": "/business/customer/{customerId}/sample-rebate",
+      "method": "GET",
+      "path": "/business/customer/{customerId}/sample-rebate",
+      "owner": "customer",
+      "module": "customer",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
+      "consumers": ["customer:customer"]
     }
   ]
 }

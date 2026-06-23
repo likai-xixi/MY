@@ -1,5 +1,23 @@
 {
   "schemaVersion": 1,
   "description": "Permission ledger. Add menu and operation permission codes here before binding them to UI or backend checks.",
-  "permissions": []
+  "permissions": [
+    { "code": "business:customer:list", "ownerFeature": "customer" },
+    { "code": "business:customer:query", "ownerFeature": "customer" },
+    { "code": "business:customer:add", "ownerFeature": "customer" },
+    { "code": "business:customer:edit", "ownerFeature": "customer" },
+    { "code": "business:customer:remove", "ownerFeature": "customer" },
+    { "code": "business:customer:export", "ownerFeature": "customer" },
+    { "code": "business:customer:owner:view", "ownerFeature": "customer" },
+    { "code": "business:customer:owner:assign", "ownerFeature": "customer" },
+    { "code": "business:customer:owner:transfer", "ownerFeature": "customer" },
+    { "code": "business:customer:owner:history", "ownerFeature": "customer" },
+    { "code": "business:customer:fund:view", "ownerFeature": "customer" },
+    { "code": "business:customer:fund:add", "ownerFeature": "customer" },
+    { "code": "business:customer:fund:flow", "ownerFeature": "customer" },
+    { "code": "business:customer:fund:adjust", "ownerFeature": "customer" },
+    { "code": "business:customer:fund:export", "ownerFeature": "customer" },
+    { "code": "business:customer:sample-policy:view", "ownerFeature": "customer" },
+    { "code": "business:customer:sample-policy:edit", "ownerFeature": "customer" }
+  ]
 }

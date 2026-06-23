@@ -1,0 +1,5 @@
+﻿customer_id	customer_code	customer_name	province_code	province	city_code	city	district_code	district
+10	KH202606000003	省市区完整验证客户20260622115256	NULL	北京市	NULL	北京市	NULL	朝阳区
+9	KH202606000002	编码优化客户B202606221835	NULL	江苏省	NULL	苏州市	NULL	吴中区
+8	KH202606000001	编码优化客户A202606221835	NULL	浙江省	NULL	宁波市	NULL	鄞州区
+1	CUS20260622172644379	验收客户20260622092456	NULL	浙江省	NULL	杭州市	NULL	滨江区

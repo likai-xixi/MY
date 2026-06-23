@@ -1,0 +1,14 @@
+customer_id	customer_code	customer_name	contact_name	contact_phone	wechat	province_code	province	city_code	city	district_code	district	address
+17	KH202606000010	默认同步UTF8验证客户20260622162301	同步后主联系人C	13445381838	wx_sync_20260622162301	440000	广东省	440100	广州市	440106	天河区	同步后默认地址20260622162301
+contact_id	customer_id	contact_name	phone	wechat	position	contact_role	is_default	del_flag
+16	17	默认主联系人A	13645381838	wx_auto_20260622162301	主联系人	其他	Y	2
+17	17	默认主联系人A	13645381838	wx_auto_20260622162301	主联系人	其他	Y	2
+18	17	同步后主联系人C	13445381838	wx_sync_20260622162301	主联系人	其他	Y	0
+address_id	customer_id	receiver_name	receiver_phone	province_code	province	city_code	city	district_code	district	detail_address	logistics_line	is_default	del_flag
+17	17	默认主联系人A	13645381838	410000	河南省	410100	郑州市	410102	中原区	自动生成默认地址20260622162301	NULL	Y	2
+18	17	默认主联系人A	13645381838	410000	河南省	410100	郑州市	410102	中原区	自动生成默认地址20260622162301	保留线路UTF8	Y	2
+19	17	同步后主联系人C	13445381838	440000	广东省	440100	广州市	440106	天河区	同步后默认地址20260622162301	保留线路UTF8	Y	0
+active_default_contacts
+1
+active_default_addresses
+1

@@ -1,0 +1,2 @@
+﻿customer_id	customer_code	customer_name	province_code	province	city_code	city	district_code	district
+11	KH202606000004	行政编码验证客户20260622135304	440000	广东省	440100	广州市	440106	天河区

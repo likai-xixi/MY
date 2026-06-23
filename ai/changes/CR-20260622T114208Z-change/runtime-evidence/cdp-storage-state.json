@@ -1,0 +1,12 @@
+{
+  "token": "present",
+  "cookieKeys": [
+    "sidebarStatus",
+    "Admin-Token"
+  ],
+  "localStorageKeys": [
+    "screen-lock-path",
+    "vueuse-color-scheme",
+    "screen-lock"
+  ]
+}

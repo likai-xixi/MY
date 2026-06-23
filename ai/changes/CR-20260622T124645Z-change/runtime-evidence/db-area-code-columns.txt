@@ -1,0 +1,6 @@
+﻿customer	province_code	varchar(20)	省编码
+customer	city_code	varchar(20)	市编码
+customer	district_code	varchar(20)	区县编码
+customer_address	province_code	varchar(20)	省编码
+customer_address	city_code	varchar(20)	市编码
+customer_address	district_code	varchar(20)	区县编码

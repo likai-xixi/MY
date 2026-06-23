@@ -1,0 +1,21 @@
+﻿## Transaction code evidence
+101:    @Transactional
+102:    public int insertCustomer(Customer customer)
+135:        int rows = customerMapper.insertCustomer(customer);
+136:        prepareCreateDefaultChildren(customer);
+137:        replaceChildren(customer);
+143:    @Transactional
+144:    public int updateCustomer(Customer customer)
+148:        int rows = customerMapper.updateCustomer(customer);
+149:        prepareUpdateDefaultChildren(customer);
+150:        replaceChildren(customer);
+194:    @Transactional
+203:        int rows = customerMapper.updateCustomer(next);
+237:    @Transactional
+330:    @Transactional
+343:    @Transactional
+372:    private void replaceChildren(Customer customer)
+415:    private void prepareCreateDefaultChildren(Customer customer)
+427:    private void prepareUpdateDefaultChildren(Customer customer)
+
+Interpretation: insertCustomer and updateCustomer are annotated with @Transactional. insertCustomerWithChildren calls prepareCreateDefaultChildren before replaceChildren and initFundAccounts. updateCustomer calls prepareUpdateDefaultChildren before replaceChildren. Therefore customer save plus default child create/sync and child replacement execute in the same service transaction.

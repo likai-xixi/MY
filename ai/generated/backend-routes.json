@@ -11,12 +11,146 @@
     "backend/modules"
   ],
   "modules": [
+    "customer",
     "monitor",
     "platform",
     "system",
     "tool"
   ],
   "routes": [
+    {
+      "module": "customer",
+      "method": "GET",
+      "path": "/business/customer/list",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
+      "source": "java-annotation"
+    },
+    {
+      "module": "customer",
+      "method": "POST",
+      "path": "/business/customer/export",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
+      "source": "java-annotation"
+    },
+    {
+      "module": "customer",
+      "method": "GET",
+      "path": "/business/customer/{customerId}",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
+      "source": "java-annotation"
+    },
+    {
+      "module": "customer",
+      "method": "GET",
+      "path": "/business/customer/duplicate-warning",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
+      "source": "java-annotation"
+    },
+    {
+      "module": "customer",
+      "method": "POST",
+      "path": "/business/customer",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
+      "source": "java-annotation"
+    },
+    {
+      "module": "customer",
+      "method": "PUT",
+      "path": "/business/customer",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
+      "source": "java-annotation"
+    },
+    {
+      "module": "customer",
+      "method": "PUT",
+      "path": "/business/customer/changeStatus",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
+      "source": "java-annotation"
+    },
+    {
+      "module": "customer",
+      "method": "DELETE",
+      "path": "/business/customer/{customerIds}",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
+      "source": "java-annotation"
+    },
+    {
+      "module": "customer",
+      "method": "GET",
+      "path": "/business/customer/salesmen",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
+      "source": "java-annotation"
+    },
+    {
+      "module": "customer",
+      "method": "PUT",
+      "path": "/business/customer/transferOwner",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
+      "source": "java-annotation"
+    },
+    {
+      "module": "customer",
+      "method": "GET",
+      "path": "/business/customer/{customerId}/owner-log",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
+      "source": "java-annotation"
+    },
+    {
+      "module": "customer",
+      "method": "GET",
+      "path": "/business/customer/{customerId}/fund/accounts",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
+      "source": "java-annotation"
+    },
+    {
+      "module": "customer",
+      "method": "POST",
+      "path": "/business/customer/{customerId}/fund/deposit",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
+      "source": "java-annotation"
+    },
+    {
+      "module": "customer",
+      "method": "GET",
+      "path": "/business/customer/{customerId}/fund/flows",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
+      "source": "java-annotation"
+    },
+    {
+      "module": "customer",
+      "method": "GET",
+      "path": "/business/customer/{customerId}/fund/deposit-batches",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
+      "source": "java-annotation"
+    },
+    {
+      "module": "customer",
+      "method": "GET",
+      "path": "/business/customer/{customerId}/sample-policy",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
+      "source": "java-annotation"
+    },
+    {
+      "module": "customer",
+      "method": "PUT",
+      "path": "/business/customer/{customerId}/sample-policy",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
+      "source": "java-annotation"
+    },
+    {
+      "module": "customer",
+      "method": "POST",
+      "path": "/business/customer/{customerId}/sample-rebate",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
+      "source": "java-annotation"
+    },
+    {
+      "module": "customer",
+      "method": "GET",
+      "path": "/business/customer/{customerId}/sample-rebate",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
+      "source": "java-annotation"
+    },
     {
       "module": "",
       "method": "GET",

@@ -2,68 +2,77 @@
 
 ## Summary
 
-RuoYi + Vue3 base integration is in baseline closeout under change record `ai/changes/CR-20260622T015319Z-ruoyi-vue3`.
+客户管理默认联系人和默认收货地址自动生成及同步迭代已完成运行验收。Current change record: `ai/changes/CR-20260622T150304Z-change`.
 
-This is not new business development. The current work keeps the imported RuoYi base stable under the Codex governance scaffold by cleaning registry names, scan false positives, duplicate scanned routes, runtime-tool discovery, and local runtime startup evidence.
+## Current Customer State
 
-Latest baseline closeout repair fixed `npm test` timeout in the remove-feature apply coverage and removed repeated-half routes such as `/system/config/system/config` from generated ownership outputs. No new business feature was added and no RuoYi source was deleted.
+- Runtime route remains `/business/customer`.
+- Customer master and shipping addresses store `province_code`, `city_code`, `district_code` alongside Chinese `province`, `city`, `district`.
+- Cascader option `value` is administrative division code; `label` is Chinese name.
+- List, detail, and export continue showing Chinese province/city/district names only.
+- Historical rows without code remain compatible through name-based edit echo; they are not bulk-backfilled.
+- 新增客户时，后端在同一事务内根据基础信息自动生成默认联系人和默认收货地址；如果请求已经提交有意义的子记录，则不重复派生。
+- 修改客户时，基础信息默认不覆盖联系人/收货地址。只有勾选“同步到默认联系人”或“同步到默认收货地址”时，才同步对应默认记录。
+- 默认收货地址同步保留已有 `logistics_line`；基础详细地址为空时不创建无效默认地址。
 
-## Current Baseline
+## Evidence
 
-- Active profile: `ruoyi`, locked in `ai/project-profile.json`.
-- Registered baseline features: `platform` / 平台底座, `system` / 系统管理, `monitor` / 监控管理, `tool` / 系统工具.
-- Runtime policy now points Maven to `C:/Users/11131/.cache/codex-tools/apache-maven-3.9.9/bin/mvn.cmd`, so a fresh terminal can run `npm run check` without manually editing PATH.
-- Local runtime smoke validation passed on non-default ports: backend `http://localhost:18080`, frontend `http://127.0.0.1:5173`, database `my_ry_vue_runtime`, Redis DB1.
-- RuoYi source remains in place; no business module has been added or removed.
+- Clean API evidence: `ai/changes/CR-20260622T150304Z-change/runtime-evidence/default-child-api-verification-utf8.json`.
+- Clean DB evidence: `ai/changes/CR-20260622T150304Z-change/runtime-evidence/default-child-db-verification-staged-utf8.txt`.
+- Browser base/detail evidence: `browser-01-filtered-customer-list.png` and `browser-03-detail-base-tab.png`.
+- Contact/address drawer-tab evidence: `browser-04-detail-contact-tab-dom.txt` and `browser-05-detail-address-tab-dom.txt`.
+- Validation customer: `默认同步UTF8验证客户20260622162301`, `KH202606000010`.
+- Verified: create auto-default contact/address, no-sync no-overwrite, sync update, preserved `保留线路UTF8`, active default contacts = `1`, active default addresses = `1`.
+- Component gate exception for pre-existing RuoYi platform/system/tool files is documented in `ai/changes/CR-20260622T150304Z-change/component-exception.md`; no customer-local reusable component was added.
+- Boundary gate exception for pre-existing RuoYi router/tool-generator imports is documented in `ai/changes/CR-20260622T150304Z-change/boundary-exception.md`; no customer cross-feature import was added.
 
 ## Changed Files
 
-- Runtime gate: `ai/rules/runtime-policy.json`, `tools/runtime-checker.js`.
-- Scanner fixes: `tools/scan-backend-routes.js`, `tools/scan-permissions.js`, `tools/scan-db-schema.js`, `tools/ownership-syncer.js`.
-- Baseline repair: `scripts/remove-feature.js`, `tests/remove-feature.test.js`, `tools/ownership-syncer.js`, `tests/ownership-syncer.test.js`.
-- Source gate hygiene: `tools/diff-checker.js`, `tools/duplicate-scan.js` skip nested dependency/build outputs created during runtime verification.
-- Registry and graph cleanup: `ai/registry/features.json`, `ai/generated/*`, `graph/ui-graph.json`.
-- Evidence and task tracking: `memory/TASKS.json`, this handover, and `ai/changes/CR-20260622T015319Z-ruoyi-vue3`.
-- Runtime evidence: `ai/changes/CR-20260622T015319Z-ruoyi-vue3/runtime-validation.md`, `ai/changes/CR-20260622T015319Z-ruoyi-vue3/runtime-evidence/browser-tool-gen.png`.
-- Frontend runtime proxy: `ruoyi-ui/vite.config.js` now supports `RUOYI_API_BASE` while keeping `http://localhost:8080` as default.
+- `ruoyi-business/src/main/java/com/ruoyi/business/customer/domain/Customer.java`
+- `ruoyi-business/src/main/java/com/ruoyi/business/customer/service/impl/CustomerServiceImpl.java`
+- `ruoyi-ui/src/views/customer/index.vue`
+- `features/customer.md`
+- `ai/contracts/customer.api.md`
+- `ai/contracts/customer.ui.md`
+- `ruoyi-ui/src/api/customer.contract.md`
+- `memory/API_CATALOG.md`
+- `memory/HANDOVER.md`
+- `memory/PROJECT_STATE.md`
+- `memory/TASKS.json`
+- `memory/sessions/2026-06-22-customer.md`
+- `ai/changes/CR-20260622T150304Z-change/`
+- `ai/changes/CR-20260622T081827Z-change/runtime-validation.md`
+- `ai/changes/CR-20260622T081827Z-change/verification.md`
+- `ai/changes/CR-20260622T081827Z-change/handover.md`
 
 ## Commands
 
 - `npm run resume`
-- `npm run scan:backend-routes`
-- `npm run scan:permissions`
-- `npm run scan:db`
+- `npm run ai:do -- "功能迭代：客户管理"`
+- `C:\Users\11131\.cache\codex-tools\apache-maven-3.9.9\bin\mvn.cmd -pl ruoyi-admin -am -DskipTests compile`
+- `npm --prefix ruoyi-ui run build:prod`
+- `C:\Users\11131\.cache\codex-tools\apache-maven-3.9.9\bin\mvn.cmd -pl ruoyi-admin -am -DskipTests package`
+- Backend restart on `18080`; frontend restart on `5174` with `RUOYI_API_BASE=http://127.0.0.1:18080`
 - `npm run scan:all`
-- `node --test tests/remove-feature.test.js`
-- `node --test tests/ownership-syncer.test.js`
-- `npm test`
-- `npm run build:graph`
-- `npm run sync:memory`
+- `npm run finalize:change -- --summary "客户管理默认联系人和默认收货地址自动生成及同步"`
 - `npm run check`
-- `npm run check:diff`
-- `npm run scan:duplicates`
-- `docker exec mj-redis redis-cli -n 1 ping`
-- `docker exec mj-mysql mysql ...`
-- `C:\Users\11131\.cache\codex-tools\apache-maven-3.9.9\bin\mvn.cmd clean package -DskipTests`
-- backend startup on `http://localhost:18080`
-- frontend startup on `http://127.0.0.1:5173`
-- browser verification for captcha, login, home, system management, monitor, and code generation
+- `npm test`
 
 ## Verification
 
-The generated scans were checked for the known bad values after scanner fixes. `npm run check` passed in a normal shell without manually adding Maven to PATH. Runtime verification imported `sql/ry_20260417.sql` and `sql/quartz.sql` into isolated database `my_ry_vue_runtime`, verified Redis, started backend/frontend, and browser-tested captcha/login/home plus representative system management, monitor, and code generation pages. Source hygiene and duplicate gates now ignore nested dependency/build output directories.
-
-Baseline repair verification on 2026-06-22: `node --test tests/remove-feature.test.js` passed after previously timing out, `npm test` passed with 76 tests, `npm run check` passed, and repeated route checks found no remaining `/system/config/system/config`, `/system/user/system/user`, or same-pattern system/test duplicates in `ai/registry/features.json`, `graph/ui-graph.json`, or `ai/generated/*`.
+- Backend compile/package passed.
+- Frontend production build passed.
+- Browser/API/DB runtime validation passed.
+- Governance scan/finalize/check passed.
+- Standalone Node tests passed.
 
 ## Risks
 
-- `npm run check` is a governance and readiness gate, not proof that the business runtime is production-ready.
-- RuoYi SQL files are initialization scripts and should only be applied to the intended empty development database.
-- Runtime evidence is local development smoke coverage, not production deployment evidence.
-- `npm install --no-package-lock` under `ruoyi-ui` reported `8 vulnerabilities (3 moderate, 5 high)`; no forced dependency rewrite was applied.
-- CRUD mutations, import/export, Druid page authentication, Swagger behavior, scheduled jobs, and production frontend build remain unverified.
+- Historical formal data was not bulk-backfilled with administrative codes. A later reviewed migration can handle that if needed.
+- Automatic deposit/rebate deduction remains intentionally deferred to sales order, shipment settlement, and finance modules.
+- The local runtime DB includes validation customers from this and previous customer iterations; they were left intact as evidence.
 
 ## Next Actions
 
-- Keep future baseline work inside this locked RuoYi profile and rerun `npm run check` after any scanner, registry, graph, or memory change.
-- For the next release phase, decide whether to harden/upgrade frontend dependencies and add deeper runtime checks for CRUD, imports/exports, Druid, Swagger, jobs, and production build.
+- Do not add sales order, shipment, finance, or automatic deduction behavior inside customer.
+- If formal historical data needs code values, create a separate reviewed backfill/migration change.

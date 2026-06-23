@@ -1,0 +1,174 @@
+﻿{
+  "generatedAt": "2026-06-22T14:03:12.193Z",
+  "allPass": true,
+  "result": [
+    {
+      "name": "Henan Zhengzhou Zhongyuan",
+      "row": {
+        "province": "河南省",
+        "city": "郑州市",
+        "district": "中原区"
+      },
+      "expected": [
+        "410000",
+        "410100",
+        "410102"
+      ],
+      "path": [
+        "410000",
+        "410100",
+        "410102"
+      ],
+      "labels": [
+        "河南省",
+        "郑州市",
+        "中原区"
+      ],
+      "pass": true
+    },
+    {
+      "name": "Henan Jiyuan",
+      "row": {
+        "province": "河南省",
+        "city": "济源示范区",
+        "district": "济源市"
+      },
+      "expected": [
+        "410000",
+        "419000",
+        "419001"
+      ],
+      "path": [
+        "410000",
+        "419000",
+        "419001"
+      ],
+      "labels": [
+        "河南省",
+        "济源示范区",
+        "济源市"
+      ],
+      "pass": true
+    },
+    {
+      "name": "Zhejiang Ningbo Yinzhou",
+      "row": {
+        "province": "浙江省",
+        "city": "宁波市",
+        "district": "鄞州区"
+      },
+      "expected": [
+        "330000",
+        "330200",
+        "330212"
+      ],
+      "path": [
+        "330000",
+        "330200",
+        "330212"
+      ],
+      "labels": [
+        "浙江省",
+        "宁波市",
+        "鄞州区"
+      ],
+      "pass": true
+    },
+    {
+      "name": "Shandong Jinan Lixia",
+      "row": {
+        "province": "山东省",
+        "city": "济南市",
+        "district": "历下区"
+      },
+      "expected": [
+        "370000",
+        "370100",
+        "370102"
+      ],
+      "path": [
+        "370000",
+        "370100",
+        "370102"
+      ],
+      "labels": [
+        "山东省",
+        "济南市",
+        "历下区"
+      ],
+      "pass": true
+    },
+    {
+      "name": "Guangdong Guangzhou Tianhe",
+      "row": {
+        "province": "广东省",
+        "city": "广州市",
+        "district": "天河区"
+      },
+      "expected": [
+        "440000",
+        "440100",
+        "440106"
+      ],
+      "path": [
+        "440000",
+        "440100",
+        "440106"
+      ],
+      "labels": [
+        "广东省",
+        "广州市",
+        "天河区"
+      ],
+      "pass": true
+    },
+    {
+      "name": "Beijing Chaoyang",
+      "row": {
+        "province": "北京市",
+        "city": "北京市",
+        "district": "朝阳区"
+      },
+      "expected": [
+        "110000",
+        "110100",
+        "110105"
+      ],
+      "path": [
+        "110000",
+        "110100",
+        "110105"
+      ],
+      "labels": [
+        "北京市",
+        "北京市",
+        "朝阳区"
+      ],
+      "pass": true
+    },
+    {
+      "name": "Shanghai Pudong",
+      "row": {
+        "province": "上海市",
+        "city": "上海市",
+        "district": "浦东新区"
+      },
+      "expected": [
+        "310000",
+        "310100",
+        "310115"
+      ],
+      "path": [
+        "310000",
+        "310100",
+        "310115"
+      ],
+      "labels": [
+        "上海市",
+        "上海市",
+        "浦东新区"
+      ],
+      "pass": true
+    }
+  ]
+}

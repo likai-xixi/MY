@@ -3360,6 +3360,255 @@
         "success",
         "error"
       ]
+    },
+    {
+      "id": "customer:business-customer",
+      "route": "/business/customer",
+      "owner": "customer",
+      "module": "customer",
+      "file": "",
+      "usesApi": [],
+      "states": [
+        "loading",
+        "empty",
+        "success",
+        "error"
+      ]
+    },
+    {
+      "id": "customer:business-customer-changestatus",
+      "route": "/business/customer/changeStatus",
+      "owner": "customer",
+      "module": "customer",
+      "file": "",
+      "usesApi": [],
+      "states": [
+        "loading",
+        "empty",
+        "success",
+        "error"
+      ]
+    },
+    {
+      "id": "customer:business-customer-duplicate-warning",
+      "route": "/business/customer/duplicate-warning",
+      "owner": "customer",
+      "module": "customer",
+      "file": "",
+      "usesApi": [],
+      "states": [
+        "loading",
+        "empty",
+        "success",
+        "error"
+      ]
+    },
+    {
+      "id": "customer:business-customer-export",
+      "route": "/business/customer/export",
+      "owner": "customer",
+      "module": "customer",
+      "file": "",
+      "usesApi": [],
+      "states": [
+        "loading",
+        "empty",
+        "success",
+        "error"
+      ]
+    },
+    {
+      "id": "customer:business-customer-list",
+      "route": "/business/customer/list",
+      "owner": "customer",
+      "module": "customer",
+      "file": "",
+      "usesApi": [],
+      "states": [
+        "loading",
+        "empty",
+        "success",
+        "error"
+      ]
+    },
+    {
+      "id": "customer:business-customer-salesmen",
+      "route": "/business/customer/salesmen",
+      "owner": "customer",
+      "module": "customer",
+      "file": "",
+      "usesApi": [],
+      "states": [
+        "loading",
+        "empty",
+        "success",
+        "error"
+      ]
+    },
+    {
+      "id": "customer:business-customer-transferowner",
+      "route": "/business/customer/transferOwner",
+      "owner": "customer",
+      "module": "customer",
+      "file": "",
+      "usesApi": [],
+      "states": [
+        "loading",
+        "empty",
+        "success",
+        "error"
+      ]
+    },
+    {
+      "id": "customer:business-customer-customerids",
+      "route": "/business/customer/{customerIds}",
+      "owner": "customer",
+      "module": "customer",
+      "file": "",
+      "usesApi": [],
+      "states": [
+        "loading",
+        "empty",
+        "success",
+        "error"
+      ]
+    },
+    {
+      "id": "customer:business-customer-customerid",
+      "route": "/business/customer/{customerId}",
+      "owner": "customer",
+      "module": "customer",
+      "file": "",
+      "usesApi": [],
+      "states": [
+        "loading",
+        "empty",
+        "success",
+        "error"
+      ]
+    },
+    {
+      "id": "customer:business-customer-customerid-fund-accounts",
+      "route": "/business/customer/{customerId}/fund/accounts",
+      "owner": "customer",
+      "module": "customer",
+      "file": "",
+      "usesApi": [],
+      "states": [
+        "loading",
+        "empty",
+        "success",
+        "error"
+      ]
+    },
+    {
+      "id": "customer:business-customer-customerid-fund-deposit",
+      "route": "/business/customer/{customerId}/fund/deposit",
+      "owner": "customer",
+      "module": "customer",
+      "file": "",
+      "usesApi": [],
+      "states": [
+        "loading",
+        "empty",
+        "success",
+        "error"
+      ]
+    },
+    {
+      "id": "customer:business-customer-customerid-fund-deposit-batches",
+      "route": "/business/customer/{customerId}/fund/deposit-batches",
+      "owner": "customer",
+      "module": "customer",
+      "file": "",
+      "usesApi": [],
+      "states": [
+        "loading",
+        "empty",
+        "success",
+        "error"
+      ]
+    },
+    {
+      "id": "customer:business-customer-customerid-fund-flows",
+      "route": "/business/customer/{customerId}/fund/flows",
+      "owner": "customer",
+      "module": "customer",
+      "file": "",
+      "usesApi": [],
+      "states": [
+        "loading",
+        "empty",
+        "success",
+        "error"
+      ]
+    },
+    {
+      "id": "customer:business-customer-customerid-owner-log",
+      "route": "/business/customer/{customerId}/owner-log",
+      "owner": "customer",
+      "module": "customer",
+      "file": "",
+      "usesApi": [],
+      "states": [
+        "loading",
+        "empty",
+        "success",
+        "error"
+      ]
+    },
+    {
+      "id": "customer:business-customer-customerid-sample-policy",
+      "route": "/business/customer/{customerId}/sample-policy",
+      "owner": "customer",
+      "module": "customer",
+      "file": "",
+      "usesApi": [],
+      "states": [
+        "loading",
+        "empty",
+        "success",
+        "error"
+      ]
+    },
+    {
+      "id": "customer:business-customer-customerid-sample-rebate",
+      "route": "/business/customer/{customerId}/sample-rebate",
+      "owner": "customer",
+      "module": "customer",
+      "file": "",
+      "usesApi": [],
+      "states": [
+        "loading",
+        "empty",
+        "success",
+        "error"
+      ]
+    },
+    {
+      "id": "customer:customer",
+      "route": "/customer",
+      "owner": "customer",
+      "module": "customer",
+      "file": "ruoyi-ui/src/views/customer/index.vue",
+      "usesApi": [
+        "/business/customer/list",
+        "/business/customer/{customerId}",
+        "/business/customer",
+        "/business/customer:update",
+        "/business/customer/changeStatus",
+        "/business/customer/transferOwner",
+        "/business/customer/{customerId}/fund/deposit",
+        "/business/customer/{customerId}/sample-policy",
+        "/business/customer/{customerId}/sample-policy:update",
+        "/business/customer/{customerId}/sample-rebate:create"
+      ],
+      "states": [
+        "loading",
+        "empty",
+        "success",
+        "error"
+      ]
     }
   ]
 }

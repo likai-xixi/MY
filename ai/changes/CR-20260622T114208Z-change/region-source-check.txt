@@ -1,0 +1,8 @@
+Source package: china-area-data@5.0.1 (MIT)
+Generated file: ruoyi-ui/src/utils/region-data.js
+Province-level entries: 34
+Henan city-level nodes: 18
+Henan required-city gaps: none
+Henan city labels: 郑州市、开封市、洛阳市、平顶山市、安阳市、鹤壁市、新乡市、焦作市、濮阳市、许昌市、漯河市、三门峡市、南阳市、商丘市、信阳市、周口市、驻马店市、济源示范区
+Municipality normalization: 北京市、上海市、天津市、重庆市 use same-name city level so the cascader keeps complete 3-level paths.
+Jiyuan normalization: source label 省直辖县级行政区划 is displayed as 济源示范区, and legacy saved names can echo through an alias map.

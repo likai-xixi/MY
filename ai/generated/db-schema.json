@@ -284,6 +284,60 @@
       "source": "sql-reference"
     },
     {
+      "name": "customer",
+      "module": "customer",
+      "file": "ruoyi-business/src/main/resources/mapper/customer/CustomerMapper.xml",
+      "source": "sql-reference"
+    },
+    {
+      "name": "customer_contact",
+      "module": "customer",
+      "file": "ruoyi-business/src/main/resources/mapper/customer/CustomerMapper.xml",
+      "source": "sql-reference"
+    },
+    {
+      "name": "customer_address",
+      "module": "customer",
+      "file": "ruoyi-business/src/main/resources/mapper/customer/CustomerMapper.xml",
+      "source": "sql-reference"
+    },
+    {
+      "name": "customer_salesman_bind_log",
+      "module": "customer",
+      "file": "ruoyi-business/src/main/resources/mapper/customer/CustomerMapper.xml",
+      "source": "sql-reference"
+    },
+    {
+      "name": "customer_fund_account",
+      "module": "customer",
+      "file": "ruoyi-business/src/main/resources/mapper/customer/CustomerMapper.xml",
+      "source": "sql-reference"
+    },
+    {
+      "name": "customer_fund_flow",
+      "module": "customer",
+      "file": "ruoyi-business/src/main/resources/mapper/customer/CustomerMapper.xml",
+      "source": "sql-reference"
+    },
+    {
+      "name": "customer_deposit_batch",
+      "module": "customer",
+      "file": "ruoyi-business/src/main/resources/mapper/customer/CustomerMapper.xml",
+      "source": "sql-reference"
+    },
+    {
+      "name": "customer_sample_policy",
+      "module": "customer",
+      "file": "ruoyi-business/src/main/resources/mapper/customer/CustomerMapper.xml",
+      "source": "sql-reference"
+    },
+    {
+      "name": "sample_rebate_record",
+      "module": "customer",
+      "file": "ruoyi-business/src/main/resources/mapper/customer/CustomerMapper.xml",
+      "source": "sql-reference"
+    },
+    {
       "name": "gen_table_column",
       "module": "",
       "file": "ruoyi-generator/src/main/resources/mapper/generator/GenTableColumnMapper.xml",

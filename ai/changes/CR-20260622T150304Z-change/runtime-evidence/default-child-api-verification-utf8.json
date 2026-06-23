@@ -1,0 +1,115 @@
+{
+  "change": "CR-20260622T150304Z-change",
+  "customerId": 17,
+  "customerName": "默认同步UTF8验证客户20260622162301",
+  "createResponseCode": 200,
+  "noSyncResponseCode": 200,
+  "syncResponseCode": 200,
+  "checks": {
+    "createOk": true,
+    "noSyncOk": true,
+    "syncOk": true,
+    "createContactAuto": true,
+    "createAddressAuto": true,
+    "noSyncDidNotOverwriteContact": true,
+    "noSyncDidNotOverwriteAddress": true,
+    "syncUpdatedContact": true,
+    "syncUpdatedAddress": true,
+    "uniqueDefaultContact": true,
+    "uniqueDefaultAddress": true
+  },
+  "created": {
+    "master": {
+      "contactName": "默认主联系人A",
+      "contactPhone": "13645381838",
+      "provinceCode": "410000",
+      "cityCode": "410100",
+      "districtCode": "410102",
+      "address": "自动生成默认地址20260622162301"
+    },
+    "defaultContact": {
+      "contactName": "默认主联系人A",
+      "phone": "13645381838",
+      "wechat": "wx_auto_20260622162301",
+      "position": "主联系人",
+      "contactRole": "其他",
+      "isDefault": "Y"
+    },
+    "defaultAddress": {
+      "receiverName": "默认主联系人A",
+      "receiverPhone": "13645381838",
+      "provinceCode": "410000",
+      "province": "河南省",
+      "cityCode": "410100",
+      "city": "郑州市",
+      "districtCode": "410102",
+      "district": "中原区",
+      "detailAddress": "自动生成默认地址20260622162301",
+      "logisticsLine": null,
+      "isDefault": "Y"
+    }
+  },
+  "afterNoSync": {
+    "master": {
+      "contactName": "未同步主联系人B",
+      "contactPhone": "13545381838",
+      "wechat": "wx_no_sync_20260622162301",
+      "address": "未同步基础地址20260622162301"
+    },
+    "defaultContact": {
+      "contactName": "默认主联系人A",
+      "phone": "13645381838",
+      "wechat": "wx_auto_20260622162301",
+      "position": "主联系人",
+      "contactRole": "其他",
+      "isDefault": "Y"
+    },
+    "defaultAddress": {
+      "receiverName": "默认主联系人A",
+      "receiverPhone": "13645381838",
+      "provinceCode": "410000",
+      "province": "河南省",
+      "cityCode": "410100",
+      "city": "郑州市",
+      "districtCode": "410102",
+      "district": "中原区",
+      "detailAddress": "自动生成默认地址20260622162301",
+      "logisticsLine": "保留线路UTF8",
+      "isDefault": "Y"
+    }
+  },
+  "afterSync": {
+    "master": {
+      "contactName": "同步后主联系人C",
+      "contactPhone": "13445381838",
+      "wechat": "wx_sync_20260622162301",
+      "provinceCode": "440000",
+      "cityCode": "440100",
+      "districtCode": "440106",
+      "address": "同步后默认地址20260622162301"
+    },
+    "defaultContact": {
+      "contactName": "同步后主联系人C",
+      "phone": "13445381838",
+      "wechat": "wx_sync_20260622162301",
+      "position": "主联系人",
+      "contactRole": "其他",
+      "isDefault": "Y"
+    },
+    "defaultAddress": {
+      "receiverName": "同步后主联系人C",
+      "receiverPhone": "13445381838",
+      "provinceCode": "440000",
+      "province": "广东省",
+      "cityCode": "440100",
+      "city": "广州市",
+      "districtCode": "440106",
+      "district": "天河区",
+      "detailAddress": "同步后默认地址20260622162301",
+      "logisticsLine": "保留线路UTF8",
+      "isDefault": "Y"
+    },
+    "activeDefaultContacts": 1,
+    "activeDefaultAddresses": 1
+  }
+}

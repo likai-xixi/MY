@@ -552,3 +552,138 @@
 - Path: `/tool/gen/synchDb/{tableName}`
 - Owner: `tool`
 - Module: `tool`
+
+## /business/customer/list
+
+- Method: `GET`
+- Path: `/business/customer/list`
+- Owner: `customer`
+- Module: `customer`
+
+## /business/customer/export
+
+- Method: `POST`
+- Path: `/business/customer/export`
+- Owner: `customer`
+- Module: `customer`
+
+## /business/customer/{customerId}
+
+- Method: `GET`
+- Path: `/business/customer/{customerId}`
+- Owner: `customer`
+- Module: `customer`
+
+## /business/customer/duplicate-warning
+
+- Method: `GET`
+- Path: `/business/customer/duplicate-warning`
+- Owner: `customer`
+- Module: `customer`
+
+## /business/customer
+
+- Method: `POST`
+- Path: `/business/customer`
+- Owner: `customer`
+- Module: `customer`
+- Notes: Creates customer master data. When no meaningful submitted contact/address exists, the service transaction auto-creates a default contact from master contact fields and a default shipping address from master address fields.
+
+## /business/customer:update
+
+- Method: `PUT`
+- Path: `/business/customer`
+- Owner: `customer`
+- Module: `customer`
+- Notes: Updates customer master data. Request-only booleans `syncDefaultContact` and `syncDefaultAddress` opt into syncing master fields to the current default child record or creating it when missing; omitted/false flags must not blindly overwrite child records.
+
+## /business/customer/changeStatus
+
+- Method: `PUT`
+- Path: `/business/customer/changeStatus`
+- Owner: `customer`
+- Module: `customer`
+
+## /business/customer/{customerIds}
+
+- Method: `DELETE`
+- Path: `/business/customer/{customerIds}`
+- Owner: `customer`
+- Module: `customer`
+
+## /business/customer/salesmen
+
+- Method: `GET`
+- Path: `/business/customer/salesmen`
+- Owner: `customer`
+- Module: `customer`
+
+## /business/customer/transferOwner
+
+- Method: `PUT`
+- Path: `/business/customer/transferOwner`
+- Owner: `customer`
+- Module: `customer`
+
+## /business/customer/{customerId}/owner-log
+
+- Method: `GET`
+- Path: `/business/customer/{customerId}/owner-log`
+- Owner: `customer`
+- Module: `customer`
+
+## /business/customer/{customerId}/fund/accounts
+
+- Method: `GET`
+- Path: `/business/customer/{customerId}/fund/accounts`
+- Owner: `customer`
+- Module: `customer`
+
+## /business/customer/{customerId}/fund/deposit
+
+- Method: `POST`
+- Path: `/business/customer/{customerId}/fund/deposit`
+- Owner: `customer`
+- Module: `customer`
+
+## /business/customer/{customerId}/fund/flows
+
+- Method: `GET`
+- Path: `/business/customer/{customerId}/fund/flows`
+- Owner: `customer`
+- Module: `customer`
+
+## /business/customer/{customerId}/fund/deposit-batches
+
+- Method: `GET`
+- Path: `/business/customer/{customerId}/fund/deposit-batches`
+- Owner: `customer`
+- Module: `customer`
+
+## /business/customer/{customerId}/sample-policy
+
+- Method: `GET`
+- Path: `/business/customer/{customerId}/sample-policy`
+- Owner: `customer`
+- Module: `customer`
+
+## /business/customer/{customerId}/sample-policy:update
+
+- Method: `PUT`
+- Path: `/business/customer/{customerId}/sample-policy`
+- Owner: `customer`
+- Module: `customer`
+
+## /business/customer/{customerId}/sample-rebate:create
+
+- Method: `POST`
+- Path: `/business/customer/{customerId}/sample-rebate`
+- Owner: `customer`
+- Module: `customer`
+
+## /business/customer/{customerId}/sample-rebate
+
+- Method: `GET`
+- Path: `/business/customer/{customerId}/sample-rebate`
+- Owner: `customer`
+- Module: `customer`

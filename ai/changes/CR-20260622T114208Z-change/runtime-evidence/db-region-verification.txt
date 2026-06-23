@@ -1,0 +1,2 @@
+﻿customer_code	customer_name	province	city	district	address
+KH202606000003	省市区完整验证客户20260622115256	北京市	北京市	朝阳区	河南开封龙亭区验证地址1号

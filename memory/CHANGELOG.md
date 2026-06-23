@@ -45,4 +45,22 @@
 - Updated change record, registry, graph, generated scans, memory, and handover.
 - Feature: `project-base`.## 2026-06-22 — profile
 - Updated change record, registry, graph, generated scans, memory, and handover.
-- Feature: `project-base`.
+- Feature: `project-base`.## 2026-06-22 — add
+- 新增客户管理功能
+- Feature: `customer`.
+
+## 2026-06-22 — customer
+
+- Implemented the RuoYi `customer` business module with customer archive CRUD/status/export, contacts, shipping addresses, owner assignment and transfer logs, fund accounts/flows, deposit entry, sample policy, rebate records, and SQL/menu/permission ownership.
+- Updated customer registries, module/API/UI graphs, API catalog, memory, handover, and change record `CR-20260622T081827Z-change`.
+- Verified `npm run check`, backend Maven compile, and frontend production build.## 2026-06-22 — add
+- 客户管理运行偏差收口
+- Feature: `customer`.## 2026-06-22 — update
+- 客户管理编码字典与地址联动优化
+- Feature: `customer`.## 2026-06-22 — update
+- 客户管理省市区完整数据源修复
+- Feature: `customer`.## 2026-06-22 — update
+- 客户管理省市区行政区划编码补齐
+- Feature: `customer`.## 2026-06-22 — update
+- 客户管理默认联系人和默认收货地址自动生成及同步
+- Feature: `customer`.

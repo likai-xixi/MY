@@ -1,0 +1,16 @@
+{
+  "capturedAt": "2026-06-22T10:01:47.943Z",
+  "directCustomer": {
+    "has404": true,
+    "href": "http://127.0.0.1:5174/customer",
+    "text": "404错误!\n找不到网页！\n对不起，您正在寻找的页面不存在。尝试检查URL的错误，然后按浏览器上的刷新按钮或尝试在我们的应用程序中找到其他内容。\n返回首页",
+    "title": "若依管理系统"
+  },
+  "businessCustomer": {
+    "hasCustomerList": true,
+    "hasCustomerMenu": true,
+    "href": "http://127.0.0.1:5174/business/customer",
+    "text": "若依管理系统\n首页\n系统管理\n系统监控\n系统工具\n若依官网\n业务管理\n客户管理\n首页\n/\n业务管理\n/\n客户管理\n3\n若依\n首页客户管理\n刷新\n客户名称\n客户简称\n联系人\n联系电话\n客户类型\n请选择\n客户等级\n请选择\n业务员\n请选择业务员\n归属部门\n请选择部门\n状态\n请选择\n搜索\n重置\n新增\n修改\n导出\n\t\n客户编码\n\t\n客户名称\n\t\n客户简称\n\t\n客户类型\n\t\n客户等级\n\t\n联系人\n\t\n联系电话\n\t\n归属业务员\n\t\n归属部门\n\t\n状态\n\t\n创建时间\n\t\n操作\n\t\nCUS20260622172644379\n\t\n验收客户20260622092456\n\t\n验收已改2456\n\t\n经销商\n\t\nNORMAL\n\t\n张验收\n\t\n13922092456\n\t\n若依\n\t\n测试部门\n\t\n\t\n2026-06-22 17:26:44\n\t\n共 1 条\n10条/页\n1\n前往\n页",
+    "title": "若依管理系统"
+  }
+}

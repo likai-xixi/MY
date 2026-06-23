@@ -1,0 +1,16 @@
+{
+  "status": 200,
+  "ok": true,
+  "headers": {
+    "connection": "keep-alive",
+    "content-type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8",
+    "date": "Mon, 22 Jun 2026 11:59:16 GMT",
+    "keep-alive": "timeout=60",
+    "transfer-encoding": "chunked",
+    "vary": "Origin, Access-Control-Request-Method, Access-Control-Request-Headers",
+    "x-content-type-options": "nosniff",
+    "x-frame-options": "SAMEORIGIN",
+    "x-xss-protection": "0"
+  },
+  "bytes": 4339
+}

@@ -58,6 +58,12 @@
       "description": "Business feature briefs and acceptance criteria."
     },
     {
+      "id": "feature:customer",
+      "type": "feature",
+      "path": "features/customer.md",
+      "description": "客户管理 feature brief."
+    },
+    {
       "id": "feature:monitor",
       "type": "feature",
       "path": "features/monitor.md",
@@ -82,6 +88,12 @@
       "description": "Tool Management feature brief."
     },
     {
+      "id": "backend:customer",
+      "type": "backend-module",
+      "path": "ruoyi-business/src/main/java/com/ruoyi/business/customer",
+      "description": "Customer backend module."
+    },
+    {
       "id": "backend:monitor",
       "type": "backend-module",
       "path": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor",
@@ -98,6 +110,12 @@
       "type": "backend-module",
       "path": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/tool",
       "description": "Tool backend module."
+    },
+    {
+      "id": "frontend:customer",
+      "type": "frontend-module",
+      "path": "ruoyi-ui/src/views/customer",
+      "description": "Customer frontend module."
     },
     {
       "id": "frontend:monitor",
@@ -182,6 +200,11 @@
     },
     {
       "from": "features",
+      "to": "feature:customer",
+      "type": "contains"
+    },
+    {
+      "from": "features",
       "to": "feature:monitor",
       "type": "contains"
     },
@@ -199,6 +222,16 @@
       "from": "features",
       "to": "feature:tool",
       "type": "contains"
+    },
+    {
+      "from": "backend",
+      "to": "backend:customer",
+      "type": "contains"
+    },
+    {
+      "from": "feature:customer",
+      "to": "backend:customer",
+      "type": "implements"
     },
     {
       "from": "backend",
@@ -228,6 +261,16 @@
     {
       "from": "feature:tool",
       "to": "backend:tool",
+      "type": "implements"
+    },
+    {
+      "from": "frontend",
+      "to": "frontend:customer",
+      "type": "contains"
+    },
+    {
+      "from": "feature:customer",
+      "to": "frontend:customer",
       "type": "implements"
     },
     {

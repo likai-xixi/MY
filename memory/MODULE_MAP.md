@@ -19,6 +19,7 @@ Generated from `graph/module-graph.json`.
 
 ## Feature
 
+- `feature:customer` (`features/customer.md`): 客户管理 feature brief.
 - `feature:monitor` (`features/monitor.md`): Monitor Management feature brief.
 - `feature:platform` (`features/platform.md`): Platform Base feature brief.
 - `feature:system` (`features/system.md`): System Management feature brief.
@@ -26,12 +27,14 @@ Generated from `graph/module-graph.json`.
 
 ## Backend Module
 
+- `backend:customer` (`ruoyi-business/src/main/java/com/ruoyi/business/customer/`): Customer backend module.
 - `backend:monitor` (`ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor/`): Monitor backend module.
 - `backend:system` (`ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/`): System backend module.
 - `backend:tool` (`ruoyi-admin/src/main/java/com/ruoyi/web/controller/tool/`): Tool backend module.
 
 ## Frontend Module
 
+- `frontend:customer` (`ruoyi-ui/src/views/customer/`): Customer frontend module.
 - `frontend:monitor` (`ruoyi-ui/src/views/monitor/`): Monitor frontend module.
 - `frontend:platform` (`ruoyi-ui/src/views/login.vue/`): Platform frontend module.
 - `frontend:system` (`ruoyi-ui/src/views/system/`): System frontend module.

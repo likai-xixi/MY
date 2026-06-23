@@ -1,0 +1,398 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.business.customer.mapper.CustomerMapper">
+
+    <resultMap type="Customer" id="CustomerResult">
+        <id property="customerId" column="customer_id" />
+        <result property="customerCode" column="customer_code" />
+        <result property="customerName" column="customer_name" />
+        <result property="shortName" column="short_name" />
+        <result property="customerType" column="customer_type" />
+        <result property="customerLevel" column="customer_level" />
+        <result property="contactName" column="contact_name" />
+        <result property="contactPhone" column="contact_phone" />
+        <result property="wechat" column="wechat" />
+        <result property="province" column="province" />
+        <result property="provinceCode" column="province_code" />
+        <result property="city" column="city" />
+        <result property="cityCode" column="city_code" />
+        <result property="district" column="district" />
+        <result property="districtCode" column="district_code" />
+        <result property="address" column="address" />
+        <result property="ownerUserId" column="owner_user_id" />
+        <result property="ownerUserName" column="owner_user_name" />
+        <result property="ownerDeptId" column="owner_dept_id" />
+        <result property="ownerDeptName" column="owner_dept_name" />
+        <result property="status" column="status" />
+        <result property="delFlag" column="del_flag" />
+        <result property="createBy" column="create_by" />
+        <result property="createTime" column="create_time" />
+        <result property="updateBy" column="update_by" />
+        <result property="updateTime" column="update_time" />
+        <result property="remark" column="remark" />
+    </resultMap>
+
+    <resultMap type="CustomerContact" id="CustomerContactResult">
+        <id property="contactId" column="contact_id" />
+        <result property="customerId" column="customer_id" />
+        <result property="contactName" column="contact_name" />
+        <result property="phone" column="phone" />
+        <result property="wechat" column="wechat" />
+        <result property="position" column="position" />
+        <result property="contactRole" column="contact_role" />
+        <result property="isDefault" column="is_default" />
+        <result property="delFlag" column="del_flag" />
+        <result property="createBy" column="create_by" />
+        <result property="createTime" column="create_time" />
+        <result property="remark" column="remark" />
+    </resultMap>
+
+    <resultMap type="CustomerAddress" id="CustomerAddressResult">
+        <id property="addressId" column="address_id" />
+        <result property="customerId" column="customer_id" />
+        <result property="receiverName" column="receiver_name" />
+        <result property="receiverPhone" column="receiver_phone" />
+        <result property="province" column="province" />
+        <result property="provinceCode" column="province_code" />
+        <result property="city" column="city" />
+        <result property="cityCode" column="city_code" />
+        <result property="district" column="district" />
+        <result property="districtCode" column="district_code" />
+        <result property="detailAddress" column="detail_address" />
+        <result property="logisticsLine" column="logistics_line" />
+        <result property="isDefault" column="is_default" />
+        <result property="delFlag" column="del_flag" />
+        <result property="createBy" column="create_by" />
+        <result property="createTime" column="create_time" />
+        <result property="remark" column="remark" />
+    </resultMap>
+
+    <resultMap type="CustomerSalesmanBindLog" id="CustomerOwnerLogResult">
+        <id property="logId" column="log_id" />
+        <result property="customerId" column="customer_id" />
+        <result property="oldOwnerUserId" column="old_owner_user_id" />
+        <result property="oldOwnerUserName" column="old_owner_user_name" />
+        <result property="newOwnerUserId" column="new_owner_user_id" />
+        <result property="newOwnerUserName" column="new_owner_user_name" />
+        <result property="oldDeptId" column="old_dept_id" />
+        <result property="oldDeptName" column="old_dept_name" />
+        <result property="newDeptId" column="new_dept_id" />
+        <result property="newDeptName" column="new_dept_name" />
+        <result property="changeReason" column="change_reason" />
+        <result property="changeBy" column="change_by" />
+        <result property="changeTime" column="change_time" />
+        <result property="remark" column="remark" />
+    </resultMap>
+
+    <resultMap type="CustomerFundAccount" id="CustomerFundAccountResult">
+        <id property="accountId" column="account_id" />
+        <result property="customerId" column="customer_id" />
+        <result property="accountType" column="account_type" />
+        <result property="balanceAmount" column="balance_amount" />
+        <result property="frozenAmount" column="frozen_amount" />
+        <result property="availableAmount" column="available_amount" />
+        <result property="status" column="status" />
+        <result property="createBy" column="create_by" />
+        <result property="createTime" column="create_time" />
+        <result property="updateBy" column="update_by" />
+        <result property="updateTime" column="update_time" />
+        <result property="remark" column="remark" />
+    </resultMap>
+
+    <resultMap type="CustomerFundFlow" id="CustomerFundFlowResult">
+        <id property="flowId" column="flow_id" />
+        <result property="customerId" column="customer_id" />
+        <result property="accountType" column="account_type" />
+        <result property="flowNo" column="flow_no" />
+        <result property="flowType" column="flow_type" />
+        <result property="amount" column="amount" />
+        <result property="beforeBalance" column="before_balance" />
+        <result property="afterBalance" column="after_balance" />
+        <result property="relatedBizType" column="related_biz_type" />
+        <result property="relatedBizId" column="related_biz_id" />
+        <result property="relatedBizNo" column="related_biz_no" />
+        <result property="operatorId" column="operator_id" />
+        <result property="occurTime" column="occur_time" />
+        <result property="remark" column="remark" />
+    </resultMap>
+
+    <resultMap type="CustomerDepositBatch" id="CustomerDepositBatchResult">
+        <id property="depositBatchId" column="deposit_batch_id" />
+        <result property="depositBatchNo" column="deposit_batch_no" />
+        <result property="customerId" column="customer_id" />
+        <result property="depositType" column="deposit_type" />
+        <result property="sourceOrderId" column="source_order_id" />
+        <result property="sourceOrderNo" column="source_order_no" />
+        <result property="depositAmount" column="deposit_amount" />
+        <result property="usedAmount" column="used_amount" />
+        <result property="remainingAmount" column="remaining_amount" />
+        <result property="status" column="status" />
+        <result property="startTime" column="start_time" />
+        <result property="settleTime" column="settle_time" />
+        <result property="remark" column="remark" />
+    </resultMap>
+
+    <resultMap type="CustomerSamplePolicy" id="CustomerSamplePolicyResult">
+        <id property="policyId" column="policy_id" />
+        <result property="customerId" column="customer_id" />
+        <result property="supportMode" column="support_mode" />
+        <result property="totalSupportRate" column="total_support_rate" />
+        <result property="instantDiscountRate" column="instant_discount_rate" />
+        <result property="deliveryDeductRate" column="delivery_deduct_rate" />
+        <result property="maxDeductPerDelivery" column="max_deduct_per_delivery" />
+        <result property="status" column="status" />
+        <result property="remark" column="remark" />
+    </resultMap>
+
+    <resultMap type="SampleRebateRecord" id="SampleRebateRecordResult">
+        <id property="rebateRecordId" column="rebate_record_id" />
+        <result property="customerId" column="customer_id" />
+        <result property="sampleOrderId" column="sample_order_id" />
+        <result property="sampleOrderNo" column="sample_order_no" />
+        <result property="sampleAmount" column="sample_amount" />
+        <result property="supportMode" column="support_mode" />
+        <result property="totalSupportRate" column="total_support_rate" />
+        <result property="instantDiscountRate" column="instant_discount_rate" />
+        <result property="instantDiscountAmount" column="instant_discount_amount" />
+        <result property="rebateAmount" column="rebate_amount" />
+        <result property="usedAmount" column="used_amount" />
+        <result property="remainingAmount" column="remaining_amount" />
+        <result property="status" column="status" />
+        <result property="remark" column="remark" />
+        <result property="createTime" column="create_time" />
+    </resultMap>
+
+    <sql id="selectCustomerVo">
+        select customer_id, customer_code, customer_name, short_name, customer_type, customer_level,
+               contact_name, contact_phone, wechat, province, province_code, city, city_code, district, district_code, address,
+               owner_user_id, owner_user_name, owner_dept_id, owner_dept_name,
+               status, del_flag, create_by, create_time, update_by, update_time, remark
+        from customer
+    </sql>
+
+    <select id="selectCustomerList" parameterType="Customer" resultMap="CustomerResult">
+        <include refid="selectCustomerVo"/>
+        <where>
+            del_flag = '0'
+            <if test="customerName != null and customerName != ''">and customer_name like concat('%', #{customerName}, '%')</if>
+            <if test="shortName != null and shortName != ''">and short_name like concat('%', #{shortName}, '%')</if>
+            <if test="contactName != null and contactName != ''">and contact_name like concat('%', #{contactName}, '%')</if>
+            <if test="contactPhone != null and contactPhone != ''">and contact_phone like concat('%', #{contactPhone}, '%')</if>
+            <if test="customerType != null and customerType != ''">and customer_type = #{customerType}</if>
+            <if test="customerLevel != null and customerLevel != ''">and customer_level = #{customerLevel}</if>
+            <if test="ownerUserId != null">and owner_user_id = #{ownerUserId}</if>
+            <if test="ownerDeptId != null">and owner_dept_id = #{ownerDeptId}</if>
+            <if test="status != null and status != ''">and status = #{status}</if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="selectCustomerById" parameterType="Long" resultMap="CustomerResult">
+        <include refid="selectCustomerVo"/>
+        where customer_id = #{customerId} and del_flag = '0'
+    </select>
+
+    <select id="selectCustomerByCode" parameterType="String" resultMap="CustomerResult">
+        <include refid="selectCustomerVo"/>
+        where customer_code = #{customerCode} and del_flag = '0' limit 1
+    </select>
+
+    <select id="selectMaxCustomerCodeByMonth" resultType="String">
+        select customer_code
+        from customer
+        where customer_code like concat(#{monthPrefix}, '%')
+          and customer_code regexp concat('^', #{monthPrefix}, '[0-9]+$')
+        order by char_length(substring(customer_code, char_length(#{monthPrefix}) + 1)) desc,
+                 substring(customer_code, char_length(#{monthPrefix}) + 1) desc
+        limit 1
+    </select>
+
+    <select id="countCustomerByName" resultType="int">
+        select count(1) from customer
+        where del_flag = '0' and customer_name = #{customerName}
+        <if test="customerId != null">and customer_id != #{customerId}</if>
+    </select>
+
+    <select id="countCustomerByPhone" resultType="int">
+        select count(1) from customer
+        where del_flag = '0' and contact_phone = #{contactPhone}
+        <if test="customerId != null">and customer_id != #{customerId}</if>
+    </select>
+
+    <insert id="insertCustomer" parameterType="Customer" useGeneratedKeys="true" keyProperty="customerId">
+        insert into customer(
+            customer_code, customer_name, short_name, customer_type, customer_level,
+            contact_name, contact_phone, wechat, province, province_code, city, city_code, district, district_code, address,
+            owner_user_id, owner_user_name, owner_dept_id, owner_dept_name,
+            status, del_flag, create_by, create_time, remark
+        ) values (
+            #{customerCode}, #{customerName}, #{shortName}, #{customerType}, #{customerLevel},
+            #{contactName}, #{contactPhone}, #{wechat}, #{province}, #{provinceCode}, #{city}, #{cityCode}, #{district}, #{districtCode}, #{address},
+            #{ownerUserId}, #{ownerUserName}, #{ownerDeptId}, #{ownerDeptName},
+            #{status}, #{delFlag}, #{createBy}, sysdate(), #{remark}
+        )
+    </insert>
+
+    <update id="updateCustomer" parameterType="Customer">
+        update customer
+        <set>
+            <if test="customerName != null and customerName != ''">customer_name = #{customerName},</if>
+            <if test="shortName != null">short_name = #{shortName},</if>
+            <if test="customerType != null">customer_type = #{customerType},</if>
+            <if test="customerLevel != null">customer_level = #{customerLevel},</if>
+            <if test="contactName != null">contact_name = #{contactName},</if>
+            <if test="contactPhone != null">contact_phone = #{contactPhone},</if>
+            <if test="wechat != null">wechat = #{wechat},</if>
+            <if test="province != null">province = #{province},</if>
+            <if test="provinceCode != null">province_code = #{provinceCode},</if>
+            <if test="city != null">city = #{city},</if>
+            <if test="cityCode != null">city_code = #{cityCode},</if>
+            <if test="district != null">district = #{district},</if>
+            <if test="districtCode != null">district_code = #{districtCode},</if>
+            <if test="address != null">address = #{address},</if>
+            <if test="ownerUserId != null">owner_user_id = #{ownerUserId},</if>
+            <if test="ownerUserName != null">owner_user_name = #{ownerUserName},</if>
+            <if test="ownerDeptId != null">owner_dept_id = #{ownerDeptId},</if>
+            <if test="ownerDeptName != null">owner_dept_name = #{ownerDeptName},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
+            update_time = sysdate()
+        </set>
+        where customer_id = #{customerId}
+    </update>
+
+    <update id="updateCustomerStatus" parameterType="Customer">
+        update customer set status = #{status}, update_by = #{updateBy}, update_time = sysdate()
+        where customer_id = #{customerId} and del_flag = '0'
+    </update>
+
+    <update id="deleteCustomerByIds">
+        update customer set del_flag = '2' where customer_id in
+        <foreach collection="array" item="customerId" open="(" separator="," close=")">
+            #{customerId}
+        </foreach>
+    </update>
+
+    <select id="selectContactsByCustomerId" parameterType="Long" resultMap="CustomerContactResult">
+        select * from customer_contact where customer_id = #{customerId} and del_flag = '0' order by is_default desc, contact_id
+    </select>
+
+    <update id="deleteContactsByCustomerId" parameterType="Long">
+        update customer_contact set del_flag = '2' where customer_id = #{customerId}
+    </update>
+
+    <insert id="insertContact" parameterType="CustomerContact" useGeneratedKeys="true" keyProperty="contactId">
+        insert into customer_contact(customer_id, contact_name, phone, wechat, position, contact_role, is_default, remark, del_flag, create_by, create_time)
+        values(#{customerId}, #{contactName}, #{phone}, #{wechat}, #{position}, #{contactRole}, #{isDefault}, #{remark}, #{delFlag}, #{createBy}, sysdate())
+    </insert>
+
+    <select id="selectAddressesByCustomerId" parameterType="Long" resultMap="CustomerAddressResult">
+        select * from customer_address where customer_id = #{customerId} and del_flag = '0' order by is_default desc, address_id
+    </select>
+
+    <update id="deleteAddressesByCustomerId" parameterType="Long">
+        update customer_address set del_flag = '2' where customer_id = #{customerId}
+    </update>
+
+    <insert id="insertAddress" parameterType="CustomerAddress" useGeneratedKeys="true" keyProperty="addressId">
+        insert into customer_address(customer_id, receiver_name, receiver_phone, province, province_code, city, city_code, district, district_code, detail_address, logistics_line, is_default, remark, del_flag, create_by, create_time)
+        values(#{customerId}, #{receiverName}, #{receiverPhone}, #{province}, #{provinceCode}, #{city}, #{cityCode}, #{district}, #{districtCode}, #{detailAddress}, #{logisticsLine}, #{isDefault}, #{remark}, #{delFlag}, #{createBy}, sysdate())
+    </insert>
+
+    <select id="selectOwnerLogsByCustomerId" parameterType="Long" resultMap="CustomerOwnerLogResult">
+        select * from customer_salesman_bind_log where customer_id = #{customerId} order by change_time desc
+    </select>
+
+    <insert id="insertOwnerLog" parameterType="CustomerSalesmanBindLog" useGeneratedKeys="true" keyProperty="logId">
+        insert into customer_salesman_bind_log(customer_id, old_owner_user_id, old_owner_user_name, new_owner_user_id, new_owner_user_name,
+            old_dept_id, old_dept_name, new_dept_id, new_dept_name, change_reason, change_by, change_time, remark)
+        values(#{customerId}, #{oldOwnerUserId}, #{oldOwnerUserName}, #{newOwnerUserId}, #{newOwnerUserName},
+            #{oldDeptId}, #{oldDeptName}, #{newDeptId}, #{newDeptName}, #{changeReason}, #{changeBy}, #{changeTime}, #{remark})
+    </insert>
+
+    <select id="selectFundAccountsByCustomerId" parameterType="Long" resultMap="CustomerFundAccountResult">
+        select * from customer_fund_account where customer_id = #{customerId} order by field(account_type, 'LONG_TERM_DEPOSIT', 'ROLLING_ORDER_DEPOSIT', 'SAMPLE_REBATE')
+    </select>
+
+    <select id="selectFundAccount" resultMap="CustomerFundAccountResult">
+        select * from customer_fund_account where customer_id = #{customerId} and account_type = #{accountType} limit 1
+    </select>
+
+    <insert id="insertFundAccount" parameterType="CustomerFundAccount" useGeneratedKeys="true" keyProperty="accountId">
+        insert into customer_fund_account(customer_id, account_type, balance_amount, frozen_amount, available_amount, status, remark, create_by, create_time)
+        values(#{customerId}, #{accountType}, #{balanceAmount}, #{frozenAmount}, #{availableAmount}, #{status}, #{remark}, #{createBy}, sysdate())
+    </insert>
+
+    <update id="updateFundAccountBalance">
+        update customer_fund_account
+        set balance_amount = #{balanceAmount}, available_amount = #{availableAmount}, frozen_amount = #{frozenAmount}, update_time = sysdate()
+        where account_id = #{accountId}
+    </update>
+
+    <insert id="insertFundFlow" parameterType="CustomerFundFlow" useGeneratedKeys="true" keyProperty="flowId">
+        insert into customer_fund_flow(customer_id, account_type, flow_no, flow_type, amount, before_balance, after_balance,
+            related_biz_type, related_biz_id, related_biz_no, operator_id, occur_time, remark, create_by, create_time)
+        values(#{customerId}, #{accountType}, #{flowNo}, #{flowType}, #{amount}, #{beforeBalance}, #{afterBalance},
+            #{relatedBizType}, #{relatedBizId}, #{relatedBizNo}, #{operatorId}, #{occurTime}, #{remark}, #{createBy}, sysdate())
+    </insert>
+
+    <select id="selectFundFlows" parameterType="CustomerFundFlow" resultMap="CustomerFundFlowResult">
+        select * from customer_fund_flow
+        <where>
+            <if test="customerId != null">customer_id = #{customerId}</if>
+            <if test="accountType != null and accountType != ''">and account_type = #{accountType}</if>
+            <if test="flowType != null and flowType != ''">and flow_type = #{flowType}</if>
+        </where>
+        order by occur_time desc, flow_id desc
+    </select>
+
+    <insert id="insertDepositBatch" parameterType="CustomerDepositBatch" useGeneratedKeys="true" keyProperty="depositBatchId">
+        insert into customer_deposit_batch(deposit_batch_no, customer_id, deposit_type, source_order_id, source_order_no,
+            deposit_amount, used_amount, remaining_amount, status, start_time, settle_time, remark, create_by, create_time)
+        values(#{depositBatchNo}, #{customerId}, #{depositType}, #{sourceOrderId}, #{sourceOrderNo},
+            #{depositAmount}, #{usedAmount}, #{remainingAmount}, #{status}, #{startTime}, #{settleTime}, #{remark}, #{createBy}, sysdate())
+    </insert>
+
+    <select id="selectDepositBatchesByCustomerId" parameterType="Long" resultMap="CustomerDepositBatchResult">
+        select * from customer_deposit_batch where customer_id = #{customerId} order by start_time desc, deposit_batch_id desc
+    </select>
+
+    <select id="selectSamplePolicyByCustomerId" parameterType="Long" resultMap="CustomerSamplePolicyResult">
+        select * from customer_sample_policy where customer_id = #{customerId} limit 1
+    </select>
+
+    <insert id="insertSamplePolicy" parameterType="CustomerSamplePolicy" useGeneratedKeys="true" keyProperty="policyId">
+        insert into customer_sample_policy(customer_id, support_mode, total_support_rate, instant_discount_rate, delivery_deduct_rate,
+            max_deduct_per_delivery, status, remark, create_by, create_time)
+        values(#{customerId}, #{supportMode}, #{totalSupportRate}, #{instantDiscountRate}, #{deliveryDeductRate},
+            #{maxDeductPerDelivery}, #{status}, #{remark}, #{createBy}, sysdate())
+    </insert>
+
+    <update id="updateSamplePolicy" parameterType="CustomerSamplePolicy">
+        update customer_sample_policy
+        set support_mode = #{supportMode},
+            total_support_rate = #{totalSupportRate},
+            instant_discount_rate = #{instantDiscountRate},
+            delivery_deduct_rate = #{deliveryDeductRate},
+            max_deduct_per_delivery = #{maxDeductPerDelivery},
+            status = #{status},
+            remark = #{remark},
+            update_by = #{updateBy},
+            update_time = sysdate()
+        where customer_id = #{customerId}
+    </update>
+
+    <insert id="insertSampleRebateRecord" parameterType="SampleRebateRecord" useGeneratedKeys="true" keyProperty="rebateRecordId">
+        insert into sample_rebate_record(customer_id, sample_order_id, sample_order_no, sample_amount, support_mode, total_support_rate,
+            instant_discount_rate, instant_discount_amount, rebate_amount, used_amount, remaining_amount, status, remark, create_by, create_time)
+        values(#{customerId}, #{sampleOrderId}, #{sampleOrderNo}, #{sampleAmount}, #{supportMode}, #{totalSupportRate},
+            #{instantDiscountRate}, #{instantDiscountAmount}, #{rebateAmount}, #{usedAmount}, #{remainingAmount}, #{status}, #{remark}, #{createBy}, sysdate())
+    </insert>
+
+    <select id="selectSampleRebateRecordsByCustomerId" parameterType="Long" resultMap="SampleRebateRecordResult">
+        select * from sample_rebate_record where customer_id = #{customerId} order by create_time desc, rebate_record_id desc
+    </select>
+</mapper>

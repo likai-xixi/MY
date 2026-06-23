@@ -1,5 +1,26 @@
 {
   "schemaVersion": 1,
   "description": "Module ownership registry generated and maintained with the module graph.",
-  "modules": []
+  "modules": [
+    {
+      "id": "customer",
+      "name": "客户管理",
+      "type": "business-feature",
+      "feature": "customer",
+      "backendPath": "ruoyi-business/src/main/java/com/ruoyi/business/customer",
+      "frontendPath": "ruoyi-ui/src/views/customer",
+      "paths": [
+        "ruoyi-business/src/main/java/com/ruoyi/business/customer",
+        "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer",
+        "ruoyi-ui/src/views/customer",
+        "ruoyi-ui/src/utils/region-data.js",
+        "ruoyi-ui/src/api/customer.contract.md",
+        "ruoyi-ui/src/api/customer.js",
+        "sql/customer.ownership.md"
+      ],
+      "owner": "workflow",
+      "adapter": "ruoyi",
+      "updatedAt": "2026-06-22"
+    }
+  ]
 }

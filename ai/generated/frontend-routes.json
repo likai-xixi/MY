@@ -8,6 +8,7 @@
     "frontend/src/modules"
   ],
   "modules": [
+    "customer",
     "monitor",
     "platform",
     "system",
@@ -17,6 +18,14 @@
     "register.vue"
   ],
   "routes": [
+    {
+      "module": "customer",
+      "route": "/customer",
+      "api": [],
+      "states": [],
+      "file": "ruoyi-ui/src/views/customer/index.vue",
+      "source": "ruoyi-view"
+    },
     {
       "module": "error",
       "route": "/error/401",

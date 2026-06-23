@@ -1,5 +1,61 @@
 {
   "schemaVersion": 1,
   "description": "Database object ledger. Add tables, migrations, seed data, and ownership here when a real stack is introduced.",
-  "tables": []
+  "tables": [
+    {
+      "name": "customer",
+      "ownerFeature": "customer",
+      "source": "sql/customer.ownership.md",
+      "columns": [
+        "province_code",
+        "city_code",
+        "district_code"
+      ]
+    },
+    {
+      "name": "customer_contact",
+      "ownerFeature": "customer",
+      "source": "sql/customer.ownership.md"
+    },
+    {
+      "name": "customer_address",
+      "ownerFeature": "customer",
+      "source": "sql/customer.ownership.md",
+      "columns": [
+        "province_code",
+        "city_code",
+        "district_code"
+      ]
+    },
+    {
+      "name": "customer_salesman_bind_log",
+      "ownerFeature": "customer",
+      "source": "sql/customer.ownership.md"
+    },
+    {
+      "name": "customer_fund_account",
+      "ownerFeature": "customer",
+      "source": "sql/customer.ownership.md"
+    },
+    {
+      "name": "customer_fund_flow",
+      "ownerFeature": "customer",
+      "source": "sql/customer.ownership.md"
+    },
+    {
+      "name": "customer_deposit_batch",
+      "ownerFeature": "customer",
+      "source": "sql/customer.ownership.md"
+    },
+    {
+      "name": "customer_sample_policy",
+      "ownerFeature": "customer",
+      "source": "sql/customer.ownership.md"
+    },
+    {
+      "name": "sample_rebate_record",
+      "ownerFeature": "customer",
+      "source": "sql/customer.ownership.md"
+    }
+  ]
 }

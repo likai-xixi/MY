@@ -1,0 +1,83 @@
+﻿## MY runtime processes after restart
+
+
+ProcessId   : 27520
+Name        : java.exe
+CommandLine : "C:\Program Files\Eclipse Adoptium\jdk-17.0.19.10-hotspot\bin\java.exe" -jar D:\Project\MjProcess\backend
+              \ruoyi-admin\target\ruoyi-admin.jar 
+
+ProcessId   : 53064
+Name        : node.exe
+CommandLine : "C:\Users\11131\AppData\Local\OpenAI\Codex\runtimes\cua_node\a89897d3d9baa117\bin\node.exe" --experimenta
+              l-vm-modules C:\Users\11131\AppData\Local\Temp\.tmpI62dIT\kernel.js --session-id fb8f97c18bc140c1a71d3e3e
+              c0d740ea --working-dir D:\Project\MY
+
+ProcessId   : 43360
+Name        : java.exe
+CommandLine : "C:\Program Files\Eclipse Adoptium\jdk-17.0.19.10-hotspot\bin\java.exe" -jar D:\Project\MY\ruoyi-admin\ta
+              rget\ruoyi-admin.jar --server.port=18080 --spring.datasource.druid.master.url=jdbc:mysql://localhost:3306
+              /my_ry_vue_runtime?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false
+              &allowPublicKeyRetrieval=true&serverTimezone=GMT%2B8 --spring.datasource.druid.master.username=root --spr
+              ing.datasource.druid.master.password=password --spring.data.redis.database=1 
+
+ProcessId   : 28460
+Name        : cmd.exe
+CommandLine : "C:\WINDOWS\system32\cmd.exe" /c npm --prefix ruoyi-ui run dev -- --host 127.0.0.1 --port 5174 --strictPo
+              rt 
+
+ProcessId   : 25324
+Name        : node.exe
+CommandLine : "C:\Users\11131\AppData\Local\Microsoft\WinGet\Packages\OpenJS.NodeJS.LTS_Microsoft.Winget.Source_8wekyb3
+              d8bbwe\node-v24.16.0-win-x64\\node.exe"  "C:\Users\11131\AppData\Local\Microsoft\WinGet\Packages\OpenJS.N
+              odeJS.LTS_Microsoft.Winget.Source_8wekyb3d8bbwe\node-v24.16.0-win-x64\node_modules\npm\bin\npm-cli.js" --
+              prefix ruoyi-ui run dev -- --host 127.0.0.1 --port 5174 --strictPort
+
+ProcessId   : 49864
+Name        : cmd.exe
+CommandLine : C:\WINDOWS\system32\cmd.exe /d /s /c vite --host 127.0.0.1 --port 5174 --strictPort
+
+ProcessId   : 45252
+Name        : node.exe
+CommandLine : "node"   "D:\Project\MY\ruoyi-ui\node_modules\.bin\\..\vite\bin\vite.js" --host 127.0.0.1 --port 5174 --s
+              trictPort
+
+ProcessId   : 33512
+Name        : esbuild.exe
+CommandLine : D:\Project\MY\ruoyi-ui\node_modules\@esbuild\win32-x64\esbuild.exe --service=0.25.12 --ping
+
+ProcessId   : 36284
+Name        : dart.exe
+CommandLine : D:\Project\MY\ruoyi-ui\node_modules\sass-embedded-win32-x64\dart-sass\src\dart.exe D:\Project\MY\ruoyi-ui
+              \node_modules\sass-embedded-win32-x64\dart-sass\src\sass.snapshot --embedded
+
+ProcessId   : 39340
+Name        : powershell.exe
+CommandLine : "C:\WINDOWS\System32\WindowsPowerShell\v1.0\powershell.exe" -Command "try { [Console]::OutputEncoding=[Sy
+              stem.Text.Encoding]::UTF8 } catch {}
+              $evidenceDir = 'ai/changes/CR-20260622T150304Z-change/runtime-evidence'
+              New-Item -ItemType Directory -Force -Path $evidenceDir | Out-Null
+              $processEvidence = @()
+              $processEvidence += '## MY runtime processes after restart'
+              $processEvidence += (Get-CimInstance Win32_Process | Where-Object { $_.CommandLine -match 'D:\\Project\\M
+              Y|127\.0\.0\.1.*5174|ruoyi-admin.jar' } | Select-Object ProcessId,Name,CommandLine | Format-List | Out-St
+              ring)
+              $processEvidence += '## Listening ports'
+              $processEvidence += (Get-NetTCPConnection -LocalPort 18080,5174 -ErrorAction SilentlyContinue | Select-Ob
+              ject LocalAddress,LocalPort,State,OwningProcess | Format-Table -AutoSize | Out-String)
+              $processEvidence | Set-Content -Path (Join-Path $evidenceDir 'runtime-processes.txt') -Encoding UTF8
+              Get-Content (Join-Path $evidenceDir 'runtime-processes.txt') -Encoding UTF8"
+
+
+
+
+## Listening ports
+
+LocalAddress LocalPort       State OwningProcess
+------------ ---------       ----- -------------
+::               18080      Listen         43360
+127.0.0.1         5174 Established         45252
+127.0.0.1         5174 Established         45252
+127.0.0.1         5174      Listen         45252
+
+
+

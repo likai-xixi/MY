@@ -1,0 +1,7 @@
+﻿customer_code	customer_name	short_name	customer_type	customer_level	province	city	district	address
+KH202606000001	编码优化客户A202606221835	编码优化客户A202606221835	DEALER	NORMAL	浙江省	宁波市	鄞州区	联动路1号
+KH202606000002	编码优化客户B202606221835	编码优化客户B202606221835	DEALER	NORMAL	江苏省	苏州市	吴中区	递增路2号
+kh_duplicate_code_count
+0
+Table	Non_unique	Key_name	Seq_in_index	Column_name	Collation	Cardinality	Sub_part	Packed	Null	Index_type	Comment	Index_comment	Visible	Expression
+customer	0	uk_customer_code	1	customer_code	A	1	NULL	NULL		BTREE			YES	NULL

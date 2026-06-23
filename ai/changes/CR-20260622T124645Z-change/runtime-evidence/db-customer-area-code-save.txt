@@ -1,0 +1,2 @@
+﻿customer_id	customer_code	customer_name	short_name	customer_type	customer_level	province_code	province	city_code	city	district_code	district
+11	KH202606000004	行政编码验证客户20260622135304	行政编码验证客户20260622135304	DEALER	NORMAL	410000	河南省	410100	郑州市	410102	中原区

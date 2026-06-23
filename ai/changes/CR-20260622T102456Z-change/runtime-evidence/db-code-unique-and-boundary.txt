@@ -1,0 +1,6 @@
+﻿Table	Non_unique	Key_name	Seq_in_index	Column_name	Collation	Cardinality	Sub_part	Packed	Null	Index_type	Comment	Index_comment	Visible	Expression
+customer	0	uk_customer_code	1	customer_code	A	1	NULL	NULL		BTREE			YES	NULL
+max_customer_code_by_month
+KH2026061000000
+persisted_boundary_rows
+0
