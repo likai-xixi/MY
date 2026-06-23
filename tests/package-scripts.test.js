@@ -1,5 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {
+  parseArgs,
+  shouldReplaceGeneratedText,
+  templatePhrase
+} from '../scripts/finalize-change.js';
 import { fileExists, readJson } from '../tools/common.js';
 import { resolveCommand, runProcess } from '../tools/process-runner.js';
 
@@ -87,4 +92,38 @@ test('Windows command shims run through cmd call without executing real npm', ()
     'call "C:\\tools\\nodejs\\npm.cmd" "--version"'
   ]);
   assert.equal(invocation.options.windowsVerbatimArguments, true);
+});
+
+test('finalize:change parses explicit verification status and evidence', () => {
+  const parsed = parseArgs([
+    '--id',
+    'CR-TEST',
+    '--summary',
+    'Governance closeout',
+    '--status',
+    'verified',
+    '--evidence',
+    'npm test passed',
+    '--command',
+    'node --test tests/resume.test.js',
+    'npm run check',
+    '--force-verification'
+  ]);
+
+  assert.equal(parsed.id, 'CR-TEST');
+  assert.equal(parsed.summary, 'Governance closeout');
+  assert.equal(parsed.verificationStatus, 'verified');
+  assert.equal(parsed.verificationEvidence, 'npm test passed');
+  assert.equal(parsed.forceVerification, true);
+  assert.deepEqual(parsed.commands, [
+    'node --test tests/resume.test.js',
+    'npm run check'
+  ]);
+});
+
+test('finalize:change detects template verification and preserves real evidence by default', () => {
+  assert.equal(templatePhrase('Status: prepared'), 'Status: prepared');
+  assert.equal(shouldReplaceGeneratedText('# Verification\n\nStatus: pending\n'), true);
+  assert.equal(shouldReplaceGeneratedText('# Verification\n\nStatus: verified\n\n## Evidence\n\nnpm test passed.\n'), false);
+  assert.equal(shouldReplaceGeneratedText('# Verification\n\nStatus: verified\n\n## Evidence\n\nnpm test passed.\n', { force: true }), true);
 });

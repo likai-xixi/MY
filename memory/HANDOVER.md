@@ -2,57 +2,53 @@
 
 ## Summary
 
-Current change record: `ai/changes/CR-20260623T015344Z-governance-handoff-integrity-checker`.
+Current change record: `ai/changes/CR-20260623T031118Z-handoff-gate`.
 
-This is a first-batch governance enhancement that adds a stronger change handoff integrity checker. It is not a customer management feature change.
+The current governance stabilization patch is verified. It improves first-batch handoff gate usability without entering customer-management business development and without implementing query routing, `check:fast`, CI, scan parallelism, or runtime policy changes.
 
 ## Impact
 
-The governance layer now checks for non-template verification evidence, actual Git changed-file coverage in `changed-files.json`, useful impact/verification/risk/next-action handoff sections, memory handover/changelog/task sync to the current change, and semantic scan/contract notes when API, UI, DB, permission, or component surfaces are touched. No customer business code, customer SQL ownership, customer API client, customer Vue page, mapper XML, or controller was modified.
+The patch affects governance scripts, checker tests, resume tests, current change evidence, and project handoff memory. `finalize:change` now preserves real verification/handover files and accepts explicit status/evidence; `change-handoff-integrity-checker` has additional failure-scenario coverage and small validator enhancements; `resume` no longer lists verified/done/closed/completed tasks as Open Tasks.
+
+No customer business paths were modified. `TASK-CUSTOMER.latestChange` remains `CR-20260622T150304Z-change`; this change is synced to the platform task.
 
 ## Changed Files
 
-- `tools/change-handoff-integrity-checker.js`
-- `scripts/close-change.js`
 - `scripts/finalize-change.js`
-- `scripts/generate-handover.js`
-- `package.json`
+- `scripts/resume.js`
+- `tools/change-handoff-integrity-checker.js`
 - `tests/change-handoff-integrity-checker.test.js`
 - `tests/package-scripts.test.js`
-- `ai/rule-proposals/2026-06-23-handoff-integrity-checker.json`
-- `ai/changes/CR-20260623T015344Z-governance-handoff-integrity-checker/`
-- `memory/HANDOVER.md`
+- `tests/resume.test.js`
+- `ai/changes/CR-20260623T031118Z-handoff-gate/`
+- `ai/changes/CURRENT_CHANGE.json`
 - `memory/CHANGELOG.md`
-- `memory/PROJECT_STATE.md`
+- `memory/HANDOVER.md`
 - `memory/TASKS.json`
-- `memory/sessions/2026-06-23-governance-handoff-integrity.md`
+- `memory/sessions/2026-06-23-governance-handoff-gate-stabilization.md`
 
 ## Commands
 
-- `npm run resume`
-- `npm run start:change -- --mode rule-change governance handoff integrity checker`
-- `npm run rule:propose -- handoff integrity checker --reason "..."`
-- `node --test tests/change-handoff-integrity-checker.test.js`
-- `node --test tests/package-scripts.test.js`
-- `node --check tools/change-handoff-integrity-checker.js`
-- `node --check scripts/finalize-change.js`
-- `node --check scripts/close-change.js`
-- `npm test`
-- `npm run finalize:change -- --summary "Governance handoff integrity checker" --command ...`
-- `npm run check:change-handoff`
-- `npm run close:change`
-- `npm run check`
+- `node --test tests/change-handoff-integrity-checker.test.js` passed with 13 tests.
+- `node --test tests/resume.test.js` passed with 5 tests.
+- `node --test tests/package-scripts.test.js` passed with 7 tests.
+- `node --check scripts/finalize-change.js` passed.
+- `node --check scripts/resume.js` passed.
+- `node --check tools/change-handoff-integrity-checker.js` passed.
+- `npm test` passed with 96 tests after scoped current-change RuoYi exception notes were added.
+- `npm run check:change-handoff` passed.
+- `npm run close:change` passed.
+- `npm run check` passed, including 96 Node tests.
+- Final standalone `npm test` passed with 96 tests.
 
 ## Verification
 
-Targeted checker/package tests and syntax checks passed. Full `npm test` was rerun once before current-change RuoYi exception files and Impact handover were added; it completed with 77 passed / 4 failed, and the four failures match the current-change exception and handover work completed in this record. Final `npm test` passed with 81 tests, and final `npm run check` passed including `close:change` with the new handoff integrity checker.
-
-Pre-commit closeout rerun on 2026-06-23 passed `node --test tests/change-handoff-integrity-checker.test.js` (5 passed), `npm run check:change-handoff`, `npm run close:change`, `npm run check`, and standalone `npm test` (81 passed, 0 failed).
+The final full governance gate passed. Earlier failures were handled during this same change: one `npm test` attempt timed out at 120 seconds before producing a result, and the next full run failed only because the new current change lacked scoped RuoYi exception notes required by existing boundary/component tests. Adding those current-change notes fixed the failures; subsequent targeted tests, `npm test`, `npm run check:change-handoff`, `npm run close:change`, `npm run check`, and final `npm test` all passed.
 
 ## Risks
 
-The new checker is intentionally stricter and may require future Codex sessions to write real evidence before closeout. This task does not validate or change business runtime behavior. No second-batch governance work was implemented.
+This patch does not exercise backend/frontend business runtime behavior. The new comment-only semantic bypass is deliberately conservative: it only bypasses semantic gates when diff text shows changed lines are comments; absent diff text still falls back to strict path-based checking.
 
 ## Next Actions
 
-Use `npm run resume` for the next task. Keep future change records synchronized with verification evidence, changed-files coverage, memory handover, changelog, TASKS, and semantic scan notes before closing.
+No immediate action is required. Use `npm run resume` for the next task; verified tasks should now be absent from Open Tasks.

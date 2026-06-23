@@ -19,8 +19,14 @@ function safeReadText(relativePath) {
   }
 }
 
-function latestSession(tasks = { tasks: [] }) {
-  const declared = (tasks.tasks || []).find((task) => task.status !== 'done' && task.latestSession)?.latestSession;
+export const CLOSED_TASK_STATUSES = new Set(['done', 'verified', 'closed', 'completed']);
+
+export function isOpenTask(task = {}) {
+  return !CLOSED_TASK_STATUSES.has(String(task.status || '').toLowerCase());
+}
+
+export function latestSession(tasks = { tasks: [] }) {
+  const declared = (tasks.tasks || []).find((task) => isOpenTask(task) && task.latestSession)?.latestSession;
   if (declared) {
     return declared;
   }
@@ -41,9 +47,9 @@ function currentChange() {
   return current.current || '';
 }
 
-function summarizeTasks(tasks) {
+export function summarizeTasks(tasks) {
   return (tasks.tasks || [])
-    .filter((task) => task.status !== 'done')
+    .filter(isOpenTask)
     .map((task) => `- ${task.id} [${task.status}] ${task.title} -> ${task.nextStep}`)
     .join('\n') || '- none';
 }

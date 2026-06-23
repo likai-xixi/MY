@@ -10,6 +10,52 @@ function pathExists(relativePath) {
   return fs.existsSync(projectPath(relativePath));
 }
 
+const TEMPLATE_PHRASES = [
+  'Status: prepared',
+  'Status: pending',
+  'Pending',
+  'Pending implementation',
+  'The change record was populated before the main gate',
+  'Change record prepared by the chat-driven workflow',
+  'Describe passing and failing verification',
+  'List residual risks',
+  'List the next concrete actions'
+];
+
+export function templatePhrase(text = '') {
+  const lower = String(text).toLowerCase();
+  return TEMPLATE_PHRASES.find((phrase) => lower.includes(phrase.toLowerCase())) || '';
+}
+
+export function shouldReplaceGeneratedText(currentText = '', { exists = true, force = false } = {}) {
+  if (force) {
+    return true;
+  }
+  if (!exists) {
+    return true;
+  }
+  if (!String(currentText).trim()) {
+    return true;
+  }
+  return Boolean(templatePhrase(currentText));
+}
+
+function readOptionalText(relativePath) {
+  try {
+    return { exists: true, text: readText(relativePath) };
+  } catch {
+    return { exists: false, text: '' };
+  }
+}
+
+function writeGeneratedMarkdown(relativePath, content, { force = false } = {}, errors) {
+  const current = readOptionalText(relativePath);
+  if (!shouldReplaceGeneratedText(current.text, { exists: current.exists, force })) {
+    return;
+  }
+  writeOrCheck(relativePath, content, false, errors);
+}
+
 export function currentChangeId() {
   try {
     return readJson('ai/changes/CURRENT_CHANGE.json').current || '';
@@ -80,7 +126,7 @@ function buildPlan({ summary, mode, featureId }) {
   ].join('\n');
 }
 
-function buildVerification({ commands, status = 'prepared', note = '' }) {
+function buildVerification({ commands, status = 'prepared', evidence = '' }) {
   return [
     '# Verification',
     '',
@@ -92,7 +138,7 @@ function buildVerification({ commands, status = 'prepared', note = '' }) {
     '',
     '## Evidence',
     '',
-    note || 'The change record was populated before the main gate. `npm run check` is the required final verification command for this scaffold.',
+    evidence || 'The change record was populated before the main gate. `npm run check` is the required final verification command for this scaffold.',
     ''
   ].join('\n');
 }
@@ -129,7 +175,7 @@ function buildChangeHandover({ summary, changedFiles, commands, risks = [], next
     '',
     '## Next Actions',
     '',
-    ...(nextActions.length ? nextActions.map((action) => `- ${action}`) : ['- Continue implementation inside the allowed edit roots and rerun `npm run check`.']),
+    ...(nextActions.length ? nextActions.map((action) => `- ${action}`) : ['- Add real verification evidence before closing this change, then rerun `npm run check`.']),
     ''
   ].join('\n');
 }
@@ -219,7 +265,8 @@ export function finalizeChange({
   changedFiles = [],
   commands = ['npm run scan:all', 'npm run close:change', 'npm run check'],
   verificationStatus = 'prepared',
-  verificationNote = '',
+  verificationEvidence = '',
+  forceVerification = false,
   risks = [],
   nextActions = [],
   updateMemory = true
@@ -243,8 +290,18 @@ export function finalizeChange({
   const safeFiles = files.length ? files : changeRecordFiles(id);
   writeOrCheck(`${dir}/changed-files.json`, formatJson({ schemaVersion: 1, files: safeFiles }), false, errors);
   writeOrCheck(`${dir}/plan.md`, buildPlan({ summary, mode, featureId }), false, errors);
-  writeOrCheck(`${dir}/verification.md`, buildVerification({ commands, status: verificationStatus, note: verificationNote }), false, errors);
-  writeOrCheck(`${dir}/handover.md`, buildChangeHandover({ summary, changedFiles: safeFiles, commands, risks, nextActions }), false, errors);
+  writeGeneratedMarkdown(
+    `${dir}/verification.md`,
+    buildVerification({ commands, status: verificationStatus, evidence: verificationEvidence }),
+    { force: forceVerification },
+    errors
+  );
+  writeGeneratedMarkdown(
+    `${dir}/handover.md`,
+    buildChangeHandover({ summary, changedFiles: safeFiles, commands, risks, nextActions }),
+    {},
+    errors
+  );
 
   if (updateMemory) {
     writeOrCheck('memory/HANDOVER.md', buildMemoryHandover({ id, summary, changedFiles: safeFiles, commands, risks, nextActions }), false, errors);
@@ -254,17 +311,44 @@ export function finalizeChange({
   return errors;
 }
 
-function parseArgs(args) {
-  const idIndex = args.indexOf('--id');
-  const summaryIndex = args.indexOf('--summary');
-  const commandIndex = args.indexOf('--command');
-  const id = idIndex === -1 ? currentChangeId() : args[idIndex + 1] || '';
-  const summary = summaryIndex === -1 ? '' : args[summaryIndex + 1] || '';
-  const commands = commandIndex === -1 ? ['npm run scan:all', 'npm run close:change', 'npm run check'] : args.slice(commandIndex + 1).filter((item) => !item.startsWith('--'));
-  return { id, summary, commands };
+export function parseArgs(args) {
+  const parsed = {
+    id: currentChangeId(),
+    summary: '',
+    commands: [],
+    verificationStatus: 'prepared',
+    verificationEvidence: '',
+    forceVerification: false
+  };
+  for (let index = 0; index < args.length; index += 1) {
+    const arg = args[index];
+    if (arg === '--id') {
+      parsed.id = args[index + 1] || '';
+      index += 1;
+    } else if (arg === '--summary') {
+      parsed.summary = args[index + 1] || '';
+      index += 1;
+    } else if (arg === '--status') {
+      parsed.verificationStatus = args[index + 1] || 'prepared';
+      index += 1;
+    } else if (arg === '--evidence') {
+      parsed.verificationEvidence = args[index + 1] || '';
+      index += 1;
+    } else if (arg === '--force-verification') {
+      parsed.forceVerification = true;
+    } else if (arg === '--command') {
+      while (args[index + 1] && !args[index + 1].startsWith('--')) {
+        parsed.commands.push(args[index + 1]);
+        index += 1;
+      }
+    }
+  }
+  if (parsed.commands.length === 0) {
+    parsed.commands = ['npm run scan:all', 'npm run close:change', 'npm run check'];
+  }
+  return parsed;
 }
 
 if (isCli(import.meta.url)) {
-  const { id, summary, commands } = parseArgs(process.argv.slice(2));
-  finish('finalize:change', finalizeChange({ id, summary, commands }));
+  finish('finalize:change', finalizeChange(parseArgs(process.argv.slice(2))));
 }

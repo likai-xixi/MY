@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "mode": "governance",
+  "feature": {
+    "id": "platform",
+    "name": "Governance Platform",
+    "status": "active"
+  },
+  "affected": {
+    "governance": [
+      "scripts/finalize-change.js",
+      "scripts/resume.js",
+      "tools/change-handoff-integrity-checker.js",
+      "tests/change-handoff-integrity-checker.test.js",
+      "tests/package-scripts.test.js",
+      "package.json"
+    ],
+    "docs": [
+      "memory/HANDOVER.md",
+      "memory/CHANGELOG.md",
+      "memory/PROJECT_STATE.md",
+      "memory/TASKS.json"
+    ]
+  },
+  "allowedEditRoots": [
+    "scripts/finalize-change.js",
+    "scripts/resume.js",
+    "tools/change-handoff-integrity-checker.js",
+    "tests/change-handoff-integrity-checker.test.js",
+    "tests/package-scripts.test.js",
+    "tests/resume.test.js",
+    "package.json",
+    "ai/changes",
+    "memory/HANDOVER.md",
+    "memory/CHANGELOG.md",
+    "memory/PROJECT_STATE.md",
+    "memory/TASKS.json",
+    "memory/sessions"
+  ],
+  "blockers": []
+}

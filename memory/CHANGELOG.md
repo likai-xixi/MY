@@ -67,4 +67,7 @@
 - Change: `ai/changes/CR-20260623T015344Z-governance-handoff-integrity-checker`.
 - Governance handoff integrity checker
 - Pre-commit closeout reran `node --test tests/change-handoff-integrity-checker.test.js`, `npm run check:change-handoff`, `npm run close:change`, `npm run check`, and standalone `npm test`; all passed.
+- Feature: `platform`.## 2026-06-23 — governance
+- Change: `ai/changes/CR-20260623T031118Z-handoff-gate`.
+- 治理增强：稳定第一批 handoff gate 使用体验
 - Feature: `platform`.

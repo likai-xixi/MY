@@ -41,7 +41,7 @@
       "latestSession": "memory/sessions/2026-06-23-governance-handoff-integrity.md",
       "handoverRequired": true,
       "updatedAt": "2026-06-23",
-      "latestChange": "CR-20260623T015344Z-governance-handoff-integrity-checker"
+      "latestChange": "CR-20260623T031118Z-handoff-gate"
     },
     {
       "id": "TASK-CUSTOMER",

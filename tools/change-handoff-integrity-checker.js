@@ -171,6 +171,20 @@ function gitChangedFiles() {
   ]).filter((file) => !isGeneratedPath(file));
 }
 
+function gitDiffForFile(file) {
+  if (!isGitRepository()) {
+    return '';
+  }
+  return [
+    runGit(['diff', '--', file]),
+    runGit(['diff', '--cached', '--', file])
+  ].filter(Boolean).join('\n');
+}
+
+function gitFileDiffs(files) {
+  return new Map(unique(files).map((file) => [file, gitDiffForFile(file)]));
+}
+
 function currentChangeId({ readJsonFile = readJson } = {}) {
   try {
     return readJsonFile('ai/changes/CURRENT_CHANGE.json').current || '';
@@ -266,6 +280,7 @@ function validateChangedFilesCoverage({ id, changedFiles, actualFiles, errors })
 }
 
 function validateVerification({ id, changedFiles, verification, errors }) {
+  ensure(verification.trim().length > 0, `ai/changes/${id}/verification.md must not be empty.`, errors);
   const substantiveFiles = changedFiles.filter((file) => isSubstantiveFile(file, id));
   const templatePhrase = containsTemplateText(verification);
   ensure(!templatePhrase, `ai/changes/${id}/verification.md still contains template evidence text: ${templatePhrase}`, errors);
@@ -293,6 +308,7 @@ function validateVerification({ id, changedFiles, verification, errors }) {
 }
 
 function validateHandover({ id, changedFiles, handover, label, errors }) {
+  ensure(handover.trim().length > 0, `${label} must not be empty.`, errors);
   const templatePhrase = containsTemplateText(handover);
   ensure(!templatePhrase, `${label} still contains template handover text: ${templatePhrase}`, errors);
   for (const heading of ['## Impact', '## Verification', '## Risks', '## Next Actions']) {
@@ -307,7 +323,40 @@ function validateHandover({ id, changedFiles, handover, label, errors }) {
   }
 }
 
-function validateMemorySync({ id, readFile, readJsonFile, exists, errors }) {
+function taskReferencesChange(task, id) {
+  return JSON.stringify(task || {}).includes(id);
+}
+
+function isGovernanceChange(impact) {
+  const featureId = typeof impact?.feature === 'object' ? impact.feature.id : impact?.feature;
+  return impact?.mode === 'governance' || impact?.mode === 'rule-change' || featureId === 'platform';
+}
+
+function isPlatformTask(task) {
+  const text = `${task?.id || ''} ${task?.feature || ''} ${task?.title || ''}`.toLowerCase();
+  return task?.feature === 'platform' || text.includes('governance') || text.includes('platform');
+}
+
+function isCustomerTask(task) {
+  return task?.id === 'TASK-CUSTOMER' || task?.feature === 'customer';
+}
+
+function validateTaskSync({ id, impact, tasks, errors }) {
+  const syncedTasks = (tasks.tasks || []).filter((task) => taskReferencesChange(task, id));
+  if (!isGovernanceChange(impact)) {
+    return;
+  }
+  ensure(
+    syncedTasks.some(isPlatformTask),
+    `memory/TASKS.json must sync governance change ${id} to a platform/governance task.`,
+    errors
+  );
+  for (const task of syncedTasks.filter(isCustomerTask)) {
+    errors.push(`memory/TASKS.json must not sync governance change ${id} to ${task.id || task.feature}.`);
+  }
+}
+
+function validateMemorySync({ id, impact, readFile, readJsonFile, exists, errors }) {
   ensure(exists('memory/HANDOVER.md'), 'memory/HANDOVER.md is missing.', errors);
   ensure(exists('memory/CHANGELOG.md'), 'memory/CHANGELOG.md is missing.', errors);
   ensure(exists('memory/TASKS.json'), 'memory/TASKS.json is missing.', errors);
@@ -318,12 +367,56 @@ function validateMemorySync({ id, readFile, readJsonFile, exists, errors }) {
   ensure(referencesCurrentChange(handover, id), `memory/HANDOVER.md must reference current change ${id}.`, errors);
   ensure(referencesCurrentChange(changelog, id), `memory/CHANGELOG.md must record current change ${id}.`, errors);
   ensure(JSON.stringify(tasks).includes(id), `memory/TASKS.json must sync current change ${id}.`, errors);
+  validateTaskSync({ id, impact, tasks, errors });
 }
 
-function validateSemanticCoverage({ id, changedFiles, verification, handover, errors }) {
+function diffForFile(file, fileDiffs) {
+  if (!fileDiffs) {
+    return '';
+  }
+  if (fileDiffs instanceof Map) {
+    return fileDiffs.get(file) || '';
+  }
+  return fileDiffs[file] || '';
+}
+
+function changedDiffLines(diffText) {
+  return String(diffText || '')
+    .split('\n')
+    .filter((line) => /^[+-]/.test(line))
+    .filter((line) => !line.startsWith('+++') && !line.startsWith('---'))
+    .map((line) => line.slice(1).trim());
+}
+
+function isCommentOnlyDiff(diffText) {
+  const changedLines = changedDiffLines(diffText)
+    .filter((line) => line.length > 0);
+  if (changedLines.length === 0) {
+    return false;
+  }
+  return changedLines.every((line) => (
+    line.startsWith('//')
+    || line.startsWith('/*')
+    || line.startsWith('*')
+    || line.startsWith('*/')
+    || line.startsWith('#')
+    || line.startsWith('<!--')
+    || line.startsWith('--')
+  ));
+}
+
+function semanticallyTouches(gate, file, fileDiffs) {
+  if (!gate.touched(file)) {
+    return false;
+  }
+  const diffText = diffForFile(file, fileDiffs);
+  return !isCommentOnlyDiff(diffText);
+}
+
+function validateSemanticCoverage({ id, changedFiles, verification, handover, fileDiffs, errors }) {
   const combinedEvidence = `${verification}\n${handover}`;
   for (const gate of SEMANTIC_GATES) {
-    const touched = changedFiles.some((file) => gate.touched(file));
+    const touched = changedFiles.some((file) => semanticallyTouches(gate, file, fileDiffs));
     if (!touched) {
       continue;
     }
@@ -340,6 +433,7 @@ function validateSemanticCoverage({ id, changedFiles, verification, handover, er
 export function validateChangeHandoffIntegrity({
   id = currentChangeId(),
   actualFiles = gitChangedFiles(),
+  fileDiffs = gitFileDiffs(actualFiles),
   readFile = readText,
   readJsonFile = readJson,
   exists = fileExists
@@ -351,7 +445,10 @@ export function validateChangeHandoffIntegrity({
   }
 
   const dir = `ai/changes/${id}`;
+  ensure(exists(`${dir}/verification.md`), `${dir}/verification.md is missing.`, errors);
+  ensure(exists(`${dir}/handover.md`), `${dir}/handover.md is missing.`, errors);
   const changed = readJsonSafe(`${dir}/changed-files.json`, { files: [] }, readJsonFile);
+  const impact = readJsonSafe(`${dir}/impact.json`, { mode: '', feature: {} }, readJsonFile);
   const changedFiles = unique(Array.isArray(changed.files) ? changed.files : []);
   ensure(changedFiles.length > 0, `${dir}/changed-files.json files must not be empty.`, errors);
   if (errors.length > 0) {
@@ -363,9 +460,9 @@ export function validateChangeHandoffIntegrity({
   validateChangedFilesCoverage({ id, changedFiles, actualFiles: unique(actualFiles), errors });
   validateVerification({ id, changedFiles, verification, errors });
   validateHandover({ id, changedFiles, handover: changeHandover, label: `${dir}/handover.md`, errors });
-  validateMemorySync({ id, readFile, readJsonFile, exists, errors });
+  validateMemorySync({ id, impact, readFile, readJsonFile, exists, errors });
   validateHandover({ id, changedFiles, handover: readTextSafe('memory/HANDOVER.md', readFile), label: 'memory/HANDOVER.md', errors });
-  validateSemanticCoverage({ id, changedFiles, verification, handover: changeHandover, errors });
+  validateSemanticCoverage({ id, changedFiles, verification, handover: changeHandover, fileDiffs, errors });
   return errors;
 }
 
