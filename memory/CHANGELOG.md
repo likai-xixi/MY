@@ -161,3 +161,36 @@
 - Scoped current-change component/boundary exceptions were added for exact pre-existing RuoYi `system/tool/generator` baseline files; no scanner/rule/profile or future-module code was changed.
 - `npm run check` and `npm test` now pass for the current change.
 - Feature: `customer`.
+
+## 2026-06-24 — update
+- Change: `ai/changes/CR-20260624T010638Z-change`.
+- 客户管理资金入金与公共客户口径校验收口
+- Feature: `customer`.
+
+## 2026-06-24 - verification-note
+
+- Change: `ai/changes/CR-20260624T010638Z-change`.
+- `/business/customer/{customerId}/fund/deposit` 收口为入金接口：空 `flowType` 或 `DEPOSIT_IN` 成功，`DEPOSIT_DEDUCT`、`DEPOSIT_REFUND`、`DEPOSIT_ADJUST`、`DEPOSIT_REVERSE` 统一拒绝并提示 `定金录入接口只允许入金，扣减、退款、调整、冲正请走独立资金处理流程。`
+- REAL 主联系电话、联系人电话、收货地址联系电话保存前 trim；非法主电话和非法子联系人电话均被 API 拒绝。
+- `duplicate-warning` 对明显非法手机号不做电话重复查询。
+- 归属变更已回归验证，`ASSIGN_MAINTENANCE` 与 `RETURN_FACTORY` 均更新当前归属；owner log 查询增加 `log_id desc` 防止同一秒排序不稳定。
+- Runtime DB evidence for validation customer `22` showed `CUSTOMER_DEPOSIT / DEPOSIT_IN / CUSTOMER_DEPOSIT_BATCH` only.
+- 本地开发库仍有历史 PUBLIC 验证行（`public_count=8`），因此不能声称运行库只有两个 seed PUBLIC；`sql/customer.ownership.md` 已补运行验证 SQL 和开发库清理/重建 SQL。
+- Captcha validation setting was restored to true after API validation.
+- `npm run check`、standalone `npm test`（97 tests）和 `git diff --check` passed.
+- Feature: `customer`.## 2026-06-24 — update
+- Change: `ai/changes/CR-20260624T010638Z-change`.
+- 客户管理风险防复发门禁
+- Feature: `customer`.
+
+## 2026-06-24 - verification-note
+
+- Change: `ai/changes/CR-20260624T010638Z-change`.
+- Cleaned local development database `my_ry_vue_runtime` historical PUBLIC validation data without changing business code.
+- Pre-clean PUBLIC count was `8`; backup tables were created with suffix `20260624_211203`; non-seed PUBLIC customer codes deleted: `KH202606000002`, `KH202606000004`, `KH202606000006`, `KH202606000008`, `KH202606000013`, `KH202606000018`.
+- Post-clean SQL invariant passed: PUBLIC total `2`, non-seed PUBLIC count `0`, duplicate `public_channel` count `0`, both built-in seed rows matched expected values, and PUBLIC child dirty counts were all `0`.
+- Post-clean runtime API validation rejected PUBLIC create, seed edit, seed status change, seed delete, and owner transfer; captcha was restored to `true` in `sys_config` and Redis DB0/DB1.
+- Feature: `customer`.## 2026-06-24 — update
+- Change: `ai/changes/CR-20260624T010638Z-change`.
+- 清理本地开发库历史 PUBLIC 验证数据
+- Feature: `customer`.

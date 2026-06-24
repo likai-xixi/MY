@@ -5,7 +5,7 @@
 - ID: `customer`
 - Name: 客户管理
 - Adapter: locked RuoYi adapter
-- Current change: `CR-20260623T235902Z-change`
+- Current change: `CR-20260624T010638Z-change`
 
 ## Business Problem
 
@@ -33,6 +33,7 @@
 公共客户规则：
 
 - 只允许两个内置公共客户：`PUB_DIRECT_SALE` / 厂内自销客户、`PUB_SELF_MEDIA` / 自媒体客户。
+- Only two built-in PUBLIC classification customers are allowed: `PUB_DIRECT_SALE` and `PUB_SELF_MEDIA`; normal customer UI/API flows must not create additional PUBLIC rows.
 - 不再作为普通客户新增入口，不允许手工新增更多 PUBLIC 公共客户。
 - 不允许普通编辑、删除、停用或归属变更。
 - 不展示/不维护客户类型、客户等级；后端仅为技术兼容固定保存 `customerType=OTHER`、`customerLevel=NORMAL`，前端不展示成“经销商 / 普通”。
@@ -60,7 +61,7 @@
 
 - 客户档案列表、新增、编辑、详情、启用/停用、逻辑删除和导出。
 - 客户性质、公共客户渠道筛选和维护。
-- 客户名称、联系电话重复提醒；名称和电话同时重复时强提醒。
+- 客户名称、联系电话重复提醒；名称和电话同时重复时强提醒，电话重复查询会先 trim 且只对合法手机号参与查重。
 - 真实客户多联系人维护，只允许一个默认联系人。
 - 真实客户多收货地址维护，只允许一个默认收货地址。
 - 真实客户归属方式选择、归属业务员和部门带出、归属来源/收益口径记录、列表筛选、详情展示和归属变更日志。
@@ -107,7 +108,7 @@
 - New/edit REAL customer dialogs additionally require main contact, contact phone, complete province/city/district selection down to district/county, and detail address.
 - New/edit REAL customer dialogs default owner type to `FACTORY`; owner salesman is required only when owner type is `SALESMAN`.
 - REAL owner source/profit options are fixed pairs: factory-assigned maintenance uses `MAINTENANCE_FEE`; salesman-self uses `SALES_COMMISSION`.
-- New/edit REAL customer dialogs require the master contact phone to be an 11-digit mainland China mobile number. Additional contact phone and shipping-address receiver phone fields remain optional, but if filled they must use the same mobile-number format.
+- New/edit REAL customer dialogs trim the master contact phone and require it to be an 11-digit mainland China mobile number. Additional contact phone and shipping-address receiver phone fields remain optional, are also trimmed, and if filled must use the same mobile-number format.
 - PUBLIC built-in customers are maintained by SQL seed/initialization data only. If the database is missing a built-in public customer, it must be restored from seed data rather than created through the normal customer dialog.
 - Public customer add/edit and detail base tab display: `公共客户仅用于订单归类，实际购买人、联系电话、收货地址、接待业务员请在销售订单中填写。`
 - Public customer list/detail type and level display as `系统分类` / `-` instead of the technical compatibility values `OTHER` / `NORMAL`.
@@ -120,6 +121,8 @@
 - Editing a real customer exposes explicit sync checkboxes:
   - `同步到默认联系人`: maps master contact, phone, and WeChat to the default contact, or creates it if missing.
   - `同步到默认收货地址`: maps master contact, phone, province/city/district code/name fields, and detail address to the default address, or creates it if missing.
+- The edit dialog checks both sync options by default for REAL customers; cancelling either checkbox means the backend must not overwrite that default child record on save.
+- User requirement: when editing a REAL customer, both default-contact and default-address sync options must start checked, while the user can uncheck either option before saving.
 - Editing a public customer hides sync checkboxes and never creates default contact or default address.
 - Public customer rows hide or disable normal edit, delete, status-toggle, owner type, owner salesman, owner source, owner profit controls, and the owner-change action.
 - The customer list displays owner type, owner display, owner department, and owner profit mode. Factory-owned real customers show owner display as `厂内`; public customers show `无固定归属`.
@@ -160,10 +163,8 @@ Deposit batch type:
 Deposit flow types:
 
 - `DEPOSIT_IN`
-- `DEPOSIT_DEDUCT`
-- `DEPOSIT_REFUND`
-- `DEPOSIT_ADJUST`
-- `DEPOSIT_REVERSE`
+
+The current customer deposit-entry endpoint is入金-only: `POST /business/customer/{customerId}/fund/deposit` accepts omitted `flowType` or `DEPOSIT_IN` and rejects `DEPOSIT_DEDUCT`、`DEPOSIT_REFUND`、`DEPOSIT_ADJUST`、`DEPOSIT_REVERSE` with a service error. Dedicated deduction/refund/adjust/reversal flows are not implemented in this customer iteration.
 
 Sample rebate generation continues to use `SAMPLE_REBATE_GENERATE` for the sample rebate flow and remains separate from deposit.
 
@@ -184,6 +185,7 @@ Sample rebate generation continues to use `SAMPLE_REBATE_GENERATE` for the sampl
 - 公共客户列表/详情不展示真实客户的客户类型和客户等级口径。
 - 公共客户不自动生成默认联系人和默认收货地址。
 - 公共客户详情不允许录入客户级定金。
+- 客户级定金录入接口只允许入金，不允许通过该接口提交扣减、退款、调整或冲正。
 - 新增真实客户默认归厂内，且不要求选择业务员。
 - 真实客户仍可维护联系人、收货地址；选择业务员归属时可以记录厂内分配维护或业务员自有客户口径。
 - 公共客户固定无固定归属，不允许归属变更。

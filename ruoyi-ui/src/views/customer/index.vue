@@ -750,8 +750,14 @@ function isEmptyFormValue(value) {
   return value === undefined || value === null || value === "" || (typeof value === "string" && value.trim() === "")
 }
 
+function normalizePhoneValue(value) {
+  const trimmed = String(value || "").trim()
+  return trimmed || undefined
+}
+
 function isValidMobilePhone(value) {
-  return MOBILE_PHONE_PATTERN.test(String(value || ""))
+  const phone = normalizePhoneValue(value)
+  return !!phone && MOBILE_PHONE_PATTERN.test(phone)
 }
 
 function requiredWhen(predicate, message, trigger) {
@@ -1018,6 +1024,16 @@ function normalizeOwnerBeforeSave() {
   applyFactoryOwnerFields()
 }
 
+function normalizeCustomerPhoneFields() {
+  form.value.contactPhone = normalizePhoneValue(form.value.contactPhone)
+  ;(form.value.contacts || []).forEach(item => {
+    item.phone = normalizePhoneValue(item.phone)
+  })
+  ;(form.value.addresses || []).forEach(item => {
+    item.receiverPhone = normalizePhoneValue(item.receiverPhone)
+  })
+}
+
 function prepareCustomerBeforeSave() {
   if (isPublicCustomerForm.value) {
     applyPublicOwnerFields()
@@ -1037,6 +1053,7 @@ function prepareCustomerBeforeSave() {
     form.value.contacts = []
     form.value.addresses = []
   } else {
+    normalizeCustomerPhoneFields()
     form.value.publicChannel = undefined
     normalizeOwnerBeforeSave()
   }

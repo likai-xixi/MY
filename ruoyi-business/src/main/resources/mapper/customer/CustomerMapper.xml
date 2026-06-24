@@ -339,7 +339,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </insert>
 
     <select id="selectOwnerLogsByCustomerId" parameterType="Long" resultMap="CustomerOwnerLogResult">
-        select * from customer_salesman_bind_log where customer_id = #{customerId} order by change_time desc
+        select * from customer_salesman_bind_log where customer_id = #{customerId} order by change_time desc, log_id desc
     </select>
 
     <insert id="insertOwnerLog" parameterType="CustomerSalesmanBindLog" useGeneratedKeys="true" keyProperty="logId">

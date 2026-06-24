@@ -581,6 +581,7 @@
 - Path: `/business/customer/duplicate-warning`
 - Owner: `customer`
 - Module: `customer`
+- Notes: Trims `customerName` and `contactPhone` before duplicate lookup. Invalid non-empty mobile phone input is ignored for phone duplicate lookup so the endpoint does not issue broad or misleading phone checks; save validation still rejects invalid REAL customer phones.
 
 ## /business/customer
 
@@ -596,7 +597,7 @@
 - Path: `/business/customer`
 - Owner: `customer`
 - Module: `customer`
-- Notes: Updates REAL customer master data. Built-in PUBLIC customers are rejected with `内置公共客户不允许在普通客户编辑中修改。`; REAL customers cannot be changed to PUBLIC and are rejected with `真实客户不允许改为公共客户。` Real-customer request-only booleans `syncDefaultContact` and `syncDefaultAddress` opt into syncing master fields to the current default child record or creating it when missing. REAL factory ownership clears owner user/dept; REAL salesman ownership validates owner user plus `FACTORY_ASSIGNED / MAINTENANCE_FEE` or `SALESMAN_SELF / SALES_COMMISSION`.
+- Notes: Updates REAL customer master data. Built-in PUBLIC customers are rejected with `内置公共客户不允许在普通客户编辑中修改。`; REAL customers cannot be changed to PUBLIC and are rejected with `真实客户不允许改为公共客户。` The REAL edit dialog defaults request-only booleans `syncDefaultContact` and `syncDefaultAddress` to true, but users may cancel either flag; false/omitted flags must not overwrite the default child records. REAL factory ownership clears owner user/dept; REAL salesman ownership validates owner user plus `FACTORY_ASSIGNED / MAINTENANCE_FEE` or `SALESMAN_SELF / SALES_COMMISSION`.
 
 ## /business/customer/changeStatus
 
@@ -650,7 +651,7 @@
 - Path: `/business/customer/{customerId}/fund/deposit`
 - Owner: `customer`
 - Module: `customer`
-- Notes: Records one unified customer deposit against `CUSTOMER_DEPOSIT`, creates a `customer_deposit_batch`, and writes a `customer_fund_flow` with related business type `CUSTOMER_DEPOSIT_BATCH`. Public customers are rejected with a service error because order-specific deposits belong to the future sales-order module.
+- Notes: Records one unified customer deposit against `CUSTOMER_DEPOSIT`, creates a `customer_deposit_batch`, and writes a `customer_fund_flow` with related business type `CUSTOMER_DEPOSIT_BATCH`. This endpoint is入金-only: omitted `flowType` or `DEPOSIT_IN` writes `DEPOSIT_IN`; `DEPOSIT_DEDUCT`, `DEPOSIT_REFUND`, `DEPOSIT_ADJUST`, and `DEPOSIT_REVERSE` are rejected with `定金录入接口只允许入金，扣减、退款、调整、冲正请走独立资金处理流程。` Public customers are rejected with a service error because order-specific deposits belong to the future sales-order module.
 
 ## /business/customer/{customerId}/fund/flows
 

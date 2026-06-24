@@ -16,14 +16,14 @@ Customer management is the first active business feature. The customer model rem
 - sample rebate remains separate as `SAMPLE_REBATE`;
 - customer-level fund changes continue through `customer_fund_flow`; direct balance edits remain out of scope.
 
-Current change `CR-20260623T235902Z-change` closes the PUBLIC public-customer口径:
+Current change `CR-20260624T010638Z-change` tightens customer runtime validation and evidence:
 
-- PUBLIC is fixed to the two system classification customers `PUB_DIRECT_SALE / 厂内自销客户 / DIRECT_SALE` and `PUB_SELF_MEDIA / 自媒体客户 / SELF_MEDIA`.
-- PUBLIC is not available from the normal add/edit customer dialog.
-- PUBLIC rows remain visible in the list/detail, but type/level display uses `系统分类` and `-` instead of showing the technical compatibility values `OTHER` / `NORMAL` as normal business labels.
-- PUBLIC rows cannot be normally edited, deleted, disabled, or owner-changed.
-- Backend APIs reject direct PUBLIC create/edit/delete/status/owner-change attempts and reject REAL customers using reserved public customer codes.
-- Service/SQL ownership documents define one active PUBLIC row per public channel; the final SQL adds `uk_customer_public_channel`.
+- `/business/customer/{customerId}/fund/deposit` is入金-only: omitted `flowType` or `DEPOSIT_IN` writes `DEPOSIT_IN`; `DEPOSIT_DEDUCT`、`DEPOSIT_REFUND`、`DEPOSIT_ADJUST`、`DEPOSIT_REVERSE` are rejected with a clear service message.
+- REAL customer master phone, contact phone, and receiver phone values are trimmed before validation/save.
+- Duplicate-warning trims input and ignores obviously invalid mobile phone input for phone duplicate lookup.
+- Owner-log queries order by `change_time desc, log_id desc` so same-second owner changes show the latest log first.
+- PUBLIC fixed-classification rules remain: normal PUBLIC create/edit/status/delete/owner-change remains blocked, SQL ownership includes runtime validation plus development cleanup SQL, and the local development database `my_ry_vue_runtime` has been cleaned back to only the two built-in PUBLIC seed rows.
+- `tests/customer-risk-gate.test.js` now guards the key customer risks through `npm test`, which is already included in `npm run check`: deposit-in-only `/fund/deposit`, customer API contract/export parity, edit-sync user-requirement docs, and fixed PUBLIC seed invariants.
 
 The previous real-customer validation and ownership rules remain in force:
 
@@ -44,17 +44,17 @@ Sales order, shipment, finance settlement, automatic deduction, receipt claiming
 
 ## Active Task
 
-`TASK-CUSTOMER` is the active customer task in `memory/TASKS.json`. The current iteration is `CR-20260623T235902Z-change`: PUBLIC public customers are fixed system classification rows and cannot be maintained through normal customer CRUD.
+`TASK-CUSTOMER` is the active customer task in `memory/TASKS.json`. The current iteration is `CR-20260624T010638Z-change`: customer deposit entry is入金-only, REAL phone trim/validation is tightened, PUBLIC fixed-classification evidence is documented, owner-log ordering is stabilized, and a customer risk regression gate has been added.
 
 ## Latest Session
 
-`memory/sessions/2026-06-24-customer-public-fixed-classification.md`
+`memory/sessions/2026-06-24-customer-fund-public-validation-tightening.md`
 
 ## Next Actions
 
-- If runtime data cleanliness matters, rebuild or clean the customer-owned development tables from `sql/customer.ownership.md` so only `PUB_DIRECT_SALE` and `PUB_SELF_MEDIA` exist as PUBLIC rows and `uk_customer_public_channel` can be applied.
-- Commit and push the current customer change when requested; the current gate is green.
-- Review `git status --short` before any commit because earlier uncommitted customer CR directories remain in the working tree.
+- Commit and push `CR-20260624T010638Z-change` only if explicitly requested.
+- Before any future runtime claim about PUBLIC data cleanliness, rerun the invariant SQL in `sql/customer.ownership.md` to confirm only `PUB_DIRECT_SALE` and `PUB_SELF_MEDIA` exist as active PUBLIC rows.
+- Do not commit or push unless explicitly requested after gates pass.
 
 ## Deferred Scope
 
@@ -80,15 +80,20 @@ Sales order, shipment, finance settlement, automatic deduction, receipt claiming
 
 ## Last Verification
 
-For `CR-20260623T235902Z-change`, `npm run resume`, `npm run impact -- 客户管理`, cached Maven backend compile, frontend `build:prod`, `npm run scan:all`, `npm run finalize:change -- --summary "客户管理公共客户固定分类口径收口"`, cached Maven backend package, runtime API validation, captcha restore check, `npm run check:components`, `node --test tests/component-checker.test.js`, `node --test tests/boundary-lint.test.js`, `npm run check:boundaries`, `npm run check`, `npm test`, and `git diff --check` passed. Plain `mvn -pl ruoyi-admin -am -DskipTests compile` failed because Maven is not on `PATH`; the cached Maven command passed.
+For `CR-20260624T010638Z-change`, `npm run resume`, `npm run ai:do -- "功能迭代：客户管理"`, `npm run impact -- 客户管理`, cached Maven backend compile, frontend `build:prod`, cached Maven package after stopping the MY backend jar lock, runtime API/DB validation, captcha restore check, `npm run scan:all`, `npm run finalize:change -- --summary "客户管理资金入金与公共客户口径校验收口"`, `npm run check`, standalone `npm test`, and `git diff --check` passed. After adding the risk gate, `node --test tests/customer-risk-gate.test.js`, `npm run scan:all`, `npm run finalize:change -- --summary "客户管理风险防复发门禁"`, `npm run check` with 102 Node tests, standalone `npm test` with 102 Node tests, and final `git diff --check` also passed.
 
 Runtime API validation confirmed:
 
-- direct `POST /business/customer` with `customerNature=PUBLIC` is rejected;
-- direct edit/status/delete/owner-change operations on built-in `PUB_DIRECT_SALE` are rejected;
-- REAL creation with reserved public code `PUB_DIRECT_SALE` is rejected;
+- customer deposit entry accepts omitted `flowType` and `DEPOSIT_IN`, both producing `DEPOSIT_IN`;
+- customer deposit entry rejects `DEPOSIT_DEDUCT`、`DEPOSIT_REFUND`、`DEPOSIT_ADJUST`、`DEPOSIT_REVERSE` with `定金录入接口只允许入金，扣减、退款、调整、冲正请走独立资金处理流程。`;
+- invalid deposit-flow attempts did not change the deposit balance;
+- DB evidence for validation customer `22` showed only `CUSTOMER_DEPOSIT / DEPOSIT_IN / CUSTOMER_DEPOSIT_BATCH`;
+- REAL phone values are trimmed before save; invalid master and child phones are rejected;
+- duplicate-warning does not run phone duplicate lookup for obvious invalid mobile phone input;
+- owner assign-maintenance and return-factory both update current owner fields, and owner-log ordering now returns the latest same-second log first;
+- built-in public customer deposit entry is rejected;
 - captcha was restored and `/captchaImage` returned `captchaEnabled=true`.
 
-The local runtime database still contains older PUBLIC test rows from previous validation. The final DDL/seed target is clean, but local DB rebuild or cleanup is required before claiming the runtime database contains only the two built-in PUBLIC rows.
+The local runtime database was cleaned on 2026-06-24 after older PUBLIC validation rows were found (`public_count=8`). Six non-seed PUBLIC rows were backed up and deleted, both seed rows were normalized, and post-clean SQL confirmed PUBLIC total `2`, non-seed PUBLIC count `0`, duplicate `public_channel` count `0`, both seed invariants `MATCH`, and PUBLIC child dirty counts `0`.
 
-The previous component/boundary gate failures were fixed by adding current-change scoped exception files for exact pre-existing RuoYi platform `system/tool/generator` paths. No governance scanner, rule, profile, sales-order, delivery, finance, channel, showroom, account, performance, or commission code was changed for this business iteration.
+No governance scanner, rule, profile, sales-order, delivery, finance, channel, showroom, account, performance, or commission code was changed for this business iteration. `package.json` was not changed; the equivalent customer risk gate runs through the existing `npm test` script.

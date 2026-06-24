@@ -44,6 +44,8 @@ Endpoint IDs are recorded in `graph/api-graph.json` and `memory/API_CATALOG.md`.
 - Public customers keep technical compatibility values `customerType=OTHER` and `customerLevel=NORMAL`, but UI clients must not present them as normal real-customer type/level labels.
 - Customer create/update/detail/list payloads include `province_code`, `city_code`, `district_code` through the Java fields `provinceCode`, `cityCode`, and `districtCode`, along with Chinese `province`, `city`, and `district`.
 - Customer shipping address payloads include the same code/name pairs for `customer_address`.
+- REAL customer master `contactPhone`, optional `contacts[].phone`, and optional `addresses[].receiverPhone` are trimmed before validation/save. The master phone must be an 11-digit mainland China mobile number; optional child phones are validated only when filled. PUBLIC customer phone/contact/address fields are cleared and not validated.
+- `GET /business/customer/duplicate-warning` trims `customerName` and `contactPhone`; invalid non-empty mobile phone input is ignored for phone duplicate lookup instead of broadening the query.
 - Export remains user-facing and may omit code fields; exported area columns must show Chinese names unless code columns are explicitly labeled as `省编码`/`市编码`/`区县编码`.
 
 ## Default Child Sync Payload Fields
@@ -51,6 +53,7 @@ Endpoint IDs are recorded in `graph/api-graph.json` and `memory/API_CATALOG.md`.
 - `POST /business/customer` accepts optional `contacts` and `addresses`. If no meaningful child contact/address is submitted, the service may create default children from master customer fields in the same transaction.
 - `PUT /business/customer` accepts `syncDefaultContact` and `syncDefaultAddress` boolean fields. They are request-only fields on `Customer` and are not database columns.
 - For seeded `customerNature=PUBLIC` records, contact/address child rows and sync flags are ignored; the service must not create default contacts or default shipping addresses.
+- The REAL edit dialog sends both sync flags as `true` by default, while still allowing users to cancel either flag before save.
 - `syncDefaultContact=true` updates or creates only the default `customer_contact` record from master `contactName`, `contactPhone`, and `wechat`.
 - `syncDefaultAddress=true` updates or creates only the default `customer_address` record from master contact, phone, province/city/district code/name fields, and detail address. Existing default-address `logisticsLine` is preserved.
 - If these flags are false or omitted, master customer edits must not blindly overwrite child contact/address records.
@@ -60,6 +63,7 @@ Endpoint IDs are recorded in `graph/api-graph.json` and `memory/API_CATALOG.md`.
 - Other modules may call only documented API endpoints, not internal service or mapper code.
 - Sales order and shipment modules may later read customer defaults and policy data through documented APIs or explicit service contracts recorded in a future change.
 - Fund deposit endpoint path remains `POST /business/customer/{customerId}/fund/deposit`. New customer-level deposit entries use only `CUSTOMER_DEPOSIT`; the request may omit `accountType`, and the backend defaults it to `CUSTOMER_DEPOSIT`.
+- `POST /business/customer/{customerId}/fund/deposit` is deposit-in only: omitted `flowType` or `DEPOSIT_IN` records an incoming deposit; `DEPOSIT_DEDUCT`, `DEPOSIT_REFUND`, `DEPOSIT_ADJUST`, and `DEPOSIT_REVERSE` are rejected with `定金录入接口只允许入金，扣减、退款、调整、冲正请走独立资金处理流程。`
 - Public customers must be rejected by customer-level deposit, sample-policy save, and sample-rebate generation operations.
 - Fund account balances must not be modified by ad hoc APIs. Mutating fund endpoints must call the fund-entry service path that also writes `customer_fund_flow`.
 - Salesman ownership uses existing RuoYi user, role, and dept structures. This feature must not create a separate salesman-management API.

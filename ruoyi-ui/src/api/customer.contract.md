@@ -14,23 +14,23 @@ Runtime API client: `ruoyi-ui/src/api/customer.js`.
 
 - `listCustomer`
 - `getCustomer`
-- `checkCustomerDuplicate`
+- `duplicateWarning`
 - `addCustomer`
 - `updateCustomer`
-- `changeCustomerStatus`
 - `delCustomer`
-- `exportCustomer`
+- `changeCustomerStatus`
 - `listSalesmen`
 - `transferOwner`
-- `listOwnerLogs`
 - `listFundAccounts`
-- `recordFundDeposit`
 - `listFundFlows`
+- `addFundDeposit`
 - `listDepositBatches`
 - `getSamplePolicy`
 - `saveSamplePolicy`
 - `createSampleRebate`
 - `listSampleRebates`
+
+The customer export endpoint is invoked by the page through RuoYi `proxy.download("business/customer/export", ...)`; there is no runtime `exportCustomer` method in this API client. Owner-change logs are returned in the customer detail aggregation from `getCustomer()` and can also be read from the backend endpoint, but there is no separate runtime `listOwnerLogs` client method in `customer.js`.
 
 ## Fund Boundary
 
@@ -38,6 +38,7 @@ The API client exposes customer-level deposit and sample rebate entry points onl
 
 - `addFundDeposit(customerId, data)` keeps the path `/business/customer/{customerId}/fund/deposit`.
 - New deposit entries use `CUSTOMER_DEPOSIT`. The frontend may omit `accountType`; the backend defaults deposit entries to `CUSTOMER_DEPOSIT`.
+- This client method is deposit-in only. If `flowType` is omitted or `DEPOSIT_IN`, the backend records an incoming deposit. `DEPOSIT_DEDUCT`, `DEPOSIT_REFUND`, `DEPOSIT_ADJUST`, and `DEPOSIT_REVERSE` are rejected by this endpoint and must wait for a separate fund-processing flow.
 - Public customers must not show customer-level deposit entry UI and are rejected by the backend if called directly.
 
 ## Address Fields
@@ -62,6 +63,8 @@ Customer create/update requests may include child rows in `contacts` and `addres
 - On `POST /business/customer`, if no meaningful child contact/address is submitted, the backend creates default child records from master customer fields in the same transaction.
 - For `customerNature=PUBLIC`, the backend does not create default contact or shipping-address rows.
 - On `PUT /business/customer`, the UI sends `syncDefaultContact` and `syncDefaultAddress` only as request intent fields. They are not database columns.
+- The edit dialog checks both sync fields by default for REAL customers; the user can cancel either checkbox before saving.
+- User requirement: editing a REAL customer must start with both default-contact and default-address sync options checked by default.
 - `syncDefaultContact=true` syncs master contact, phone, and WeChat to the default contact, or creates it when missing.
 - `syncDefaultAddress=true` syncs master contact, phone, province/city/district code/name fields, and detail address to the default shipping address, or creates it when missing.
 - When the flags are false or omitted, editing master fields must not overwrite child contact/address records.

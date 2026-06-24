@@ -41,7 +41,7 @@ The route is the RuoYi menu route produced by parent path `business` plus child 
   - Required for REAL customers only: main contact, contact phone, complete province/city/district selection down to district/county, and detail address.
   - REAL customers default owner type to `FACTORY`. Owner salesman and owner source are required only when owner type is `SALESMAN`.
   - REAL `SALESMAN` owner source is one of two fixed pairs: `FACTORY_ASSIGNED` maps to `MAINTENANCE_FEE`, and `SALESMAN_SELF` maps to `SALES_COMMISSION`.
-  - REAL customer contact phone must match an 11-digit mainland China mobile number. Optional contact-tab phone and shipping-address receiver phone fields are validated only when filled.
+  - REAL customer contact phone is trimmed and must match an 11-digit mainland China mobile number. Optional contact-tab phone and shipping-address receiver phone fields are also trimmed and validated only when filled.
   - Optional: customer short name, WeChat, remark, generated customer code, status default, and owner department derived from owner salesman when a salesman owner is selected.
 - If any legacy UI state attempts to submit `PUBLIC`, the frontend must block it with `公共客户由系统初始化，不允许手工新增或编辑。`
 - Public customer rows must hide/disable normal edit, delete, owner-change, and status-toggle operations.
@@ -52,9 +52,11 @@ The route is the RuoYi menu route produced by parent path `business` plus child 
 - The edit dialog base tab exposes two explicit sync options:
   - `同步到默认联系人`: syncs master contact, phone, and WeChat to the default contact. It is checked by default when editing real customers and can be manually cancelled before save.
   - `同步到默认收货地址`: syncs master contact, phone, province/city/district code/name fields, and detail address to the default shipping address. It is checked by default when editing real customers and can be manually cancelled before save.
+- User requirement: when editing a REAL customer, both default-contact and default-address sync options must start checked by default, and users may still cancel either one before saving.
 - If users do not check the sync options during edit, changing master contact/address fields must not overwrite existing default child records.
 - Funds and policy display only `定金` and `样品返现`. The UI must not show old long-term or rolling deposit labels.
 - Deposit entry dialog captures `收款金额`, optional `收款凭证号`, and `备注`; it must not show account-type selection or source-order fields.
+- Deposit entry dialog must submit deposit-in intent only. It must not expose deduction, refund, adjustment, or reversal actions from the customer deposit-entry button.
 - The accepted page route is `/business/customer`; `/customer` remains outside the runtime contract.
 
 ## Shared Component Rule

@@ -42,7 +42,7 @@ Feature ID: `customer`
 - 定金只有一种：`CUSTOMER_DEPOSIT`。样品返现账户 `SAMPLE_REBATE` 独立保留。
 - `customer_fund_account.account_type` 只允许 `CUSTOMER_DEPOSIT`、`SAMPLE_REBATE`。
 - `customer_deposit_batch.deposit_type` 只允许 `CUSTOMER_DEPOSIT`。
-- 定金相关 `customer_fund_flow.flow_type` 只允许 `DEPOSIT_IN`、`DEPOSIT_DEDUCT`、`DEPOSIT_REFUND`、`DEPOSIT_ADJUST`、`DEPOSIT_REVERSE`。
+- 定金相关 `customer_fund_flow.flow_type` 只允许 `DEPOSIT_IN`、`DEPOSIT_DEDUCT`、`DEPOSIT_REFUND`、`DEPOSIT_ADJUST`、`DEPOSIT_REVERSE`；当前客户管理“录入定金”接口只实现入金，必须只写 `DEPOSIT_IN`。
 - 所有资金变化必须写入 `customer_fund_flow`；不允许新增 `customer.deposit_balance` 单字段，也不允许手工直接改余额。
 - 本项目仍处于开发阶段，本文件只保留最终初始化结构，不包含旧数据迁移、旧资金账户兼容或旧前端文案兼容。
 
@@ -342,6 +342,229 @@ where not exists (select 1 from customer where customer_code = 'PUB_DIRECT_SALE'
 insert into customer(customer_code, customer_name, short_name, customer_nature, public_channel, customer_type, customer_level, owner_type, owner_source, owner_profit_mode, status, del_flag, create_by, create_time, remark)
 select 'PUB_SELF_MEDIA', '自媒体客户', '自媒体客户', 'PUBLIC', 'SELF_MEDIA', 'OTHER', 'NORMAL', 'NONE', 'NONE', 'NONE', '0', '0', 'admin', sysdate(), '系统内置公共客户：自媒体订单归类'
 where not exists (select 1 from customer where customer_code = 'PUB_SELF_MEDIA');
+```
+
+## Runtime Validation SQL
+
+Use these checks after rebuilding or cleaning the development database. Do not claim the runtime database has only the two built-in PUBLIC rows unless these queries return the expected result.
+
+```sql
+-- Expected: public_count = 2
+select count(*) as public_count
+from customer
+where del_flag = '0' and customer_nature = 'PUBLIC';
+
+-- Expected: 0 rows
+select customer_code, customer_name, public_channel
+from customer
+where del_flag = '0'
+  and customer_nature = 'PUBLIC'
+  and customer_code not in ('PUB_DIRECT_SALE', 'PUB_SELF_MEDIA');
+
+-- Expected: 0 rows
+select customer_code, customer_name, public_channel
+from customer
+where del_flag = '0'
+  and (
+    (public_channel = 'DIRECT_SALE' and (customer_code <> 'PUB_DIRECT_SALE' or customer_name <> '厂内自销客户'))
+    or (public_channel = 'SELF_MEDIA' and (customer_code <> 'PUB_SELF_MEDIA' or customer_name <> '自媒体客户'))
+  );
+
+-- Expected: 0 rows
+select public_channel, count(*) as active_count
+from customer
+where del_flag = '0' and customer_nature = 'PUBLIC'
+group by public_channel
+having count(*) > 1;
+
+-- Expected: 0 rows for newly recorded customer deposit entries.
+select flow_id, flow_type, related_biz_type, related_biz_no
+from customer_fund_flow
+where account_type = 'CUSTOMER_DEPOSIT'
+  and related_biz_type = 'CUSTOMER_DEPOSIT_BATCH'
+  and flow_type <> 'DEPOSIT_IN';
+```
+
+If an older development database still contains historical PUBLIC validation rows, rebuild the customer-owned tables from the final DDL above. If a rebuild is not possible, first back up the development database, then delete only non-seed active PUBLIC rows and re-run the seed statements plus validation SQL. The short snippet below only shows the seed normalization core; use the complete development cleanup flow after it when child-table backup and cleanup evidence is required.
+
+```sql
+delete from customer
+where customer_nature = 'PUBLIC'
+  and customer_code not in ('PUB_DIRECT_SALE', 'PUB_SELF_MEDIA');
+
+update customer
+set customer_name = '厂内自销客户',
+    short_name = '厂内自销客户',
+    public_channel = 'DIRECT_SALE',
+    customer_type = 'OTHER',
+    customer_level = 'NORMAL',
+    owner_type = 'NONE',
+    owner_source = 'NONE',
+    owner_profit_mode = 'NONE',
+    owner_user_id = null,
+    owner_user_name = null,
+    owner_dept_id = null,
+    owner_dept_name = null,
+    owner_effective_time = null,
+    contact_name = null,
+    contact_phone = null,
+    province = null,
+    city = null,
+    district = null,
+    address = null
+where customer_code = 'PUB_DIRECT_SALE';
+
+update customer
+set customer_name = '自媒体客户',
+    short_name = '自媒体客户',
+    public_channel = 'SELF_MEDIA',
+    customer_type = 'OTHER',
+    customer_level = 'NORMAL',
+    owner_type = 'NONE',
+    owner_source = 'NONE',
+    owner_profit_mode = 'NONE',
+    owner_user_id = null,
+    owner_user_name = null,
+    owner_dept_id = null,
+    owner_dept_name = null,
+    owner_effective_time = null,
+    contact_name = null,
+    contact_phone = null,
+    province = null,
+    city = null,
+    district = null,
+    address = null
+where customer_code = 'PUB_SELF_MEDIA';
+```
+
+Complete development cleanup flow for historical PUBLIC validation data:
+
+```sql
+-- Replace YYYYMMDD_HHMMSS with the actual timestamp suffix.
+-- Keep these backup tables until the runtime validation is accepted.
+create table customer_public_backup_YYYYMMDD_HHMMSS as
+select *
+from customer
+where customer_nature = 'PUBLIC';
+
+create table customer_contact_public_backup_YYYYMMDD_HHMMSS as
+select cc.*
+from customer_contact cc
+join customer_public_backup_YYYYMMDD_HHMMSS pc on pc.customer_id = cc.customer_id;
+
+create table customer_address_public_backup_YYYYMMDD_HHMMSS as
+select ca.*
+from customer_address ca
+join customer_public_backup_YYYYMMDD_HHMMSS pc on pc.customer_id = ca.customer_id;
+
+create table customer_fund_account_public_backup_YYYYMMDD_HHMMSS as
+select cfa.*
+from customer_fund_account cfa
+join customer_public_backup_YYYYMMDD_HHMMSS pc on pc.customer_id = cfa.customer_id;
+
+create table customer_fund_flow_public_backup_YYYYMMDD_HHMMSS as
+select cff.*
+from customer_fund_flow cff
+join customer_public_backup_YYYYMMDD_HHMMSS pc on pc.customer_id = cff.customer_id;
+
+create table customer_deposit_batch_public_backup_YYYYMMDD_HHMMSS as
+select cdb.*
+from customer_deposit_batch cdb
+join customer_public_backup_YYYYMMDD_HHMMSS pc on pc.customer_id = cdb.customer_id;
+
+create table customer_sample_policy_public_backup_YYYYMMDD_HHMMSS as
+select csp.*
+from customer_sample_policy csp
+join customer_public_backup_YYYYMMDD_HHMMSS pc on pc.customer_id = csp.customer_id;
+
+create table sample_rebate_record_public_backup_YYYYMMDD_HHMMSS as
+select srr.*
+from sample_rebate_record srr
+join customer_public_backup_YYYYMMDD_HHMMSS pc on pc.customer_id = srr.customer_id;
+
+create table customer_salesman_bind_log_public_backup_YYYYMMDD_HHMMSS as
+select log.*
+from customer_salesman_bind_log log
+join customer_public_backup_YYYYMMDD_HHMMSS pc on pc.customer_id = log.customer_id;
+
+create temporary table tmp_public_customer_ids as
+select customer_id
+from customer
+where customer_nature = 'PUBLIC';
+
+create temporary table tmp_non_seed_public_customer_ids as
+select customer_id
+from customer
+where customer_nature = 'PUBLIC'
+  and customer_code not in ('PUB_DIRECT_SALE', 'PUB_SELF_MEDIA');
+
+delete log from customer_salesman_bind_log log join tmp_public_customer_ids pc on pc.customer_id = log.customer_id;
+delete srr from sample_rebate_record srr join tmp_public_customer_ids pc on pc.customer_id = srr.customer_id;
+delete csp from customer_sample_policy csp join tmp_public_customer_ids pc on pc.customer_id = csp.customer_id;
+delete cdb from customer_deposit_batch cdb join tmp_public_customer_ids pc on pc.customer_id = cdb.customer_id;
+delete cff from customer_fund_flow cff join tmp_public_customer_ids pc on pc.customer_id = cff.customer_id;
+delete cfa from customer_fund_account cfa join tmp_public_customer_ids pc on pc.customer_id = cfa.customer_id;
+delete ca from customer_address ca join tmp_public_customer_ids pc on pc.customer_id = ca.customer_id;
+delete cc from customer_contact cc join tmp_public_customer_ids pc on pc.customer_id = cc.customer_id;
+delete c from customer c join tmp_non_seed_public_customer_ids pc on pc.customer_id = c.customer_id;
+
+insert into customer(customer_code, customer_name, short_name, customer_nature, public_channel, customer_type, customer_level, owner_type, owner_source, owner_profit_mode, status, del_flag, create_by, create_time, remark)
+select 'PUB_DIRECT_SALE', convert(unhex('E58E82E58685E887AAE99480E5AEA2E688B7') using utf8mb4), convert(unhex('E58E82E58685E887AAE99480E5AEA2E688B7') using utf8mb4), 'PUBLIC', 'DIRECT_SALE', 'OTHER', 'NORMAL', 'NONE', 'NONE', 'NONE', '0', '0', 'admin', sysdate(), 'system public customer: direct sale order classification'
+where not exists (select 1 from customer where customer_code = 'PUB_DIRECT_SALE');
+
+insert into customer(customer_code, customer_name, short_name, customer_nature, public_channel, customer_type, customer_level, owner_type, owner_source, owner_profit_mode, status, del_flag, create_by, create_time, remark)
+select 'PUB_SELF_MEDIA', convert(unhex('E887AAE5AA92E4BD93E5AEA2E688B7') using utf8mb4), convert(unhex('E887AAE5AA92E4BD93E5AEA2E688B7') using utf8mb4), 'PUBLIC', 'SELF_MEDIA', 'OTHER', 'NORMAL', 'NONE', 'NONE', 'NONE', '0', '0', 'admin', sysdate(), 'system public customer: self-media order classification'
+where not exists (select 1 from customer where customer_code = 'PUB_SELF_MEDIA');
+
+update customer
+set customer_name = convert(unhex('E58E82E58685E887AAE99480E5AEA2E688B7') using utf8mb4),
+    short_name = convert(unhex('E58E82E58685E887AAE99480E5AEA2E688B7') using utf8mb4),
+    public_channel = 'DIRECT_SALE',
+    customer_type = 'OTHER',
+    customer_level = 'NORMAL',
+    owner_type = 'NONE',
+    owner_source = 'NONE',
+    owner_profit_mode = 'NONE',
+    owner_user_id = null,
+    owner_user_name = null,
+    owner_dept_id = null,
+    owner_dept_name = null,
+    owner_effective_time = null,
+    contact_name = null,
+    contact_phone = null,
+    wechat = null,
+    province = null,
+    city = null,
+    district = null,
+    address = null,
+    status = '0',
+    del_flag = '0'
+where customer_code = 'PUB_DIRECT_SALE';
+
+update customer
+set customer_name = convert(unhex('E887AAE5AA92E4BD93E5AEA2E688B7') using utf8mb4),
+    short_name = convert(unhex('E887AAE5AA92E4BD93E5AEA2E688B7') using utf8mb4),
+    public_channel = 'SELF_MEDIA',
+    customer_type = 'OTHER',
+    customer_level = 'NORMAL',
+    owner_type = 'NONE',
+    owner_source = 'NONE',
+    owner_profit_mode = 'NONE',
+    owner_user_id = null,
+    owner_user_name = null,
+    owner_dept_id = null,
+    owner_dept_name = null,
+    owner_effective_time = null,
+    contact_name = null,
+    contact_phone = null,
+    wechat = null,
+    province = null,
+    city = null,
+    district = null,
+    address = null,
+    status = '0',
+    del_flag = '0'
+where customer_code = 'PUB_SELF_MEDIA';
 ```
 
 ## Removal Ownership

@@ -77,6 +77,7 @@ public class CustomerServiceImpl implements ICustomerService
     private static final String DEPOSIT_REFUND = "DEPOSIT_REFUND";
     private static final String DEPOSIT_ADJUST = "DEPOSIT_ADJUST";
     private static final String DEPOSIT_REVERSE = "DEPOSIT_REVERSE";
+    private static final String DEPOSIT_IN_ONLY_MESSAGE = "定金录入接口只允许入金，扣减、退款、调整、冲正请走独立资金处理流程。";
     private static final BigDecimal ZERO = BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP);
     private static final String CUSTOMER_CODE_PREFIX = "KH";
     private static final int CUSTOMER_CODE_MIN_SEQUENCE_WIDTH = 6;
@@ -238,8 +239,14 @@ public class CustomerServiceImpl implements ICustomerService
     @Override
     public Map<String, Object> checkDuplicate(Long customerId, String customerName, String contactPhone)
     {
-        int nameCount = StringUtils.isEmpty(customerName) ? 0 : customerMapper.countCustomerByName(customerId, customerName);
-        int phoneCount = StringUtils.isEmpty(contactPhone) ? 0 : customerMapper.countCustomerByPhone(customerId, contactPhone);
+        String normalizedCustomerName = trimToNull(customerName);
+        String normalizedContactPhone = trimToNull(contactPhone);
+        if (StringUtils.isNotEmpty(normalizedContactPhone) && !MOBILE_PHONE_PATTERN.matcher(normalizedContactPhone).matches())
+        {
+            normalizedContactPhone = null;
+        }
+        int nameCount = StringUtils.isEmpty(normalizedCustomerName) ? 0 : customerMapper.countCustomerByName(customerId, normalizedCustomerName);
+        int phoneCount = StringUtils.isEmpty(normalizedContactPhone) ? 0 : customerMapper.countCustomerByPhone(customerId, normalizedContactPhone);
         Map<String, Object> result = new HashMap<>();
         result.put("nameDuplicate", nameCount > 0);
         result.put("phoneDuplicate", phoneCount > 0);
@@ -927,6 +934,7 @@ public class CustomerServiceImpl implements ICustomerService
             normalizePublicCustomerForSave(customer);
             return;
         }
+        normalizeRealContactFields(customer);
         validateCustomerRequiredForSave(customer);
         customer.setPublicChannel(null);
         normalizeOwnerForReal(customer);
@@ -1106,6 +1114,34 @@ public class CustomerServiceImpl implements ICustomerService
         {
             throw new ServiceException("公共客户渠道已存在，不允许重复创建内置公共客户。");
         }
+        assertBuiltinPublicCustomerIdentity(customer);
+    }
+
+    private void assertBuiltinPublicCustomerIdentity(Customer customer)
+    {
+        if (customer == null)
+        {
+            return;
+        }
+        if (DIRECT_SALE.equals(customer.getPublicChannel()))
+        {
+            assertBuiltinPublicValue(customer.getCustomerCode(), PUBLIC_DIRECT_SALE_CODE, "厂内自销公共客户编码必须为PUB_DIRECT_SALE");
+            assertBuiltinPublicValue(customer.getCustomerName(), "厂内自销客户", "厂内自销公共客户名称必须为厂内自销客户");
+            return;
+        }
+        if (SELF_MEDIA.equals(customer.getPublicChannel()))
+        {
+            assertBuiltinPublicValue(customer.getCustomerCode(), PUBLIC_SELF_MEDIA_CODE, "自媒体公共客户编码必须为PUB_SELF_MEDIA");
+            assertBuiltinPublicValue(customer.getCustomerName(), "自媒体客户", "自媒体公共客户名称必须为自媒体客户");
+        }
+    }
+
+    private void assertBuiltinPublicValue(String actual, String expected, String message)
+    {
+        if (!expected.equals(trimToNull(actual)))
+        {
+            throw new ServiceException(message);
+        }
     }
 
     private boolean isPublicCustomer(Customer customer)
@@ -1170,6 +1206,35 @@ public class CustomerServiceImpl implements ICustomerService
         return StringUtils.isEmpty(value) ? fallback : value;
     }
 
+    private void normalizeRealContactFields(Customer customer)
+    {
+        customer.setContactPhone(trimToNull(customer.getContactPhone()));
+        if (customer.getContacts() != null)
+        {
+            for (CustomerContact contact : customer.getContacts())
+            {
+                contact.setPhone(trimToNull(contact.getPhone()));
+            }
+        }
+        if (customer.getAddresses() != null)
+        {
+            for (CustomerAddress address : customer.getAddresses())
+            {
+                address.setReceiverPhone(trimToNull(address.getReceiverPhone()));
+            }
+        }
+    }
+
+    private String trimToNull(String value)
+    {
+        if (value == null)
+        {
+            return null;
+        }
+        String trimmed = value.trim();
+        return trimmed.isEmpty() ? null : trimmed;
+    }
+
     private boolean hasSalesRole(SysUser user)
     {
         List<SysRole> roles = sysRoleService.selectRolesByUserId(user.getUserId());
@@ -1208,9 +1273,16 @@ public class CustomerServiceImpl implements ICustomerService
     {
         if (StringUtils.isNotEmpty(flowType))
         {
-            if (CUSTOMER_DEPOSIT.equals(accountType) && isDepositFlowType(flowType))
+            if (CUSTOMER_DEPOSIT.equals(accountType))
             {
-                return flowType;
+                if (DEPOSIT_IN.equals(flowType))
+                {
+                    return DEPOSIT_IN;
+                }
+                if (isDepositChangeFlowType(flowType))
+                {
+                    throw new ServiceException(DEPOSIT_IN_ONLY_MESSAGE);
+                }
             }
             if (SAMPLE_REBATE.equals(accountType) && SAMPLE_REBATE_GENERATE.equals(flowType))
             {
@@ -1238,9 +1310,9 @@ public class CustomerServiceImpl implements ICustomerService
         return CUSTOMER_DEPOSIT;
     }
 
-    private boolean isDepositFlowType(String flowType)
+    private boolean isDepositChangeFlowType(String flowType)
     {
-        return DEPOSIT_IN.equals(flowType) || DEPOSIT_DEDUCT.equals(flowType) || DEPOSIT_REFUND.equals(flowType)
+        return DEPOSIT_DEDUCT.equals(flowType) || DEPOSIT_REFUND.equals(flowType)
             || DEPOSIT_ADJUST.equals(flowType) || DEPOSIT_REVERSE.equals(flowType);
     }
 
