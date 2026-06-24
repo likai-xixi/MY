@@ -13,6 +13,19 @@ public class CustomerSalesmanBindLog extends BaseEntity
 
     private Long logId;
     private Long customerId;
+    private String oldOwnerType;
+    private String newOwnerType;
+    private String oldOwnerSource;
+    private String newOwnerSource;
+    private String oldOwnerProfitMode;
+    private String newOwnerProfitMode;
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date oldOwnerEffectiveTime;
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date newOwnerEffectiveTime;
+
     private Long oldOwnerUserId;
     private String oldOwnerUserName;
     private Long newOwnerUserId;
@@ -31,6 +44,22 @@ public class CustomerSalesmanBindLog extends BaseEntity
     public void setLogId(Long logId) { this.logId = logId; }
     public Long getCustomerId() { return customerId; }
     public void setCustomerId(Long customerId) { this.customerId = customerId; }
+    public String getOldOwnerType() { return oldOwnerType; }
+    public void setOldOwnerType(String oldOwnerType) { this.oldOwnerType = oldOwnerType; }
+    public String getNewOwnerType() { return newOwnerType; }
+    public void setNewOwnerType(String newOwnerType) { this.newOwnerType = newOwnerType; }
+    public String getOldOwnerSource() { return oldOwnerSource; }
+    public void setOldOwnerSource(String oldOwnerSource) { this.oldOwnerSource = oldOwnerSource; }
+    public String getNewOwnerSource() { return newOwnerSource; }
+    public void setNewOwnerSource(String newOwnerSource) { this.newOwnerSource = newOwnerSource; }
+    public String getOldOwnerProfitMode() { return oldOwnerProfitMode; }
+    public void setOldOwnerProfitMode(String oldOwnerProfitMode) { this.oldOwnerProfitMode = oldOwnerProfitMode; }
+    public String getNewOwnerProfitMode() { return newOwnerProfitMode; }
+    public void setNewOwnerProfitMode(String newOwnerProfitMode) { this.newOwnerProfitMode = newOwnerProfitMode; }
+    public Date getOldOwnerEffectiveTime() { return oldOwnerEffectiveTime; }
+    public void setOldOwnerEffectiveTime(Date oldOwnerEffectiveTime) { this.oldOwnerEffectiveTime = oldOwnerEffectiveTime; }
+    public Date getNewOwnerEffectiveTime() { return newOwnerEffectiveTime; }
+    public void setNewOwnerEffectiveTime(Date newOwnerEffectiveTime) { this.newOwnerEffectiveTime = newOwnerEffectiveTime; }
     public Long getOldOwnerUserId() { return oldOwnerUserId; }
     public void setOldOwnerUserId(Long oldOwnerUserId) { this.oldOwnerUserId = oldOwnerUserId; }
     public String getOldOwnerUserName() { return oldOwnerUserName; }

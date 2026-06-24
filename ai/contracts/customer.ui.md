@@ -10,18 +10,20 @@ Feature ID: `customer`
 - File: `ruoyi-ui/src/views/customer/index.vue`
 - Region data: `ruoyi-ui/src/utils/region-data.js`
 
-The screen includes list search/table actions, add/edit dialog, detail drawer, owner transfer dialog, fund entry dialog, and sample rebate dialog.
+The screen includes list search/table actions, add/edit dialog, detail drawer, owner-change dialog, fund entry dialog, and sample rebate dialog.
 The route is the RuoYi menu route produced by parent path `business` plus child path `customer`.
 
 ## Display Rules
 
-- Customer list search includes customer nature (`REAL`/`PUBLIC`) and public channel (`DIRECT_SALE`/`SELF_MEDIA`) filters.
+- Customer list search includes customer nature (`REAL`/`PUBLIC`), public channel (`DIRECT_SALE`/`SELF_MEDIA`), and owner type (`FACTORY`/`SALESMAN`/`NONE`) filters.
 - Public customers are marked with a visible tag in the list.
+- Customer list shows owner type, owner display, owner department, and owner profit mode. Factory-owned real customers display owner as `厂内`; public customers display `无固定归属`.
 - Customer code column uses a fixed width, no wrapping, overflow ellipsis, and Element Plus overflow tooltip.
 - Customer name stays clickable and opens the existing detail drawer.
 - Customer list displays province/city/district Chinese names in a tooltip-enabled column.
-- Customer level display must use labels in every visible customer context: `A`, `B`, `C`, `NORMAL -> 普通`.
-- Customer type display must use labels in every visible customer context: `DEALER -> 经销商`, `PROJECT -> 工程客户`, `RETAIL -> 散户`, `STORE -> 门店`, `OTHER -> 其他`.
+- Real-customer level display must use labels in visible real-customer contexts: `A`, `B`, `C`, `NORMAL -> 普通`.
+- Real-customer type display must use labels in visible real-customer contexts: `DEALER -> 经销商`, `PROJECT -> 工程客户`, `RETAIL -> 散户`, `STORE -> 门店`, `OTHER -> 其他`.
+- Public customer list/detail display must show customer type as `系统分类` and customer level as `-`, not the technical compatibility values `OTHER` / `NORMAL`.
 - Add/edit customer dialogs use a searchable province/city/district cascader. Users cannot type arbitrary province/city/district text in the dialog.
 - Cascader options are imported from `@/utils/region-data`, generated from `china-area-data@5.0.1 (MIT)` instead of hand-written mock options.
 - The option tree covers province-level regions, direct municipalities, autonomous regions, prefecture-level cities/states/leagues, and district/county/county-level-city nodes.
@@ -32,8 +34,20 @@ The route is the RuoYi menu route produced by parent path `business` plus child 
 - Save payloads persist both `province_code`, `city_code`, `district_code` and Chinese `province`, `city`, `district` for customer master data and shipping addresses.
 - Customer detail, list, and export continue showing Chinese province/city/district names, not raw codes.
 - Customer short name remains optional; when it is blank, backend save fills it from customer name.
-- Add/edit customer dialogs expose customer nature. Public customer dialogs show public channel and the notice: `公共客户仅用于订单归类，实际购买人、联系电话、收货地址、接待业务员请在销售订单中填写。`
-- Public customer editing hides contact, shipping-address, fixed-owner, and sync controls. Public customer detail hides customer-level deposit/sample policy actions and shows the public-customer fund notice.
+- Add customer dialogs default to `REAL` and do not offer `PUBLIC` as a normal customer nature option. PUBLIC customers are maintained only through SQL seed/initialization data.
+- Edit customer dialogs only open for REAL customers. PUBLIC rows must hide/disable the normal edit action or show `公共客户为系统内置分类客户，不允许在普通客户编辑中修改。`
+- Add/edit customer dialogs validate required fields before submit through the Element Plus form:
+  - Always required for normal REAL save: customer name, customer nature, customer type, and customer level.
+  - Required for REAL customers only: main contact, contact phone, complete province/city/district selection down to district/county, and detail address.
+  - REAL customers default owner type to `FACTORY`. Owner salesman and owner source are required only when owner type is `SALESMAN`.
+  - REAL `SALESMAN` owner source is one of two fixed pairs: `FACTORY_ASSIGNED` maps to `MAINTENANCE_FEE`, and `SALESMAN_SELF` maps to `SALES_COMMISSION`.
+  - REAL customer contact phone must match an 11-digit mainland China mobile number. Optional contact-tab phone and shipping-address receiver phone fields are validated only when filled.
+  - Optional: customer short name, WeChat, remark, generated customer code, status default, and owner department derived from owner salesman when a salesman owner is selected.
+- If any legacy UI state attempts to submit `PUBLIC`, the frontend must block it with `公共客户由系统初始化，不允许手工新增或编辑。`
+- Public customer rows must hide/disable normal edit, delete, owner-change, and status-toggle operations.
+- Public customer detail hides contact, shipping-address, customer-level deposit, sample-policy, and sample-rebate actions, and shows the public-customer fund notice.
+- The owner-change dialog replaces the old salesman-transfer wording. It supports assigning a factory customer to salesman maintenance, marking a salesman-self customer, and returning a customer to factory ownership.
+- Owner-change dialog must require change reason, default effective time to current time, require salesman only for salesman-target modes, and show: `归属变更只影响生效时间之后提交的销售订单；历史订单归属不自动回算。`
 - New real-customer creation does not require users to duplicate master contact/address fields into child tabs. When master contact/phone/WeChat and detail address are present, the backend creates the default contact and default shipping address transactionally.
 - The edit dialog base tab exposes two explicit sync options:
   - `同步到默认联系人`: syncs master contact, phone, and WeChat to the default contact. It is checked by default when editing real customers and can be manually cancelled before save.
@@ -54,4 +68,4 @@ The route is the RuoYi menu route produced by parent path `business` plus child 
 - `npm run scan:frontend-routes`
 - `npm run check:components`
 - `npm run check:component-similarity`
-- Browser validation on `/business/customer` for REAL/PUBLIC create/edit, public customer hidden child/fund controls, unified deposit display, complete area selection for real customers, default contact/address auto-create, edit sync/no-sync behavior, and parsed XLSX export labels.
+- Browser validation on `/business/customer` for REAL create/edit, PUBLIC built-in rows remaining visible, PUBLIC list/detail type-level display as `系统分类` / `-`, PUBLIC normal edit/delete/status/owner-change operations hidden or disabled, REAL factory default ownership, REAL salesman ownership source/profit pairs, public customer hidden owner/child/fund controls, unified deposit display, complete area selection for real customers, default contact/address auto-create, edit sync/no-sync behavior, owner-change actions, and parsed XLSX export labels.

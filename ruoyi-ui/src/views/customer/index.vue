@@ -17,6 +17,11 @@
           <el-option v-for="item in publicChannelOptions" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
       </el-form-item>
+      <el-form-item label="归属方式" prop="ownerType">
+        <el-select v-model="queryParams.ownerType" placeholder="请选择" clearable style="width: 150px">
+          <el-option v-for="item in ownerTypeOptions" :key="item.value" :label="item.label" :value="item.value" />
+        </el-select>
+      </el-form-item>
       <el-form-item label="联系人" prop="contactName">
         <el-input v-model="queryParams.contactName" placeholder="请输入联系人" clearable style="width: 180px" @keyup.enter="handleQuery" />
       </el-form-item>
@@ -58,7 +63,7 @@
         <el-button type="primary" plain icon="Plus" @click="handleAdd" v-hasPermi="['business:customer:add']">新增</el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="success" plain icon="Edit" :disabled="single" @click="handleUpdate" v-hasPermi="['business:customer:edit']">修改</el-button>
+        <el-button type="success" plain icon="Edit" :disabled="single || hasPublicSelection" @click="handleUpdate" v-hasPermi="['business:customer:edit']">修改</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button type="warning" plain icon="Download" @click="handleExport" v-hasPermi="['business:customer:export']">导出</el-button>
@@ -84,21 +89,29 @@
         <template #default="scope">{{ optionLabel(publicChannelOptions, scope.row.publicChannel) }}</template>
       </el-table-column>
       <el-table-column label="客户类型" align="center" prop="customerType" width="110">
-        <template #default="scope">{{ optionLabel(customerTypeOptions, scope.row.customerType) }}</template>
+        <template #default="scope">{{ customerTypeDisplay(scope.row) }}</template>
       </el-table-column>
       <el-table-column label="客户等级" align="center" prop="customerLevel" width="90">
-        <template #default="scope">{{ optionLabel(customerLevelOptions, scope.row.customerLevel) }}</template>
+        <template #default="scope">{{ customerLevelDisplay(scope.row) }}</template>
       </el-table-column>
       <el-table-column label="联系人" align="center" prop="contactName" width="110" :show-overflow-tooltip="true" />
       <el-table-column label="联系电话" align="center" prop="contactPhone" width="130" :show-overflow-tooltip="true" />
       <el-table-column label="省市区" align="center" min-width="170" :show-overflow-tooltip="true">
         <template #default="scope">{{ formatArea(scope.row) }}</template>
       </el-table-column>
-      <el-table-column label="归属业务员" align="center" prop="ownerUserName" width="120" :show-overflow-tooltip="true" />
+      <el-table-column label="归属方式" align="center" prop="ownerType" width="110">
+        <template #default="scope">{{ optionLabel(ownerTypeOptions, scope.row.ownerType) }}</template>
+      </el-table-column>
+      <el-table-column label="归属业务员" align="center" prop="ownerUserName" width="120" :show-overflow-tooltip="true">
+        <template #default="scope">{{ ownerUserDisplay(scope.row) }}</template>
+      </el-table-column>
       <el-table-column label="归属部门" align="center" prop="ownerDeptName" width="130" :show-overflow-tooltip="true" />
+      <el-table-column label="收益口径" align="center" prop="ownerProfitMode" width="110">
+        <template #default="scope">{{ optionLabel(ownerProfitModeOptions, scope.row.ownerProfitMode) }}</template>
+      </el-table-column>
       <el-table-column label="状态" align="center" prop="status" width="90">
         <template #default="scope">
-          <el-switch v-model="scope.row.status" active-value="0" inactive-value="1" @change="handleStatusChange(scope.row)" />
+          <el-switch v-model="scope.row.status" active-value="0" inactive-value="1" :disabled="isPublicRow(scope.row)" @change="handleStatusChange(scope.row)" />
         </template>
       </el-table-column>
       <el-table-column label="创建时间" align="center" prop="createTime" width="160">
@@ -109,13 +122,13 @@
           <el-tooltip content="详情" placement="top">
             <el-button link type="primary" icon="View" @click="handleView(scope.row)" v-hasPermi="['business:customer:query']"></el-button>
           </el-tooltip>
-          <el-tooltip content="修改" placement="top">
+          <el-tooltip v-if="!isPublicRow(scope.row)" content="修改" placement="top">
             <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['business:customer:edit']"></el-button>
           </el-tooltip>
-          <el-tooltip content="转移业务员" placement="top">
+          <el-tooltip v-if="!isPublicRow(scope.row)" content="归属变更" placement="top">
             <el-button link type="primary" icon="Switch" @click="handleTransfer(scope.row)" v-hasPermi="['business:customer:owner:transfer']"></el-button>
           </el-tooltip>
-          <el-tooltip content="删除" placement="top">
+          <el-tooltip v-if="!isPublicRow(scope.row)" content="删除" placement="top">
             <el-button link type="primary" icon="Delete" @click="handleDelete(scope.row)" v-hasPermi="['business:customer:remove']"></el-button>
           </el-tooltip>
         </template>
@@ -142,12 +155,12 @@
               <el-col :span="12">
                 <el-form-item label="客户性质" prop="customerNature">
                   <el-radio-group v-model="form.customerNature" @change="handleFormNatureChange">
-                    <el-radio-button v-for="item in customerNatureOptions" :key="item.value" :label="item.value">{{ item.label }}</el-radio-button>
+                    <el-radio-button label="REAL">真实客户</el-radio-button>
                   </el-radio-group>
                 </el-form-item>
               </el-col>
               <el-col v-if="isPublicCustomerForm" :span="12">
-                <el-form-item label="公共渠道" prop="publicChannel">
+                <el-form-item label="公共渠道" prop="publicChannel" :required="isPublicCustomerForm">
                   <el-select v-model="form.publicChannel" placeholder="请选择公共渠道" style="width: 100%">
                     <el-option v-for="item in publicChannelOptions" :key="item.value" :label="item.label" :value="item.value" />
                   </el-select>
@@ -176,12 +189,45 @@
                 </el-form-item>
               </el-col>
               <el-col v-if="!isPublicCustomerForm" :span="12">
-                <el-form-item label="主联系人" prop="contactName">
+                <el-form-item label="归属方式" prop="ownerType" :required="!isPublicCustomerForm">
+                  <el-radio-group v-model="form.ownerType" @change="handleOwnerTypeChange">
+                    <el-radio-button label="FACTORY">厂内</el-radio-button>
+                    <el-radio-button label="SALESMAN">业务员</el-radio-button>
+                  </el-radio-group>
+                </el-form-item>
+              </el-col>
+              <el-col v-if="!isPublicCustomerForm && isFactoryOwnerForm" :span="12">
+                <el-form-item label="归属业务员">
+                  <el-tag type="info">厂内</el-tag>
+                </el-form-item>
+              </el-col>
+              <el-col v-if="isSalesmanOwnerForm" :span="12">
+                <el-form-item label="归属业务员" prop="ownerUserId" :required="isSalesmanOwnerForm">
+                  <el-select v-model="form.ownerUserId" filterable remote clearable reserve-keyword :remote-method="loadSalesmen" placeholder="请选择业务员" style="width: 100%">
+                    <el-option v-for="item in salesmanOptions" :key="item.userId" :label="salesmanLabel(item)" :value="item.userId" />
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col v-if="isSalesmanOwnerForm" :span="12">
+                <el-form-item label="归属来源" prop="ownerSource" :required="isSalesmanOwnerForm">
+                  <el-radio-group v-model="form.ownerSource" @change="handleOwnerSourceChange">
+                    <el-radio-button label="FACTORY_ASSIGNED">厂内分配维护（维护费）</el-radio-button>
+                    <el-radio-button label="SALESMAN_SELF">业务员自有客户（业务提成）</el-radio-button>
+                  </el-radio-group>
+                </el-form-item>
+              </el-col>
+              <el-col v-if="isSalesmanOwnerForm" :span="12">
+                <el-form-item label="收益口径">
+                  <el-tag>{{ optionLabel(ownerProfitModeOptions, form.ownerProfitMode) }}</el-tag>
+                </el-form-item>
+              </el-col>
+              <el-col v-if="!isPublicCustomerForm" :span="12">
+                <el-form-item label="主联系人" prop="contactName" :required="!isPublicCustomerForm">
                   <el-input v-model="form.contactName" placeholder="请输入联系人" maxlength="30" />
                 </el-form-item>
               </el-col>
               <el-col v-if="!isPublicCustomerForm" :span="12">
-                <el-form-item label="联系电话" prop="contactPhone">
+                <el-form-item label="联系电话" prop="contactPhone" :required="!isPublicCustomerForm">
                   <el-input v-model="form.contactPhone" placeholder="请输入联系电话" maxlength="30" />
                 </el-form-item>
               </el-col>
@@ -190,15 +236,8 @@
                   <el-input v-model="form.wechat" placeholder="请输入微信号" maxlength="50" />
                 </el-form-item>
               </el-col>
-              <el-col v-if="!isPublicCustomerForm" :span="12">
-                <el-form-item label="归属业务员" prop="ownerUserId">
-                  <el-select v-model="form.ownerUserId" filterable remote clearable reserve-keyword :remote-method="loadSalesmen" placeholder="请选择业务员" style="width: 100%">
-                    <el-option v-for="item in salesmanOptions" :key="item.userId" :label="salesmanLabel(item)" :value="item.userId" />
-                  </el-select>
-                </el-form-item>
-              </el-col>
               <el-col v-if="!isPublicCustomerForm" :span="24">
-                <el-form-item label="省市区" prop="areaPath">
+                <el-form-item label="省市区" prop="areaPath" :required="!isPublicCustomerForm">
                   <el-cascader
                     v-model="form.areaPath"
                     :options="areaOptions"
@@ -212,7 +251,7 @@
                 </el-form-item>
               </el-col>
               <el-col v-if="!isPublicCustomerForm" :span="24">
-                <el-form-item label="详细地址" prop="address">
+                <el-form-item label="详细地址" prop="address" :required="!isPublicCustomerForm">
                   <el-input v-model="form.address" placeholder="请输入详细地址" maxlength="200" />
                 </el-form-item>
               </el-col>
@@ -339,12 +378,16 @@
             <el-descriptions-item label="客户名称">{{ detail.customer.customerName }}</el-descriptions-item>
             <el-descriptions-item label="客户性质">{{ optionLabel(customerNatureOptions, detail.customer.customerNature) }}</el-descriptions-item>
             <el-descriptions-item v-if="detail.customer.customerNature === 'PUBLIC'" label="公共渠道">{{ optionLabel(publicChannelOptions, detail.customer.publicChannel) }}</el-descriptions-item>
-            <el-descriptions-item label="客户类型">{{ optionLabel(customerTypeOptions, detail.customer.customerType) }}</el-descriptions-item>
-            <el-descriptions-item label="客户等级">{{ optionLabel(customerLevelOptions, detail.customer.customerLevel) }}</el-descriptions-item>
+            <el-descriptions-item label="客户类型">{{ customerTypeDisplay(detail.customer) }}</el-descriptions-item>
+            <el-descriptions-item label="客户等级">{{ customerLevelDisplay(detail.customer) }}</el-descriptions-item>
             <el-descriptions-item v-if="!isPublicDetail" label="主联系人">{{ detail.customer.contactName }}</el-descriptions-item>
             <el-descriptions-item v-if="!isPublicDetail" label="联系电话">{{ detail.customer.contactPhone }}</el-descriptions-item>
-            <el-descriptions-item v-if="!isPublicDetail" label="业务员">{{ detail.customer.ownerUserName }}</el-descriptions-item>
-            <el-descriptions-item v-if="!isPublicDetail" label="部门">{{ detail.customer.ownerDeptName }}</el-descriptions-item>
+            <el-descriptions-item label="归属方式">{{ optionLabel(ownerTypeOptions, detail.customer.ownerType) }}</el-descriptions-item>
+            <el-descriptions-item label="归属来源">{{ optionLabel(ownerSourceAllOptions, detail.customer.ownerSource) }}</el-descriptions-item>
+            <el-descriptions-item label="收益口径">{{ optionLabel(ownerProfitModeOptions, detail.customer.ownerProfitMode) }}</el-descriptions-item>
+            <el-descriptions-item v-if="!isPublicDetail" label="归属业务员">{{ ownerUserDisplay(detail.customer) }}</el-descriptions-item>
+            <el-descriptions-item v-if="!isPublicDetail" label="归属部门">{{ detail.customer.ownerDeptName }}</el-descriptions-item>
+            <el-descriptions-item v-if="!isPublicDetail" label="归属生效时间">{{ parseTime(detail.customer.ownerEffectiveTime) }}</el-descriptions-item>
             <el-descriptions-item label="状态">{{ detail.customer.status === '0' ? '正常' : '停用' }}</el-descriptions-item>
             <el-descriptions-item v-if="!isPublicDetail" label="地址" :span="3">{{ fullAddress(detail.customer) }}</el-descriptions-item>
             <el-descriptions-item label="备注" :span="3">{{ detail.customer.remark }}</el-descriptions-item>
@@ -471,10 +514,18 @@
         </el-tab-pane>
         <el-tab-pane label="操作日志" name="logs">
           <el-table :data="detail.ownerLogs || []">
+            <el-table-column label="原归属" width="120"><template #default="scope">{{ optionLabel(ownerTypeOptions, scope.row.oldOwnerType) }}</template></el-table-column>
+            <el-table-column label="新归属" width="120"><template #default="scope">{{ optionLabel(ownerTypeOptions, scope.row.newOwnerType) }}</template></el-table-column>
+            <el-table-column label="原来源" width="150"><template #default="scope">{{ optionLabel(ownerSourceAllOptions, scope.row.oldOwnerSource) }}</template></el-table-column>
+            <el-table-column label="新来源" width="150"><template #default="scope">{{ optionLabel(ownerSourceAllOptions, scope.row.newOwnerSource) }}</template></el-table-column>
+            <el-table-column label="原收益口径" width="120"><template #default="scope">{{ optionLabel(ownerProfitModeOptions, scope.row.oldOwnerProfitMode) }}</template></el-table-column>
+            <el-table-column label="新收益口径" width="120"><template #default="scope">{{ optionLabel(ownerProfitModeOptions, scope.row.newOwnerProfitMode) }}</template></el-table-column>
             <el-table-column label="原业务员" prop="oldOwnerUserName" />
             <el-table-column label="新业务员" prop="newOwnerUserName" />
             <el-table-column label="原部门" prop="oldDeptName" />
             <el-table-column label="新部门" prop="newDeptName" />
+            <el-table-column label="原生效时间" prop="oldOwnerEffectiveTime" width="160" />
+            <el-table-column label="新生效时间" prop="newOwnerEffectiveTime" width="160" />
             <el-table-column label="原因" prop="changeReason" />
             <el-table-column label="操作人" prop="changeBy" />
             <el-table-column label="时间" prop="changeTime" width="160" />
@@ -483,15 +534,36 @@
       </el-tabs>
     </el-drawer>
 
-    <el-dialog title="转移业务员" v-model="transferOpen" width="520px" append-to-body>
+    <el-dialog title="归属变更" v-model="transferOpen" width="620px" append-to-body>
       <el-form :model="transferForm" label-width="110px">
-        <el-form-item label="新业务员">
+        <el-alert
+          title="归属变更只影响生效时间之后提交的销售订单；历史订单归属不自动回算。"
+          type="warning"
+          show-icon
+          :closable="false"
+          class="mb8"
+        />
+        <el-form-item label="变更方式">
+          <el-radio-group v-model="transferForm.transferMode" @change="handleTransferModeChange">
+            <el-radio-button v-for="item in transferModeOptions" :key="item.value" :label="item.value">{{ item.label }}</el-radio-button>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item v-if="transferRequiresSalesman()" label="新业务员" required>
           <el-select v-model="transferForm.newOwnerUserId" filterable remote clearable :remote-method="loadSalesmen" placeholder="请选择业务员" style="width: 100%">
             <el-option v-for="item in salesmanOptions" :key="item.userId" :label="salesmanLabel(item)" :value="item.userId" />
           </el-select>
         </el-form-item>
-        <el-form-item label="转移原因">
-          <el-input v-model="transferForm.changeReason" type="textarea" />
+        <el-form-item label="收益口径">
+          <el-tag>{{ transferProfitModeLabel }}</el-tag>
+        </el-form-item>
+        <el-form-item label="生效时间">
+          <el-date-picker v-model="transferForm.effectiveTime" type="datetime" value-format="YYYY-MM-DD HH:mm:ss" placeholder="请选择生效时间" style="width: 100%" />
+        </el-form-item>
+        <el-form-item label="变更原因" required>
+          <el-input v-model="transferForm.changeReason" type="textarea" maxlength="200" />
+        </el-form-item>
+        <el-form-item label="备注">
+          <el-input v-model="transferForm.remark" type="textarea" maxlength="200" />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -565,6 +637,30 @@ const publicChannelOptions = [
   { label: "厂内自销", value: "DIRECT_SALE" },
   { label: "自媒体", value: "SELF_MEDIA" }
 ]
+const ownerTypeOptions = [
+  { label: "厂内", value: "FACTORY" },
+  { label: "业务员", value: "SALESMAN" },
+  { label: "无固定归属", value: "NONE" }
+]
+const ownerSourceOptions = [
+  { label: "厂内分配维护（维护费）", value: "FACTORY_ASSIGNED" },
+  { label: "业务员自有客户（业务提成）", value: "SALESMAN_SELF" }
+]
+const ownerSourceAllOptions = [
+  { label: "厂内客户池", value: "FACTORY_POOL" },
+  ...ownerSourceOptions,
+  { label: "无", value: "NONE" }
+]
+const ownerProfitModeOptions = [
+  { label: "无个人收益", value: "NONE" },
+  { label: "维护费", value: "MAINTENANCE_FEE" },
+  { label: "业务提成", value: "SALES_COMMISSION" }
+]
+const transferModeOptions = [
+  { label: "分配给业务员维护", value: "ASSIGN_MAINTENANCE", ownerProfitMode: "MAINTENANCE_FEE" },
+  { label: "转为业务员自有客户", value: "MARK_SALESMAN_SELF", ownerProfitMode: "SALES_COMMISSION" },
+  { label: "收回厂内", value: "RETURN_FACTORY", ownerProfitMode: "NONE" }
+]
 const contactRoleOptions = ["老板", "采购", "财务", "收货人", "跟单员", "其他"].map(item => ({ label: item, value: item }))
 const supportModeOptions = [
   { label: "不支持", value: "NONE" },
@@ -572,6 +668,7 @@ const supportModeOptions = [
   { label: "仅返现", value: "REBATE_ONLY" },
   { label: "打折并返现", value: "DISCOUNT_AND_REBATE" }
 ]
+const MOBILE_PHONE_PATTERN = /^1[3-9]\d{9}$/
 
 const customerList = ref([])
 const salesmanOptions = ref([])
@@ -579,6 +676,7 @@ const deptOptions = ref([])
 const loading = ref(true)
 const showSearch = ref(true)
 const ids = ref([])
+const selectedRows = ref([])
 const single = ref(true)
 const total = ref(0)
 const open = ref(false)
@@ -607,6 +705,7 @@ const data = reactive({
     contactPhone: undefined,
     customerType: undefined,
     customerLevel: undefined,
+    ownerType: undefined,
     ownerUserId: undefined,
     ownerDeptId: undefined,
     status: undefined
@@ -617,21 +716,119 @@ const data = reactive({
   rebateForm: {},
   rules: {
     customerName: [{ required: true, message: "客户名称不能为空", trigger: "blur" }],
-    contactPhone: [{ max: 30, message: "联系电话长度不能超过30个字符", trigger: "blur" }]
+    customerNature: [{ required: true, message: "客户性质不能为空", trigger: "change" }],
+    customerType: [{ required: true, message: "客户类型不能为空", trigger: "change" }],
+    customerLevel: [{ required: true, message: "客户等级不能为空", trigger: "change" }],
+    publicChannel: [requiredWhen(() => isPublicCustomerForm.value, "公共渠道不能为空", "change")],
+    contactName: [requiredWhen(() => !isPublicCustomerForm.value, "主联系人不能为空", "blur")],
+    contactPhone: [
+      requiredWhen(() => !isPublicCustomerForm.value, "联系电话不能为空", "blur"),
+      mobilePhoneWhen(() => !isPublicCustomerForm.value, "联系电话必须为11位手机号"),
+      { max: 30, message: "联系电话长度不能超过30个字符", trigger: "blur" }
+    ],
+    ownerType: [requiredWhen(() => !isPublicCustomerForm.value, "归属方式不能为空", "change")],
+    ownerUserId: [requiredWhen(() => isSalesmanOwnerForm.value, "归属业务员不能为空", "change")],
+    ownerSource: [requiredWhen(() => isSalesmanOwnerForm.value, "归属来源不能为空", "change")],
+    areaPath: [areaPathRequiredWhenReal()],
+    address: [requiredWhen(() => !isPublicCustomerForm.value, "详细地址不能为空", "blur")]
   }
 })
 
 const { queryParams, form, transferForm, fundForm, rebateForm, rules } = toRefs(data)
 
 const isPublicCustomerForm = computed(() => form.value.customerNature === "PUBLIC")
+const isSalesmanOwnerForm = computed(() => !isPublicCustomerForm.value && form.value.ownerType === "SALESMAN")
+const isFactoryOwnerForm = computed(() => !isPublicCustomerForm.value && form.value.ownerType !== "SALESMAN")
 const isPublicDetail = computed(() => detail.value.customer?.customerNature === "PUBLIC")
+const hasPublicSelection = computed(() => selectedRows.value.some(row => isPublicRow(row)))
+const transferProfitModeLabel = computed(() => {
+  const option = transferModeOptions.find(item => item.value === transferForm.value.transferMode)
+  return optionLabel(ownerProfitModeOptions, option?.ownerProfitMode)
+})
+
+function isEmptyFormValue(value) {
+  return value === undefined || value === null || value === "" || (typeof value === "string" && value.trim() === "")
+}
+
+function isValidMobilePhone(value) {
+  return MOBILE_PHONE_PATTERN.test(String(value || ""))
+}
+
+function requiredWhen(predicate, message, trigger) {
+  return {
+    trigger,
+    validator: (_rule, value, callback) => {
+      if (!predicate() || !isEmptyFormValue(value)) {
+        callback()
+        return
+      }
+      callback(new Error(message))
+    }
+  }
+}
+
+function mobilePhoneWhen(predicate, message = "联系电话必须为11位手机号") {
+  return {
+    trigger: "blur",
+    validator: (_rule, value, callback) => {
+      if (!predicate() || isEmptyFormValue(value)) {
+        callback()
+        return
+      }
+      if (!isValidMobilePhone(value)) {
+        callback(new Error(message))
+        return
+      }
+      callback()
+    }
+  }
+}
+
+function areaPathRequiredWhenReal() {
+  return {
+    trigger: "change",
+    validator: (_rule, value, callback) => {
+      if (isPublicCustomerForm.value) {
+        callback()
+        return
+      }
+      if (Array.isArray(value) && value.length === 3) {
+        callback()
+        return
+      }
+      callback(new Error("省市区请选择完整到区县"))
+    }
+  }
+}
 
 function optionLabel(options, value) {
   return options.find(item => item.value === value)?.label || value || ""
 }
 
+function isPublicRow(row) {
+  return row?.customerNature === "PUBLIC"
+}
+
+function customerTypeDisplay(row) {
+  return isPublicRow(row) ? "系统分类" : optionLabel(customerTypeOptions, row?.customerType)
+}
+
+function customerLevelDisplay(row) {
+  return isPublicRow(row) ? "-" : optionLabel(customerLevelOptions, row?.customerLevel)
+}
+
 function formatArea(row) {
   return [row.province, row.city, row.district].filter(Boolean).join(" / ")
+}
+
+function ownerUserDisplay(row) {
+  if (!row || row.customerNature === "PUBLIC" || row.ownerType === "NONE") {
+    return "无固定归属"
+  }
+  if (row.ownerType === "FACTORY") {
+    return "厂内"
+  }
+  return row.ownerUserName || "-"
 }
 
 function salesmanLabel(item) {
@@ -761,8 +958,69 @@ function validateAreaSelections() {
   return true
 }
 
+function validateChildPhoneSelections() {
+  if (isPublicCustomerForm.value) {
+    return true
+  }
+  const invalidContactIndex = (form.value.contacts || []).findIndex(item => !isEmptyFormValue(item.phone) && !isValidMobilePhone(item.phone))
+  if (invalidContactIndex !== -1) {
+    proxy.$modal.msgError(`第${invalidContactIndex + 1}个联系人电话必须为11位手机号`)
+    editTab.value = "contacts"
+    return false
+  }
+  const invalidAddressIndex = (form.value.addresses || []).findIndex(item => !isEmptyFormValue(item.receiverPhone) && !isValidMobilePhone(item.receiverPhone))
+  if (invalidAddressIndex !== -1) {
+    proxy.$modal.msgError(`第${invalidAddressIndex + 1}条收货地址联系电话必须为11位手机号`)
+    editTab.value = "addresses"
+    return false
+  }
+  return true
+}
+
+function applyPublicOwnerFields() {
+  form.value.ownerType = "NONE"
+  form.value.ownerSource = "NONE"
+  form.value.ownerProfitMode = "NONE"
+  form.value.ownerEffectiveTime = undefined
+  form.value.ownerUserId = undefined
+  form.value.ownerUserName = undefined
+  form.value.ownerDeptId = undefined
+  form.value.ownerDeptName = undefined
+}
+
+function applyFactoryOwnerFields() {
+  form.value.ownerType = "FACTORY"
+  form.value.ownerSource = "FACTORY_POOL"
+  form.value.ownerProfitMode = "NONE"
+  form.value.ownerUserId = undefined
+  form.value.ownerUserName = undefined
+  form.value.ownerDeptId = undefined
+  form.value.ownerDeptName = undefined
+}
+
+function applySalesmanOwnerDefaults() {
+  form.value.ownerType = "SALESMAN"
+  if (!["FACTORY_ASSIGNED", "SALESMAN_SELF"].includes(form.value.ownerSource)) {
+    form.value.ownerSource = "FACTORY_ASSIGNED"
+  }
+  handleOwnerSourceChange(form.value.ownerSource)
+}
+
+function normalizeOwnerBeforeSave() {
+  if (isPublicCustomerForm.value) {
+    applyPublicOwnerFields()
+    return
+  }
+  if (form.value.ownerType === "SALESMAN") {
+    applySalesmanOwnerDefaults()
+    return
+  }
+  applyFactoryOwnerFields()
+}
+
 function prepareCustomerBeforeSave() {
   if (isPublicCustomerForm.value) {
+    applyPublicOwnerFields()
     form.value.contactName = undefined
     form.value.contactPhone = undefined
     form.value.wechat = undefined
@@ -774,16 +1032,13 @@ function prepareCustomerBeforeSave() {
     form.value.districtCode = undefined
     form.value.areaPath = []
     form.value.address = undefined
-    form.value.ownerUserId = undefined
-    form.value.ownerUserName = undefined
-    form.value.ownerDeptId = undefined
-    form.value.ownerDeptName = undefined
     form.value.syncDefaultContact = false
     form.value.syncDefaultAddress = false
     form.value.contacts = []
     form.value.addresses = []
   } else {
     form.value.publicChannel = undefined
+    normalizeOwnerBeforeSave()
   }
   if (!form.value.shortName) {
     form.value.shortName = form.value.customerName
@@ -850,7 +1105,14 @@ function reset() {
     districtCode: undefined,
     areaPath: [],
     address: undefined,
+    ownerType: "FACTORY",
+    ownerSource: "FACTORY_POOL",
+    ownerProfitMode: "NONE",
+    ownerEffectiveTime: undefined,
     ownerUserId: undefined,
+    ownerUserName: undefined,
+    ownerDeptId: undefined,
+    ownerDeptName: undefined,
     status: "0",
     remark: undefined,
     syncDefaultContact: false,
@@ -870,10 +1132,22 @@ function handleAdd() {
 
 function handleUpdate(row) {
   reset()
-  const customerId = row.customerId || ids.value[0]
+  const selected = row || selectedRows.value[0]
+  if (isPublicRow(selected)) {
+    proxy.$modal.msgError("公共客户为系统内置分类客户，不允许在普通客户编辑中修改。")
+    return
+  }
+  const customerId = selected.customerId || ids.value[0]
   getCustomer(customerId).then(response => {
     form.value = response.data.customer
+    if (isPublicCustomerForm.value) {
+      proxy.$modal.msgError("公共客户为系统内置分类客户，不允许在普通客户编辑中修改。")
+      return
+    }
     form.value.customerNature = form.value.customerNature || "REAL"
+    form.value.ownerType = form.value.ownerType || (form.value.customerNature === "PUBLIC" ? "NONE" : "FACTORY")
+    form.value.ownerSource = form.value.ownerSource || (form.value.ownerType === "SALESMAN" ? "FACTORY_ASSIGNED" : form.value.ownerType === "FACTORY" ? "FACTORY_POOL" : "NONE")
+    form.value.ownerProfitMode = form.value.ownerProfitMode || (form.value.ownerSource === "SALESMAN_SELF" ? "SALES_COMMISSION" : form.value.ownerSource === "FACTORY_ASSIGNED" ? "MAINTENANCE_FEE" : "NONE")
     form.value.contacts = form.value.contacts || []
     form.value.addresses = form.value.addresses || []
     hydrateCustomerArea()
@@ -888,15 +1162,35 @@ function handleUpdate(row) {
 
 function handleFormNatureChange(value) {
   if (value === "PUBLIC") {
-    form.value.publicChannel = form.value.publicChannel || "DIRECT_SALE"
-    form.value.contacts = []
-    form.value.addresses = []
-    form.value.syncDefaultContact = false
-    form.value.syncDefaultAddress = false
-    editTab.value = "base"
+    proxy.$modal.msgError("公共客户由系统初始化，不允许手工新增或编辑。")
+    form.value.customerNature = "REAL"
+    form.value.publicChannel = undefined
+    applyFactoryOwnerFields()
   } else {
     form.value.publicChannel = undefined
+    applyFactoryOwnerFields()
   }
+  proxy.$refs["customerRef"]?.clearValidate()
+}
+
+function handleOwnerTypeChange(value) {
+  if (value === "SALESMAN") {
+    applySalesmanOwnerDefaults()
+  } else {
+    applyFactoryOwnerFields()
+  }
+  proxy.$refs["customerRef"]?.clearValidate(["ownerType", "ownerUserId", "ownerSource"])
+}
+
+function handleOwnerSourceChange(value) {
+  if (value === "SALESMAN_SELF") {
+    form.value.ownerProfitMode = "SALES_COMMISSION"
+  } else if (value === "FACTORY_ASSIGNED") {
+    form.value.ownerProfitMode = "MAINTENANCE_FEE"
+  } else {
+    form.value.ownerProfitMode = "NONE"
+  }
+  proxy.$refs["customerRef"]?.clearValidate(["ownerSource"])
 }
 
 function handleView(row) {
@@ -922,12 +1216,13 @@ function cancel() {
 function submitForm() {
   proxy.$refs["customerRef"].validate(valid => {
     if (!valid) return
-    if (isPublicCustomerForm.value && !form.value.publicChannel) {
-      proxy.$modal.msgError("请选择公共客户渠道")
+    if (isPublicCustomerForm.value) {
+      proxy.$modal.msgError("公共客户由系统初始化，不允许手工新增或编辑。")
       editTab.value = "base"
       return
     }
     if (!validateAreaSelections()) return
+    if (!validateChildPhoneSelections()) return
     prepareCustomerBeforeSave()
     duplicateWarning({
       customerId: form.value.customerId,
@@ -953,11 +1248,17 @@ function submitForm() {
 }
 
 function handleSelectionChange(selection) {
+  selectedRows.value = selection
   ids.value = selection.map(item => item.customerId)
   single.value = selection.length !== 1
 }
 
 function handleStatusChange(row) {
+  if (isPublicRow(row)) {
+    row.status = row.status === "0" ? "1" : "0"
+    proxy.$modal.msgError("内置公共客户不允许停用。")
+    return
+  }
   const text = row.status === "0" ? "启用" : "停用"
   proxy.$modal.confirm(`确认要${text}客户"${row.customerName}"吗？`).then(() => {
     return changeCustomerStatus(row.customerId, row.status)
@@ -970,6 +1271,10 @@ function handleStatusChange(row) {
 
 function handleDelete(row) {
   const customerIds = row.customerId || ids.value
+  if (isPublicRow(row) || (!row.customerId && hasPublicSelection.value)) {
+    proxy.$modal.msgError("内置公共客户不允许删除。")
+    return
+  }
   proxy.$modal.confirm('是否确认删除客户编号为"' + customerIds + '"的数据项？').then(() => {
     return delCustomer(customerIds)
   }).then(() => {
@@ -1019,18 +1324,76 @@ function setDefaultAddress(index) {
 }
 
 function handleTransfer(row) {
+  if (row.customerNature === "PUBLIC") {
+    proxy.$modal.msgError("公共客户不支持归属变更")
+    return
+  }
   currentCustomerId.value = row.customerId
-  transferForm.value = { customerId: row.customerId, newOwnerUserId: row.ownerUserId, changeReason: "", remark: "" }
+  transferForm.value = {
+    customerId: row.customerId,
+    transferMode: row.ownerType === "SALESMAN" ? "RETURN_FACTORY" : "ASSIGN_MAINTENANCE",
+    newOwnerUserId: row.ownerType === "SALESMAN" ? undefined : row.ownerUserId,
+    effectiveTime: currentDateTimeValue(),
+    changeReason: "",
+    remark: ""
+  }
   transferOpen.value = true
 }
 
+function transferRequiresSalesman(mode = transferForm.value.transferMode) {
+  return mode === "ASSIGN_MAINTENANCE" || mode === "MARK_SALESMAN_SELF" || mode === "CHANGE_SALESMAN"
+}
+
+function handleTransferModeChange(mode) {
+  if (!transferRequiresSalesman(mode)) {
+    transferForm.value.newOwnerUserId = undefined
+  }
+}
+
+function prepareTransferPayload() {
+  const payload = { ...transferForm.value }
+  if (payload.transferMode === "ASSIGN_MAINTENANCE") {
+    payload.newOwnerType = "SALESMAN"
+    payload.newOwnerSource = "FACTORY_ASSIGNED"
+    payload.newOwnerProfitMode = "MAINTENANCE_FEE"
+  } else if (payload.transferMode === "MARK_SALESMAN_SELF") {
+    payload.newOwnerType = "SALESMAN"
+    payload.newOwnerSource = "SALESMAN_SELF"
+    payload.newOwnerProfitMode = "SALES_COMMISSION"
+  } else if (payload.transferMode === "RETURN_FACTORY") {
+    payload.newOwnerType = "FACTORY"
+    payload.newOwnerSource = "FACTORY_POOL"
+    payload.newOwnerProfitMode = "NONE"
+    payload.newOwnerUserId = undefined
+  }
+  return payload
+}
+
 function submitTransfer() {
-  transferOwner(transferForm.value).then(() => {
-    proxy.$modal.msgSuccess("转移成功")
+  if (!transferForm.value.transferMode) {
+    proxy.$modal.msgError("请选择归属变更方式")
+    return
+  }
+  if (transferRequiresSalesman() && !transferForm.value.newOwnerUserId) {
+    proxy.$modal.msgError("请选择归属业务员")
+    return
+  }
+  if (isEmptyFormValue(transferForm.value.changeReason)) {
+    proxy.$modal.msgError("请输入变更原因")
+    return
+  }
+  transferOwner(prepareTransferPayload()).then(() => {
+    proxy.$modal.msgSuccess("归属变更成功")
     transferOpen.value = false
     getList()
     if (detailOpen.value) loadDetail(currentCustomerId.value)
   })
+}
+
+function currentDateTimeValue() {
+  const date = new Date()
+  const pad = value => String(value).padStart(2, "0")
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`
 }
 
 function handleFundEntry() {

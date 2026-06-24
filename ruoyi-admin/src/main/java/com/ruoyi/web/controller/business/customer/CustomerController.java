@@ -113,7 +113,7 @@ public class CustomerController extends BaseController
     }
 
     @PreAuthorize("@ss.hasPermi('business:customer:owner:transfer')")
-    @Log(title = "客户业务员转移", businessType = BusinessType.UPDATE)
+    @Log(title = "客户归属变更", businessType = BusinessType.UPDATE)
     @PutMapping("/transferOwner")
     public AjaxResult transferOwner(@RequestBody CustomerOwnerTransfer transfer)
     {

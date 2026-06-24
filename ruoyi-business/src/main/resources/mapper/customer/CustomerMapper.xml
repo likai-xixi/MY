@@ -23,6 +23,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="district" column="district" />
         <result property="districtCode" column="district_code" />
         <result property="address" column="address" />
+        <result property="ownerType" column="owner_type" />
+        <result property="ownerSource" column="owner_source" />
+        <result property="ownerProfitMode" column="owner_profit_mode" />
+        <result property="ownerEffectiveTime" column="owner_effective_time" />
         <result property="ownerUserId" column="owner_user_id" />
         <result property="ownerUserName" column="owner_user_name" />
         <result property="ownerDeptId" column="owner_dept_id" />
@@ -74,6 +78,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <resultMap type="CustomerSalesmanBindLog" id="CustomerOwnerLogResult">
         <id property="logId" column="log_id" />
         <result property="customerId" column="customer_id" />
+        <result property="oldOwnerType" column="old_owner_type" />
+        <result property="newOwnerType" column="new_owner_type" />
+        <result property="oldOwnerSource" column="old_owner_source" />
+        <result property="newOwnerSource" column="new_owner_source" />
+        <result property="oldOwnerProfitMode" column="old_owner_profit_mode" />
+        <result property="newOwnerProfitMode" column="new_owner_profit_mode" />
+        <result property="oldOwnerEffectiveTime" column="old_owner_effective_time" />
+        <result property="newOwnerEffectiveTime" column="new_owner_effective_time" />
         <result property="oldOwnerUserId" column="old_owner_user_id" />
         <result property="oldOwnerUserName" column="old_owner_user_name" />
         <result property="newOwnerUserId" column="new_owner_user_id" />
@@ -168,6 +180,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <sql id="selectCustomerVo">
         select customer_id, customer_code, customer_name, short_name, customer_nature, public_channel, customer_type, customer_level,
                contact_name, contact_phone, wechat, province, province_code, city, city_code, district, district_code, address,
+               owner_type, owner_source, owner_profit_mode, owner_effective_time,
                owner_user_id, owner_user_name, owner_dept_id, owner_dept_name,
                status, del_flag, create_by, create_time, update_by, update_time, remark
         from customer
@@ -185,6 +198,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="publicChannel != null and publicChannel != ''">and public_channel = #{publicChannel}</if>
             <if test="customerType != null and customerType != ''">and customer_type = #{customerType}</if>
             <if test="customerLevel != null and customerLevel != ''">and customer_level = #{customerLevel}</if>
+            <if test="ownerType != null and ownerType != ''">and owner_type = #{ownerType}</if>
+            <if test="ownerSource != null and ownerSource != ''">and owner_source = #{ownerSource}</if>
+            <if test="ownerProfitMode != null and ownerProfitMode != ''">and owner_profit_mode = #{ownerProfitMode}</if>
             <if test="ownerUserId != null">and owner_user_id = #{ownerUserId}</if>
             <if test="ownerDeptId != null">and owner_dept_id = #{ownerDeptId}</if>
             <if test="status != null and status != ''">and status = #{status}</if>
@@ -224,15 +240,26 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <if test="customerId != null">and customer_id != #{customerId}</if>
     </select>
 
+    <select id="countActivePublicCustomerByChannel" resultType="int">
+        select count(1)
+        from customer
+        where del_flag = '0'
+          and customer_nature = 'PUBLIC'
+          and public_channel = #{publicChannel}
+        <if test="customerId != null">and customer_id != #{customerId}</if>
+    </select>
+
     <insert id="insertCustomer" parameterType="Customer" useGeneratedKeys="true" keyProperty="customerId">
         insert into customer(
             customer_code, customer_name, short_name, customer_nature, public_channel, customer_type, customer_level,
             contact_name, contact_phone, wechat, province, province_code, city, city_code, district, district_code, address,
+            owner_type, owner_source, owner_profit_mode, owner_effective_time,
             owner_user_id, owner_user_name, owner_dept_id, owner_dept_name,
             status, del_flag, create_by, create_time, remark
         ) values (
             #{customerCode}, #{customerName}, #{shortName}, #{customerNature}, #{publicChannel}, #{customerType}, #{customerLevel},
             #{contactName}, #{contactPhone}, #{wechat}, #{province}, #{provinceCode}, #{city}, #{cityCode}, #{district}, #{districtCode}, #{address},
+            #{ownerType}, #{ownerSource}, #{ownerProfitMode}, #{ownerEffectiveTime},
             #{ownerUserId}, #{ownerUserName}, #{ownerDeptId}, #{ownerDeptName},
             #{status}, #{delFlag}, #{createBy}, sysdate(), #{remark}
         )
@@ -257,10 +284,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="customerNature != null">district = #{district},</if>
             <if test="customerNature != null">district_code = #{districtCode},</if>
             <if test="customerNature != null">address = #{address},</if>
-            <if test="customerNature != null">owner_user_id = #{ownerUserId},</if>
-            <if test="customerNature != null">owner_user_name = #{ownerUserName},</if>
-            <if test="customerNature != null">owner_dept_id = #{ownerDeptId},</if>
-            <if test="customerNature != null">owner_dept_name = #{ownerDeptName},</if>
+            <if test="customerNature != null or ownerType != null">owner_type = #{ownerType},</if>
+            <if test="customerNature != null or ownerType != null">owner_source = #{ownerSource},</if>
+            <if test="customerNature != null or ownerType != null">owner_profit_mode = #{ownerProfitMode},</if>
+            <if test="customerNature != null or ownerType != null">owner_effective_time = #{ownerEffectiveTime},</if>
+            <if test="customerNature != null or ownerType != null">owner_user_id = #{ownerUserId},</if>
+            <if test="customerNature != null or ownerType != null">owner_user_name = #{ownerUserName},</if>
+            <if test="customerNature != null or ownerType != null">owner_dept_id = #{ownerDeptId},</if>
+            <if test="customerNature != null or ownerType != null">owner_dept_name = #{ownerDeptName},</if>
             <if test="status != null">status = #{status},</if>
             <if test="remark != null">remark = #{remark},</if>
             <if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
@@ -312,10 +343,20 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <insert id="insertOwnerLog" parameterType="CustomerSalesmanBindLog" useGeneratedKeys="true" keyProperty="logId">
-        insert into customer_salesman_bind_log(customer_id, old_owner_user_id, old_owner_user_name, new_owner_user_id, new_owner_user_name,
-            old_dept_id, old_dept_name, new_dept_id, new_dept_name, change_reason, change_by, change_time, remark)
-        values(#{customerId}, #{oldOwnerUserId}, #{oldOwnerUserName}, #{newOwnerUserId}, #{newOwnerUserName},
-            #{oldDeptId}, #{oldDeptName}, #{newDeptId}, #{newDeptName}, #{changeReason}, #{changeBy}, #{changeTime}, #{remark})
+        insert into customer_salesman_bind_log(
+            customer_id,
+            old_owner_type, new_owner_type, old_owner_source, new_owner_source,
+            old_owner_profit_mode, new_owner_profit_mode, old_owner_effective_time, new_owner_effective_time,
+            old_owner_user_id, old_owner_user_name, new_owner_user_id, new_owner_user_name,
+            old_dept_id, old_dept_name, new_dept_id, new_dept_name, change_reason, change_by, change_time, remark
+        )
+        values(
+            #{customerId},
+            #{oldOwnerType}, #{newOwnerType}, #{oldOwnerSource}, #{newOwnerSource},
+            #{oldOwnerProfitMode}, #{newOwnerProfitMode}, #{oldOwnerEffectiveTime}, #{newOwnerEffectiveTime},
+            #{oldOwnerUserId}, #{oldOwnerUserName}, #{newOwnerUserId}, #{newOwnerUserName},
+            #{oldDeptId}, #{oldDeptName}, #{newDeptId}, #{newDeptName}, #{changeReason}, #{changeBy}, #{changeTime}, #{remark}
+        )
     </insert>
 
     <select id="selectFundAccountsByCustomerId" parameterType="Long" resultMap="CustomerFundAccountResult">

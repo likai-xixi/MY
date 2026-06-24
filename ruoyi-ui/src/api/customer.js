@@ -70,7 +70,7 @@ export function listSalesmen(keyword) {
   })
 }
 
-// 转移业务员
+// 归属变更
 export function transferOwner(data) {
   return request({
     url: '/business/customer/transferOwner',

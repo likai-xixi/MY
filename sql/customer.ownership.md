@@ -26,8 +26,19 @@ Feature ID: `customer`
 - Public customer channel is stored on `customer.public_channel`:
   - `DIRECT_SALE`: 厂内自销
   - `SELF_MEDIA`: 自媒体
+- PUBLIC 公共客户固定为两个系统内置分类客户：
+  - `PUB_DIRECT_SALE` / 厂内自销客户 / `PUBLIC` / `DIRECT_SALE`
+  - `PUB_SELF_MEDIA` / 自媒体客户 / `PUBLIC` / `SELF_MEDIA`
 - 公共客户只用于订单归类，不代表真实买家；真实购买人、联系电话、收货地址、接待业务员、来源渠道由后续 `sales-order` 模块在订单主表快照字段保存。
+- 公共客户不展示/不编辑 `customer_type`、`customer_level`；后端仅为技术兼容固定保存 `customer_type = OTHER`、`customer_level = NORMAL`。
+- 公共客户不允许通过普通客户入口新增、编辑、删除、停用或归属变更。
+- 每个 `public_channel` 只能有一个有效 PUBLIC 公共客户。
 - 公共客户不强制联系人、收货地址，不绑定固定归属业务员，不启用客户级定金、客户级样品政策或样品返现。
+- 展厅、抖音、快手、视频号、具体账号、接待业务员和真实买家信息属于后续销售订单来源与买家快照字段，不创建额外 PUBLIC 公共客户。
+- 真实客户默认归属厂内客户池：`owner_type = FACTORY`、`owner_source = FACTORY_POOL`、`owner_profit_mode = NONE`。
+- 厂内客户可以分配给业务员维护：`owner_type = SALESMAN`、`owner_source = FACTORY_ASSIGNED`、`owner_profit_mode = MAINTENANCE_FEE`。
+- 业务员自有客户使用业务提成口径：`owner_type = SALESMAN`、`owner_source = SALESMAN_SELF`、`owner_profit_mode = SALES_COMMISSION`。
+- `owner_effective_time` 记录当前归属生效时间；客户管理只记录口径，不计算维护费、业务提成，也不回算历史订单。
 - 定金只有一种：`CUSTOMER_DEPOSIT`。样品返现账户 `SAMPLE_REBATE` 独立保留。
 - `customer_fund_account.account_type` 只允许 `CUSTOMER_DEPOSIT`、`SAMPLE_REBATE`。
 - `customer_deposit_batch.deposit_type` 只允许 `CUSTOMER_DEPOSIT`。
@@ -106,6 +117,10 @@ create table customer (
   district varchar(64) default null comment '区',
   district_code varchar(20) default null comment '区县编码',
   address varchar(255) default null comment '详细地址',
+  owner_type varchar(32) not null default 'FACTORY' comment '归属方式（FACTORY厂内 SALESMAN业务员 NONE无固定归属）',
+  owner_source varchar(32) not null default 'FACTORY_POOL' comment '归属来源（FACTORY_POOL厂内客户池 FACTORY_ASSIGNED厂内分配 SALESMAN_SELF业务员自有 NONE无）',
+  owner_profit_mode varchar(32) not null default 'NONE' comment '收益口径（NONE无个人收益 MAINTENANCE_FEE维护费 SALES_COMMISSION业务提成）',
+  owner_effective_time datetime default null comment '当前归属生效时间',
   owner_user_id bigint default null comment '归属业务员ID',
   owner_user_name varchar(64) default null comment '归属业务员名称',
   owner_dept_id bigint default null comment '归属部门ID',
@@ -119,13 +134,24 @@ create table customer (
   remark varchar(500) default null comment '备注',
   primary key (customer_id),
   unique key uk_customer_code (customer_code),
+  unique key uk_customer_public_channel (customer_nature, public_channel),
   key idx_customer_name_phone (customer_name, contact_phone),
   key idx_customer_nature_channel (customer_nature, public_channel),
+  key idx_customer_owner_type (owner_type, owner_source, owner_profit_mode),
   key idx_customer_owner (owner_user_id, owner_dept_id),
   constraint chk_customer_nature check (customer_nature in ('REAL', 'PUBLIC')),
+  constraint chk_customer_owner_type check (owner_type in ('FACTORY', 'SALESMAN', 'NONE')),
+  constraint chk_customer_owner_source check (owner_source in ('FACTORY_POOL', 'FACTORY_ASSIGNED', 'SALESMAN_SELF', 'NONE')),
+  constraint chk_customer_owner_profit_mode check (owner_profit_mode in ('NONE', 'MAINTENANCE_FEE', 'SALES_COMMISSION')),
   constraint chk_customer_public_channel check (
     (customer_nature = 'REAL' and public_channel is null)
     or (customer_nature = 'PUBLIC' and public_channel in ('DIRECT_SALE', 'SELF_MEDIA'))
+  ),
+  constraint chk_customer_owner_rule check (
+    (customer_nature = 'REAL' and owner_type = 'FACTORY' and owner_source = 'FACTORY_POOL' and owner_profit_mode = 'NONE' and owner_user_id is null)
+    or (customer_nature = 'REAL' and owner_type = 'SALESMAN' and owner_source = 'FACTORY_ASSIGNED' and owner_profit_mode = 'MAINTENANCE_FEE' and owner_user_id is not null)
+    or (customer_nature = 'REAL' and owner_type = 'SALESMAN' and owner_source = 'SALESMAN_SELF' and owner_profit_mode = 'SALES_COMMISSION' and owner_user_id is not null)
+    or (customer_nature = 'PUBLIC' and owner_type = 'NONE' and owner_source = 'NONE' and owner_profit_mode = 'NONE' and owner_user_id is null)
   )
 ) engine=innodb auto_increment=1 default charset=utf8mb4 comment='客户档案';
 
@@ -175,6 +201,14 @@ create table customer_address (
 create table customer_salesman_bind_log (
   log_id bigint not null auto_increment,
   customer_id bigint not null,
+  old_owner_type varchar(32) default null,
+  new_owner_type varchar(32) default null,
+  old_owner_source varchar(32) default null,
+  new_owner_source varchar(32) default null,
+  old_owner_profit_mode varchar(32) default null,
+  new_owner_profit_mode varchar(32) default null,
+  old_owner_effective_time datetime default null,
+  new_owner_effective_time datetime default null,
   old_owner_user_id bigint default null,
   old_owner_user_name varchar(64) default null,
   new_owner_user_id bigint default null,
@@ -189,7 +223,7 @@ create table customer_salesman_bind_log (
   remark varchar(500) default null,
   primary key (log_id),
   key idx_customer_salesman_log_customer (customer_id)
-) engine=innodb default charset=utf8mb4 comment='客户业务员转移日志';
+) engine=innodb default charset=utf8mb4 comment='客户归属变更日志';
 
 create table customer_fund_account (
   account_id bigint not null auto_increment,
@@ -301,12 +335,12 @@ create table sample_rebate_record (
 ## Public Customer Seed Data
 
 ```sql
-insert into customer(customer_code, customer_name, short_name, customer_nature, public_channel, customer_type, customer_level, status, del_flag, create_by, create_time, remark)
-select 'PUB_DIRECT_SALE', '厂内自销客户', '厂内自销客户', 'PUBLIC', 'DIRECT_SALE', 'OTHER', 'NORMAL', '0', '0', 'admin', sysdate(), '系统内置公共客户：厂内自销订单归类'
+insert into customer(customer_code, customer_name, short_name, customer_nature, public_channel, customer_type, customer_level, owner_type, owner_source, owner_profit_mode, status, del_flag, create_by, create_time, remark)
+select 'PUB_DIRECT_SALE', '厂内自销客户', '厂内自销客户', 'PUBLIC', 'DIRECT_SALE', 'OTHER', 'NORMAL', 'NONE', 'NONE', 'NONE', '0', '0', 'admin', sysdate(), '系统内置公共客户：厂内自销订单归类'
 where not exists (select 1 from customer where customer_code = 'PUB_DIRECT_SALE');
 
-insert into customer(customer_code, customer_name, short_name, customer_nature, public_channel, customer_type, customer_level, status, del_flag, create_by, create_time, remark)
-select 'PUB_SELF_MEDIA', '自媒体客户', '自媒体客户', 'PUBLIC', 'SELF_MEDIA', 'OTHER', 'NORMAL', '0', '0', 'admin', sysdate(), '系统内置公共客户：自媒体订单归类'
+insert into customer(customer_code, customer_name, short_name, customer_nature, public_channel, customer_type, customer_level, owner_type, owner_source, owner_profit_mode, status, del_flag, create_by, create_time, remark)
+select 'PUB_SELF_MEDIA', '自媒体客户', '自媒体客户', 'PUBLIC', 'SELF_MEDIA', 'OTHER', 'NORMAL', 'NONE', 'NONE', 'NONE', '0', '0', 'admin', sysdate(), '系统内置公共客户：自媒体订单归类'
 where not exists (select 1 from customer where customer_code = 'PUB_SELF_MEDIA');
 ```
 

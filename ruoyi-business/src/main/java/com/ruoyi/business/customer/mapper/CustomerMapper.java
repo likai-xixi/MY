@@ -38,6 +38,8 @@ public interface CustomerMapper
 
     public int countCustomerByPhone(@Param("customerId") Long customerId, @Param("contactPhone") String contactPhone);
 
+    public int countActivePublicCustomerByChannel(@Param("customerId") Long customerId, @Param("publicChannel") String publicChannel);
+
     public List<CustomerContact> selectContactsByCustomerId(Long customerId);
 
     public int deleteContactsByCustomerId(Long customerId);

@@ -559,7 +559,7 @@
 - Path: `/business/customer/list`
 - Owner: `customer`
 - Module: `customer`
-- Notes: Lists customer master data and supports filtering by `customerNature` (`REAL` or `PUBLIC`) and `publicChannel` (`DIRECT_SALE` or `SELF_MEDIA`). Public customers are classification customers only.
+- Notes: Lists customer master data and supports filtering by `customerNature` (`REAL` or `PUBLIC`), `publicChannel` (`DIRECT_SALE` or `SELF_MEDIA`), and `ownerType` (`FACTORY`, `SALESMAN`, `NONE`). Rows include `ownerSource`, `ownerProfitMode`, and `ownerEffectiveTime`; public customers are fixed system classification rows and UI clients must not display their technical `OTHER/NORMAL` values as real-customer type/level labels.
 
 ## /business/customer/export
 
@@ -588,7 +588,7 @@
 - Path: `/business/customer`
 - Owner: `customer`
 - Module: `customer`
-- Notes: Creates customer master data. `customerNature` defaults to `REAL`; `PUBLIC` requires `publicChannel`. Real customers can auto-create default contact/address from master fields. Public customers do not auto-create contacts or shipping addresses and are used only for order classification.
+- Notes: Creates REAL customer master data. `customerNature` defaults to `REAL`; direct `customerNature=PUBLIC` is rejected with `公共客户由系统初始化，不允许手工新增。` New REAL customers default to factory ownership (`FACTORY / FACTORY_POOL / NONE`) and do not require `ownerUserId`; REAL salesman-owned customers require a valid owner source/profit pair. Real customers can auto-create default contact/address from master fields.
 
 ## /business/customer:update
 
@@ -596,7 +596,7 @@
 - Path: `/business/customer`
 - Owner: `customer`
 - Module: `customer`
-- Notes: Updates customer master data. Real-customer request-only booleans `syncDefaultContact` and `syncDefaultAddress` opt into syncing master fields to the current default child record or creating it when missing. Public customers clear real-customer contact/address/owner fields and do not sync or create default child records.
+- Notes: Updates REAL customer master data. Built-in PUBLIC customers are rejected with `内置公共客户不允许在普通客户编辑中修改。`; REAL customers cannot be changed to PUBLIC and are rejected with `真实客户不允许改为公共客户。` Real-customer request-only booleans `syncDefaultContact` and `syncDefaultAddress` opt into syncing master fields to the current default child record or creating it when missing. REAL factory ownership clears owner user/dept; REAL salesman ownership validates owner user plus `FACTORY_ASSIGNED / MAINTENANCE_FEE` or `SALESMAN_SELF / SALES_COMMISSION`.
 
 ## /business/customer/changeStatus
 
@@ -604,6 +604,7 @@
 - Path: `/business/customer/changeStatus`
 - Owner: `customer`
 - Module: `customer`
+- Notes: Updates REAL customer status. Built-in PUBLIC customers are rejected with `内置公共客户不允许停用。`
 
 ## /business/customer/{customerIds}
 
@@ -611,6 +612,7 @@
 - Path: `/business/customer/{customerIds}`
 - Owner: `customer`
 - Module: `customer`
+- Notes: Logically deletes REAL customers. Built-in PUBLIC customers are rejected with `内置公共客户不允许删除。`
 
 ## /business/customer/salesmen
 
@@ -625,6 +627,7 @@
 - Path: `/business/customer/transferOwner`
 - Owner: `customer`
 - Module: `customer`
+- Notes: Existing path now represents customer owner change. `ASSIGN_MAINTENANCE` assigns a factory customer to salesman maintenance (`FACTORY_ASSIGNED / MAINTENANCE_FEE`), `MARK_SALESMAN_SELF` records salesman-self ownership (`SALESMAN_SELF / SALES_COMMISSION`), and `RETURN_FACTORY` returns the customer to factory pool (`FACTORY_POOL / NONE`) and clears owner user/dept. Requires `changeReason`; `effectiveTime` defaults to current time. Public customers are rejected.
 
 ## /business/customer/{customerId}/owner-log
 

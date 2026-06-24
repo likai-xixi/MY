@@ -1,7 +1,9 @@
 package com.ruoyi.business.customer.domain;
 
+import java.util.Date;
 import java.util.List;
 import jakarta.validation.constraints.NotBlank;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
@@ -61,6 +63,20 @@ public class Customer extends BaseEntity
 
     @Excel(name = "详细地址")
     private String address;
+
+    @Excel(name = "归属方式", readConverterExp = "FACTORY=厂内,SALESMAN=业务员,NONE=无固定归属")
+    private String ownerType;
+
+    @Excel(name = "归属来源", readConverterExp = "FACTORY_POOL=厂内客户池,FACTORY_ASSIGNED=厂内分配维护,SALESMAN_SELF=业务员自有,NONE=无")
+    private String ownerSource;
+
+    @Excel(name = "收益口径", readConverterExp = "NONE=无个人收益,MAINTENANCE_FEE=维护费,SALES_COMMISSION=业务提成")
+    private String ownerProfitMode;
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "归属生效时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
+    private Date ownerEffectiveTime;
+
     private Long ownerUserId;
 
     @Excel(name = "归属业务员")
@@ -261,6 +277,46 @@ public class Customer extends BaseEntity
         this.address = address;
     }
 
+    public String getOwnerType()
+    {
+        return ownerType;
+    }
+
+    public void setOwnerType(String ownerType)
+    {
+        this.ownerType = ownerType;
+    }
+
+    public String getOwnerSource()
+    {
+        return ownerSource;
+    }
+
+    public void setOwnerSource(String ownerSource)
+    {
+        this.ownerSource = ownerSource;
+    }
+
+    public String getOwnerProfitMode()
+    {
+        return ownerProfitMode;
+    }
+
+    public void setOwnerProfitMode(String ownerProfitMode)
+    {
+        this.ownerProfitMode = ownerProfitMode;
+    }
+
+    public Date getOwnerEffectiveTime()
+    {
+        return ownerEffectiveTime;
+    }
+
+    public void setOwnerEffectiveTime(Date ownerEffectiveTime)
+    {
+        this.ownerEffectiveTime = ownerEffectiveTime;
+    }
+
     public Long getOwnerUserId()
     {
         return ownerUserId;
@@ -370,6 +426,10 @@ public class Customer extends BaseEntity
             .append("customerName", getCustomerName())
             .append("customerNature", getCustomerNature())
             .append("publicChannel", getPublicChannel())
+            .append("ownerType", getOwnerType())
+            .append("ownerSource", getOwnerSource())
+            .append("ownerProfitMode", getOwnerProfitMode())
+            .append("ownerEffectiveTime", getOwnerEffectiveTime())
             .append("ownerUserName", getOwnerUserName())
             .append("status", getStatus())
             .toString();

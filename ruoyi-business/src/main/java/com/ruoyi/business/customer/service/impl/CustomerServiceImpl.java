@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.regex.Pattern;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
@@ -52,6 +53,22 @@ public class CustomerServiceImpl implements ICustomerService
     private static final String PUBLIC = "PUBLIC";
     private static final String DIRECT_SALE = "DIRECT_SALE";
     private static final String SELF_MEDIA = "SELF_MEDIA";
+    private static final String PUBLIC_DIRECT_SALE_CODE = "PUB_DIRECT_SALE";
+    private static final String PUBLIC_SELF_MEDIA_CODE = "PUB_SELF_MEDIA";
+    private static final String OWNER_FACTORY = "FACTORY";
+    private static final String OWNER_SALESMAN = "SALESMAN";
+    private static final String OWNER_NONE = "NONE";
+    private static final String SOURCE_FACTORY_POOL = "FACTORY_POOL";
+    private static final String SOURCE_FACTORY_ASSIGNED = "FACTORY_ASSIGNED";
+    private static final String SOURCE_SALESMAN_SELF = "SALESMAN_SELF";
+    private static final String SOURCE_NONE = "NONE";
+    private static final String PROFIT_NONE = "NONE";
+    private static final String PROFIT_MAINTENANCE_FEE = "MAINTENANCE_FEE";
+    private static final String PROFIT_SALES_COMMISSION = "SALES_COMMISSION";
+    private static final String TRANSFER_ASSIGN_MAINTENANCE = "ASSIGN_MAINTENANCE";
+    private static final String TRANSFER_MARK_SALESMAN_SELF = "MARK_SALESMAN_SELF";
+    private static final String TRANSFER_RETURN_FACTORY = "RETURN_FACTORY";
+    private static final String TRANSFER_CHANGE_SALESMAN = "CHANGE_SALESMAN";
     private static final String CUSTOMER_DEPOSIT = "CUSTOMER_DEPOSIT";
     private static final String SAMPLE_REBATE = "SAMPLE_REBATE";
     private static final String SAMPLE_REBATE_GENERATE = "SAMPLE_REBATE_GENERATE";
@@ -65,6 +82,7 @@ public class CustomerServiceImpl implements ICustomerService
     private static final int CUSTOMER_CODE_MIN_SEQUENCE_WIDTH = 6;
     private static final int CUSTOMER_CODE_MAX_RETRY = 8;
     private static final DateTimeFormatter CUSTOMER_CODE_MONTH_FORMATTER = DateTimeFormatter.ofPattern("yyyyMM");
+    private static final Pattern MOBILE_PHONE_PATTERN = Pattern.compile("^1[3-9]\\d{9}$");
 
     @Autowired
     private CustomerMapper customerMapper;
@@ -122,7 +140,12 @@ public class CustomerServiceImpl implements ICustomerService
     @Transactional
     public int insertCustomer(Customer customer)
     {
+        if (customer != null && PUBLIC.equals(customer.getCustomerNature()))
+        {
+            throw new ServiceException("公共客户由系统初始化，不允许手工新增。");
+        }
         normalizeCustomerForSave(customer);
+        assertNotReservedPublicCode(customer);
         fillDefaultShortName(customer);
         if (StringUtils.isEmpty(customer.getStatus()))
         {
@@ -165,7 +188,17 @@ public class CustomerServiceImpl implements ICustomerService
     @Transactional
     public int updateCustomer(Customer customer)
     {
+        Customer existing = requiredCustomer(customer.getCustomerId());
+        if (isBuiltinPublicCustomer(existing))
+        {
+            throw new ServiceException("内置公共客户不允许在普通客户编辑中修改。");
+        }
+        if (PUBLIC.equals(customer.getCustomerNature()))
+        {
+            throw new ServiceException("真实客户不允许改为公共客户。");
+        }
         normalizeCustomerForSave(customer);
+        assertNotReservedPublicCode(customer);
         fillDefaultShortName(customer);
         fillOwnerSnapshot(customer);
         int rows = customerMapper.updateCustomer(customer);
@@ -177,12 +210,28 @@ public class CustomerServiceImpl implements ICustomerService
     @Override
     public int updateCustomerStatus(Customer customer)
     {
+        Customer existing = requiredCustomer(customer.getCustomerId());
+        if (isBuiltinPublicCustomer(existing))
+        {
+            throw new ServiceException("内置公共客户不允许停用。");
+        }
         return customerMapper.updateCustomerStatus(customer);
     }
 
     @Override
     public int deleteCustomerByIds(Long[] customerIds)
     {
+        if (customerIds != null)
+        {
+            for (Long customerId : customerIds)
+            {
+                Customer existing = requiredCustomer(customerId);
+                if (isBuiltinPublicCustomer(existing))
+                {
+                    throw new ServiceException("内置公共客户不允许删除。");
+                }
+            }
+        }
         return customerMapper.deleteCustomerByIds(customerIds);
     }
 
@@ -217,16 +266,33 @@ public class CustomerServiceImpl implements ICustomerService
     @Transactional
     public int transferOwner(CustomerOwnerTransfer transfer, Long operatorId, String operatorName)
     {
+        if (transfer == null || transfer.getCustomerId() == null)
+        {
+            throw new ServiceException("客户不能为空");
+        }
         Customer current = requiredCustomer(transfer.getCustomerId());
-        Customer next = new Customer();
+        if (isPublicCustomer(current))
+        {
+            throw new ServiceException("公共客户不支持归属变更");
+        }
+        assertRequired(transfer.getChangeReason(), "变更原因不能为空");
+
+        Customer next = buildOwnerTransferTarget(current, transfer);
         next.setCustomerId(transfer.getCustomerId());
-        next.setOwnerUserId(transfer.getNewOwnerUserId());
         next.setUpdateBy(operatorName);
         fillOwnerSnapshot(next);
         int rows = customerMapper.updateCustomer(next);
 
         CustomerSalesmanBindLog log = new CustomerSalesmanBindLog();
         log.setCustomerId(current.getCustomerId());
+        log.setOldOwnerType(current.getOwnerType());
+        log.setOldOwnerSource(current.getOwnerSource());
+        log.setOldOwnerProfitMode(current.getOwnerProfitMode());
+        log.setOldOwnerEffectiveTime(current.getOwnerEffectiveTime());
+        log.setNewOwnerType(next.getOwnerType());
+        log.setNewOwnerSource(next.getOwnerSource());
+        log.setNewOwnerProfitMode(next.getOwnerProfitMode());
+        log.setNewOwnerEffectiveTime(next.getOwnerEffectiveTime());
         log.setOldOwnerUserId(current.getOwnerUserId());
         log.setOldOwnerUserName(current.getOwnerUserName());
         log.setOldDeptId(current.getOwnerDeptId());
@@ -725,6 +791,55 @@ public class CustomerServiceImpl implements ICustomerService
         customer.setOwnerDeptName(dept == null ? null : dept.getDeptName());
     }
 
+    private Customer buildOwnerTransferTarget(Customer current, CustomerOwnerTransfer transfer)
+    {
+        Customer next = new Customer();
+        next.setOwnerEffectiveTime(transfer.getEffectiveTime() == null ? new Date() : transfer.getEffectiveTime());
+        String transferMode = transfer.getTransferMode();
+        if (TRANSFER_ASSIGN_MAINTENANCE.equals(transferMode))
+        {
+            next.setOwnerType(OWNER_SALESMAN);
+            next.setOwnerSource(SOURCE_FACTORY_ASSIGNED);
+            next.setOwnerProfitMode(PROFIT_MAINTENANCE_FEE);
+            next.setOwnerUserId(transfer.getNewOwnerUserId());
+        }
+        else if (TRANSFER_MARK_SALESMAN_SELF.equals(transferMode))
+        {
+            next.setOwnerType(OWNER_SALESMAN);
+            next.setOwnerSource(SOURCE_SALESMAN_SELF);
+            next.setOwnerProfitMode(PROFIT_SALES_COMMISSION);
+            next.setOwnerUserId(transfer.getNewOwnerUserId());
+        }
+        else if (TRANSFER_RETURN_FACTORY.equals(transferMode))
+        {
+            next.setOwnerType(OWNER_FACTORY);
+            next.setOwnerSource(SOURCE_FACTORY_POOL);
+            next.setOwnerProfitMode(PROFIT_NONE);
+            clearOwnerSnapshot(next);
+        }
+        else if (TRANSFER_CHANGE_SALESMAN.equals(transferMode))
+        {
+            next.setOwnerType(OWNER_SALESMAN);
+            next.setOwnerSource(defaultIfEmpty(transfer.getNewOwnerSource(), current.getOwnerSource()));
+            next.setOwnerProfitMode(defaultIfEmpty(transfer.getNewOwnerProfitMode(), current.getOwnerProfitMode()));
+            next.setOwnerUserId(transfer.getNewOwnerUserId());
+        }
+        else
+        {
+            throw new ServiceException("归属变更方式不能为空");
+        }
+        validateOwnerStateForReal(next);
+        return next;
+    }
+
+    private void clearOwnerSnapshot(Customer customer)
+    {
+        customer.setOwnerUserId(null);
+        customer.setOwnerUserName(null);
+        customer.setOwnerDeptId(null);
+        customer.setOwnerDeptName(null);
+    }
+
     private void initFundAccounts(Customer customer, String operator)
     {
         if (customer == null || customer.getCustomerId() == null || isPublicCustomer(customer))
@@ -809,46 +924,211 @@ public class CustomerServiceImpl implements ICustomerService
         }
         if (isPublicCustomer(customer))
         {
-            validatePublicChannel(customer.getPublicChannel());
-            customer.setCustomerType("OTHER");
-            if (StringUtils.isEmpty(customer.getCustomerLevel()))
-            {
-                customer.setCustomerLevel("NORMAL");
-            }
-            customer.setContactName(null);
-            customer.setContactPhone(null);
-            customer.setWechat(null);
-            customer.setProvince(null);
-            customer.setProvinceCode(null);
-            customer.setCity(null);
-            customer.setCityCode(null);
-            customer.setDistrict(null);
-            customer.setDistrictCode(null);
-            customer.setAddress(null);
-            customer.setOwnerUserId(null);
-            customer.setOwnerUserName(null);
-            customer.setOwnerDeptId(null);
-            customer.setOwnerDeptName(null);
-            customer.setSyncDefaultContact(false);
-            customer.setSyncDefaultAddress(false);
-            customer.setContacts(Collections.emptyList());
-            customer.setAddresses(Collections.emptyList());
+            normalizePublicCustomerForSave(customer);
             return;
         }
+        validateCustomerRequiredForSave(customer);
         customer.setPublicChannel(null);
+        normalizeOwnerForReal(customer);
+        validateRealCustomerRequired(customer);
+    }
+
+    private void normalizePublicCustomerForSave(Customer customer)
+    {
+        validatePublicChannel(customer.getPublicChannel());
+        assertUniquePublicChannel(customer);
+        customer.setCustomerType("OTHER");
+        customer.setCustomerLevel("NORMAL");
+        customer.setOwnerType(OWNER_NONE);
+        customer.setOwnerSource(SOURCE_NONE);
+        customer.setOwnerProfitMode(PROFIT_NONE);
+        customer.setOwnerEffectiveTime(null);
+        customer.setContactName(null);
+        customer.setContactPhone(null);
+        customer.setWechat(null);
+        customer.setProvince(null);
+        customer.setProvinceCode(null);
+        customer.setCity(null);
+        customer.setCityCode(null);
+        customer.setDistrict(null);
+        customer.setDistrictCode(null);
+        customer.setAddress(null);
+        clearOwnerSnapshot(customer);
+        customer.setSyncDefaultContact(false);
+        customer.setSyncDefaultAddress(false);
+        customer.setContacts(Collections.emptyList());
+        customer.setAddresses(Collections.emptyList());
+    }
+
+    private void normalizeOwnerForReal(Customer customer)
+    {
+        if (StringUtils.isEmpty(customer.getOwnerType()))
+        {
+            customer.setOwnerType(OWNER_FACTORY);
+        }
+        if (OWNER_NONE.equals(customer.getOwnerType()))
+        {
+            throw new ServiceException("真实客户不能使用无固定归属");
+        }
+        if (customer.getOwnerEffectiveTime() == null)
+        {
+            customer.setOwnerEffectiveTime(new Date());
+        }
+        validateOwnerStateForReal(customer);
+    }
+
+    private void validateOwnerStateForReal(Customer customer)
+    {
+        if (OWNER_FACTORY.equals(customer.getOwnerType()))
+        {
+            customer.setOwnerSource(SOURCE_FACTORY_POOL);
+            customer.setOwnerProfitMode(PROFIT_NONE);
+            clearOwnerSnapshot(customer);
+            return;
+        }
+        if (!OWNER_SALESMAN.equals(customer.getOwnerType()))
+        {
+            throw new ServiceException("归属方式不合法");
+        }
+        if (customer.getOwnerUserId() == null)
+        {
+            throw new ServiceException("归属业务员不能为空");
+        }
+        if (StringUtils.isEmpty(customer.getOwnerSource()))
+        {
+            throw new ServiceException("归属来源不能为空");
+        }
+        if (SOURCE_FACTORY_ASSIGNED.equals(customer.getOwnerSource()))
+        {
+            assertOwnerProfitMode(customer, PROFIT_MAINTENANCE_FEE, "厂内分配维护必须使用维护费口径");
+            return;
+        }
+        if (SOURCE_SALESMAN_SELF.equals(customer.getOwnerSource()))
+        {
+            assertOwnerProfitMode(customer, PROFIT_SALES_COMMISSION, "业务员自有客户必须使用业务提成口径");
+            return;
+        }
+        throw new ServiceException("归属来源不合法");
+    }
+
+    private void assertOwnerProfitMode(Customer customer, String expectedProfitMode, String message)
+    {
+        if (StringUtils.isEmpty(customer.getOwnerProfitMode()))
+        {
+            customer.setOwnerProfitMode(expectedProfitMode);
+            return;
+        }
+        if (!expectedProfitMode.equals(customer.getOwnerProfitMode()))
+        {
+            throw new ServiceException(message);
+        }
+    }
+
+    private void validateCustomerRequiredForSave(Customer customer)
+    {
+        assertRequired(customer.getCustomerType(), "客户类型不能为空");
+        assertRequired(customer.getCustomerLevel(), "客户等级不能为空");
+    }
+
+    private void validateRealCustomerRequired(Customer customer)
+    {
+        assertRequired(customer.getContactName(), "主联系人不能为空");
+        assertRequired(customer.getContactPhone(), "联系电话不能为空");
+        assertMobilePhone(customer.getContactPhone(), "联系电话必须为11位手机号");
+        if (StringUtils.isEmpty(customer.getProvince()) || StringUtils.isEmpty(customer.getCity()) || StringUtils.isEmpty(customer.getDistrict()))
+        {
+            throw new ServiceException("省市区不能为空");
+        }
+        assertRequired(customer.getAddress(), "详细地址不能为空");
+        validateChildMobilePhones(customer);
+    }
+
+    private void assertRequired(String value, String message)
+    {
+        if (StringUtils.isEmpty(value))
+        {
+            throw new ServiceException(message);
+        }
+    }
+
+    private void assertMobilePhone(String value, String message)
+    {
+        if (!MOBILE_PHONE_PATTERN.matcher(value).matches())
+        {
+            throw new ServiceException(message);
+        }
+    }
+
+    private void validateChildMobilePhones(Customer customer)
+    {
+        List<CustomerContact> contacts = customer.getContacts();
+        if (contacts != null)
+        {
+            for (int i = 0; i < contacts.size(); i++)
+            {
+                String phone = contacts.get(i).getPhone();
+                if (StringUtils.isNotEmpty(phone) && !MOBILE_PHONE_PATTERN.matcher(phone).matches())
+                {
+                    throw new ServiceException("第" + (i + 1) + "个联系人电话必须为11位手机号");
+                }
+            }
+        }
+        List<CustomerAddress> addresses = customer.getAddresses();
+        if (addresses != null)
+        {
+            for (int i = 0; i < addresses.size(); i++)
+            {
+                String receiverPhone = addresses.get(i).getReceiverPhone();
+                if (StringUtils.isNotEmpty(receiverPhone) && !MOBILE_PHONE_PATTERN.matcher(receiverPhone).matches())
+                {
+                    throw new ServiceException("第" + (i + 1) + "条收货地址联系电话必须为11位手机号");
+                }
+            }
+        }
     }
 
     private void validatePublicChannel(String publicChannel)
     {
+        if (StringUtils.isEmpty(publicChannel))
+        {
+            throw new ServiceException("公共渠道不能为空");
+        }
         if (!DIRECT_SALE.equals(publicChannel) && !SELF_MEDIA.equals(publicChannel))
         {
             throw new ServiceException("公共客户渠道不合法");
         }
     }
 
+    private void assertUniquePublicChannel(Customer customer)
+    {
+        int count = customerMapper.countActivePublicCustomerByChannel(customer.getCustomerId(), customer.getPublicChannel());
+        if (count > 0)
+        {
+            throw new ServiceException("公共客户渠道已存在，不允许重复创建内置公共客户。");
+        }
+    }
+
     private boolean isPublicCustomer(Customer customer)
     {
         return customer != null && PUBLIC.equals(customer.getCustomerNature());
+    }
+
+    private boolean isBuiltinPublicCustomer(Customer customer)
+    {
+        return isPublicCustomer(customer) || (customer != null && isReservedPublicCode(customer.getCustomerCode()));
+    }
+
+    private boolean isReservedPublicCode(String customerCode)
+    {
+        return PUBLIC_DIRECT_SALE_CODE.equals(customerCode) || PUBLIC_SELF_MEDIA_CODE.equals(customerCode);
+    }
+
+    private void assertNotReservedPublicCode(Customer customer)
+    {
+        if (customer != null && isReservedPublicCode(customer.getCustomerCode()))
+        {
+            throw new ServiceException("内置公共客户编码不允许用于普通客户。");
+        }
     }
 
     private void assertRealCustomerFeature(Long customerId, String message)
