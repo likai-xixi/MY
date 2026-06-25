@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.codex.my/schemas/idempotency-registry.schema.json",
+  "title": "High-risk idempotency registry",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["schemaVersion", "entries"],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "entries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": [
+          "featureId",
+          "api",
+          "method",
+          "riskDomain",
+          "required",
+          "idempotencyKey",
+          "scope",
+          "ttl",
+          "duplicateBehavior",
+          "conflictBehavior",
+          "payloadHashRequired",
+          "lockStrategy",
+          "resultReplay",
+          "tests",
+          "status"
+        ],
+        "properties": {
+          "featureId": {
+            "type": "string"
+          },
+          "api": {
+            "type": "string"
+          },
+          "method": {
+            "type": "string"
+          },
+          "riskDomain": {
+            "type": "string"
+          },
+          "required": {
+            "type": "boolean"
+          },
+          "payloadHashRequired": {
+            "type": "boolean"
+          },
+          "tests": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "status": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

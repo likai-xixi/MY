@@ -3,22 +3,24 @@
   "generatedBy": "scripts/context-build.js",
   "generatedAt": "stable",
   "currentFeature": "customer",
-  "currentChange": "CR-20260625T112646Z-ci-backend-frontend-governance-checks",
+  "currentChange": "CR-20260625T130657Z-high-risk-semantic-governance-framework",
   "repositoryProfile": {
     "adapter": "ruoyi",
     "locked": true,
     "stack": "RuoYi + Vue3 + Codex Auto Dev OS"
   },
   "allowedEditRoots": [
-    ".github/workflows",
-    ".gitignore",
     "tools",
     "tests",
+    "ai/registry",
+    "ai/rules",
+    "ai/rule-proposals",
     "ai/changes",
     "ai/context",
     "memory",
     "README.md",
-    "ruoyi-ui/src/views/tool/build"
+    "docs",
+    "package.json"
   ],
   "forbiddenEditRoots": [
     "ruoyi-business/src/main/java/com/ruoyi/business/customer",
@@ -36,7 +38,10 @@
     "ruoyi-ui/src/api/sales-order.js",
     "ruoyi-ui/src/api/salesOrder.js",
     "sql/sales-order.ownership.md",
-    "sql/sales_order_init.sql"
+    "sql/sales_order_init.sql",
+    "delivery runtime business code",
+    "finance runtime business code",
+    "production runtime business code"
   ],
   "mustReadFiles": [
     {
@@ -84,15 +89,15 @@
       "reason": "Governance backlog and required/deferred evidence."
     },
     {
-      "path": "ai/changes/CR-20260625T112646Z-ci-backend-frontend-governance-checks/impact.json",
+      "path": "ai/changes/CR-20260625T130657Z-high-risk-semantic-governance-framework/impact.json",
       "reason": "Current change allowed and forbidden edit roots."
     },
     {
-      "path": "ai/changes/CR-20260625T112646Z-ci-backend-frontend-governance-checks/plan.md",
+      "path": "ai/changes/CR-20260625T130657Z-high-risk-semantic-governance-framework/plan.md",
       "reason": "Current change execution plan."
     },
     {
-      "path": "ai/changes/CR-20260625T112646Z-ci-backend-frontend-governance-checks/verification.md",
+      "path": "ai/changes/CR-20260625T130657Z-high-risk-semantic-governance-framework/verification.md",
       "reason": "Current change verification evidence."
     }
   ],
@@ -299,8 +304,7 @@
   "verificationCommands": [
     "npm run resume",
     "npm test",
-    "npm run check:ci-coverage-declaration",
-    "npm run check:verification-provenance",
+    "npm run check:high-risk-governance",
     "npm run check",
     "mvn -pl ruoyi-admin -am -DskipTests compile",
     "npm --prefix ruoyi-ui run build:prod",

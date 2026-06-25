@@ -316,3 +316,13 @@
 - Repair: `tools/runtime-checker.js` now falls back from an unavailable configured tool path to the standard command name such as `mvn`, with regression coverage in `tests/runtime-checker.test.js`.
 - Local repair verification passed: `npm run scan:frontend-routes`, `npm run scan:frontend-routes:check`, `npm run check:ci-coverage-declaration`, `npm run check:verification-provenance`, `npm test`, `npm run check`, Maven compile, ruoyi-ui production build, and `git diff --check`.
 - [ci-planned] A new GitHub Actions result is required after pushing this repair; do not treat the local checks as CI passed evidence.
+
+## 2026-06-25 - governance/rule-change
+
+- Change: `ai/changes/CR-20260625T130657Z-high-risk-semantic-governance-framework`.
+- Added CR-3 high-risk semantic governance framework registries, JSON schemas, `tools/high-risk-governance-checker.js`, `check:high-risk-governance`, and `tests/high-risk-governance.test.js`.
+- Blocking scope is schema/registry correctness and explicitly required entries; missing future sales-order/delivery/finance/production runtime evidence is not hard blocking in CR-3.
+- `beforeSalesOrder` remains blocked; sales-order snapshot, state-machine, fund-boundary, idempotency, contract-to-test, and migration-plan contracts remain CR-4 scope.
+- No customer runtime code, sales-order runtime code, customer business rules, or business database table structure was changed.
+- [local] Verification passed: `node --test tests/high-risk-governance.test.js` with 36 tests, `npm test` with 174 tests, `npm run check:high-risk-governance` with the expected non-blocking customer baseline migration warning, full `npm run check`, cached Maven backend compile, ruoyi-ui production build, `git diff --check`, and forbidden-path audit.
+- [not-run] Plain `mvn -pl ruoyi-admin -am -DskipTests compile` is not runnable on local PATH; [local] the project configured Maven command in `ai/rules/runtime-policy.json` passed with `BUILD SUCCESS`.

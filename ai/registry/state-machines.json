@@ -1,0 +1,5 @@
+{
+  "schemaVersion": 1,
+  "description": "Registry for business state machines. CR-3 only establishes the schema/checker; sales-order state machine contracts belong to CR-4.",
+  "entries": []
+}

@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.codex.my/schemas/contract-test-matrix.schema.json",
+  "title": "Contract-to-test matrix",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["schemaVersion", "contracts"],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "contracts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": [
+          "contractId",
+          "contractFile",
+          "requirementText",
+          "status",
+          "coverage",
+          "tests",
+          "deferredReason",
+          "phase",
+          "owner",
+          "trigger",
+          "expiresAtPhase"
+        ],
+        "properties": {
+          "contractId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "contractFile": {
+            "type": "string",
+            "minLength": 1
+          },
+          "requirementText": {
+            "type": "string",
+            "minLength": 1
+          },
+          "status": {
+            "enum": ["covered", "deferred", "blocked", "not-applicable"]
+          },
+          "coverage": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "tests": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "deferredReason": {
+            "type": "string"
+          },
+          "phase": {
+            "type": "string"
+          },
+          "owner": {
+            "type": "string"
+          },
+          "trigger": {
+            "type": "string"
+          },
+          "expiresAtPhase": {
+            "type": "string"
+          },
+          "blocker": {
+            "type": "string"
+          },
+          "nextAction": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

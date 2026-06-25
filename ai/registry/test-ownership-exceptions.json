@@ -16,6 +16,15 @@
       "relatedFeatures": [
         "customer"
       ]
+    },
+    {
+      "file": "tests/high-risk-governance.test.js",
+      "type": "governance-test",
+      "reason": "validates CR-3 high-risk semantic governance framework gates",
+      "owner": "governance",
+      "relatedFeatures": [
+        "customer"
+      ]
     }
   ]
 }

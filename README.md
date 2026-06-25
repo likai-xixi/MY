@@ -25,6 +25,7 @@ Codex Auto Dev OS is kept in the repository as the workflow and evidence layer: 
 - Component governance: shared components must be registered in the component catalog; generic reusable controls are blocked inside feature-local component folders.
 - Deletion ownership: delete dry-run lists feature files, registries, graph entries, API/UI ownership, database objects, permissions, SQL, mapper XML, menus, components, docs, orphan checks, and rollback notes.
 - Full gate: `npm run check` runs scans, registries, graphs, memory, handoff, components, boundaries, stale-doc checks, orphan checks, rule lock, diff scope, duplicate scan, and tests.
+- High-risk semantic governance: CR-3 adds `check:high-risk-governance`, high-risk domain registries, evidence/contract/idempotency/state-machine/migration/permission schemas, and framework checks. It is framework-only; `beforeSalesOrder` remains blocked and sales-order contracts remain CR-4 scope.
 
 ## Normal Codex App workflow
 
@@ -188,3 +189,5 @@ npm run review:feature -- "功能预审：..."
 `review:feature` writes a structured `ai/reviews/RV-*` package. Complex implementation stays blocked until the review decision intentionally contains `Allow Implementation`.
 
 Sales-order implementation must pass the `beforeSalesOrder` gate first. Governance/rule-change work may improve the gate itself, but it must not create sales-order code, change customer business code, or alter business database table structure.
+
+CR-3 high-risk semantic governance is documented in `docs/high-risk-semantic-governance.md`. Evidence freshness is framework-only until machine evidence manifests exist; existing customer migration DDL is a baseline warning, while future required migrations must be executable.

@@ -1,0 +1,105 @@
+{
+  "schemaVersion": 1,
+  "mode": "rule-change",
+  "changeType": "governance/high-risk-semantic-framework",
+  "feature": {
+    "id": "platform",
+    "name": "Platform Governance",
+    "status": "active"
+  },
+  "summary": "Add CR-3 high-risk semantic governance registries, schemas, checker, tests, package script wiring, and handoff evidence without touching customer runtime or sales-order implementation code.",
+  "affected": {
+    "governanceScripts": [
+      "tools/high-risk-governance-checker.js"
+    ],
+    "tests": [
+      "tests/high-risk-governance.test.js"
+    ],
+    "registries": [
+      "ai/registry/high-risk-domains.json",
+      "ai/registry/idempotency-registry.json",
+      "ai/registry/state-machines.json",
+      "ai/registry/migration-registry.json",
+      "ai/registry/high-risk-permission-coverage.json",
+      "ai/registry/test-ownership-exceptions.json"
+    ],
+    "schemas": [
+      "ai/rules/schemas/evidence-manifest.schema.json",
+      "ai/rules/schemas/contract-test-matrix.schema.json",
+      "ai/rules/schemas/idempotency-registry.schema.json",
+      "ai/rules/schemas/state-machines.schema.json",
+      "ai/rules/schemas/migration-registry.schema.json",
+      "ai/rules/schemas/high-risk-permission-coverage.schema.json"
+    ],
+    "docsAndMemory": [
+      "README.md",
+      "docs/high-risk-semantic-governance.md",
+      "ai/context/current-context.md",
+      "ai/context/current-context.json",
+      "memory/HANDOVER.md",
+      "memory/PROJECT_STATE.md",
+      "memory/TASKS.json",
+      "memory/CHANGELOG.md",
+      "memory/sessions/2026-06-25-high-risk-semantic-governance-framework.md"
+    ],
+    "changeRecord": [
+      "ai/changes/CR-20260625T130657Z-high-risk-semantic-governance-framework",
+      "ai/rule-proposals/2026-06-25-high-risk-semantic-governance-framework.json"
+    ],
+    "packageScripts": [
+      "package.json"
+    ]
+  },
+  "allowedEditRoots": [
+    "tools",
+    "tests",
+    "ai/registry",
+    "ai/rules",
+    "ai/rule-proposals",
+    "ai/changes",
+    "ai/context",
+    "memory",
+    "README.md",
+    "docs",
+    "package.json"
+  ],
+  "forbiddenEditRoots": [
+    "ruoyi-business/src/main/java/com/ruoyi/business/customer",
+    "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer",
+    "ruoyi-business/src/main/resources/mapper/customer",
+    "ruoyi-ui/src/views/customer",
+    "ruoyi-ui/src/api/customer.js",
+    "sql/customer.ownership.md",
+    "ruoyi-business/src/main/java/com/ruoyi/business/sales-order",
+    "ruoyi-business/src/main/java/com/ruoyi/business/salesorder",
+    "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/sales-order",
+    "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/salesorder",
+    "ruoyi-ui/src/views/sales-order",
+    "ruoyi-ui/src/views/salesorder",
+    "ruoyi-ui/src/api/sales-order.js",
+    "ruoyi-ui/src/api/salesOrder.js",
+    "sql/sales-order.ownership.md",
+    "sql/sales_order_init.sql",
+    "delivery runtime business code",
+    "finance runtime business code",
+    "production runtime business code"
+  ],
+  "blockers": [],
+  "nonGoals": [
+    "Do not modify customer runtime Java, Vue, mapper XML, frontend API client, SQL ownership DDL, or customer business rules.",
+    "Do not create sales-order controller, service, mapper, domain, Vue, API, SQL, route, permission, or table files.",
+    "Do not implement CR-4 sales-order contracts.",
+    "Do not require machine evidence manifests for customer-fund as a blocking gate in CR-3.",
+    "Do not convert future sales-order, delivery, finance, or production runtime evidence gaps into hard blockers before their entries exist."
+  ],
+  "requiredCommands": [
+    "npm run resume",
+    "npm test",
+    "npm run check:high-risk-governance",
+    "npm run check",
+    "mvn -pl ruoyi-admin -am -DskipTests compile",
+    "npm --prefix ruoyi-ui run build:prod",
+    "git diff --check",
+    "forbidden-path audit"
+  ]
+}

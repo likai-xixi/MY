@@ -1,0 +1,5 @@
+{
+  "schemaVersion": 1,
+  "description": "Registry for high-risk mutating API idempotency requirements. Empty entries are allowed in CR-3; future required entries must be complete and tested.",
+  "entries": []
+}

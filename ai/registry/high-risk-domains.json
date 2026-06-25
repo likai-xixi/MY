@@ -1,0 +1,434 @@
+{
+  "schemaVersion": 1,
+  "description": "CR-3 high-risk semantic domain registry. Domains describe when stricter contracts, registries, tests, evidence, permissions, migrations, or state machines are required. Framework-only domains must not imply runtime implementation exists.",
+  "domains": [
+    {
+      "id": "customer-fund",
+      "name": "Customer Fund Boundary",
+      "description": "Customer-level deposit, sample rebate, fund-account, and fund-flow behavior already implemented by the customer module. CR-3 records the high-risk boundary but does not require a machine evidence manifest yet.",
+      "phase": "current-customer-boundary",
+      "status": "implemented-boundary",
+      "appliesToFeatures": [
+        "customer"
+      ],
+      "triggerKeywords": [
+        "customer fund",
+        "deposit",
+        "deduct",
+        "refund",
+        "adjust",
+        "reverse",
+        "fund flow"
+      ],
+      "requiredContracts": [
+        "fund-boundary-contract"
+      ],
+      "requiredRegistries": [
+        "high-risk-permission-coverage",
+        "idempotency-registry",
+        "evidence-manifest"
+      ],
+      "requiredTests": [
+        "tests/customer-risk-gate.test.js"
+      ],
+      "evidenceLevel": "machine-manifest-warning",
+      "blockingMode": "warning-only"
+    },
+    {
+      "id": "sales-order-snapshot",
+      "name": "Sales Order Customer Snapshot",
+      "description": "Sales order must snapshot customer, contact, address, owner, and public-buyer fields instead of relying on mutable customer rows.",
+      "phase": "CR-4-contract",
+      "status": "planned",
+      "appliesToFeatures": [
+        "sales-order"
+      ],
+      "triggerKeywords": [
+        "sales order",
+        "customer snapshot",
+        "buyer snapshot",
+        "address snapshot",
+        "owner snapshot"
+      ],
+      "requiredContracts": [
+        "customer-snapshot-contract"
+      ],
+      "requiredRegistries": [
+        "contract-test-matrix",
+        "migration-registry"
+      ],
+      "requiredTests": [],
+      "evidenceLevel": "contract-required-before-runtime",
+      "blockingMode": "contract-required"
+    },
+    {
+      "id": "sales-order-state",
+      "name": "Sales Order State Machine",
+      "description": "Sales order status transitions must be explicit before delivery, finance, or production depend on them.",
+      "phase": "CR-4-contract",
+      "status": "planned",
+      "appliesToFeatures": [
+        "sales-order"
+      ],
+      "triggerKeywords": [
+        "state",
+        "status",
+        "submit",
+        "approve",
+        "cancel",
+        "close"
+      ],
+      "requiredContracts": [
+        "state-machine-contract"
+      ],
+      "requiredRegistries": [
+        "state-machines",
+        "contract-test-matrix"
+      ],
+      "requiredTests": [],
+      "evidenceLevel": "contract-required-before-runtime",
+      "blockingMode": "contract-required"
+    },
+    {
+      "id": "sales-order-submit",
+      "name": "Sales Order Submit",
+      "description": "Sales order submit mutates order state, customer snapshots, and downstream readiness. Runtime implementation remains blocked until CR-4 contracts exist.",
+      "phase": "CR-4-contract",
+      "status": "planned",
+      "appliesToFeatures": [
+        "sales-order"
+      ],
+      "triggerKeywords": [
+        "submit order",
+        "place order",
+        "order submit",
+        "create sales order"
+      ],
+      "requiredContracts": [
+        "customer-snapshot-contract",
+        "state-machine-contract",
+        "idempotency-contract"
+      ],
+      "requiredRegistries": [
+        "idempotency-registry",
+        "state-machines",
+        "contract-test-matrix",
+        "high-risk-permission-coverage"
+      ],
+      "requiredTests": [],
+      "evidenceLevel": "contract-required-before-runtime",
+      "blockingMode": "contract-required"
+    },
+    {
+      "id": "delivery-settlement",
+      "name": "Delivery Settlement",
+      "description": "Delivery settlement depends on sales-order state, shipment confirmation, fund deduction, and settlement evidence.",
+      "phase": "future-runtime",
+      "status": "planned",
+      "appliesToFeatures": [
+        "delivery",
+        "sales-order",
+        "finance"
+      ],
+      "triggerKeywords": [
+        "delivery",
+        "shipment",
+        "settlement",
+        "shipping"
+      ],
+      "requiredContracts": [
+        "delivery-boundary-contract",
+        "fund-boundary-contract"
+      ],
+      "requiredRegistries": [
+        "contract-test-matrix",
+        "state-machines",
+        "high-risk-permission-coverage"
+      ],
+      "requiredTests": [],
+      "evidenceLevel": "future-implementation-required",
+      "blockingMode": "implementation-required"
+    },
+    {
+      "id": "finance-fund",
+      "name": "Finance Fund Mutation",
+      "description": "Finance receipts, claims, deductions, refunds, adjustments, and reversals mutate money-like balances and require idempotency and evidence.",
+      "phase": "future-runtime",
+      "status": "planned",
+      "appliesToFeatures": [
+        "finance",
+        "customer",
+        "sales-order"
+      ],
+      "triggerKeywords": [
+        "receipt",
+        "claim",
+        "deduct",
+        "refund",
+        "adjust",
+        "reverse",
+        "reconciliation"
+      ],
+      "requiredContracts": [
+        "fund-boundary-contract",
+        "receipt-reconciliation-contract"
+      ],
+      "requiredRegistries": [
+        "idempotency-registry",
+        "high-risk-permission-coverage",
+        "evidence-manifest"
+      ],
+      "requiredTests": [],
+      "evidenceLevel": "future-implementation-required",
+      "blockingMode": "implementation-required"
+    },
+    {
+      "id": "production-generation",
+      "name": "Production Generation",
+      "description": "Production task generation must be gated by payment/release policy, order state, and duplicate-generation protection.",
+      "phase": "future-runtime",
+      "status": "planned",
+      "appliesToFeatures": [
+        "production",
+        "sales-order"
+      ],
+      "triggerKeywords": [
+        "production",
+        "generate production",
+        "release",
+        "work order"
+      ],
+      "requiredContracts": [
+        "production-release-policy",
+        "payment-state-contract"
+      ],
+      "requiredRegistries": [
+        "idempotency-registry",
+        "state-machines",
+        "contract-test-matrix"
+      ],
+      "requiredTests": [],
+      "evidenceLevel": "future-implementation-required",
+      "blockingMode": "implementation-required"
+    },
+    {
+      "id": "station-scan",
+      "name": "Station Scan",
+      "description": "Station scan records production progress and can create irreversible operational state if duplicated or out of sequence.",
+      "phase": "future-runtime",
+      "status": "planned",
+      "appliesToFeatures": [
+        "production"
+      ],
+      "triggerKeywords": [
+        "station",
+        "scan",
+        "barcode",
+        "qr code"
+      ],
+      "requiredContracts": [
+        "station-scan-contract"
+      ],
+      "requiredRegistries": [
+        "idempotency-registry",
+        "state-machines",
+        "evidence-manifest"
+      ],
+      "requiredTests": [],
+      "evidenceLevel": "future-implementation-required",
+      "blockingMode": "implementation-required"
+    },
+    {
+      "id": "station-offline-sync",
+      "name": "Station Offline Sync",
+      "description": "Offline station sync must protect duplicate scan replay, conflict resolution, and stale local state.",
+      "phase": "future-runtime",
+      "status": "planned",
+      "appliesToFeatures": [
+        "production"
+      ],
+      "triggerKeywords": [
+        "offline",
+        "sync",
+        "retry",
+        "replay",
+        "station"
+      ],
+      "requiredContracts": [
+        "station-offline-sync-contract"
+      ],
+      "requiredRegistries": [
+        "idempotency-registry",
+        "contract-test-matrix",
+        "evidence-manifest"
+      ],
+      "requiredTests": [],
+      "evidenceLevel": "future-implementation-required",
+      "blockingMode": "implementation-required"
+    },
+    {
+      "id": "inventory-stock",
+      "name": "Inventory Stock Mutation",
+      "description": "Inventory stock mutation changes quantity state and must protect duplicate updates and stock ledger consistency.",
+      "phase": "future-runtime",
+      "status": "planned",
+      "appliesToFeatures": [
+        "inventory"
+      ],
+      "triggerKeywords": [
+        "stock",
+        "inventory",
+        "inbound",
+        "outbound",
+        "reserve"
+      ],
+      "requiredContracts": [
+        "stock-ledger-contract"
+      ],
+      "requiredRegistries": [
+        "idempotency-registry",
+        "contract-test-matrix",
+        "migration-registry"
+      ],
+      "requiredTests": [],
+      "evidenceLevel": "future-implementation-required",
+      "blockingMode": "implementation-required"
+    },
+    {
+      "id": "dxf-generation",
+      "name": "DXF Generation",
+      "description": "DXF output affects manufacturing files and must be traceable to source order/configuration inputs.",
+      "phase": "future-runtime",
+      "status": "planned",
+      "appliesToFeatures": [
+        "production",
+        "file-center"
+      ],
+      "triggerKeywords": [
+        "dxf",
+        "cad",
+        "drawing",
+        "generate file"
+      ],
+      "requiredContracts": [
+        "dxf-generation-contract"
+      ],
+      "requiredRegistries": [
+        "evidence-manifest",
+        "contract-test-matrix"
+      ],
+      "requiredTests": [],
+      "evidenceLevel": "future-implementation-required",
+      "blockingMode": "implementation-required"
+    },
+    {
+      "id": "laser-task",
+      "name": "Laser Task",
+      "description": "Laser task issuance can trigger physical manufacturing operations and must be permissioned and idempotent.",
+      "phase": "future-runtime",
+      "status": "planned",
+      "appliesToFeatures": [
+        "production"
+      ],
+      "triggerKeywords": [
+        "laser",
+        "task",
+        "cut",
+        "dispatch"
+      ],
+      "requiredContracts": [
+        "laser-task-contract"
+      ],
+      "requiredRegistries": [
+        "idempotency-registry",
+        "high-risk-permission-coverage",
+        "evidence-manifest"
+      ],
+      "requiredTests": [],
+      "evidenceLevel": "future-implementation-required",
+      "blockingMode": "implementation-required"
+    },
+    {
+      "id": "file-center",
+      "name": "File Center",
+      "description": "Business files, generated artifacts, and upload/download operations need provenance and permission coverage.",
+      "phase": "future-runtime",
+      "status": "planned",
+      "appliesToFeatures": [
+        "file-center",
+        "production",
+        "sales-order"
+      ],
+      "triggerKeywords": [
+        "file",
+        "upload",
+        "download",
+        "attachment",
+        "generated artifact"
+      ],
+      "requiredContracts": [
+        "file-center-contract"
+      ],
+      "requiredRegistries": [
+        "high-risk-permission-coverage",
+        "evidence-manifest"
+      ],
+      "requiredTests": [],
+      "evidenceLevel": "future-implementation-required",
+      "blockingMode": "implementation-required"
+    },
+    {
+      "id": "high-risk-permission",
+      "name": "High-Risk Permission Coverage",
+      "description": "High-risk actions need dedicated backend/frontend/menu/registry permission coverage instead of generic edit permissions.",
+      "phase": "CR-3-framework",
+      "status": "framework-ready",
+      "appliesToFeatures": [
+        "platform"
+      ],
+      "triggerKeywords": [
+        "permission",
+        "auth",
+        "role",
+        "high risk action"
+      ],
+      "requiredContracts": [],
+      "requiredRegistries": [
+        "high-risk-permission-coverage"
+      ],
+      "requiredTests": [
+        "tests/high-risk-governance.test.js"
+      ],
+      "evidenceLevel": "schema-and-checker",
+      "blockingMode": "implementation-required"
+    },
+    {
+      "id": "migration",
+      "name": "Executable Migration Gate",
+      "description": "Future business tables and blocking schema changes must use executable migrations, while existing customer DDL remains a baseline warning in CR-3.",
+      "phase": "CR-3-framework",
+      "status": "framework-ready",
+      "appliesToFeatures": [
+        "platform"
+      ],
+      "triggerKeywords": [
+        "migration",
+        "table",
+        "ddl",
+        "schema",
+        "seed"
+      ],
+      "requiredContracts": [
+        "migration-plan"
+      ],
+      "requiredRegistries": [
+        "migration-registry"
+      ],
+      "requiredTests": [
+        "tests/high-risk-governance.test.js"
+      ],
+      "evidenceLevel": "schema-and-checker",
+      "blockingMode": "implementation-required"
+    }
+  ]
+}

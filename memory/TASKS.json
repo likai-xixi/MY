@@ -8,8 +8,8 @@
       "status": "in_progress",
       "owner": "Codex",
       "priority": "high",
-      "statusReason": "Governance change CR-20260625T112646Z-ci-backend-frontend-governance-checks adds real baseline GitHub Actions coverage and is repairing pushed governance CI failures by tracking pre-existing RuoYi tool/build route source files, preventing npm install from generating untracked lockfiles, making Maven available to npm run check in CI, and falling back from local Maven tool paths to standard mvn when needed.",
-      "nextStep": "Verify, commit, and push the CR-2 runtime checker Maven fallback repair, then confirm the new GitHub Actions run. Keep CR-3 high-risk semantic gates and CR-4 sales-order contracts separate.",
+      "statusReason": "Governance change CR-20260625T130657Z-high-risk-semantic-governance-framework establishes CR-3 high-risk semantic registries, schemas, checker, tests, and npm run check wiring. It is framework-only and does not modify customer runtime code, create sales-order runtime code, or change business database structure.",
+      "nextStep": "Review CR-3, then commit and push only after explicit user confirmation. Keep CR-4 as the sales-order contract package.",
       "blockedBy": [],
       "verification": [
         "npm run profile:setup",
@@ -84,12 +84,25 @@
         "GitHub Actions run 28170129447 passed route scan, handoff integrity, backend compile, and frontend build but failed in governance at check:runtime because mvn was unavailable",
         "CR-2 governance job repair adds Java 17 setup before Node so npm run check can run the existing runtime checker without skipping it",
         "GitHub Actions run 28170484346 still failed in governance at check:runtime because ai/rules/runtime-policy.json configured a Windows-local Maven path",
-        "CR-2 runtime checker repair falls back from unavailable configured Maven paths to mvn while still failing when no Maven command is runnable"
+        "CR-2 runtime checker repair falls back from unavailable configured Maven paths to mvn while still failing when no Maven command is runnable",
+        "CR-2 baseline CI coverage is published on master at 84886464f7dda693fe16af15f1491e03903c150c and GitHub Actions passed governance, backend-compile, and frontend-build before CR-3 started",
+        "CR-20260625T130657Z-high-risk-semantic-governance-framework created high-risk domain, idempotency, state-machine, migration, and permission registries",
+        "CR-20260625T130657Z-high-risk-semantic-governance-framework added evidence, contract-to-test, idempotency, state-machine, migration, and high-risk permission JSON schemas",
+        "CR-20260625T130657Z-high-risk-semantic-governance-framework added tools/high-risk-governance-checker.js and package script check:high-risk-governance",
+        "node --test tests/high-risk-governance.test.js passed with 36 tests for CR-20260625T130657Z-high-risk-semantic-governance-framework",
+        "npm test passed with 174 tests for CR-20260625T130657Z-high-risk-semantic-governance-framework",
+        "npm run check:high-risk-governance passed for CR-20260625T130657Z-high-risk-semantic-governance-framework with the expected non-blocking customer baseline migration warning",
+        "npm run check passed for CR-20260625T130657Z-high-risk-semantic-governance-framework with check:high-risk-governance wired into the existing gate sequence",
+        "[not-run] plain mvn -pl ruoyi-admin -am -DskipTests compile is not runnable on local PATH for CR-20260625T130657Z-high-risk-semantic-governance-framework",
+        "cached Maven compile passed for CR-20260625T130657Z-high-risk-semantic-governance-framework using C:\\Users\\11131\\.cache\\codex-tools\\apache-maven-3.9.9\\bin\\mvn.cmd",
+        "npm --prefix ruoyi-ui run build:prod passed for CR-20260625T130657Z-high-risk-semantic-governance-framework",
+        "git diff --check passed for CR-20260625T130657Z-high-risk-semantic-governance-framework",
+        "forbidden-path audit returned FORBIDDEN_PATH_AUDIT_OK for CR-20260625T130657Z-high-risk-semantic-governance-framework"
       ],
-      "latestSession": "memory/sessions/2026-06-25-ci-backend-frontend-governance-checks.md",
+      "latestSession": "memory/sessions/2026-06-25-high-risk-semantic-governance-framework.md",
       "handoverRequired": true,
       "updatedAt": "2026-06-25",
-      "latestChange": "CR-20260625T112646Z-ci-backend-frontend-governance-checks"
+      "latestChange": "CR-20260625T130657Z-high-risk-semantic-governance-framework"
     },
     {
       "id": "TASK-CUSTOMER",

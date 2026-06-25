@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.codex.my/schemas/high-risk-permission-coverage.schema.json",
+  "title": "High-risk permission coverage registry",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["schemaVersion", "entries"],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "entries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": [
+          "featureId",
+          "api",
+          "riskDomain",
+          "backendPermission",
+          "frontendPermission",
+          "menuPermission",
+          "registryPermission",
+          "tests",
+          "status"
+        ],
+        "properties": {
+          "tests": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "status": {
+            "enum": ["required", "deferred", "framework-warning", "not-applicable"]
+          },
+          "deferredReason": {
+            "type": "string"
+          },
+          "phase": {
+            "type": "string"
+          },
+          "owner": {
+            "type": "string"
+          },
+          "trigger": {
+            "type": "string"
+          },
+          "hasFrontendAction": {
+            "type": "boolean"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.codex.my/schemas/migration-registry.schema.json",
+  "title": "Business migration registry",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["schemaVersion", "entries"],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "entries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": [
+          "migrationId",
+          "featureId",
+          "file",
+          "type",
+          "appliesToTables",
+          "status",
+          "phase",
+          "rollbackPlan",
+          "verification",
+          "owner"
+        ],
+        "properties": {
+          "appliesToTables": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "verification": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "blocking": {
+            "type": "boolean"
+          }
+        }
+      }
+    }
+  }
+}

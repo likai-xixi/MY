@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "description": "Registry for executable business migrations. Existing customer DDL in sql/customer.ownership.md is a CR-3 baseline warning, not a blocking executable migration.",
+  "entries": [
+    {
+      "migrationId": "customer-current-ddl-baseline",
+      "featureId": "customer",
+      "file": "sql/customer.ownership.md",
+      "type": "baseline-ddl-document",
+      "appliesToTables": [
+        "customer",
+        "customer_contact",
+        "customer_address",
+        "customer_salesman_bind_log",
+        "customer_fund_account",
+        "customer_fund_flow",
+        "customer_deposit_batch",
+        "customer_sample_policy",
+        "sample_rebate_record"
+      ],
+      "status": "baseline",
+      "phase": "existing-customer-baseline",
+      "rollbackPlan": "Existing customer DDL remains documented as baseline ownership. Future blocking table changes must use executable migration files.",
+      "verification": [
+        "sql/customer.ownership.md runtime validation SQL"
+      ],
+      "owner": "governance",
+      "blocking": false
+    }
+  ]
+}

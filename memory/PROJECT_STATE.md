@@ -22,7 +22,11 @@ Customer management is the first active business feature. The customer model rem
 - sample rebate remains separate as `SAMPLE_REBATE`;
 - customer-level fund changes continue through `customer_fund_flow`; direct balance edits remain out of scope.
 
-Current governance change `CR-20260625T112646Z-ci-backend-frontend-governance-checks` adds CR-2 baseline CI coverage. The GitHub Actions workflow now contains real jobs for Node governance (`npm run check`), backend Maven compile (`mvn -pl ruoyi-admin -am -DskipTests compile`), and ruoyi-ui production build (`npm --prefix ruoyi-ui run build:prod`). CI coverage and provenance checkers now parse actual workflow `run:` commands and support `[ci-planned]` without treating it as passed CI evidence. The first pushed Actions run failed only in `governance` because clean Linux checkout lacked the ignored `ruoyi-ui/src/views/tool/build/*.vue` route source files already referenced by generated route artifacts; the follow-up repair tracks those pre-existing RuoYi tool sources with a narrow `.gitignore` exception. The second pushed Actions run passed the frontend route scan but failed because root `npm install` generated an untracked `package-lock.json`; CI install commands now use `--package-lock=false` while still running real npm installs because no committed lockfiles exist. The third pushed Actions run reached `check:runtime` and failed because `mvn` was unavailable in the Node-only governance job; the governance job now sets up Java 17 before Node so `npm run check` can run the existing runtime checker. The fourth pushed Actions run still failed because the runtime policy configured a Windows-local Maven path; `tools/runtime-checker.js` now falls back from an unavailable configured tool path to the standard command name such as `mvn`.
+CR-2 baseline CI coverage is already published on `master` at `84886464f7dda693fe16af15f1491e03903c150c`. GitHub Actions passed the real `governance`, `backend-compile`, and `frontend-build` jobs after the Maven fallback repair.
+
+Current governance change `CR-20260625T130657Z-high-risk-semantic-governance-framework` is CR-3. It adds high-risk semantic governance registries, JSON schemas, a real checker, package script wiring, and temp-root tests. This is a governance/rule-change batch only: it does not modify customer runtime code, does not create sales-order runtime code, does not change business database table structure, and does not open `beforeSalesOrder`.
+
+CR-3 blocking is intentionally narrow. Schema/registry format errors, malformed machine evidence manifests, missing covered evidence files, incomplete required entries, executable migration violations, generic edit permissions on required high-risk APIs, and invalid state-machine transitions fail. Missing evidence manifests do not fail. Stale evidence hashes and current customer migration baseline DDL warn unless explicitly declared blocking.
 
 Current customer fund concurrency change `CR-20260625T042041Z-change`:
 
@@ -71,15 +75,16 @@ Sales order, shipment, finance settlement, automatic deduction, receipt claiming
 
 ## Active Task
 
-`TASK-0002` is the active governance/platform task in `memory/TASKS.json` for `CR-20260625T112646Z-ci-backend-frontend-governance-checks`. The customer concurrency CR remains historical context; this rule-change batch must not modify customer runtime code.
+`TASK-0002` is the active governance/platform task in `memory/TASKS.json` for `CR-20260625T130657Z-high-risk-semantic-governance-framework`. The customer concurrency CR remains historical context; this rule-change batch must not modify customer runtime code.
 
 ## Latest Session
 
-`memory/sessions/2026-06-25-ci-backend-frontend-governance-checks.md`
+`memory/sessions/2026-06-25-high-risk-semantic-governance-framework.md`
 
 ## Next Actions
 
-- Review `CR-20260625T112646Z-ci-backend-frontend-governance-checks`, then handle commit/push and post-push GitHub Actions confirmation as a separate publish step.
+- Review CR-3, then commit and push only after explicit user confirmation.
+- Keep CR-4 as the sales-order contract package: customer snapshot contract, state-machine contract, fund-boundary contract, idempotency contract, contract-to-test matrix, and migration plan.
 - Keep sales order, delivery, finance, source/channel/account, maintenance-fee calculation, commission calculation, automatic deduction, receipt claiming, reconciliation, and order-level deposit behavior in separate future feature changes.
 - Before any future runtime claim about PUBLIC data cleanliness, rerun the invariant SQL in `sql/customer.ownership.md` to confirm only `PUB_DIRECT_SALE` and `PUB_SELF_MEDIA` exist as active PUBLIC rows.
 
@@ -107,7 +112,10 @@ Sales order, shipment, finance settlement, automatic deduction, receipt claiming
 
 ## Last Verification
 
-For `CR-20260625T112646Z-ci-backend-frontend-governance-checks`, [local] `npm run resume`, [local] `npm run start:change -- --mode rule-change "ci backend frontend governance checks"`, [local] `npm run context:build -- customer`, [local] `node --test tests/governance-gates.test.js` with 16 tests, [local] `npm test` with 138 Node tests, [local] `npm run check:ci-coverage-declaration`, [local] `npm run check:verification-provenance`, [local] `npm run check` with 138 Node tests and existing config-safety warnings only, [local] `mvn -pl ruoyi-admin -am -DskipTests compile` with `BUILD SUCCESS`, and [local] `npm --prefix ruoyi-ui run build:prod` with Vite build success passed. [ci-planned] GitHub Actions workflow includes Node governance with Java/Maven available for `check:runtime`, Maven compile, ruoyi-ui build, lockfile-free install commands, and runtime checker fallback from local Maven path to `mvn`; actual CI result is determined after push. This governance change did not modify customer runtime code, sales-order implementation code, customer business rules, or business database table structure.
+For `CR-20260625T130657Z-high-risk-semantic-governance-framework`, [local] `npm run resume` passed during startup and final verification. [local] `npm run rule:propose -- "high-risk semantic governance framework" --reason "..."`
+created `ai/rule-proposals/2026-06-25-high-risk-semantic-governance-framework.json`. [local] `npm run start:change -- --mode rule-change "high-risk semantic governance framework"` created the current CR. [local] `node --test tests/high-risk-governance.test.js` passed with 36 tests. [local] `npm test` passed with 174 tests. [local] `npm run check:high-risk-governance` passed with one expected non-blocking warning for the existing customer baseline DDL document in `sql/customer.ownership.md`. [local] `npm run check` passed with the new high-risk gate wired into the existing gate sequence and `npm test` with 174 tests. [not-run] `mvn -pl ruoyi-admin -am -DskipTests compile` because plain `mvn` is not runnable on local PATH; [local] `C:\Users\11131\.cache\codex-tools\apache-maven-3.9.9\bin\mvn.cmd -pl ruoyi-admin -am -DskipTests compile` passed with reactor `BUILD SUCCESS`. [local] `npm --prefix ruoyi-ui run build:prod` passed with Vite production build success. [local] `git diff --check` passed. [local] forbidden-path audit returned `FORBIDDEN_PATH_AUDIT_OK`.
+
+For `CR-20260625T112646Z-ci-backend-frontend-governance-checks`, [local] `npm run resume`, [local] `npm run start:change -- --mode rule-change "ci backend frontend governance checks"`, [local] `npm run context:build -- customer`, [local] `node --test tests/governance-gates.test.js` with 16 tests, [local] `npm test` with 138 Node tests, [local] `npm run check:ci-coverage-declaration`, [local] `npm run check:verification-provenance`, [local] `npm run check` with 138 Node tests and existing config-safety warnings only, [local] `mvn -pl ruoyi-admin -am -DskipTests compile` with `BUILD SUCCESS`, and [local] `npm --prefix ruoyi-ui run build:prod` with Vite build success passed. This governance change did not modify customer runtime code, sales-order implementation code, customer business rules, or business database table structure. The pushed CR-2 GitHub Actions baseline passed before CR-3 started.
 
 For `CR-20260625T042041Z-change`, `npm run resume`, `npm run context:build -- customer`, `npm run ai:do -- "功能迭代：客户管理"`, `npm run impact -- 客户管理`, `npm run review:feature -- "功能预审：客户管理资金并发安全收口" --feature customer`, `node --test tests/customer-risk-gate.test.js`, cached Maven compile, cached Maven package, runtime API/DB validation, `npm run scan:all`, `npm run finalize:change -- --summary "客户管理资金并发安全收口"`, regenerated current context, `npm run check` with 121 Node tests, standalone `npm test` with 121 Node tests, and `git diff --check` passed.
 
