@@ -257,3 +257,14 @@
 - No Java, XML, Vue, API client, SQL, customer fund business logic, or sales-order implementation files were changed.
 - Verification passed after scoped current-CR baseline exceptions and context regeneration: `npm run check` with 120 Node tests, standalone `npm test` with 120 Node tests, and `git diff --check`.
 - Feature: `customer`.
+
+## 2026-06-25 - update
+- Change: `ai/changes/CR-20260625T042041Z-change`.
+- 客户管理资金并发安全收口.
+- Extracted customer fund mutation into `ICustomerFundService` / `CustomerFundServiceImpl` and delegated fund-account initialization, deposit entry, generic fund entry, and sample rebate fund-flow writing from `CustomerServiceImpl`.
+- Added `CustomerMapper.selectFundAccountForUpdate(customerId, accountType)` with `limit 1 for update`, so balance calculation happens after the account row is locked.
+- Handled concurrent first fund-account creation through `DuplicateKeyException` and locked re-read, and added bounded retry for `flow_no` and `deposit_batch_no` unique collisions.
+- Runtime API/DB validation passed for omitted/explicit `CUSTOMER_DEPOSIT`, invalid account rejection without mutation, sample rebate record-before-flow without deposit batch, PUBLIC customer rejection without mutation, and 10 concurrent one-yuan deposits without lost update or duplicate numbers.
+- Verification passed: cached Maven compile/package, `node --test tests/customer-risk-gate.test.js` with 8 tests, `npm run scan:all`, `npm run finalize:change -- --summary "客户管理资金并发安全收口"`, regenerated current context, `npm run check` with 121 Node tests, standalone `npm test` with 121 Node tests, and `git diff --check`.
+- No sales-order, delivery, finance, deduction, refund, adjustment, reversal, governance-rule, or SQL business table structure change was made. No commit or push has been made.
+- Feature: `customer`.

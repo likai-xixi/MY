@@ -3,15 +3,13 @@
   "generatedBy": "scripts/context-build.js",
   "generatedAt": "stable",
   "currentFeature": "customer",
-  "currentChange": "CR-20260625T035514Z-change",
+  "currentChange": "CR-20260625T042041Z-change",
   "repositoryProfile": {
     "adapter": "ruoyi",
     "locked": true,
     "stack": "RuoYi + Vue3 + Codex Auto Dev OS"
   },
   "allowedEditRoots": [
-    "README.md",
-    "ai/context",
     "features/customer.md",
     "ruoyi-business/src/main/java/com/ruoyi/business/customer",
     "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer",
@@ -19,6 +17,7 @@
     "ruoyi-ui/src/utils/region-data.js",
     "ruoyi-ui/src/api/customer.contract.md",
     "ruoyi-ui/src/api/customer.js",
+    "tests/customer-risk-gate.test.js",
     "ai/contracts/customer.api.md",
     "ai/contracts/customer.db.md",
     "ai/contracts/customer.delete-ownership.md",
@@ -36,7 +35,9 @@
     "ruoyi-ui/src/views/customer/index.vue",
     "ai/registry/features.json",
     "ai/registry/modules.json",
+    "ai/context",
     "ai/changes",
+    "ai/reviews/RV-20260625T042103Z-review",
     "ai/generated",
     "graph",
     "memory",
@@ -90,15 +91,15 @@
       "reason": "Governance backlog and required/deferred evidence."
     },
     {
-      "path": "ai/changes/CR-20260625T035514Z-change/impact.json",
+      "path": "ai/changes/CR-20260625T042041Z-change/impact.json",
       "reason": "Current change allowed and forbidden edit roots."
     },
     {
-      "path": "ai/changes/CR-20260625T035514Z-change/plan.md",
+      "path": "ai/changes/CR-20260625T042041Z-change/plan.md",
       "reason": "Current change execution plan."
     },
     {
-      "path": "ai/changes/CR-20260625T035514Z-change/verification.md",
+      "path": "ai/changes/CR-20260625T042041Z-change/verification.md",
       "reason": "Current change verification evidence."
     }
   ],

@@ -60,6 +60,8 @@ public interface CustomerMapper
 
     public CustomerFundAccount selectFundAccount(@Param("customerId") Long customerId, @Param("accountType") String accountType);
 
+    public CustomerFundAccount selectFundAccountForUpdate(@Param("customerId") Long customerId, @Param("accountType") String accountType);
+
     public int insertFundAccount(CustomerFundAccount account);
 
     public int updateFundAccountBalance(@Param("accountId") Long accountId,

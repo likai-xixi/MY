@@ -1,12 +1,16 @@
+# Context
+
 # Current Context
 
 Current feature: `customer`
-Current change: `CR-20260625T042041Z-change`
+Current change: `CR-20260625T035514Z-change`
 Repository: RuoYi + Vue3 + Codex Auto Dev OS
 Profile: adapter `ruoyi`, locked `true`
 
 ## Allowed Edit Roots
 
+- `README.md`
+- `ai/context`
 - `features/customer.md`
 - `ruoyi-business/src/main/java/com/ruoyi/business/customer`
 - `ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer`
@@ -14,7 +18,6 @@ Profile: adapter `ruoyi`, locked `true`
 - `ruoyi-ui/src/utils/region-data.js`
 - `ruoyi-ui/src/api/customer.contract.md`
 - `ruoyi-ui/src/api/customer.js`
-- `tests/customer-risk-gate.test.js`
 - `ai/contracts/customer.api.md`
 - `ai/contracts/customer.db.md`
 - `ai/contracts/customer.delete-ownership.md`
@@ -32,9 +35,7 @@ Profile: adapter `ruoyi`, locked `true`
 - `ruoyi-ui/src/views/customer/index.vue`
 - `ai/registry/features.json`
 - `ai/registry/modules.json`
-- `ai/context`
 - `ai/changes`
-- `ai/reviews/RV-20260625T042103Z-review`
 - `ai/generated`
 - `graph`
 - `memory`
@@ -57,9 +58,9 @@ Profile: adapter `ruoyi`, locked `true`
 - `ai/roadmap/phase-gates.json` - beforeSalesOrder gate state.
 - `ai/roadmap/refactor-debt.json` - Known debt affecting sales-order handoff.
 - `ai/roadmap/enhancement-backlog.json` - Governance backlog and required/deferred evidence.
-- `ai/changes/CR-20260625T042041Z-change/impact.json` - Current change allowed and forbidden edit roots.
-- `ai/changes/CR-20260625T042041Z-change/plan.md` - Current change execution plan.
-- `ai/changes/CR-20260625T042041Z-change/verification.md` - Current change verification evidence.
+- `ai/changes/CR-20260625T035514Z-change/impact.json` - Current change allowed and forbidden edit roots.
+- `ai/changes/CR-20260625T035514Z-change/plan.md` - Current change execution plan.
+- `ai/changes/CR-20260625T035514Z-change/verification.md` - Current change verification evidence.
 
 ## Must Not Break
 

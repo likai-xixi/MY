@@ -5,9 +5,9 @@
 - ID: `customer`
 - Name: 客户管理
 - Adapter: locked RuoYi adapter
-- Current change: `CR-20260625T035514Z-change`
-- Current closeout scope: handoff/status ownership sync only. This closeout does not change customer runtime Java/XML/Vue/API/SQL code or customer fund business logic.
-- Previous pushed business commit on GitHub master: `d103b0d fix(customer): restrict deposit endpoint to customer deposit`.
+- Current change: `CR-20260625T042041Z-change`
+- Current scope: customer fund concurrency safety closeout. This change extracts `CustomerFundService`, keeps external customer API paths unchanged, row-locks fund accounts before balance calculation, handles concurrent fund-account creation, and retries `flow_no` / `deposit_batch_no` unique-key collisions.
+- Previous pushed commit on GitHub master: `166c3ee docs(customer): close handoff status drift`.
 
 ## Business Problem
 
@@ -151,7 +151,7 @@
 - `owner_profit_mode varchar(32) not null default 'NONE'`
 - `owner_effective_time datetime default null`
 
-Funds are modeled as account plus flow plus batch/policy records. Balance, frozen amount, and available amount are updated only inside the fund-entry service transaction that writes `customer_fund_flow`.
+Funds are modeled as account plus flow plus batch/policy records. Balance, frozen amount, and available amount are updated only inside `CustomerFundService` transactions that write `customer_fund_flow`.
 
 Fund account types:
 
@@ -167,6 +167,14 @@ Deposit flow types:
 - `DEPOSIT_IN`
 
 The current customer deposit-entry endpoint is account-locked and 入金-only: `POST /business/customer/{customerId}/fund/deposit` accepts omitted `accountType` or explicit `CUSTOMER_DEPOSIT`, stamps the entry as `CUSTOMER_DEPOSIT`, and rejects `SAMPLE_REBATE` or any other non-`CUSTOMER_DEPOSIT` value before account balance, deposit batch, or fund flow mutation. It accepts omitted `flowType` or `DEPOSIT_IN` and rejects `DEPOSIT_DEDUCT`、`DEPOSIT_REFUND`、`DEPOSIT_ADJUST`、`DEPOSIT_REVERSE` with a service error. Dedicated deduction/refund/adjust/reversal flows are not implemented in this customer iteration.
+
+Fund-entry concurrency rules:
+
+- `CustomerServiceImpl` delegates fund mutation to the injected `CustomerFundService`.
+- `CustomerFundServiceImpl` performs fund entry in public `@Transactional` methods, so the Spring transaction proxy is active.
+- Balance math must happen after `CustomerMapper.selectFundAccountForUpdate(customerId, accountType)` returns the locked `customer_fund_account` row.
+- If a fund account does not exist, the service tries to insert it; `DuplicateKeyException` means another concurrent transaction created it, so the service re-reads with `selectFundAccountForUpdate`.
+- `insertFundFlow` and `insertDepositBatch` catch `DuplicateKeyException`, regenerate `flow_no` or `deposit_batch_no`, and retry up to a bounded maximum before throwing a clear service error.
 
 Sample rebate generation remains separate from deposit: `POST /business/customer/{customerId}/sample-rebate` creates `sample_rebate_record`, then the internal service path writes the `SAMPLE_REBATE` account flow with `SAMPLE_REBATE_GENERATE`.
 

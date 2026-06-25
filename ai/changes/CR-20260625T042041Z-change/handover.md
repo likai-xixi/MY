@@ -6,15 +6,14 @@
 
 ## Impact
 
-Customer fund mutation has been extracted into `CustomerFundServiceImpl`. The customer deposit path now locks the target `customer_fund_account` row with `selectFundAccountForUpdate` before balance calculation, handles concurrent first account creation with `DuplicateKeyException` plus locked re-read, and retries `flow_no` / `deposit_batch_no` unique-key collisions with bounded insert retry.
-
-External API paths are unchanged. No sales-order, delivery, finance, deduction, refund, adjustment, reversal, governance-rule, or SQL business table structure change is included.
+This change extracts customer fund mutation from `CustomerServiceImpl` into `CustomerFundServiceImpl`, adds a mapper row-lock read for `customer_fund_account`, and adds bounded duplicate-key retry for fund-flow and deposit-batch number generation. External customer API paths and frontend API clients are unchanged. No SQL business table structure was changed.
 
 ## Changed Files
 
 - `ruoyi-business/src/main/java/com/ruoyi/business/customer/service/ICustomerFundService.java`
 - `ruoyi-business/src/main/java/com/ruoyi/business/customer/service/impl/CustomerFundServiceImpl.java`
 - `ruoyi-business/src/main/java/com/ruoyi/business/customer/service/impl/CustomerServiceImpl.java`
+- `ruoyi-business/src/main/java/com/ruoyi/business/customer/service/ICustomerService.java` remains compatible; no signature removal.
 - `ruoyi-business/src/main/java/com/ruoyi/business/customer/mapper/CustomerMapper.java`
 - `ruoyi-business/src/main/resources/mapper/customer/CustomerMapper.xml`
 - `tests/customer-risk-gate.test.js`
@@ -43,7 +42,7 @@ External API paths are unchanged. No sales-order, delivery, finance, deduction, 
 - `node --test tests/customer-risk-gate.test.js`
 - `C:\Users\11131\.cache\codex-tools\apache-maven-3.9.9\bin\mvn.cmd -pl ruoyi-admin -am -DskipTests compile`
 - `C:\Users\11131\.cache\codex-tools\apache-maven-3.9.9\bin\mvn.cmd -pl ruoyi-admin -am -DskipTests package`
-- Runtime API/DB validation on backend `http://127.0.0.1:18080`, database `my_ry_vue_runtime`, Redis DB1
+- Runtime API/DB validation on `http://127.0.0.1:18080`
 - `npm run scan:all`
 - `npm run finalize:change -- --summary "客户管理资金并发安全收口"`
 - `npm run context:build -- customer`
@@ -53,12 +52,12 @@ External API paths are unchanged. No sales-order, delivery, finance, deduction, 
 
 ## Verification
 
-Review approval exists at `ai/reviews/RV-20260625T042103Z-review/decision.md` with `Allow Implementation`. Static customer risk gate passed with 8 tests. Maven compile and package passed. Live API/DB validation passed for omitted/explicit deposit, invalid account rejection without mutation, sample rebate record-before-flow without deposit batch, PUBLIC rejection without mutation, and 10 concurrent one-yuan deposits without lost update or duplicate fund/deposit numbers. `npm run scan:all`, `finalize:change`, regenerated current context, full `npm run check` with 121 Node tests, standalone `npm test` with 121 Node tests, and `git diff --check` passed.
+Verification passed: review approval exists, targeted customer risk gate passed with 8 tests, Maven compile/package passed, live API/DB concurrency validation passed, `npm run scan:all` and `finalize:change` passed, current context was regenerated, full `npm run check` passed with 121 Node tests, standalone `npm test` passed with 121 Node tests, and `git diff --check` passed. Runtime validation proved the key concurrent case: 10 simultaneous one-yuan deposits created 10 flows and 10 batches, increased deposit balance/frozen by exactly `10.00`, left available unchanged, and produced no duplicate `flow_no` or `deposit_batch_no`.
 
 ## Risks
 
-- Runtime validation retained test customer `26 / RT_FUND_CONCURRENCY_202606250432` in local development data for audit traceability.
-- Order-level deposits, deduction, refund, adjustment, reversal, delivery, and finance remain out of scope.
+- Runtime validation retained test customer `26 / RT_FUND_CONCURRENCY_202606250432` and its fund evidence in local development data for audit traceability.
+- This change fixes customer-level deposit entry concurrency only. Sales-order, delivery, finance settlement, automatic deduction, customer deposit deduction, refund, adjustment, and reversal remain future modules.
 - No commit or push has been made; publishing still requires explicit user approval.
 
 ## Next Actions

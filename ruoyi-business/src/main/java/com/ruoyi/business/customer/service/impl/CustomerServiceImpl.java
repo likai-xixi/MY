@@ -29,6 +29,7 @@ import com.ruoyi.business.customer.domain.CustomerSalesmanBindLog;
 import com.ruoyi.business.customer.domain.CustomerSamplePolicy;
 import com.ruoyi.business.customer.domain.SampleRebateRecord;
 import com.ruoyi.business.customer.mapper.CustomerMapper;
+import com.ruoyi.business.customer.service.ICustomerFundService;
 import com.ruoyi.business.customer.service.ICustomerService;
 import com.ruoyi.common.core.domain.entity.SysDept;
 import com.ruoyi.common.core.domain.entity.SysRole;
@@ -69,16 +70,6 @@ public class CustomerServiceImpl implements ICustomerService
     private static final String TRANSFER_MARK_SALESMAN_SELF = "MARK_SALESMAN_SELF";
     private static final String TRANSFER_RETURN_FACTORY = "RETURN_FACTORY";
     private static final String TRANSFER_CHANGE_SALESMAN = "CHANGE_SALESMAN";
-    private static final String CUSTOMER_DEPOSIT = "CUSTOMER_DEPOSIT";
-    private static final String SAMPLE_REBATE = "SAMPLE_REBATE";
-    private static final String SAMPLE_REBATE_GENERATE = "SAMPLE_REBATE_GENERATE";
-    private static final String DEPOSIT_IN = "DEPOSIT_IN";
-    private static final String DEPOSIT_DEDUCT = "DEPOSIT_DEDUCT";
-    private static final String DEPOSIT_REFUND = "DEPOSIT_REFUND";
-    private static final String DEPOSIT_ADJUST = "DEPOSIT_ADJUST";
-    private static final String DEPOSIT_REVERSE = "DEPOSIT_REVERSE";
-    private static final String DEPOSIT_ACCOUNT_ONLY_MESSAGE = "定金录入接口只允许写入CUSTOMER_DEPOSIT账户，样品返现请通过样品返现入口处理。";
-    private static final String DEPOSIT_IN_ONLY_MESSAGE = "定金录入接口只允许入金，扣减、退款、调整、冲正请走独立资金处理流程。";
     private static final BigDecimal ZERO = BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP);
     private static final String CUSTOMER_CODE_PREFIX = "KH";
     private static final int CUSTOMER_CODE_MIN_SEQUENCE_WIDTH = 6;
@@ -88,6 +79,9 @@ public class CustomerServiceImpl implements ICustomerService
 
     @Autowired
     private CustomerMapper customerMapper;
+
+    @Autowired
+    private ICustomerFundService customerFundService;
 
     @Autowired
     private SysUserMapper sysUserMapper;
@@ -182,7 +176,7 @@ public class CustomerServiceImpl implements ICustomerService
         int rows = customerMapper.insertCustomer(customer);
         prepareCreateDefaultChildren(customer);
         replaceChildren(customer);
-        initFundAccounts(customer, customer.getCreateBy());
+        customerFundService.initFundAccounts(customer, customer.getCreateBy());
         return rows;
     }
 
@@ -326,100 +320,19 @@ public class CustomerServiceImpl implements ICustomerService
     @Override
     public List<CustomerFundAccount> selectFundAccounts(Long customerId)
     {
-        Customer customer = requiredCustomer(customerId);
-        if (isPublicCustomer(customer))
-        {
-            return Collections.emptyList();
-        }
-        initFundAccounts(customer, null);
-        return customerMapper.selectFundAccountsByCustomerId(customerId);
+        return customerFundService.selectFundAccounts(customerId);
     }
 
     @Override
-    @Transactional
     public CustomerFundFlow recordCustomerDeposit(Long customerId, CustomerFundEntry entry, Long operatorId, String operatorName)
     {
-        if (entry == null)
-        {
-            entry = new CustomerFundEntry();
-        }
-        validateCustomerDepositAccountType(entry.getAccountType());
-        entry.setAccountType(CUSTOMER_DEPOSIT);
-        return recordFundEntry(customerId, entry, operatorId, operatorName);
+        return customerFundService.recordCustomerDeposit(customerId, entry, operatorId, operatorName);
     }
 
     @Override
-    @Transactional
     public CustomerFundFlow recordFundEntry(Long customerId, CustomerFundEntry entry, Long operatorId, String operatorName)
     {
-        Customer customer = requiredCustomer(customerId);
-        if (isPublicCustomer(customer))
-        {
-            throw new ServiceException("公共客户不启用客户级定金，请在销售订单中记录本单定金。");
-        }
-        if (entry == null)
-        {
-            entry = new CustomerFundEntry();
-        }
-        BigDecimal amount = normalizeAmount(entry.getAmount());
-        if (amount.compareTo(BigDecimal.ZERO) <= 0)
-        {
-            throw new ServiceException("资金录入金额必须大于0");
-        }
-
-        String accountType = normalizeAccountType(entry.getAccountType());
-        CustomerFundAccount account = ensureFundAccount(customerId, accountType, operatorName);
-        BigDecimal beforeBalance = money(account.getBalanceAmount());
-        BigDecimal afterBalance = beforeBalance.add(amount);
-        BigDecimal frozen = money(account.getFrozenAmount());
-        BigDecimal available = money(account.getAvailableAmount());
-        if (SAMPLE_REBATE.equals(accountType))
-        {
-            available = available.add(amount);
-        }
-        else
-        {
-            frozen = frozen.add(amount);
-        }
-        customerMapper.updateFundAccountBalance(account.getAccountId(), afterBalance, available, frozen);
-
-        CustomerFundFlow flow = new CustomerFundFlow();
-        flow.setCustomerId(customerId);
-        flow.setAccountType(accountType);
-        flow.setFlowNo(nextNo("FLOW"));
-        flow.setFlowType(resolveFlowType(accountType, entry.getFlowType()));
-        flow.setAmount(amount);
-        flow.setBeforeBalance(beforeBalance);
-        flow.setAfterBalance(afterBalance);
-        flow.setRelatedBizType(defaultIfEmpty(entry.getRelatedBizType(), "CUSTOMER"));
-        flow.setRelatedBizId(entry.getRelatedBizId());
-        flow.setRelatedBizNo(entry.getRelatedBizNo());
-        flow.setOperatorId(operatorId);
-        flow.setOccurTime(new Date());
-        flow.setRemark(entry.getRemark());
-        flow.setCreateBy(operatorName);
-
-        if (!SAMPLE_REBATE.equals(accountType))
-        {
-            CustomerDepositBatch batch = new CustomerDepositBatch();
-            batch.setDepositBatchNo(nextNo("DEP"));
-            batch.setCustomerId(customerId);
-            batch.setDepositType(resolveDepositType(accountType, entry.getDepositType()));
-            batch.setReceiptNo(entry.getReceiptNo());
-            batch.setDepositAmount(amount);
-            batch.setUsedAmount(ZERO);
-            batch.setRemainingAmount(amount);
-            batch.setStatus("LOCKED");
-            batch.setStartTime(new Date());
-            batch.setRemark(entry.getRemark());
-            batch.setCreateBy(operatorName);
-            customerMapper.insertDepositBatch(batch);
-            flow.setRelatedBizType("CUSTOMER_DEPOSIT_BATCH");
-            flow.setRelatedBizId(batch.getDepositBatchId());
-            flow.setRelatedBizNo(batch.getDepositBatchNo());
-        }
-        customerMapper.insertFundFlow(flow);
-        return flow;
+        return customerFundService.recordFundEntry(customerId, entry, operatorId, operatorName);
     }
 
     @Override
@@ -482,15 +395,7 @@ public class CustomerServiceImpl implements ICustomerService
         record.setCreateBy(operatorName);
         customerMapper.insertSampleRebateRecord(record);
 
-        CustomerFundEntry entry = new CustomerFundEntry();
-        entry.setAccountType(SAMPLE_REBATE);
-        entry.setFlowType(SAMPLE_REBATE_GENERATE);
-        entry.setAmount(record.getRebateAmount());
-        entry.setRelatedBizType(SAMPLE_REBATE);
-        entry.setRelatedBizId(record.getRebateRecordId());
-        entry.setRelatedBizNo(record.getSampleOrderNo());
-        entry.setRemark(record.getRemark());
-        recordFundEntry(record.getCustomerId(), entry, operatorId, operatorName);
+        customerFundService.recordSampleRebateFlow(record, operatorId, operatorName);
         return record;
     }
 
@@ -861,35 +766,6 @@ public class CustomerServiceImpl implements ICustomerService
         customer.setOwnerDeptName(null);
     }
 
-    private void initFundAccounts(Customer customer, String operator)
-    {
-        if (customer == null || customer.getCustomerId() == null || isPublicCustomer(customer))
-        {
-            return;
-        }
-        ensureFundAccount(customer.getCustomerId(), CUSTOMER_DEPOSIT, operator);
-        ensureFundAccount(customer.getCustomerId(), SAMPLE_REBATE, operator);
-    }
-
-    private CustomerFundAccount ensureFundAccount(Long customerId, String accountType, String operator)
-    {
-        CustomerFundAccount account = customerMapper.selectFundAccount(customerId, accountType);
-        if (account != null)
-        {
-            return account;
-        }
-        account = new CustomerFundAccount();
-        account.setCustomerId(customerId);
-        account.setAccountType(accountType);
-        account.setBalanceAmount(ZERO);
-        account.setFrozenAmount(ZERO);
-        account.setAvailableAmount(ZERO);
-        account.setStatus(NORMAL);
-        account.setCreateBy(operator);
-        customerMapper.insertFundAccount(account);
-        return customerMapper.selectFundAccount(customerId, accountType);
-    }
-
     private Customer requiredCustomer(Long customerId)
     {
         Customer customer = customerMapper.selectCustomerById(customerId);
@@ -905,11 +781,6 @@ public class CustomerServiceImpl implements ICustomerService
         CustomerFundFlow flow = new CustomerFundFlow();
         flow.setCustomerId(customerId);
         return flow;
-    }
-
-    private String nextNo(String prefix)
-    {
-        return prefix + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS"));
     }
 
     private String nextCustomerCode()
@@ -1260,83 +1131,9 @@ public class CustomerServiceImpl implements ICustomerService
         });
     }
 
-    private BigDecimal normalizeAmount(BigDecimal amount)
-    {
-        return amount == null ? ZERO : amount.setScale(2, RoundingMode.HALF_UP);
-    }
-
     private BigDecimal money(BigDecimal amount)
     {
         return amount == null ? ZERO : amount.setScale(2, RoundingMode.HALF_UP);
-    }
-
-    private String normalizeAccountType(String accountType)
-    {
-        if (StringUtils.isEmpty(accountType))
-        {
-            return CUSTOMER_DEPOSIT;
-        }
-        if (CUSTOMER_DEPOSIT.equals(accountType) || SAMPLE_REBATE.equals(accountType))
-        {
-            return accountType;
-        }
-        throw new ServiceException("资金账户类型不合法");
-    }
-
-    private void validateCustomerDepositAccountType(String accountType)
-    {
-        if (StringUtils.isEmpty(accountType) || CUSTOMER_DEPOSIT.equals(accountType))
-        {
-            return;
-        }
-        throw new ServiceException(DEPOSIT_ACCOUNT_ONLY_MESSAGE);
-    }
-
-    private String resolveFlowType(String accountType, String flowType)
-    {
-        if (StringUtils.isNotEmpty(flowType))
-        {
-            if (CUSTOMER_DEPOSIT.equals(accountType))
-            {
-                if (DEPOSIT_IN.equals(flowType))
-                {
-                    return DEPOSIT_IN;
-                }
-                if (isDepositChangeFlowType(flowType))
-                {
-                    throw new ServiceException(DEPOSIT_IN_ONLY_MESSAGE);
-                }
-            }
-            if (SAMPLE_REBATE.equals(accountType) && SAMPLE_REBATE_GENERATE.equals(flowType))
-            {
-                return flowType;
-            }
-            throw new ServiceException("资金流水类型不合法");
-        }
-        if (CUSTOMER_DEPOSIT.equals(accountType))
-        {
-            return DEPOSIT_IN;
-        }
-        return SAMPLE_REBATE_GENERATE;
-    }
-
-    private String resolveDepositType(String accountType, String depositType)
-    {
-        if (!CUSTOMER_DEPOSIT.equals(accountType))
-        {
-            throw new ServiceException("定金账户类型不合法");
-        }
-        if (StringUtils.isNotEmpty(depositType) && !CUSTOMER_DEPOSIT.equals(depositType))
-        {
-            throw new ServiceException("定金类型不合法");
-        }
-        return CUSTOMER_DEPOSIT;
-    }
-
-    private boolean isDepositChangeFlowType(String flowType)
-    {
-        return DEPOSIT_DEDUCT.equals(flowType) || DEPOSIT_REFUND.equals(flowType)
-            || DEPOSIT_ADJUST.equals(flowType) || DEPOSIT_REVERSE.equals(flowType);
     }
 
     private void fillSampleRebateAmounts(SampleRebateRecord record)

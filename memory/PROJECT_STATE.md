@@ -22,7 +22,19 @@ Customer management is the first active business feature. The customer model rem
 - sample rebate remains separate as `SAMPLE_REBATE`;
 - customer-level fund changes continue through `customer_fund_flow`; direct balance edits remain out of scope.
 
-GitHub master currently includes the pushed customer deposit-boundary commit `d103b0d fix(customer): restrict deposit endpoint to customer deposit`. Current closeout change `CR-20260625T035514Z-change` only reconciles handoff, context, README, feature brief, registry ownership, memory, changelog, and task state; it does not modify customer runtime code, customer fund business logic, SQL, Java, XML, Vue, or API client files.
+GitHub master currently includes `166c3ee48d558bff7ccb81eec576803e3c9fa31d docs(customer): close handoff status drift`, the pushed first-batch handoff-status closeout. Current customer business change `CR-20260625T042041Z-change` closes the second batch, customer fund concurrency safety, without committing or pushing yet.
+
+Current customer fund concurrency change `CR-20260625T042041Z-change`:
+
+- extracts customer fund mutation from `CustomerServiceImpl` into `CustomerFundServiceImpl` behind `ICustomerFundService`;
+- keeps external customer API paths and frontend API clients unchanged;
+- adds `CustomerMapper.selectFundAccountForUpdate(customerId, accountType)` and mapper SQL with `limit 1 for update`;
+- calculates fund balances only after the locked account read;
+- handles concurrent first fund-account creation through `DuplicateKeyException` plus locked re-read;
+- retries `flow_no` and `deposit_batch_no` unique collisions with bounded insert retry;
+- does not add sales-order, delivery, finance, deduction, refund, adjustment, reversal, governance-rule, or SQL business table structure changes.
+
+Previous closeout change `CR-20260625T035514Z-change` reconciled handoff, context, README, feature brief, registry ownership, memory, changelog, and task state after the pushed deposit-boundary commit; it did not modify customer runtime code, customer fund business logic, SQL, Java, XML, Vue, or API client files.
 
 Previous customer business change `CR-20260625T022150Z-change` closes the deposit account boundary for `/business/customer/{customerId}/fund/deposit`:
 
@@ -59,15 +71,15 @@ Sales order, shipment, finance settlement, automatic deduction, receipt claiming
 
 ## Active Task
 
-`TASK-CUSTOMER` is the active customer task in `memory/TASKS.json`. The current iteration is `CR-20260625T035514Z-change`: customer management handoff state is being reconciled after the pushed `d103b0d` deposit-boundary commit, while customer runtime behavior remains unchanged in this closeout.
+`TASK-CUSTOMER` is the active customer task in `memory/TASKS.json`. The current iteration is `CR-20260625T042041Z-change`: customer fund mutation is now concurrency-safe, verified, and awaiting user review/commit approval.
 
 ## Latest Session
 
-`memory/sessions/2026-06-25-customer-fund-deposit-boundary.md`
+`memory/sessions/2026-06-25-customer-fund-concurrency.md`
 
 ## Next Actions
 
-- Complete governance closeout verification for `CR-20260625T035514Z-change`.
+- Review the `CR-20260625T042041Z-change` diff and, if approved, commit with `fix(customer): make fund entries concurrency safe`.
 - Before any future runtime claim about PUBLIC data cleanliness, rerun the invariant SQL in `sql/customer.ownership.md` to confirm only `PUB_DIRECT_SALE` and `PUB_SELF_MEDIA` exist as active PUBLIC rows.
 - Keep sales order, delivery, finance, source/channel/account, maintenance-fee calculation, commission calculation, automatic deduction, receipt claiming, reconciliation, and order-level deposit behavior in separate future feature changes.
 
@@ -94,6 +106,12 @@ Sales order, shipment, finance settlement, automatic deduction, receipt claiming
 - Old data migration or old fund-account compatibility.
 
 ## Last Verification
+
+For `CR-20260625T042041Z-change`, `npm run resume`, `npm run context:build -- customer`, `npm run ai:do -- "功能迭代：客户管理"`, `npm run impact -- 客户管理`, `npm run review:feature -- "功能预审：客户管理资金并发安全收口" --feature customer`, `node --test tests/customer-risk-gate.test.js`, cached Maven compile, cached Maven package, runtime API/DB validation, `npm run scan:all`, `npm run finalize:change -- --summary "客户管理资金并发安全收口"`, regenerated current context, `npm run check` with 121 Node tests, standalone `npm test` with 121 Node tests, and `git diff --check` passed.
+
+Runtime validation for `CR-20260625T042041Z-change` used backend `http://127.0.0.1:18080`, database `my_ry_vue_runtime`, Redis DB1, and test customer `26 / RT_FUND_CONCURRENCY_202606250432`. It confirmed omitted and explicit customer deposit entry, rejection of `SAMPLE_REBATE` and invalid account types through `/fund/deposit` without mutation, sample rebate record-before-flow behavior without deposit batch, PUBLIC customer deposit rejection without mutation, and 10 concurrent one-yuan deposits with no lost update, no duplicate `flow_no`, and no duplicate `deposit_batch_no`.
+
+No sales-order implementation, delivery, finance, deduction, refund, adjustment, reversal, governance-rule change, or SQL business table structure change was made. No commit or push has been made for this change.
 
 For `CR-20260625T022150Z-change`, `npm run resume`, `npm run context:build -- customer`, `npm run ai:do -- "功能迭代：客户管理"`, `npm run review:feature -- "功能预审：客户管理定金入口资金边界收口" --feature customer`, `node --test tests/customer-risk-gate.test.js`, `node --test tests/governance-sales-order-handoff-gate.test.js`, `npm run scan:all`, `npm run finalize:change -- --summary "客户管理定金入口资金边界收口"`, `npm run check` with 120 Node tests, standalone `npm test` with 120 Node tests, and `git diff --check` passed.
 

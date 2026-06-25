@@ -117,7 +117,9 @@
         "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java"
       ],
       "services": [
+        "ruoyi-business/src/main/java/com/ruoyi/business/customer/service/ICustomerFundService.java",
         "ruoyi-business/src/main/java/com/ruoyi/business/customer/service/ICustomerService.java",
+        "ruoyi-business/src/main/java/com/ruoyi/business/customer/service/impl/CustomerFundServiceImpl.java",
         "ruoyi-business/src/main/java/com/ruoyi/business/customer/service/impl/CustomerServiceImpl.java"
       ],
       "mappers": [
@@ -254,7 +256,9 @@
           "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java"
         ],
         "services": [
+          "ruoyi-business/src/main/java/com/ruoyi/business/customer/service/ICustomerFundService.java",
           "ruoyi-business/src/main/java/com/ruoyi/business/customer/service/ICustomerService.java",
+          "ruoyi-business/src/main/java/com/ruoyi/business/customer/service/impl/CustomerFundServiceImpl.java",
           "ruoyi-business/src/main/java/com/ruoyi/business/customer/service/impl/CustomerServiceImpl.java"
         ],
         "mappers": [

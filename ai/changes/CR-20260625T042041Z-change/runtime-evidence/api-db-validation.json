@@ -1,0 +1,288 @@
+{
+  "marker": "RT_FUND_CONCURRENCY_20260625043231",
+  "backend": "http://127.0.0.1:18080",
+  "database": "my_ry_vue_runtime",
+  "redisDb": 1,
+  "cases": [
+    {
+      "name": "omitted accountType deposit",
+      "result": "passed",
+      "before": {
+        "depositBalance": 0,
+        "depositFrozen": 0,
+        "depositAvailable": 0,
+        "sampleBalance": 0,
+        "accountCount": 0,
+        "flowCount": 0,
+        "batchCount": 0,
+        "rebateCount": 0
+      },
+      "after": {
+        "depositBalance": 1.23,
+        "depositFrozen": 1.23,
+        "depositAvailable": 0,
+        "sampleBalance": 0,
+        "accountCount": 1,
+        "flowCount": 1,
+        "batchCount": 1,
+        "rebateCount": 0
+      },
+      "response": {
+        "msg": "操作成功",
+        "code": 200,
+        "data": {
+          "createBy": "admin",
+          "createTime": null,
+          "updateBy": null,
+          "updateTime": null,
+          "remark": null,
+          "flowId": 7,
+          "customerId": 26,
+          "accountType": "CUSTOMER_DEPOSIT",
+          "flowNo": "FLOW20260625123238504002",
+          "flowType": "DEPOSIT_IN",
+          "amount": 1.23,
+          "beforeBalance": 0,
+          "afterBalance": 1.23,
+          "relatedBizType": "CUSTOMER_DEPOSIT_BATCH",
+          "relatedBizId": 6,
+          "relatedBizNo": "DEP20260625123238492001",
+          "operatorId": 1,
+          "occurTime": "2026-06-25 12:32:38"
+        }
+      }
+    },
+    {
+      "name": "explicit CUSTOMER_DEPOSIT deposit",
+      "result": "passed",
+      "before": {
+        "depositBalance": 1.23,
+        "depositFrozen": 1.23,
+        "depositAvailable": 0,
+        "sampleBalance": 0,
+        "accountCount": 1,
+        "flowCount": 1,
+        "batchCount": 1,
+        "rebateCount": 0
+      },
+      "after": {
+        "depositBalance": 3.57,
+        "depositFrozen": 3.57,
+        "depositAvailable": 0,
+        "sampleBalance": 0,
+        "accountCount": 1,
+        "flowCount": 2,
+        "batchCount": 2,
+        "rebateCount": 0
+      },
+      "response": {
+        "msg": "操作成功",
+        "code": 200,
+        "data": {
+          "createBy": "admin",
+          "createTime": null,
+          "updateBy": null,
+          "updateTime": null,
+          "remark": null,
+          "flowId": 8,
+          "customerId": 26,
+          "accountType": "CUSTOMER_DEPOSIT",
+          "flowNo": "FLOW20260625123239259004",
+          "flowType": "DEPOSIT_IN",
+          "amount": 2.34,
+          "beforeBalance": 1.23,
+          "afterBalance": 3.57,
+          "relatedBizType": "CUSTOMER_DEPOSIT_BATCH",
+          "relatedBizId": 7,
+          "relatedBizNo": "DEP20260625123239249003",
+          "operatorId": 1,
+          "occurTime": "2026-06-25 12:32:39"
+        }
+      }
+    },
+    {
+      "name": "SAMPLE_REBATE through fund deposit rejection",
+      "result": "passed",
+      "before": {
+        "depositBalance": 3.57,
+        "depositFrozen": 3.57,
+        "depositAvailable": 0,
+        "sampleBalance": 0,
+        "accountCount": 1,
+        "flowCount": 2,
+        "batchCount": 2,
+        "rebateCount": 0
+      },
+      "after": {
+        "depositBalance": 3.57,
+        "depositFrozen": 3.57,
+        "depositAvailable": 0,
+        "sampleBalance": 0,
+        "accountCount": 1,
+        "flowCount": 2,
+        "batchCount": 2,
+        "rebateCount": 0
+      },
+      "response": {
+        "msg": "定金录入接口只允许写入CUSTOMER_DEPOSIT账户，样品返现请通过样品返现入口处理。",
+        "code": 500
+      }
+    },
+    {
+      "name": "invalid accountType rejection",
+      "result": "passed",
+      "before": {
+        "depositBalance": 3.57,
+        "depositFrozen": 3.57,
+        "depositAvailable": 0,
+        "sampleBalance": 0,
+        "accountCount": 1,
+        "flowCount": 2,
+        "batchCount": 2,
+        "rebateCount": 0
+      },
+      "after": {
+        "depositBalance": 3.57,
+        "depositFrozen": 3.57,
+        "depositAvailable": 0,
+        "sampleBalance": 0,
+        "accountCount": 1,
+        "flowCount": 2,
+        "batchCount": 2,
+        "rebateCount": 0
+      },
+      "response": {
+        "msg": "定金录入接口只允许写入CUSTOMER_DEPOSIT账户，样品返现请通过样品返现入口处理。",
+        "code": 500
+      }
+    },
+    {
+      "name": "sample rebate creates record then SAMPLE_REBATE_GENERATE without deposit batch",
+      "result": "passed",
+      "before": {
+        "depositBalance": 3.57,
+        "depositFrozen": 3.57,
+        "depositAvailable": 0,
+        "sampleBalance": 0,
+        "accountCount": 1,
+        "flowCount": 2,
+        "batchCount": 2,
+        "rebateCount": 0
+      },
+      "after": {
+        "depositBalance": 3.57,
+        "depositFrozen": 3.57,
+        "depositAvailable": 0,
+        "sampleBalance": 20,
+        "accountCount": 2,
+        "flowCount": 3,
+        "batchCount": 2,
+        "rebateCount": 1
+      },
+      "response": {
+        "msg": "操作成功",
+        "code": 200,
+        "data": {
+          "createBy": "admin",
+          "createTime": null,
+          "updateBy": null,
+          "updateTime": null,
+          "remark": "RT_FUND_CONCURRENCY_20260625043231",
+          "rebateRecordId": 2,
+          "customerId": 26,
+          "sampleOrderId": null,
+          "sampleOrderNo": "RT_FUND_CONCURRENCY_20260625043231_SAMPLE",
+          "sampleAmount": 100,
+          "supportMode": null,
+          "totalSupportRate": 0.2,
+          "instantDiscountRate": null,
+          "instantDiscountAmount": 0,
+          "rebateAmount": 20,
+          "usedAmount": 0,
+          "remainingAmount": 20,
+          "status": "AVAILABLE"
+        }
+      }
+    },
+    {
+      "name": "PUBLIC customer deposit rejection without mutation",
+      "result": "passed",
+      "before": {
+        "depositBalance": 0,
+        "depositFrozen": 0,
+        "depositAvailable": 0,
+        "sampleBalance": 0,
+        "accountCount": 0,
+        "flowCount": 0,
+        "batchCount": 0,
+        "rebateCount": 0
+      },
+      "after": {
+        "depositBalance": 0,
+        "depositFrozen": 0,
+        "depositAvailable": 0,
+        "sampleBalance": 0,
+        "accountCount": 0,
+        "flowCount": 0,
+        "batchCount": 0,
+        "rebateCount": 0
+      },
+      "response": {
+        "msg": "公共客户不启用客户级定金，请在销售订单中记录本单定金。",
+        "code": 500
+      }
+    },
+    {
+      "name": "10 concurrent one-yuan deposits",
+      "result": "passed",
+      "before": {
+        "depositBalance": 3.57,
+        "depositFrozen": 3.57,
+        "depositAvailable": 0,
+        "sampleBalance": 20,
+        "accountCount": 2,
+        "flowCount": 3,
+        "batchCount": 2,
+        "rebateCount": 1
+      },
+      "after": {
+        "depositBalance": 13.57,
+        "depositFrozen": 13.57,
+        "depositAvailable": 0,
+        "sampleBalance": 20,
+        "accountCount": 2,
+        "flowCount": 13,
+        "batchCount": 12,
+        "rebateCount": 1
+      },
+      "duplicateCheck": {
+        "flowTotal": 13,
+        "distinctFlowNo": 13,
+        "batchTotal": 12,
+        "distinctDepositBatchNo": 12,
+        "concurrentBatchCount": 10,
+        "concurrentFlowCount": 10
+      }
+    }
+  ],
+  "login": {
+    "status": 200,
+    "code": 200
+  },
+  "customer": {
+    "customerId": 26,
+    "customerCode": "RT_FUND_CONCURRENCY_202606250432",
+    "customerName": "RT_FUND_CONCURRENCY_20260625043231"
+  },
+  "finalState": {
+    "depositBalance": 13.57,
+    "depositFrozen": 13.57,
+    "depositAvailable": 0,
+    "sampleBalance": 20,
+    "accountCount": 2,
+    "flowCount": 13,
+    "batchCount": 12,
+    "rebateCount": 1
+  },
+  "result": "passed"
+}

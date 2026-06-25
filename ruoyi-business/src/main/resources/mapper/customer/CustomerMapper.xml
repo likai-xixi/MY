@@ -367,6 +367,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select * from customer_fund_account where customer_id = #{customerId} and account_type = #{accountType} limit 1
     </select>
 
+    <select id="selectFundAccountForUpdate" resultMap="CustomerFundAccountResult">
+        select *
+        from customer_fund_account
+        where customer_id = #{customerId}
+          and account_type = #{accountType}
+        limit 1
+        for update
+    </select>
+
     <insert id="insertFundAccount" parameterType="CustomerFundAccount" useGeneratedKeys="true" keyProperty="accountId">
         insert into customer_fund_account(customer_id, account_type, balance_amount, frozen_amount, available_amount, status, remark, create_by, create_time)
         values(#{customerId}, #{accountType}, #{balanceAmount}, #{frozenAmount}, #{availableAmount}, #{status}, #{remark}, #{createBy}, sysdate())

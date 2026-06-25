@@ -52,6 +52,9 @@ DDL, menu SQL, and permission SQL are documented in `sql/customer.ownership.md`.
 - `customer_deposit_batch.deposit_type` allows only `CUSTOMER_DEPOSIT`.
 - Customer deposit flow types are `DEPOSIT_IN`, `DEPOSIT_DEDUCT`, `DEPOSIT_REFUND`, `DEPOSIT_ADJUST`, and `DEPOSIT_REVERSE`.
 - `customer_fund_account.balance_amount`, `frozen_amount`, and `available_amount` are derived from fund entries.
+- `customer_fund_account` is unique by `(customer_id, account_type)` and fund entry must read the target account with `select ... for update` before balance calculation.
+- If concurrent first-use account creation hits `uk_customer_fund_account`, the service must catch `DuplicateKeyException` and re-read the account with the row lock.
+- `customer_fund_flow.flow_no` and `customer_deposit_batch.deposit_batch_no` unique-key collisions must be handled with bounded regenerate-and-insert retry.
 - Direct manual balance update is not an allowed business operation.
 - Every fund mutation must insert `customer_fund_flow` with operator, time, amount, before balance, after balance, related business metadata, and remark.
 - Customer-level deposit entries must also create `customer_deposit_batch` records and set fund-flow `related_biz_type=CUSTOMER_DEPOSIT_BATCH`.

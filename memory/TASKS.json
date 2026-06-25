@@ -77,8 +77,8 @@
       "status": "in_progress",
       "owner": "workflow",
       "priority": "normal",
-      "statusReason": "CR-20260625T035514Z-change reconciles customer handoff state after GitHub master included d103b0d fix(customer): restrict deposit endpoint to customer deposit. This closeout updates README, feature brief, context, registry ownership, memory, changelog, and task state without changing customer runtime code or customer fund business logic.",
-      "nextStep": "Review the CR-20260625T035514Z-change closeout diff and suggested commit message. Keep sales order, delivery, finance, source/channel/account, maintenance-fee calculation, commission calculation, automatic deduction, receipt claiming, reconciliation, and order-level deposit behavior in separate future feature changes.",
+      "statusReason": "CR-20260625T042041Z-change verifies customer fund concurrency safety: fund mutation is extracted into CustomerFundServiceImpl, customer_fund_account is locked with selectFundAccountForUpdate before balance calculation, concurrent first account creation uses DuplicateKeyException plus locked re-read, and flow_no/deposit_batch_no unique collisions use bounded retry. Final verification passed; no commit or push has been made.",
+      "nextStep": "Review the CR-20260625T042041Z-change diff and, if approved, commit with fix(customer): make fund entries concurrency safe. Keep sales order, delivery, finance, deduction, refund, adjustment, reversal, governance-rule, and SQL business table structure changes out of this CR.",
       "blockedBy": [],
       "verification": [
         "npm run resume",
@@ -255,10 +255,23 @@
         "CR-20260625T035514Z-change used scoped current-CR component and boundary exceptions for pre-existing RuoYi system/tool/generator baseline findings",
         "npm run check passed with 120 Node tests for CR-20260625T035514Z-change",
         "standalone npm test passed with 120 Node tests for CR-20260625T035514Z-change",
-        "git diff --check passed for CR-20260625T035514Z-change"
+        "git diff --check passed for CR-20260625T035514Z-change",
+        "CR-20260625T042041Z-change extracted customer fund mutation into ICustomerFundService and CustomerFundServiceImpl while keeping external customer API paths unchanged",
+        "CR-20260625T042041Z-change added CustomerMapper.selectFundAccountForUpdate with limit 1 for update and moved balance calculation after the locked fund-account read",
+        "CR-20260625T042041Z-change handles concurrent first fund-account creation with DuplicateKeyException plus locked re-read",
+        "CR-20260625T042041Z-change retries flow_no and deposit_batch_no unique collisions with bounded insert retry",
+        "node --test tests/customer-risk-gate.test.js passed with 8 tests for CR-20260625T042041Z-change",
+        "cached Maven compile and package passed for CR-20260625T042041Z-change",
+        "CR-20260625T042041Z-change runtime API/DB validation passed for omitted/explicit CUSTOMER_DEPOSIT, invalid account rejection without mutation, sample rebate record-before-flow without deposit batch, PUBLIC customer rejection without mutation, and 10 concurrent one-yuan deposits without lost update or duplicate numbers",
+        "npm run scan:all passed for CR-20260625T042041Z-change",
+        "npm run finalize:change -- --summary \"????????????\" passed for CR-20260625T042041Z-change",
+        "npm run context:build -- customer passed for CR-20260625T042041Z-change after impact-scope updates",
+        "npm run check passed with 121 Node tests for CR-20260625T042041Z-change",
+        "standalone npm test passed with 121 Node tests for CR-20260625T042041Z-change",
+        "git diff --check passed for CR-20260625T042041Z-change"
       ],
-      "latestSession": "memory/sessions/2026-06-25-customer-fund-deposit-boundary.md",
-      "latestChange": "CR-20260625T035514Z-change",
+      "latestSession": "memory/sessions/2026-06-25-customer-fund-concurrency.md",
+      "latestChange": "CR-20260625T042041Z-change",
       "handoverRequired": true,
       "updatedAt": "2026-06-25"
     }
