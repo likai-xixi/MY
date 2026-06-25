@@ -335,3 +335,13 @@
 - Updated `AGENTS.md`, `docs/chat-driven-codex-workflow.md`, current context, handover, task memory, and session memory for the policy.
 - No customer runtime code, sales-order runtime code, delivery/finance/production runtime code, customer business rules, or business database table structure was changed.
 - [local] Verification passed: `node --test tests/pre-release-policy.test.js` with 4 tests, `npm run check:pre-release-policy`, `node --test tests/boundary-lint.test.js` with 9 tests, `node --test tests/component-checker.test.js` with 8 tests, `npm test` with 178 tests, `npm run check` with 178 tests after provenance markers were recorded, `git diff --check`, and forbidden-path audit.
+
+## 2026-06-25 - governance/post-push handover consistency
+
+- Change: `ai/changes/CR-20260625T155756Z-post-push-handover-consistency-fix`.
+- R-01 corrected CR-3 handover and verification state from stale no-commit/no-push wording to commit-recorded wording.
+- CR-3 commit: `a49b678644dddc16ce45f094bff5459fd9a716e2` / `governance: add high-risk semantic framework`.
+- CI result not confirmed in this evidence pass. Do not claim GitHub Actions passed until actual run id and conclusion are recorded.
+- Next action is R-02 production safety baseline, followed by customer fund vocabulary source cleanup, governance/runtime verification boundary clarification, and customer salesman candidate hardening.
+- Local verification passed after context regeneration: `npm run check` with 178/178 Node tests and `git diff --check`. `npm run check:after-push` remained inconclusive because the R-01 worktree was not clean.
+- No customer runtime code, sales-order runtime code, production safety config, fund model code, migrations, package/tool/test code, or business database table structure was changed.

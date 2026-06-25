@@ -3,23 +3,23 @@
   "generatedBy": "scripts/context-build.js",
   "generatedAt": "stable",
   "currentFeature": "customer",
-  "currentChange": "CR-20260625T143256Z-pre-release-breaking-change-policy",
+  "currentChange": "CR-20260625T155756Z-post-push-handover-consistency-fix",
   "repositoryProfile": {
     "adapter": "ruoyi",
     "locked": true,
     "stack": "RuoYi + Vue3 + Codex Auto Dev OS"
   },
   "allowedEditRoots": [
-    "AGENTS.md",
-    "docs",
-    "package.json",
-    "tools",
-    "tests",
-    "ai/rules",
-    "ai/rule-proposals",
-    "ai/changes",
-    "ai/context",
-    "memory"
+    "memory/HANDOVER.md",
+    "memory/PROJECT_STATE.md",
+    "memory/CHANGELOG.md",
+    "memory/TASKS.json",
+    "ai/changes/CR-20260625T130657Z-high-risk-semantic-governance-framework/verification.md",
+    "ai/changes/CR-20260625T130657Z-high-risk-semantic-governance-framework/handover.md",
+    "ai/context/current-context.md",
+    "ai/context/current-context.json",
+    "ai/changes/CR-20260625T155756Z-post-push-handover-consistency-fix",
+    "ai/changes/CURRENT_CHANGE.json"
   ],
   "forbiddenEditRoots": [
     "ruoyi-business/src/main/java/com/ruoyi/business/customer",
@@ -28,6 +28,8 @@
     "ruoyi-ui/src/views/customer",
     "ruoyi-ui/src/api/customer.js",
     "sql/customer.ownership.md",
+    "ruoyi-framework/src/main/java/com/ruoyi/framework/config/SecurityConfig.java",
+    "ruoyi-admin/src/main/resources/application*.yml",
     "ruoyi-business/src/main/java/com/ruoyi/business/sales-order",
     "ruoyi-business/src/main/java/com/ruoyi/business/salesorder",
     "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/sales-order",
@@ -38,9 +40,17 @@
     "ruoyi-ui/src/api/salesOrder.js",
     "sql/sales-order.ownership.md",
     "sql/sales_order_init.sql",
+    "package.json",
+    "tools",
+    "tests",
     "delivery runtime business code",
     "finance runtime business code",
-    "production runtime business code"
+    "production runtime business code",
+    "Windows workstation client code",
+    "H5 or mini-program code",
+    "DXF code",
+    "fund model Java/Vue/SQL",
+    "migration files"
   ],
   "mustReadFiles": [
     {
@@ -88,15 +98,15 @@
       "reason": "Governance backlog and required/deferred evidence."
     },
     {
-      "path": "ai/changes/CR-20260625T143256Z-pre-release-breaking-change-policy/impact.json",
+      "path": "ai/changes/CR-20260625T155756Z-post-push-handover-consistency-fix/impact.json",
       "reason": "Current change allowed and forbidden edit roots."
     },
     {
-      "path": "ai/changes/CR-20260625T143256Z-pre-release-breaking-change-policy/plan.md",
+      "path": "ai/changes/CR-20260625T155756Z-post-push-handover-consistency-fix/plan.md",
       "reason": "Current change execution plan."
     },
     {
-      "path": "ai/changes/CR-20260625T143256Z-pre-release-breaking-change-policy/verification.md",
+      "path": "ai/changes/CR-20260625T155756Z-post-push-handover-consistency-fix/verification.md",
       "reason": "Current change verification evidence."
     }
   ],
@@ -302,12 +312,9 @@
   ],
   "verificationCommands": [
     "npm run resume",
-    "node --test tests/pre-release-policy.test.js",
-    "npm run check:pre-release-policy",
-    "npm test",
+    "npm run check:after-push",
     "npm run check",
-    "git diff --check",
-    "forbidden-path audit"
+    "git diff --check"
   ],
   "nextSteps": [
     "Keep this change governance-only.",

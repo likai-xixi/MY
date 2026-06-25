@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "mode": "rule-change",
+  "feature": {
+    "id": "platform",
+    "name": "Codex Auto Dev OS governance",
+    "status": "active"
+  },
+  "summary": "R-01 post-push handover consistency fix for CR-3 commit and CI wording.",
+  "affected": {
+    "changeRecords": [
+      "ai/changes/CR-20260625T130657Z-high-risk-semantic-governance-framework/verification.md",
+      "ai/changes/CR-20260625T130657Z-high-risk-semantic-governance-framework/handover.md",
+      "ai/changes/CR-20260625T155756Z-post-push-handover-consistency-fix"
+    ],
+    "context": [
+      "ai/context/current-context.md",
+      "ai/context/current-context.json"
+    ],
+    "memory": [
+      "memory/HANDOVER.md",
+      "memory/PROJECT_STATE.md",
+      "memory/CHANGELOG.md",
+      "memory/TASKS.json"
+    ]
+  },
+  "allowedEditRoots": [
+    "memory/HANDOVER.md",
+    "memory/PROJECT_STATE.md",
+    "memory/CHANGELOG.md",
+    "memory/TASKS.json",
+    "ai/changes/CR-20260625T130657Z-high-risk-semantic-governance-framework/verification.md",
+    "ai/changes/CR-20260625T130657Z-high-risk-semantic-governance-framework/handover.md",
+    "ai/context/current-context.md",
+    "ai/context/current-context.json",
+    "ai/changes/CR-20260625T155756Z-post-push-handover-consistency-fix",
+    "ai/changes/CURRENT_CHANGE.json"
+  ],
+  "forbiddenEditRoots": [
+    "ruoyi-business/src/main/java/com/ruoyi/business/customer",
+    "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer",
+    "ruoyi-business/src/main/resources/mapper/customer",
+    "ruoyi-ui/src/views/customer",
+    "ruoyi-ui/src/api/customer.js",
+    "sql/customer.ownership.md",
+    "ruoyi-framework/src/main/java/com/ruoyi/framework/config/SecurityConfig.java",
+    "ruoyi-admin/src/main/resources/application*.yml",
+    "ruoyi-business/src/main/java/com/ruoyi/business/sales-order",
+    "ruoyi-business/src/main/java/com/ruoyi/business/salesorder",
+    "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/sales-order",
+    "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/salesorder",
+    "ruoyi-ui/src/views/sales-order",
+    "ruoyi-ui/src/views/salesorder",
+    "ruoyi-ui/src/api/sales-order.js",
+    "ruoyi-ui/src/api/salesOrder.js",
+    "sql/sales-order.ownership.md",
+    "sql/sales_order_init.sql",
+    "package.json",
+    "tools",
+    "tests",
+    "delivery runtime business code",
+    "finance runtime business code",
+    "production runtime business code",
+    "Windows workstation client code",
+    "H5 or mini-program code",
+    "DXF code",
+    "fund model Java/Vue/SQL",
+    "migration files"
+  ],
+  "requiredCommands": [
+    "npm run resume",
+    "npm run check:after-push",
+    "npm run check",
+    "git diff --check"
+  ],
+  "noCustomerRuntimeChange": true,
+  "noSalesOrderImplementation": true,
+  "noProductionSafetyConfigChange": true,
+  "noFundModelChange": true,
+  "noBusinessDatabaseStructureChange": true,
+  "blockers": [
+    "CI result not confirmed in this evidence pass. Actual GitHub Actions run id, URL, and conclusion must be checked manually or by an available connector before claiming CI passed."
+  ]
+}

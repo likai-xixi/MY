@@ -2,58 +2,58 @@
 
 ## Summary
 
-Current change record: `ai/changes/CR-20260625T143256Z-pre-release-breaking-change-policy`.
+Current change record: `ai/changes/CR-20260625T155756Z-post-push-handover-consistency-fix`.
 
-This governance/rule-change makes the unreleased project default to breaking-change development: do not add old-code or old-data compatibility by default, allow recorded development data reset/rebuild, and require explicit user approval before adding compatibility layers.
+R-01 fixes post-push handover consistency for CR-3 only. CR-3 commit is recorded as `a49b678644dddc16ce45f094bff5459fd9a716e2` with message `governance: add high-risk semantic framework`.
 
 ## Impact
 
-The active project policy is now `ai/rules/pre-release-policy.json`, and `npm run check` includes `check:pre-release-policy`. Future feature iterations should replace old API/UI/enum/permission/SQL/development-data contracts by default while the project remains unreleased. Customer runtime code, sales-order runtime code, delivery/finance/production runtime code, and business database table structure were not modified.
+This update corrects handover, verification, current-context, and memory text that still described CR-3 as lacking commit/push evidence. The corrected state is commit-recorded on `master`, with conservative CI wording.
+
+CI result not confirmed in this evidence pass. Do not claim GitHub Actions passed until actual run id and conclusion are recorded.
+
+Customer runtime code, sales-order runtime code, production safety configuration, fund model code, migrations, package/tool/test code, and business database table structure were not modified. `beforeSalesOrder` remains blocked unless required contracts and review later explicitly unlock it.
 
 ## Changed Files
 
-- `AGENTS.md`
-- `docs/chat-driven-codex-workflow.md`
-- `ai/rules/pre-release-policy.json`
-- `tools/pre-release-policy-checker.js`
-- `tests/pre-release-policy.test.js`
-- `package.json`
-- `ai/rule-proposals/2026-06-25-pre-release-breaking-change-policy.json`
-- `ai/changes/CR-20260625T143256Z-pre-release-breaking-change-policy/*`
-- `ai/context/current-context.*`
 - `memory/HANDOVER.md`
 - `memory/PROJECT_STATE.md`
-- `memory/TASKS.json`
 - `memory/CHANGELOG.md`
-- `memory/sessions/2026-06-25-pre-release-breaking-change-policy.md`
+- `memory/TASKS.json`
+- `ai/changes/CR-20260625T130657Z-high-risk-semantic-governance-framework/verification.md`
+- `ai/changes/CR-20260625T130657Z-high-risk-semantic-governance-framework/handover.md`
+- `ai/context/current-context.md`
+- `ai/context/current-context.json`
+- `ai/changes/CR-20260625T155756Z-post-push-handover-consistency-fix/*`
+- `ai/changes/CURRENT_CHANGE.json`
 
 ## Commands
 
-- [local] `npm run resume`
-- [local] `npm run rule:propose -- "pre-release breaking change policy" --reason "..."`
-- [local] `npm run start:change -- --mode rule-change "pre-release breaking change policy"`
-- [local] `npm run context:build -- customer`
-- [local] `node --test tests/pre-release-policy.test.js`
-- [local] `npm run check:pre-release-policy`
-- [local] `node --test tests/boundary-lint.test.js`
-- [local] `node --test tests/component-checker.test.js`
-- [local] `npm test`
-- [local] `npm run check`
-- [local] `git diff --check`
-- [local] forbidden-path audit
+- [local] `npm run resume` - passed before this change record was created.
+- [local] `npm run start:change -- --mode rule-change post-push-handover-consistency-fix` - created this change record.
+- [local] `git show -s --format="%H%n%s%n%D" a49b678644dddc16ce45f094bff5459fd9a716e2` - confirmed the CR-3 commit hash and message.
+- [local] `git branch --contains a49b678644dddc16ce45f094bff5459fd9a716e2` - confirmed the commit is contained by local `master`.
+- [inconclusive] `npm run check:after-push` - exited non-zero with `check:after-push: inconclusive` because the working tree is not clean during this R-01 development pass.
+- [local] `npm run context:build -- customer` - passed; restored generated `ai/context/current-context.*` idempotence after manual context edits.
+- [local] `npm run check` - passed with 178/178 Node tests after fixing handover Verification wording and regenerating current context. Existing warning-only findings remained config-safety development/default values and the high-risk customer baseline migration markdown warning.
+- [local] `git diff --check` - passed.
 
 ## Verification
 
-[local] Dedicated policy tests passed, full `npm test` passed with 178 tests, and `npm run check` passed after provenance markers were recorded. The final gate retained existing non-blocking warnings only: development/default config-safety warnings and the customer baseline migration markdown warning in `check:high-risk-governance`.
+- [local] CR-3 verification and handover now record commit `a49b678644dddc16ce45f094bff5459fd9a716e2` / `governance: add high-risk semantic framework`.
+- [inconclusive] `npm run check:after-push` did not confirm a clean post-push state because this evidence pass is running with local R-01 edits in the worktree.
+- [local] `npm run check` and `git diff --check` passed for this R-01 local evidence pass.
+- [inconclusive] CI result not confirmed in this evidence pass. Do not claim GitHub Actions passed until actual run id and conclusion are recorded.
+- [local] The current edit scope is governance documentation and memory consistency only.
 
 ## Risks
 
-- This CR changes governance behavior only; no customer runtime behavior was modified or runtime-tested.
-- Future production/released data still needs explicit migration and rollback planning even though development data can be reset during pre-release work.
-- Feature deletion remains separate: dry-run first, then explicit user confirmation with the feature name.
+- [inconclusive] Actual GitHub Actions run id, URL, and conclusion are still missing from local evidence.
+- R-02 production safety baseline is intentionally not included in this R-01 fix.
 
 ## Next Actions
 
-- Review `CR-20260625T143256Z-pre-release-breaking-change-policy`.
-- Use the policy for future feature iterations: replace old contracts by default during pre-release work, and add compatibility only after explicit user approval.
-- Commit or push only after explicit user confirmation.
+- Start R-02 production safety baseline.
+- Then handle customer fund vocabulary source cleanup.
+- Then clarify governance/runtime verification boundaries.
+- Then harden customer salesman candidate handling.

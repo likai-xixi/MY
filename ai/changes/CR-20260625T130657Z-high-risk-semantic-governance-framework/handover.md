@@ -6,11 +6,13 @@ Current rule-change: `CR-20260625T130657Z-high-risk-semantic-governance-framewor
 
 CR-3 establishes high-risk semantic governance registries, schemas, checker, tests, package script wiring, and documentation. It is framework-only.
 
+Post-push consistency correction: commit `a49b678644dddc16ce45f094bff5459fd9a716e2` exists on `master` with message `governance: add high-risk semantic framework`.
+
 ## Impact
 
 This CR adds machine-readable governance for high-risk domains, evidence freshness, contract-to-test matrices, idempotency, state machines, executable migrations, and high-risk permission coverage. It wires `check:high-risk-governance` into `npm run check` without removing existing gates.
 
-No customer runtime Java, Vue, mapper XML, frontend API client, business SQL, customer business rule, sales-order runtime implementation, delivery/finance/production runtime implementation, or business database table structure is part of this change.
+No customer runtime Java, Vue, mapper XML, frontend API client, business SQL, customer business rule, sales-order code, delivery/finance/production runtime code, or business database table structure is part of this change.
 
 `beforeSalesOrder` remains blocked. Sales-order snapshot, state-machine, fund-boundary, idempotency, contract-to-test, and migration-plan contracts remain CR-4 scope.
 
@@ -54,6 +56,8 @@ Key surfaces:
 - [local] Backend compile passed through the project configured Maven path after the bare `mvn` command showed the local PATH issue.
 - [local] Frontend production build passed.
 - [local] `beforeSalesOrder` remains blocked by the existing phase gate. CR-3 did not create sales-order contracts or code.
+- [local] Commit evidence is recorded as `a49b678644dddc16ce45f094bff5459fd9a716e2` / `governance: add high-risk semantic framework`.
+- [inconclusive] CI result not confirmed in this evidence pass. Do not claim GitHub Actions passed until actual run id and conclusion are recorded.
 
 ## Risks
 
@@ -65,6 +69,7 @@ Key surfaces:
 
 ## Next Actions
 
-- Review CR-3.
-- Commit and push only after explicit user confirmation.
-- Start CR-4 for the sales-order contract package after CR-3 is accepted.
+- Start R-02 production safety baseline.
+- Then handle customer fund vocabulary source cleanup.
+- Then clarify governance/runtime verification boundaries.
+- Then harden customer salesman candidate handling.

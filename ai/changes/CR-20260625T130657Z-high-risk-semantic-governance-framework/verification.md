@@ -1,6 +1,6 @@
 # Verification
 
-Status: [local] verified. CR-3 high-risk semantic governance framework passed Node tests, the standalone high-risk checker, the full governance gate, backend compile through the project configured Maven, frontend production build, whitespace diff check, and forbidden-path audit.
+Status: [local] verified. CR-3 high-risk semantic governance framework passed Node tests, the standalone high-risk checker, the full governance gate, backend compile through the project configured Maven, frontend production build, whitespace diff check, and forbidden-path audit. Post-push consistency was corrected by `CR-20260625T155756Z-post-push-handover-consistency-fix`.
 
 ## Commands
 
@@ -24,4 +24,5 @@ Status: [local] verified. CR-3 high-risk semantic governance framework passed No
 - [local] `npm run check:high-risk-governance` validates schemas, registries, evidence directory behavior, matrix discovery, empty registries, and the customer baseline migration warning without treating missing future sales-order/delivery/finance/production runtime evidence as blocking.
 - [local] The only current high-risk checker warning is `baseline-migration-document` for `customer-current-ddl-baseline`, which is intentional because existing customer DDL lives in `sql/customer.ownership.md` and CR-3 must not rewrite it as an executable migration.
 - [local] Forbidden-path audit checked current changed and untracked paths against the customer runtime roots, `sql/customer.ownership.md`, sales-order runtime roots, and delivery/finance/production runtime roots; no forbidden path was present.
-- [local] No CI result is claimed for CR-3 because this change has not been committed or pushed.
+- [local] Commit evidence corrected after push: commit `a49b678644dddc16ce45f094bff5459fd9a716e2` exists on `master` with message `governance: add high-risk semantic framework`.
+- [inconclusive] CI result not confirmed in this evidence pass. Do not claim GitHub Actions passed until actual run id and conclusion are recorded.

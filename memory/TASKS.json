@@ -8,8 +8,8 @@
       "status": "in_progress",
       "owner": "Codex",
       "priority": "high",
-      "statusReason": "Governance change CR-20260625T143256Z-pre-release-breaking-change-policy establishes the pre-release breaking-change policy: replace old code/data contracts by default while unreleased, allow recorded development data reset/rebuild, and require explicit user approval before adding compatibility layers. It is governance-only and does not modify customer runtime code, create sales-order runtime code, or change business database structure.",
-      "nextStep": "Review CR-20260625T143256Z-pre-release-breaking-change-policy, then commit and push only after explicit user confirmation. Use the policy for future feature iterations and keep CR-4 as the sales-order contract package.",
+      "statusReason": "Governance change CR-20260625T155756Z-post-push-handover-consistency-fix is R-01: it corrects CR-3 post-push handover consistency by recording commit a49b678644dddc16ce45f094bff5459fd9a716e2 / governance: add high-risk semantic framework and keeping CI result unconfirmed without a run id/conclusion. It is governance-memory only and does not modify customer runtime code, create sales-order runtime code, change production safety config, change fund model code, alter migrations, edit package/tool/test code, or change business database structure.",
+      "nextStep": "Start R-02 production safety baseline, then customer fund vocabulary source cleanup, governance/runtime verification boundary clarification, and customer salesman candidate hardening. Keep beforeSalesOrder blocked unless required contracts and review explicitly unlock it later.",
       "blockedBy": [],
       "verification": [
         "npm run profile:setup",
@@ -105,12 +105,20 @@
         "npm test passed with 178 tests for CR-20260625T143256Z-pre-release-breaking-change-policy",
         "npm run check passed with 178 tests for CR-20260625T143256Z-pre-release-breaking-change-policy after provenance markers were recorded",
         "git diff --check passed for CR-20260625T143256Z-pre-release-breaking-change-policy",
-        "forbidden-path audit returned FORBIDDEN_PATH_AUDIT_OK for CR-20260625T143256Z-pre-release-breaking-change-policy"
+        "forbidden-path audit returned FORBIDDEN_PATH_AUDIT_OK for CR-20260625T143256Z-pre-release-breaking-change-policy",
+        "CR-20260625T155756Z-post-push-handover-consistency-fix created R-01 post-push handover consistency fix for CR-3",
+        "git show confirmed CR-3 commit a49b678644dddc16ce45f094bff5459fd9a716e2 with message governance: add high-risk semantic framework",
+        "git branch --contains confirmed CR-3 commit is contained by local master",
+        "npm run check:after-push was inconclusive because the working tree is not clean during R-01 development",
+        "npm run context:build -- customer passed and restored generated current-context idempotence",
+        "npm run check passed with 178 Node tests for CR-20260625T155756Z-post-push-handover-consistency-fix",
+        "git diff --check passed for CR-20260625T155756Z-post-push-handover-consistency-fix",
+        "CI result not confirmed in this evidence pass; actual GitHub Actions run id, URL, and conclusion must be checked before claiming CI passed"
       ],
       "latestSession": "memory/sessions/2026-06-25-pre-release-breaking-change-policy.md",
       "handoverRequired": true,
       "updatedAt": "2026-06-25",
-      "latestChange": "CR-20260625T143256Z-pre-release-breaking-change-policy"
+      "latestChange": "CR-20260625T155756Z-post-push-handover-consistency-fix"
     },
     {
       "id": "TASK-CUSTOMER",
