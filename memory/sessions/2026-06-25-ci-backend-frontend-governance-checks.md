@@ -17,6 +17,7 @@
 - Repair the first pushed `governance` CI failure by making the committed frontend route scan source set match clean GitHub Actions checkout.
 - Repair the second pushed `governance` CI failure by preventing CI npm install steps from generating untracked lockfiles in clean checkout.
 - Repair the third pushed `governance` CI failure by making Maven available to `npm run check`'s existing runtime checker.
+- Repair the fourth pushed `governance` CI failure by allowing the runtime checker to fall back from a Windows-local configured Maven path to `mvn` on CI.
 
 ## Changed Files
 
@@ -42,10 +43,10 @@
 - [local] `npm run start:change -- --mode rule-change "ci backend frontend governance checks"` - passed and created this CR.
 - [local] `npm run context:build -- customer` - passed and regenerated current context for this CR.
 - [local] `node --test tests/governance-gates.test.js` - passed with 16 tests during implementation.
-- [local] `npm test` - passed with 137 Node tests.
+- [local] `npm test` - passed with 138 Node tests.
 - [local] `npm run check:ci-coverage-declaration` - passed with no Maven/frontend missing warnings.
 - [local] `npm run check:verification-provenance` - passed.
-- [local] `npm run check` - passed with 137 Node tests; `check:config-safety` retained existing development/default configuration warnings only.
+- [local] `npm run check` - passed with 138 Node tests; `check:config-safety` retained existing development/default configuration warnings only.
 - [local] `mvn -pl ruoyi-admin -am -DskipTests compile` - passed with `BUILD SUCCESS` using the Maven path configured in `ai/rules/runtime-policy.json`.
 - [local] `npm --prefix ruoyi-ui run build:prod` - passed; Vite transformed 2546 modules and built successfully.
 - [local] `git diff --check` - passed.
@@ -59,6 +60,8 @@
 - [local] Root and `ruoyi-ui` install commands completed with `--package-lock=false` and did not generate lockfiles.
 - [ci] Third pushed GitHub Actions run `28170129447` passed route scan, handoff integrity, backend compile, and frontend build, then failed in `governance` / `npm run check` at `check:runtime` because `mvn` was unavailable.
 - [local] Governance job now sets up Java 17 before Node so the existing runtime checker can find Maven during `npm run check`.
+- [ci] Fourth pushed GitHub Actions run `28170484346` still failed at `check:runtime` because `ai/rules/runtime-policy.json` configured a Windows-local Maven path.
+- [local] Runtime checker now falls back from an unavailable configured Maven path to `mvn`, with test coverage in `tests/runtime-checker.test.js`.
 - [local] Repair verification passed: `npm run scan:frontend-routes`, `npm run scan:frontend-routes:check`, `npm run check:ci-coverage-declaration`, `npm run check:verification-provenance`, `npm test`, `npm run check`, Maven compile, ruoyi-ui production build, and `git diff --check`.
 
 ## Verification
@@ -68,7 +71,7 @@
 - [local] Maven backend compile and ruoyi-ui production build passed locally.
 - [local] `git diff --check` and forbidden-path audit passed after evidence updates.
 - [ci] First pushed GitHub Actions run failed only in `governance`; `backend-compile` and `frontend-build` passed.
-- [ci-planned] GitHub Actions workflow includes Node governance with Java/Maven available for `check:runtime`, Maven compile, ruoyi-ui build, and lockfile-free install commands; actual CI result for this repair is determined after push.
+- [ci-planned] GitHub Actions workflow includes Node governance with Java/Maven available for `check:runtime`, Maven compile, ruoyi-ui build, lockfile-free install commands, and runtime checker fallback from local Maven path to `mvn`; actual CI result for this repair is determined after push.
 - [local] The repair is source-tracking only for pre-existing RuoYi tool files already present in generated governance artifacts.
 - [local] Final local repair verification passed before committing the follow-up install-side-effect fix.
 
@@ -78,7 +81,7 @@
 - [inconclusive] Migration gating remains non-blocking for sales-order.
 - [inconclusive] Idempotency, state-machine, and contract-to-test gates remain future CRs.
 - [inconclusive] Sales-order three contracts remain uncreated.
-- [ci-planned] GitHub Actions workflow includes Node governance with Java/Maven available for `check:runtime`, Maven compile, ruoyi-ui build, and lockfile-free install commands; actual CI result is determined after push.
+- [ci-planned] GitHub Actions workflow includes Node governance with Java/Maven available for `check:runtime`, Maven compile, ruoyi-ui build, lockfile-free install commands, and runtime checker fallback from local Maven path to `mvn`; actual CI result is determined after push.
 
 ## Next Entry Point
 

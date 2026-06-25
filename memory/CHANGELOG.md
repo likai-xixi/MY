@@ -312,5 +312,7 @@
 - Local install verification confirmed both install commands completed without generating root or `ruoyi-ui` lockfiles.
 - Third pushed GitHub Actions run `28170129447` passed route scan, handoff integrity, backend compile, and frontend build, then failed at `check:runtime` because `mvn` was unavailable in the Node-only governance job.
 - Repair: set up Java 17 in the governance job before Node so `npm run check` can run the existing runtime checker without skipping it.
+- Fourth pushed GitHub Actions run `28170484346` still failed at `check:runtime` because the runtime policy configured a Windows-local Maven path.
+- Repair: `tools/runtime-checker.js` now falls back from an unavailable configured tool path to the standard command name such as `mvn`, with regression coverage in `tests/runtime-checker.test.js`.
 - Local repair verification passed: `npm run scan:frontend-routes`, `npm run scan:frontend-routes:check`, `npm run check:ci-coverage-declaration`, `npm run check:verification-provenance`, `npm test`, `npm run check`, Maven compile, ruoyi-ui production build, and `git diff --check`.
 - [ci-planned] A new GitHub Actions result is required after pushing this repair; do not treat the local checks as CI passed evidence.

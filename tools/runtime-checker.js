@@ -25,15 +25,31 @@ function canRun(command, args = ['--version'], runner = defaultProcessRunner) {
   return runner.canRun(command, args);
 }
 
-function toolCommand(tool, policy) {
-  const configured = policy.toolPaths?.[tool];
-  if (configured) {
-    return configured;
-  }
+function defaultToolCommand(tool) {
   if (tool === 'maven') {
     return 'mvn';
   }
   return tool;
+}
+
+function toolCandidates(tool, policy) {
+  const configured = policy.toolPaths?.[tool];
+  const candidates = [];
+  if (configured) {
+    candidates.push(configured);
+  }
+  candidates.push(defaultToolCommand(tool));
+  return [...new Set(candidates)];
+}
+
+function resolveToolCommand(tool, policy, runner = defaultProcessRunner) {
+  const candidates = toolCandidates(tool, policy);
+  for (const candidate of candidates) {
+    if (canRun(candidate, ['--version'], runner)) {
+      return { command: candidate, available: true };
+    }
+  }
+  return { command: candidates[0], available: false };
 }
 
 function runCommand(command, args, cwd, runner = defaultProcessRunner) {
@@ -137,25 +153,25 @@ export function validateRuntimeReadiness({
   const mavenProjects = detectMavenProjects();
   const frontendProjects = detectFrontendProjects();
   const shouldExecute = execute || policy.executeCommandsByDefault === true;
-  const mavenCommand = toolCommand('maven', policy);
+  const mavenTool = resolveToolCommand('maven', policy, runner);
 
-  if (mavenProjects.length > 0 && policy.requireToolingWhenDetected !== false && !canRun(mavenCommand, ['--version'], runner)) {
+  if (mavenProjects.length > 0 && policy.requireToolingWhenDetected !== false && !mavenTool.available) {
     errors.push('Maven project detected, but `mvn` is not available. Install Maven or configure ai/rules/runtime-policy.json.');
   }
 
   for (const dir of frontendProjects) {
     const manager = detectPackageManager(dir);
-    const managerCommand = toolCommand(manager, policy);
-    if (policy.requireToolingWhenDetected !== false && !canRun(managerCommand, ['--version'], runner)) {
+    const managerTool = resolveToolCommand(manager, policy, runner);
+    if (policy.requireToolingWhenDetected !== false && !managerTool.available) {
       errors.push(`${manager} project detected at ${dir}, but ${manager} is not available.`);
       continue;
     }
-    errors.push(...validateFrontendProject({ dir, packageManager: manager, command: managerCommand, execute: shouldExecute, policy, runner }));
+    errors.push(...validateFrontendProject({ dir, packageManager: manager, command: managerTool.command, execute: shouldExecute, policy, runner }));
   }
 
-  if (mavenProjects.length > 0 && canRun(mavenCommand, ['--version'], runner)) {
+  if (mavenProjects.length > 0 && mavenTool.available) {
     for (const dir of mavenProjects) {
-      errors.push(...validateMavenProject({ dir, command: mavenCommand, execute: shouldExecute, policy, runner }));
+      errors.push(...validateMavenProject({ dir, command: mavenTool.command, execute: shouldExecute, policy, runner }));
     }
   }
 

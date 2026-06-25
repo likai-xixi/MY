@@ -15,10 +15,12 @@
     "governanceScripts": [
       "tools/governance-checker-utils.js",
       "tools/ci-coverage-declaration-checker.js",
+      "tools/runtime-checker.js",
       "tools/verification-provenance-checker.js"
     ],
     "tests": [
-      "tests/governance-gates.test.js"
+      "tests/governance-gates.test.js",
+      "tests/runtime-checker.test.js"
     ],
     "docsAndMemory": [
       "README.md",
@@ -86,8 +88,8 @@
     "No CR-4 sales-order contracts."
   ],
   "lockfilePolicy": {
-    "root": "No package-lock.json is present, so CI uses npm install at repository root.",
-    "ruoyiUi": "No ruoyi-ui/package-lock.json is present, so CI uses npm --prefix ruoyi-ui install."
+    "root": "No package-lock.json is present, so CI uses npm install --package-lock=false at repository root.",
+    "ruoyiUi": "No ruoyi-ui/package-lock.json is present, so CI uses npm --prefix ruoyi-ui install --package-lock=false."
   },
   "requiredCommands": [
     "npm run resume",

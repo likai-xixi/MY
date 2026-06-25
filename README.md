@@ -139,7 +139,7 @@ npm run check
 
 `.github/workflows/ci.yml` contains three real baseline jobs:
 
-- `governance`: Java 17 and Node 20 setup, root `npm install --package-lock=false`, then `npm run check`.
+- `governance`: Java 17 with Maven cache and Node 20 setup, root `npm install --package-lock=false`, then `npm run check`.
 - `backend-compile`: Java 17 with Maven cache, then `mvn -pl ruoyi-admin -am -DskipTests compile`.
 - `frontend-build`: `npm --prefix ruoyi-ui install --package-lock=false`, then `npm --prefix ruoyi-ui run build:prod`.
 

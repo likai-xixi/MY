@@ -67,3 +67,36 @@ test('runtime checker reports missing frontend tooling through runner', () => {
     'npm project detected at ., but npm is not available.'
   ]);
 });
+
+test('runtime checker falls back to default Maven command when configured path is unavailable', () => {
+  const calls = [];
+  const runner = {
+    canRun(command, args) {
+      calls.push({ command, args });
+      return command === 'mvn' || command === 'npm';
+    },
+    run() {
+      throw new Error('run should not be called when execute is false');
+    }
+  };
+
+  const errors = validateRuntimeReadiness({
+    force: true,
+    profile: { templateSetup: false },
+    policy: {
+      skipWhenTemplateSetup: false,
+      requireToolingWhenDetected: true,
+      requireFrontendBuildScript: false,
+      toolPaths: {
+        maven: 'C:/local-only/apache-maven/bin/mvn.cmd'
+      }
+    },
+    runner
+  });
+
+  assert.deepEqual(errors, []);
+  assert.deepEqual(calls.slice(0, 2).map((call) => call.command), [
+    'C:/local-only/apache-maven/bin/mvn.cmd',
+    'mvn'
+  ]);
+});

@@ -27,8 +27,10 @@
     "ruoyi-ui/src/views/tool/build/TreeNodeDialog.vue",
     "ruoyi-ui/src/views/tool/build/index.vue",
     "tests/governance-gates.test.js",
+    "tests/runtime-checker.test.js",
     "tools/ci-coverage-declaration-checker.js",
     "tools/governance-checker-utils.js",
+    "tools/runtime-checker.js",
     "tools/verification-provenance-checker.js"
   ]
 }

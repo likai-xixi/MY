@@ -8,8 +8,8 @@
       "status": "in_progress",
       "owner": "Codex",
       "priority": "high",
-      "statusReason": "Governance change CR-20260625T112646Z-ci-backend-frontend-governance-checks adds real baseline GitHub Actions coverage and is repairing pushed governance CI failures by tracking pre-existing RuoYi tool/build route source files, preventing npm install from generating untracked lockfiles, and making Maven available to npm run check in CI.",
-      "nextStep": "Verify, commit, and push the CR-2 governance job Maven availability repair, then confirm the new GitHub Actions run. Keep CR-3 high-risk semantic gates and CR-4 sales-order contracts separate.",
+      "statusReason": "Governance change CR-20260625T112646Z-ci-backend-frontend-governance-checks adds real baseline GitHub Actions coverage and is repairing pushed governance CI failures by tracking pre-existing RuoYi tool/build route source files, preventing npm install from generating untracked lockfiles, making Maven available to npm run check in CI, and falling back from local Maven tool paths to standard mvn when needed.",
+      "nextStep": "Verify, commit, and push the CR-2 runtime checker Maven fallback repair, then confirm the new GitHub Actions run. Keep CR-3 high-risk semantic gates and CR-4 sales-order contracts separate.",
       "blockedBy": [],
       "verification": [
         "npm run profile:setup",
@@ -68,8 +68,8 @@
         "node --test tests/governance-gates.test.js passed with 16 tests during CR-2 implementation",
         "npm run check:ci-coverage-declaration passed without Maven/frontend missing warnings during CR-2 implementation",
         "npm run check:verification-provenance passed after adding ci-planned provenance support during CR-2 implementation",
-        "npm test passed with 137 Node tests for CR-20260625T112646Z-ci-backend-frontend-governance-checks",
-        "npm run check passed with 137 Node tests for CR-20260625T112646Z-ci-backend-frontend-governance-checks; config-safety retained existing development/default warnings only",
+        "npm test passed with 138 Node tests for CR-20260625T112646Z-ci-backend-frontend-governance-checks",
+        "npm run check passed with 138 Node tests for CR-20260625T112646Z-ci-backend-frontend-governance-checks; config-safety retained existing development/default warnings only",
         "mvn -pl ruoyi-admin -am -DskipTests compile passed with BUILD SUCCESS for CR-20260625T112646Z-ci-backend-frontend-governance-checks",
         "npm --prefix ruoyi-ui run build:prod passed with Vite build success for CR-20260625T112646Z-ci-backend-frontend-governance-checks",
         "git diff --check passed for CR-20260625T112646Z-ci-backend-frontend-governance-checks",
@@ -82,7 +82,9 @@
         "CR-2 CI install repair changes root and ruoyi-ui CI install commands to use --package-lock=false while still running real npm installs",
         "CR-2 CI install repair local verification confirmed both install commands completed without generating root or ruoyi-ui package-lock files",
         "GitHub Actions run 28170129447 passed route scan, handoff integrity, backend compile, and frontend build but failed in governance at check:runtime because mvn was unavailable",
-        "CR-2 governance job repair adds Java 17 setup before Node so npm run check can run the existing runtime checker without skipping it"
+        "CR-2 governance job repair adds Java 17 setup before Node so npm run check can run the existing runtime checker without skipping it",
+        "GitHub Actions run 28170484346 still failed in governance at check:runtime because ai/rules/runtime-policy.json configured a Windows-local Maven path",
+        "CR-2 runtime checker repair falls back from unavailable configured Maven paths to mvn while still failing when no Maven command is runnable"
       ],
       "latestSession": "memory/sessions/2026-06-25-ci-backend-frontend-governance-checks.md",
       "handoverRequired": true,
