@@ -1,27 +1,19 @@
 # Current Context
 
 Current feature: `customer`
-Current change: `CR-20260625T093416Z-p0-governance-stability-gates`
+Current change: `CR-20260625T112646Z-ci-backend-frontend-governance-checks`
 Repository: RuoYi + Vue3 + Codex Auto Dev OS
 Profile: adapter `ruoyi`, locked `true`
 
 ## Allowed Edit Roots
 
-- `tools`
-- `scripts/context-build.js`
-- `tests`
-- `ai/registry`
-- `ai/rules`
-- `ai/rule-proposals`
-- `ai/generated`
-- `ai/context`
-- `ai/changes`
-- `memory`
-- `package.json`
 - `.github/workflows`
-- `docs`
+- `tools`
+- `tests`
+- `ai/changes`
+- `ai/context`
+- `memory`
 - `README.md`
-- `features/customer.md`
 
 ## Forbidden Edit Roots
 
@@ -55,9 +47,9 @@ Profile: adapter `ruoyi`, locked `true`
 - `ai/roadmap/phase-gates.json` - beforeSalesOrder gate state.
 - `ai/roadmap/refactor-debt.json` - Known debt affecting sales-order handoff.
 - `ai/roadmap/enhancement-backlog.json` - Governance backlog and required/deferred evidence.
-- `ai/changes/CR-20260625T093416Z-p0-governance-stability-gates/impact.json` - Current change allowed and forbidden edit roots.
-- `ai/changes/CR-20260625T093416Z-p0-governance-stability-gates/plan.md` - Current change execution plan.
-- `ai/changes/CR-20260625T093416Z-p0-governance-stability-gates/verification.md` - Current change verification evidence.
+- `ai/changes/CR-20260625T112646Z-ci-backend-frontend-governance-checks/impact.json` - Current change allowed and forbidden edit roots.
+- `ai/changes/CR-20260625T112646Z-ci-backend-frontend-governance-checks/plan.md` - Current change execution plan.
+- `ai/changes/CR-20260625T112646Z-ci-backend-frontend-governance-checks/verification.md` - Current change verification evidence.
 
 ## Must Not Break
 
@@ -120,13 +112,13 @@ Deferred:
 
 - `npm run resume`
 - `npm test`
-- `npm run check:current-doc-state`
-- `npm run check:feature-test-ownership`
-- `npm run check:config-safety`
-- `npm run check:verification-provenance`
 - `npm run check:ci-coverage-declaration`
+- `npm run check:verification-provenance`
 - `npm run check`
+- `mvn -pl ruoyi-admin -am -DskipTests compile`
+- `npm --prefix ruoyi-ui run build:prod`
 - `git diff --check`
+- `forbidden-path audit`
 
 ## Next Steps
 

@@ -97,7 +97,9 @@
 - Change: `ai/changes/CR-20260623T015344Z-governance-handoff-integrity-checker`.
 - Governance handoff integrity checker
 - Pre-commit closeout reran `node --test tests/change-handoff-integrity-checker.test.js`, `npm run check:change-handoff`, `npm run close:change`, `npm run check`, and standalone `npm test`; all passed.
-- Feature: `platform`.## 2026-06-23 — governance
+- Feature: `platform`.
+
+## 2026-06-23 — governance
 - Change: `ai/changes/CR-20260623T031118Z-handoff-gate`.
 - 治理增强：稳定第一批 handoff gate 使用体验
 - Feature: `platform`.
@@ -266,7 +268,7 @@
 - Handled concurrent first fund-account creation through `DuplicateKeyException` and locked re-read, and added bounded retry for `flow_no` and `deposit_batch_no` unique collisions.
 - Runtime API/DB validation passed for omitted/explicit `CUSTOMER_DEPOSIT`, invalid account rejection without mutation, sample rebate record-before-flow without deposit batch, PUBLIC customer rejection without mutation, and 10 concurrent one-yuan deposits without lost update or duplicate numbers.
 - Verification passed: cached Maven compile/package, `node --test tests/customer-risk-gate.test.js` with 8 tests, `npm run scan:all`, `npm run finalize:change -- --summary "客户管理资金并发安全收口"`, regenerated current context, `npm run check` with 121 Node tests, standalone `npm test` with 121 Node tests, and `git diff --check`.
-- No sales-order, delivery, finance, deduction, refund, adjustment, reversal, governance-rule, or SQL business table structure change was made. No commit or push has been made.
+- No sales-order, delivery, finance, deduction, refund, adjustment, reversal, governance-rule, or SQL business table structure change was made.
 - Feature: `customer`.
 
 ## 2026-06-25 - governance/rule-change
@@ -283,3 +285,18 @@
 - Change: `ai/changes/CR-20260625T093416Z-p0-governance-stability-gates`.
 - 新增 P0 治理稳定门禁
 - Feature: `platform`.
+
+## 2026-06-25 — rule-change
+- Change: `ai/changes/CR-20260625T112646Z-ci-backend-frontend-governance-checks`.
+- CI backend frontend governance checks
+- Feature: `platform`.
+
+## 2026-06-25 - governance/ci
+
+- Change: `ai/changes/CR-20260625T112646Z-ci-backend-frontend-governance-checks`.
+- Added GitHub Actions baseline jobs `governance`, `backend-compile`, and `frontend-build` with real `npm run check`, `mvn -pl ruoyi-admin -am -DskipTests compile`, and `npm --prefix ruoyi-ui run build:prod` commands.
+- Hardened CI coverage and verification provenance checkers to parse workflow `run:` commands, reject echo-only build theater, accept `working-directory: ruoyi-ui` frontend builds, and distinguish `[ci-planned]` from passed CI evidence.
+- Root and `ruoyi-ui` have no `package-lock.json`, so the CI workflow uses `npm install` without committing lockfile changes.
+- Local verification passed: `npm test` with 137 Node tests, `npm run check:ci-coverage-declaration`, `npm run check:verification-provenance`, full `npm run check` with 137 Node tests, `mvn -pl ruoyi-admin -am -DskipTests compile`, `npm --prefix ruoyi-ui run build:prod`, `git diff --check`, and forbidden-path audit.
+- [ci-planned] GitHub Actions workflow includes Node governance, Maven compile, and ruoyi-ui build; actual CI result is determined after push.
+- No customer runtime code, sales-order implementation code, customer business rules, or business database table structure was changed.

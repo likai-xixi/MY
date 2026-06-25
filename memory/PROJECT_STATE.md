@@ -22,7 +22,7 @@ Customer management is the first active business feature. The customer model rem
 - sample rebate remains separate as `SAMPLE_REBATE`;
 - customer-level fund changes continue through `customer_fund_flow`; direct balance edits remain out of scope.
 
-Current governance change `CR-20260625T093416Z-p0-governance-stability-gates` adds the P0 stability gates for current documentation state, feature test ownership, config safety, verification provenance, CI declaration coverage, and after-push handover checks. Current Git/push state is intentionally read from Git and CI rather than hand-written in project state.
+Current governance change `CR-20260625T112646Z-ci-backend-frontend-governance-checks` adds CR-2 baseline CI coverage. The GitHub Actions workflow now contains real jobs for Node governance (`npm run check`), backend Maven compile (`mvn -pl ruoyi-admin -am -DskipTests compile`), and ruoyi-ui production build (`npm --prefix ruoyi-ui run build:prod`). CI coverage and provenance checkers now parse actual workflow `run:` commands and support `[ci-planned]` without treating it as passed CI evidence.
 
 Current customer fund concurrency change `CR-20260625T042041Z-change`:
 
@@ -71,15 +71,15 @@ Sales order, shipment, finance settlement, automatic deduction, receipt claiming
 
 ## Active Task
 
-`TASK-0002` is the active governance/platform task in `memory/TASKS.json` for `CR-20260625T093416Z-p0-governance-stability-gates`. The customer concurrency CR remains historical context; this rule-change batch must not modify customer runtime code.
+`TASK-0002` is the active governance/platform task in `memory/TASKS.json` for `CR-20260625T112646Z-ci-backend-frontend-governance-checks`. The customer concurrency CR remains historical context; this rule-change batch must not modify customer runtime code.
 
 ## Latest Session
 
-`memory/sessions/2026-06-25-p0-governance-stability-gates.md`
+`memory/sessions/2026-06-25-ci-backend-frontend-governance-checks.md`
 
 ## Next Actions
 
-- Finish the P0 governance gate verification ladder for `CR-20260625T093416Z-p0-governance-stability-gates`.
+- Review `CR-20260625T112646Z-ci-backend-frontend-governance-checks`, then handle commit/push and post-push GitHub Actions confirmation as a separate publish step.
 - Keep sales order, delivery, finance, source/channel/account, maintenance-fee calculation, commission calculation, automatic deduction, receipt claiming, reconciliation, and order-level deposit behavior in separate future feature changes.
 - Before any future runtime claim about PUBLIC data cleanliness, rerun the invariant SQL in `sql/customer.ownership.md` to confirm only `PUB_DIRECT_SALE` and `PUB_SELF_MEDIA` exist as active PUBLIC rows.
 
@@ -107,7 +107,7 @@ Sales order, shipment, finance settlement, automatic deduction, receipt claiming
 
 ## Last Verification
 
-For `CR-20260625T093416Z-p0-governance-stability-gates`, [local] `npm run resume`, [local] `npm test` with 131 Node tests, [local] `npm run check:current-doc-state`, [local] `npm run check:feature-test-ownership`, [local] `npm run check:config-safety`, [local] `npm run check:verification-provenance`, [local] `npm run check:ci-coverage-declaration`, [local] `npm run check`, and [local] `git diff --check` passed. Config-safety warnings are limited to existing development/default configuration values; CI-coverage warnings are limited to absent broader build workflow commands. This governance change did not modify customer runtime code, sales-order implementation code, or business database table structure.
+For `CR-20260625T112646Z-ci-backend-frontend-governance-checks`, [local] `npm run resume`, [local] `npm run start:change -- --mode rule-change "ci backend frontend governance checks"`, [local] `npm run context:build -- customer`, [local] `node --test tests/governance-gates.test.js` with 16 tests, [local] `npm test` with 137 Node tests, [local] `npm run check:ci-coverage-declaration`, [local] `npm run check:verification-provenance`, [local] `npm run check` with 137 Node tests and existing config-safety warnings only, [local] `mvn -pl ruoyi-admin -am -DskipTests compile` with `BUILD SUCCESS`, and [local] `npm --prefix ruoyi-ui run build:prod` with Vite build success passed. [ci-planned] GitHub Actions workflow includes Node governance, Maven compile, and ruoyi-ui build; actual CI result is determined after push. This governance change did not modify customer runtime code, sales-order implementation code, customer business rules, or business database table structure.
 
 For `CR-20260625T042041Z-change`, `npm run resume`, `npm run context:build -- customer`, `npm run ai:do -- "功能迭代：客户管理"`, `npm run impact -- 客户管理`, `npm run review:feature -- "功能预审：客户管理资金并发安全收口" --feature customer`, `node --test tests/customer-risk-gate.test.js`, cached Maven compile, cached Maven package, runtime API/DB validation, `npm run scan:all`, `npm run finalize:change -- --summary "客户管理资金并发安全收口"`, regenerated current context, `npm run check` with 121 Node tests, standalone `npm test` with 121 Node tests, and `git diff --check` passed.
 

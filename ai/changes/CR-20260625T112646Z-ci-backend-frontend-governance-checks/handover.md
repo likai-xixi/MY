@@ -4,11 +4,9 @@
 
 Current governance/ci rule-change: `CR-20260625T112646Z-ci-backend-frontend-governance-checks`.
 
-Current change record: `ai/changes/CR-20260625T112646Z-ci-backend-frontend-governance-checks`.
-
 ## Impact
 
-This CR adds baseline GitHub Actions CI with real Node governance, Maven backend compile, and ruoyi-ui production build jobs. It also hardens CI coverage and verification provenance checkers so docs can distinguish `[local]`, `[ci-planned]`, and real `[ci]` evidence.
+This CR adds baseline GitHub Actions CI with real Node governance, Maven backend compile, and ruoyi-ui production build jobs. It also hardens the governance checkers so documentation can only claim CI Maven/frontend coverage when the workflow contains real matching commands.
 
 No customer runtime Java, Vue, mapper XML, API client, business SQL, customer business rule, sales-order implementation, or business database table structure is part of this change.
 
@@ -42,7 +40,7 @@ No customer runtime Java, Vue, mapper XML, API client, business SQL, customer bu
 - [local] `npm run resume` - passed.
 - [local] `npm run start:change -- --mode rule-change "ci backend frontend governance checks"` - passed.
 - [local] `npm run context:build -- customer` - passed.
-- [local] `node --test tests/governance-gates.test.js` - passed with 16 tests during implementation.
+- [local] `node --test tests/governance-gates.test.js` - passed with 15 tests during implementation.
 - [local] `npm run finalize:change -- --summary "CI backend frontend governance checks" ...` - passed.
 - [local] `npm test` - passed with 137 Node tests.
 - [local] `npm run check:ci-coverage-declaration` - passed with no Maven/frontend missing warnings.
@@ -55,11 +53,11 @@ No customer runtime Java, Vue, mapper XML, API client, business SQL, customer bu
 
 ## Verification
 
-- [local] Targeted governance tests passed with 16 tests after workflow/checker updates.
-- [local] Workflow jobs are real command jobs: `governance`, `backend-compile`, and `frontend-build`.
+- [local] Targeted governance tests passed with 16 tests after checker and workflow updates.
+- [local] The workflow contains real jobs named `governance`, `backend-compile`, and `frontend-build`.
 - [local] Full `npm run check`, Maven compile, and ruoyi-ui production build all passed locally for this CR.
 - [ci-planned] GitHub Actions workflow includes Node governance, Maven compile, and ruoyi-ui build; actual CI result is determined after push.
-- [local] Final `git diff --check` and forbidden-path audit passed after evidence updates.
+- [local] `git diff --check` and forbidden-path audit passed after evidence updates.
 
 ## Risks
 
@@ -71,5 +69,6 @@ No customer runtime Java, Vue, mapper XML, API client, business SQL, customer bu
 
 ## Next Actions
 
+- Finish the final local verification ladder for CR-2.
 - Review CR-2, then handle commit/push and post-push CI confirmation as a separate publish step.
 - Keep CR-3 high-risk semantic framework and CR-4 sales-order contracts separate.

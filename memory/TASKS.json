@@ -8,8 +8,8 @@
       "status": "in_progress",
       "owner": "Codex",
       "priority": "high",
-      "statusReason": "Governance change CR-20260625T093416Z-p0-governance-stability-gates adds P0 gates for current-doc drift, feature test ownership, config safety, verification provenance, CI declaration coverage, and after-push handover checks without touching customer business code or sales-order implementation.",
-      "nextStep": "Review and commit the P0 governance gate change when ready, then leave Maven/frontend CI for CR-2, high-risk semantic gates for CR-3, and sales-order contracts for CR-4.",
+      "statusReason": "Governance change CR-20260625T112646Z-ci-backend-frontend-governance-checks adds real baseline GitHub Actions coverage for Node governance, backend Maven compile, and ruoyi-ui production build while hardening CI coverage/provenance checkers.",
+      "nextStep": "Finish CR-2 local verification, review the governance/ci diff, then handle commit/push and post-push GitHub Actions confirmation separately. Keep CR-3 high-risk semantic gates and CR-4 sales-order contracts separate.",
       "blockedBy": [],
       "verification": [
         "npm run profile:setup",
@@ -63,12 +63,22 @@
         "npm run finalize:change -- --summary \"新增销售订单前治理接手机制\" passed for CR-20260624T152423Z-governance-sales-order-handoff-gate",
         "npm run check passed with 109 Node tests for CR-20260624T152423Z-governance-sales-order-handoff-gate",
         "standalone npm test passed with 109 Node tests for CR-20260624T152423Z-governance-sales-order-handoff-gate",
-        "git diff --check passed for CR-20260624T152423Z-governance-sales-order-handoff-gate"
+        "git diff --check passed for CR-20260624T152423Z-governance-sales-order-handoff-gate",
+        "CR-20260625T112646Z-ci-backend-frontend-governance-checks adds GitHub Actions jobs governance, backend-compile, and frontend-build",
+        "node --test tests/governance-gates.test.js passed with 16 tests during CR-2 implementation",
+        "npm run check:ci-coverage-declaration passed without Maven/frontend missing warnings during CR-2 implementation",
+        "npm run check:verification-provenance passed after adding ci-planned provenance support during CR-2 implementation",
+        "npm test passed with 137 Node tests for CR-20260625T112646Z-ci-backend-frontend-governance-checks",
+        "npm run check passed with 137 Node tests for CR-20260625T112646Z-ci-backend-frontend-governance-checks; config-safety retained existing development/default warnings only",
+        "mvn -pl ruoyi-admin -am -DskipTests compile passed with BUILD SUCCESS for CR-20260625T112646Z-ci-backend-frontend-governance-checks",
+        "npm --prefix ruoyi-ui run build:prod passed with Vite build success for CR-20260625T112646Z-ci-backend-frontend-governance-checks",
+        "git diff --check passed for CR-20260625T112646Z-ci-backend-frontend-governance-checks",
+        "forbidden-path audit returned FORBIDDEN_PATH_AUDIT_OK for CR-20260625T112646Z-ci-backend-frontend-governance-checks"
       ],
-      "latestSession": "memory/sessions/2026-06-25-p0-governance-stability-gates.md",
+      "latestSession": "memory/sessions/2026-06-25-ci-backend-frontend-governance-checks.md",
       "handoverRequired": true,
       "updatedAt": "2026-06-25",
-      "latestChange": "CR-20260625T093416Z-p0-governance-stability-gates"
+      "latestChange": "CR-20260625T112646Z-ci-backend-frontend-governance-checks"
     },
     {
       "id": "TASK-CUSTOMER",

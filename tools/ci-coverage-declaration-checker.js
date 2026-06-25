@@ -8,21 +8,41 @@ import {
   printIssues,
   readText,
   sectionLineRecords,
-  workflowContains,
-  workflowFiles
+  workflowFiles,
+  workflowRunSteps
 } from './governance-checker-utils.js';
 
+function commandParts(command) {
+  return String(command || '')
+    .split(/\r?\n|&&|;/)
+    .map((line) => line.trim())
+    .filter(Boolean);
+}
+
+function isMavenCompileCommand(command) {
+  return commandParts(command).some((line) => /^(?:\.\/)?mvnw(?:\.cmd)?\b|^mvn(?:\.cmd)?\b/i.test(line)
+    && /(?:^|\s)-pl\s+ruoyi-admin(?:\s|$)/i.test(line)
+    && /(?:^|\s)-am(?:\s|$)/i.test(line)
+    && /(?:^|\s)-DskipTests(?:\s|$)/i.test(line)
+    && /(?:^|\s)compile(?:\s|$)/i.test(line));
+}
+
+function isFrontendBuildCommand(step) {
+  return commandParts(step.command).some((line) => /^npm\s+--prefix\s+ruoyi-ui\s+run\s+build:prod(?:\s|$)/i.test(line)
+    || (/^npm\s+run\s+build:prod(?:\s|$)/i.test(line)
+      && step.workingDirectory.replace(/\\/g, '/') === 'ruoyi-ui'));
+}
+
 function workflowHasCheck(root) {
-  return workflowContains(root, /npm\s+run\s+check/i);
+  return workflowRunSteps(root).some((step) => commandParts(step.command).some((line) => /^npm\s+run\s+check(?:\s|$)/i.test(line)));
 }
 
 function workflowHasMaven(root) {
-  return workflowContains(root, /mvn(\.cmd)?\s+.*-pl\s+ruoyi-admin\s+.*-am\s+.*-DskipTests\s+compile/i)
-    || workflowContains(root, /mvn(\.cmd)?\s+.*-DskipTests\s+compile\s+.*-pl\s+ruoyi-admin/i);
+  return workflowRunSteps(root).some((step) => isMavenCompileCommand(step.command));
 }
 
 function workflowHasFrontend(root) {
-  return workflowContains(root, /npm\s+--prefix\s+ruoyi-ui\s+run\s+build:prod/i);
+  return workflowRunSteps(root).some((step) => isFrontendBuildCommand(step));
 }
 
 function declarationTargets(root) {
@@ -38,6 +58,9 @@ function declarationTargets(root) {
 }
 
 function isCiCoverageClaim(line) {
+  if (/\[ci-planned\]/i.test(line)) {
+    return false;
+  }
   return /\[ci\]|\[runtime-ci\]/i.test(line)
     || /(github actions|\bci\b).*\b(passed|verified|covered|runs?|ran|build|compile)\b/i.test(line);
 }

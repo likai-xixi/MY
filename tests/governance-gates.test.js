@@ -214,3 +214,72 @@ test('ci-coverage-declaration warns when Maven CI is absent unless docs claim it
   result = validateCiCoverageDeclaration({ root });
   assert.ok(result.failures.some((failure) => failure.code === 'declared-ci-maven-missing'));
 }));
+
+test('ci-coverage-declaration accepts real Node, Maven, and prefix frontend workflow commands', () => withRoot((root) => {
+  writeWorkflow(root, [
+    '- run: npm run check',
+    '- run: mvn -pl ruoyi-admin -am -DskipTests compile',
+    '- run: npm --prefix ruoyi-ui run build:prod'
+  ].join('\n'));
+
+  const result = validateCiCoverageDeclaration({ root });
+  assert.deepEqual(result.failures, []);
+  assert.ok(!result.warnings.some((warning) => warning.code === 'maven-ci-not-present'));
+  assert.ok(!result.warnings.some((warning) => warning.code === 'frontend-ci-not-present'));
+}));
+
+test('ci-coverage-declaration accepts ruoyi-ui working-directory frontend build', () => withRoot((root) => {
+  writeWorkflow(root, [
+    '- run: npm run check',
+    '- run: mvn -pl ruoyi-admin -am -DskipTests compile',
+    '- run: npm run build:prod',
+    '  working-directory: ruoyi-ui'
+  ].join('\n'));
+
+  const result = validateCiCoverageDeclaration({ root });
+  assert.deepEqual(result.failures, []);
+  assert.ok(!result.warnings.some((warning) => warning.code === 'frontend-ci-not-present'));
+}));
+
+test('ci-coverage-declaration rejects echo-only compile and build theater', () => withRoot((root) => {
+  writeWorkflow(root, [
+    '- run: npm run check',
+    '- run: echo compile passed',
+    '- run: echo frontend build passed'
+  ].join('\n'));
+  write(root, 'memory/HANDOVER.md', [
+    '# Handover',
+    '',
+    '## Verification',
+    '',
+    '- [ci] Maven compile passed',
+    '- [ci] frontend build passed',
+    ''
+  ].join('\n'));
+
+  const result = validateCiCoverageDeclaration({ root });
+  assert.ok(result.failures.some((failure) => failure.code === 'declared-ci-maven-missing'));
+  assert.ok(result.failures.some((failure) => failure.code === 'declared-ci-frontend-missing'));
+}));
+
+test('ci-coverage-declaration allows local Maven evidence without Maven workflow coverage', () => withRoot((root) => {
+  writeWorkflow(root);
+  write(root, 'memory/HANDOVER.md', '# Handover\n\n## Verification\n\n- [local] Maven compile passed\n');
+
+  const result = validateCiCoverageDeclaration({ root });
+  assert.deepEqual(result.failures, []);
+  assert.ok(result.warnings.some((warning) => warning.code === 'maven-ci-not-present'));
+}));
+
+test('verification-provenance treats ci-planned as planned coverage, not passed CI evidence', () => withRoot((root) => {
+  writeVerificationRoot(root, '- [ci-planned] Maven compile will run after push; actual CI result is determined after push.');
+
+  assert.deepEqual(validateVerificationProvenance({ root }).failures, []);
+  assert.deepEqual(validateCiCoverageDeclaration({ root }).failures, []);
+}));
+
+test('verification-provenance ignores ci text inside change-record paths', () => withRoot((root) => {
+  writeVerificationRoot(root, 'Current change record: `ai/changes/CR-TEST-ci-backend-frontend-governance-checks`.');
+
+  assert.deepEqual(validateVerificationProvenance({ root }).failures, []);
+}));

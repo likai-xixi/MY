@@ -11,6 +11,7 @@ Codex Auto Dev OS is kept in the repository as the workflow and evidence layer: 
 - Business domain: MY 门业 ERP.
 - Implemented business module: `customer` / 客户管理.
 - Current closeout focus: keep feature briefs, context, registry ownership, README, memory handoff, verification provenance, and CI-coverage declarations in sync.
+- CI baseline: [ci-planned] GitHub Actions workflow includes Node governance, Maven compile, and ruoyi-ui build; actual CI result is determined after push.
 
 ## What is included
 
@@ -133,6 +134,16 @@ npm run check
 ```
 
 `npm run check` is the repository governance gate. It does not replace runtime business tests. Once a real backend/frontend stack exists, add stack-specific build, unit, integration, browser, migration, and permission checks.
+
+## GitHub Actions CI Baseline
+
+`.github/workflows/ci.yml` contains three real baseline jobs:
+
+- `governance`: root `npm install`, then `npm run check`.
+- `backend-compile`: Java 17 with Maven cache, then `mvn -pl ruoyi-admin -am -DskipTests compile`.
+- `frontend-build`: `npm --prefix ruoyi-ui install`, then `npm --prefix ruoyi-ui run build:prod`.
+
+The repository root and `ruoyi-ui` currently have no `package-lock.json`, so the CI workflow uses `npm install` instead of `npm ci` and does not generate or commit lockfile changes.
 
 ## Directory map
 

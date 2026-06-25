@@ -264,6 +264,92 @@ export function workflowContains(root, pattern) {
   return pattern.test(workflowText(root));
 }
 
+function yamlIndent(line) {
+  return line.match(/^\s*/)?.[0].length || 0;
+}
+
+function unquoteYamlValue(value) {
+  const trimmed = String(value || '').trim();
+  const match = trimmed.match(/^['"](.+)['"]$/);
+  return match ? match[1] : trimmed;
+}
+
+export function workflowRunSteps(root) {
+  const steps = [];
+  for (const file of workflowFiles(root)) {
+    const lines = readText(root, file).split(/\r?\n/);
+    let current = null;
+
+    const pushCurrent = () => {
+      if (current && current.command.trim()) {
+        steps.push({
+          file,
+          line: current.line,
+          command: current.command.trim(),
+          workingDirectory: current.workingDirectory
+        });
+      }
+    };
+
+    const setKey = (key, rawValue, keyIndent, index) => {
+      const value = String(rawValue || '').trim();
+      if (key === 'working-directory') {
+        current.workingDirectory = unquoteYamlValue(value);
+        return index;
+      }
+      if (key !== 'run') {
+        return index;
+      }
+      if (value === '|' || value === '>') {
+        const commandLines = [];
+        let nextIndex = index + 1;
+        for (; nextIndex < lines.length; nextIndex += 1) {
+          const line = lines[nextIndex];
+          if (line.trim() && yamlIndent(line) <= keyIndent) {
+            break;
+          }
+          commandLines.push(line.trimStart());
+        }
+        current.command = commandLines.join('\n');
+        current.line = index + 1;
+        return nextIndex - 1;
+      }
+      current.command = unquoteYamlValue(value);
+      current.line = index + 1;
+      return index;
+    };
+
+    for (let index = 0; index < lines.length; index += 1) {
+      const line = lines[index];
+      const stepMatch = line.match(/^(\s*)-\s+(.+?)\s*$/);
+      if (stepMatch) {
+        pushCurrent();
+        current = {
+          stepIndent: stepMatch[1].length,
+          line: index + 1,
+          command: '',
+          workingDirectory: ''
+        };
+        const keyMatch = stepMatch[2].match(/^([A-Za-z-]+):\s*(.*)$/);
+        if (keyMatch) {
+          index = setKey(keyMatch[1], keyMatch[2], stepMatch[1].length + 2, index);
+        }
+        continue;
+      }
+
+      if (!current || yamlIndent(line) <= current.stepIndent) {
+        continue;
+      }
+      const keyMatch = line.match(/^\s*([A-Za-z-]+):\s*(.*)$/);
+      if (keyMatch) {
+        index = setKey(keyMatch[1], keyMatch[2], yamlIndent(line), index);
+      }
+    }
+    pushCurrent();
+  }
+  return steps;
+}
+
 export function runGit(root, args) {
   try {
     return {

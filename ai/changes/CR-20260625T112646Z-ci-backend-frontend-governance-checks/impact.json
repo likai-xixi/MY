@@ -1,0 +1,90 @@
+{
+  "schemaVersion": 1,
+  "mode": "rule-change",
+  "changeType": "governance/ci",
+  "feature": {
+    "id": "platform",
+    "name": "Platform Base",
+    "status": "active"
+  },
+  "summary": "Add real GitHub Actions coverage for Node governance, backend Maven compile, and ruoyi-ui production build, then harden governance checkers so CI evidence declarations require actual workflow commands.",
+  "affected": {
+    "workflows": [
+      ".github/workflows/ci.yml"
+    ],
+    "governanceScripts": [
+      "tools/governance-checker-utils.js",
+      "tools/ci-coverage-declaration-checker.js",
+      "tools/verification-provenance-checker.js"
+    ],
+    "tests": [
+      "tests/governance-gates.test.js"
+    ],
+    "docsAndMemory": [
+      "README.md",
+      "ai/context/current-context.md",
+      "ai/context/current-context.json",
+      "memory/HANDOVER.md",
+      "memory/PROJECT_STATE.md",
+      "memory/TASKS.json",
+      "memory/CHANGELOG.md",
+      "memory/sessions/2026-06-25-ci-backend-frontend-governance-checks.md"
+    ],
+    "changeRecord": [
+      "ai/changes/CR-20260625T112646Z-ci-backend-frontend-governance-checks",
+      "ai/changes/CR-20260625T112646Z-ci-backend-frontend-governance-checks/boundary-exception.md",
+      "ai/changes/CR-20260625T112646Z-ci-backend-frontend-governance-checks/component-exception.md"
+    ]
+  },
+  "allowedEditRoots": [
+    ".github/workflows",
+    "tools",
+    "tests",
+    "ai/changes",
+    "ai/context",
+    "memory",
+    "README.md"
+  ],
+  "forbiddenEditRoots": [
+    "ruoyi-business/src/main/java/com/ruoyi/business/customer",
+    "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer",
+    "ruoyi-business/src/main/resources/mapper/customer",
+    "ruoyi-ui/src/views/customer",
+    "ruoyi-ui/src/api/customer.js",
+    "sql/customer.ownership.md",
+    "ruoyi-business/src/main/java/com/ruoyi/business/sales-order",
+    "ruoyi-business/src/main/java/com/ruoyi/business/salesorder",
+    "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/sales-order",
+    "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/salesorder",
+    "ruoyi-ui/src/views/sales-order",
+    "ruoyi-ui/src/views/salesorder",
+    "ruoyi-ui/src/api/sales-order.js",
+    "ruoyi-ui/src/api/salesOrder.js",
+    "sql/sales-order.ownership.md",
+    "sql/sales_order_init.sql"
+  ],
+  "blockers": [],
+  "nonGoals": [
+    "No customer runtime Java, Vue, mapper XML, API client, SQL, or business-rule changes.",
+    "No sales-order implementation code, route, API client, SQL, table, or permission.",
+    "No runtime database validation in GitHub Actions.",
+    "No check:after-push wiring into npm run check.",
+    "No CR-3 high-risk semantic framework.",
+    "No CR-4 sales-order contracts."
+  ],
+  "lockfilePolicy": {
+    "root": "No package-lock.json is present, so CI uses npm install at repository root.",
+    "ruoyiUi": "No ruoyi-ui/package-lock.json is present, so CI uses npm --prefix ruoyi-ui install."
+  },
+  "requiredCommands": [
+    "npm run resume",
+    "npm test",
+    "npm run check:ci-coverage-declaration",
+    "npm run check:verification-provenance",
+    "npm run check",
+    "mvn -pl ruoyi-admin -am -DskipTests compile",
+    "npm --prefix ruoyi-ui run build:prod",
+    "git diff --check",
+    "forbidden-path audit"
+  ]
+}

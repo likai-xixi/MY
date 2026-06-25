@@ -3,28 +3,20 @@
   "generatedBy": "scripts/context-build.js",
   "generatedAt": "stable",
   "currentFeature": "customer",
-  "currentChange": "CR-20260625T093416Z-p0-governance-stability-gates",
+  "currentChange": "CR-20260625T112646Z-ci-backend-frontend-governance-checks",
   "repositoryProfile": {
     "adapter": "ruoyi",
     "locked": true,
     "stack": "RuoYi + Vue3 + Codex Auto Dev OS"
   },
   "allowedEditRoots": [
-    "tools",
-    "scripts/context-build.js",
-    "tests",
-    "ai/registry",
-    "ai/rules",
-    "ai/rule-proposals",
-    "ai/generated",
-    "ai/context",
-    "ai/changes",
-    "memory",
-    "package.json",
     ".github/workflows",
-    "docs",
-    "README.md",
-    "features/customer.md"
+    "tools",
+    "tests",
+    "ai/changes",
+    "ai/context",
+    "memory",
+    "README.md"
   ],
   "forbiddenEditRoots": [
     "ruoyi-business/src/main/java/com/ruoyi/business/customer",
@@ -90,15 +82,15 @@
       "reason": "Governance backlog and required/deferred evidence."
     },
     {
-      "path": "ai/changes/CR-20260625T093416Z-p0-governance-stability-gates/impact.json",
+      "path": "ai/changes/CR-20260625T112646Z-ci-backend-frontend-governance-checks/impact.json",
       "reason": "Current change allowed and forbidden edit roots."
     },
     {
-      "path": "ai/changes/CR-20260625T093416Z-p0-governance-stability-gates/plan.md",
+      "path": "ai/changes/CR-20260625T112646Z-ci-backend-frontend-governance-checks/plan.md",
       "reason": "Current change execution plan."
     },
     {
-      "path": "ai/changes/CR-20260625T093416Z-p0-governance-stability-gates/verification.md",
+      "path": "ai/changes/CR-20260625T112646Z-ci-backend-frontend-governance-checks/verification.md",
       "reason": "Current change verification evidence."
     }
   ],
@@ -305,13 +297,13 @@
   "verificationCommands": [
     "npm run resume",
     "npm test",
-    "npm run check:current-doc-state",
-    "npm run check:feature-test-ownership",
-    "npm run check:config-safety",
-    "npm run check:verification-provenance",
     "npm run check:ci-coverage-declaration",
+    "npm run check:verification-provenance",
     "npm run check",
-    "git diff --check"
+    "mvn -pl ruoyi-admin -am -DskipTests compile",
+    "npm --prefix ruoyi-ui run build:prod",
+    "git diff --check",
+    "forbidden-path audit"
   ],
   "nextSteps": [
     "Keep this change governance-only.",

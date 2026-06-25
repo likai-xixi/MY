@@ -7,25 +7,45 @@ import {
   printIssues,
   readText,
   sectionLineRecords,
-  workflowContains
+  workflowRunSteps
 } from './governance-checker-utils.js';
 
-const PROVENANCE_TAG = /\[(local|ci|runtime-local|runtime-ci|not-run|inconclusive)\]/i;
+const PROVENANCE_TAG = /\[(local|ci|ci-planned|runtime-local|runtime-ci|not-run|inconclusive)\]/i;
 const CI_TAG = /\[ci\]|\[runtime-ci\]/i;
-const COMMAND_OR_SCOPE = /(npm run check|npm test|node --test|mvn\b|maven|frontend build|build:prod|npm --prefix ruoyi-ui run build:prod|runtime api|runtime db|github actions|\bci\b|git diff --check)/i;
+const COMMAND_OR_SCOPE = /(npm run check|npm test|node --test|mvn\b|maven|frontend build|build:prod|npm --prefix ruoyi-ui run build:prod|runtime api|runtime db|github actions|ci-planned|git diff --check)/i;
 const RESULT_SEMANTICS = /\b(passed|verified|succeeded|failed|completed|done|ok)\b|通过|完成|成功|已验证|失败/i;
 
+function commandParts(command) {
+  return String(command || '')
+    .split(/\r?\n|&&|;/)
+    .map((line) => line.trim())
+    .filter(Boolean);
+}
+
+function isMavenCompileCommand(command) {
+  return commandParts(command).some((line) => /^(?:\.\/)?mvnw(?:\.cmd)?\b|^mvn(?:\.cmd)?\b/i.test(line)
+    && /(?:^|\s)-pl\s+ruoyi-admin(?:\s|$)/i.test(line)
+    && /(?:^|\s)-am(?:\s|$)/i.test(line)
+    && /(?:^|\s)-DskipTests(?:\s|$)/i.test(line)
+    && /(?:^|\s)compile(?:\s|$)/i.test(line));
+}
+
+function isFrontendBuildCommand(step) {
+  return commandParts(step.command).some((line) => /^npm\s+--prefix\s+ruoyi-ui\s+run\s+build:prod(?:\s|$)/i.test(line)
+    || (/^npm\s+run\s+build:prod(?:\s|$)/i.test(line)
+      && step.workingDirectory.replace(/\\/g, '/') === 'ruoyi-ui'));
+}
+
 function workflowHasMaven(root) {
-  return workflowContains(root, /mvn(\.cmd)?\s+.*-pl\s+ruoyi-admin\s+.*-am\s+.*-DskipTests\s+compile/i)
-    || workflowContains(root, /mvn(\.cmd)?\s+.*-DskipTests\s+compile\s+.*-pl\s+ruoyi-admin/i);
+  return workflowRunSteps(root).some((step) => isMavenCompileCommand(step.command));
 }
 
 function workflowHasFrontend(root) {
-  return workflowContains(root, /npm\s+--prefix\s+ruoyi-ui\s+run\s+build:prod/i);
+  return workflowRunSteps(root).some((step) => isFrontendBuildCommand(step));
 }
 
 function workflowHasCheck(root) {
-  return workflowContains(root, /npm\s+run\s+check/i);
+  return workflowRunSteps(root).some((step) => commandParts(step.command).some((line) => /^npm\s+run\s+check(?:\s|$)/i.test(line)));
 }
 
 function provenanceTargets(root) {
