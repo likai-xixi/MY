@@ -37,9 +37,10 @@ The customer export endpoint is invoked by the page through RuoYi `proxy.downloa
 The API client exposes customer-level deposit and sample rebate entry points only. It must not expose direct account-balance update calls.
 
 - `addFundDeposit(customerId, data)` keeps the path `/business/customer/{customerId}/fund/deposit`.
-- New deposit entries use `CUSTOMER_DEPOSIT`. The frontend may omit `accountType`; the backend defaults deposit entries to `CUSTOMER_DEPOSIT`.
+- New deposit entries use `CUSTOMER_DEPOSIT`. The frontend may omit `accountType`; the backend defaults deposit entries to `CUSTOMER_DEPOSIT`. If a caller submits `accountType=SAMPLE_REBATE` or any other non-`CUSTOMER_DEPOSIT` value, the backend rejects it before account balance, batch, or flow mutation.
 - This client method is deposit-in only. If `flowType` is omitted or `DEPOSIT_IN`, the backend records an incoming deposit. `DEPOSIT_DEDUCT`, `DEPOSIT_REFUND`, `DEPOSIT_ADJUST`, and `DEPOSIT_REVERSE` are rejected by this endpoint and must wait for a separate fund-processing flow.
 - Public customers must not show customer-level deposit entry UI and are rejected by the backend if called directly.
+- Sample rebate remains separate: callers must use `/business/customer/{customerId}/sample-rebate`, which creates `sample_rebate_record` and then writes internal `SAMPLE_REBATE_GENERATE` flow against the `SAMPLE_REBATE` account.
 
 ## Address Fields
 

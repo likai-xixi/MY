@@ -1,0 +1,24 @@
+{
+  "id": "RV-20260625T022214Z-review",
+  "request": "功能预审：客户管理定金入口资金边界收口",
+  "mode": "pre-review",
+  "feature": "customer",
+  "createdAt": "2026-06-25T02:22:14.337Z",
+  "status": "approved",
+  "decision": {
+    "allowImplementation": true,
+    "reason": "Allow Implementation for the narrow customer fund deposit account-type boundary fix only."
+  },
+  "requiredFiles": [
+    "request.md",
+    "context.md",
+    "product-review.md",
+    "architecture-review.md",
+    "backend-review.md",
+    "frontend-review.md",
+    "qa-review.md",
+    "risk-register.md",
+    "decision.md",
+    "review.json"
+  ]
+}

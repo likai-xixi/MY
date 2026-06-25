@@ -62,8 +62,9 @@ Endpoint IDs are recorded in `graph/api-graph.json` and `memory/API_CATALOG.md`.
 
 - Other modules may call only documented API endpoints, not internal service or mapper code.
 - Sales order and shipment modules may later read customer defaults and policy data through documented APIs or explicit service contracts recorded in a future change.
-- Fund deposit endpoint path remains `POST /business/customer/{customerId}/fund/deposit`. New customer-level deposit entries use only `CUSTOMER_DEPOSIT`; the request may omit `accountType`, and the backend defaults it to `CUSTOMER_DEPOSIT`.
+- Fund deposit endpoint path remains `POST /business/customer/{customerId}/fund/deposit`. New customer-level deposit entries use only `CUSTOMER_DEPOSIT`; the request may omit `accountType`, and the backend defaults it to `CUSTOMER_DEPOSIT`. Explicit `CUSTOMER_DEPOSIT` is accepted; `SAMPLE_REBATE` or any other non-`CUSTOMER_DEPOSIT` `accountType` is rejected before account balance, deposit batch, or fund flow mutation.
 - `POST /business/customer/{customerId}/fund/deposit` is deposit-in only: omitted `flowType` or `DEPOSIT_IN` records an incoming deposit; `DEPOSIT_DEDUCT`, `DEPOSIT_REFUND`, `DEPOSIT_ADJUST`, and `DEPOSIT_REVERSE` are rejected with `定金录入接口只允许入金，扣减、退款、调整、冲正请走独立资金处理流程。`
+- Sample rebate must enter through `POST /business/customer/{customerId}/sample-rebate`, which creates `sample_rebate_record` and then lets the internal service write `SAMPLE_REBATE_GENERATE` against the `SAMPLE_REBATE` account.
 - Public customers must be rejected by customer-level deposit, sample-policy save, and sample-rebate generation operations.
 - Fund account balances must not be modified by ad hoc APIs. Mutating fund endpoints must call the fund-entry service path that also writes `customer_fund_flow`.
 - Salesman ownership uses existing RuoYi user, role, and dept structures. This feature must not create a separate salesman-management API.

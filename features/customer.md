@@ -164,9 +164,9 @@ Deposit flow types:
 
 - `DEPOSIT_IN`
 
-The current customer deposit-entry endpoint is入金-only: `POST /business/customer/{customerId}/fund/deposit` accepts omitted `flowType` or `DEPOSIT_IN` and rejects `DEPOSIT_DEDUCT`、`DEPOSIT_REFUND`、`DEPOSIT_ADJUST`、`DEPOSIT_REVERSE` with a service error. Dedicated deduction/refund/adjust/reversal flows are not implemented in this customer iteration.
+The current customer deposit-entry endpoint is account-locked and 入金-only: `POST /business/customer/{customerId}/fund/deposit` accepts omitted `accountType` or explicit `CUSTOMER_DEPOSIT`, stamps the entry as `CUSTOMER_DEPOSIT`, and rejects `SAMPLE_REBATE` or any other non-`CUSTOMER_DEPOSIT` value before account balance, deposit batch, or fund flow mutation. It accepts omitted `flowType` or `DEPOSIT_IN` and rejects `DEPOSIT_DEDUCT`、`DEPOSIT_REFUND`、`DEPOSIT_ADJUST`、`DEPOSIT_REVERSE` with a service error. Dedicated deduction/refund/adjust/reversal flows are not implemented in this customer iteration.
 
-Sample rebate generation continues to use `SAMPLE_REBATE_GENERATE` for the sample rebate flow and remains separate from deposit.
+Sample rebate generation remains separate from deposit: `POST /business/customer/{customerId}/sample-rebate` creates `sample_rebate_record`, then the internal service path writes the `SAMPLE_REBATE` account flow with `SAMPLE_REBATE_GENERATE`.
 
 ## Permissions
 

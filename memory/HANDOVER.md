@@ -2,82 +2,65 @@
 
 ## Summary
 
-Current change record: `ai/changes/CR-20260624T152423Z-governance-sales-order-handoff-gate`.
-
-This is a governance/rule-change batch for the sales-order-before handoff mechanism. It does not implement sales order, does not modify customer-management business code, and does not change database business table structure.
-
-The follow-up M1/L1 review gaps are closed inside the same change record: `npm run check` now reaches context-aware `check:review` with `--require-allow`, and `check:phase-gate` blocks canonical plus common sales-order naming variants under real implementation roots without blocking governance docs.
-
-The push-preflight `check:file-weight` EISDIR defect is also fixed inside the same local, unpushed governance commit: directory entries in historical `changed-files.json` data are no longer read as files, and future `finalize:change` output filters existing directories out of `changed-files.json`.
-
-Future sales-order work must pass `beforeSalesOrder` and multi-role pre-review before creating any sales-order controller, service, mapper, Vue page, API client, SQL table, route, or permission.
+客户管理定金入口资金边界收口.
+Current change record: `ai/changes/CR-20260625T022150Z-change`.
 
 ## Impact
 
-Governance-only surfaces changed:
+Current change `CR-20260625T022150Z-change` affects customer-management deposit entry behavior. External `POST /business/customer/{customerId}/fund/deposit` now goes through a deposit-only service method, accepts omitted `accountType` or explicit `CUSTOMER_DEPOSIT`, and rejects `SAMPLE_REBATE` or any other non-`CUSTOMER_DEPOSIT` account type before account balance, deposit batch, or fund flow mutation.
 
-- Current-context generation: `scripts/context-build.js`, `ai/context/current-context.*`, and `ai/context/features/*.md`.
-- Review precheck: `docs/multi-role-review-workflow.md`, `scripts/review-feature.js`, `tools/review-checker.js`, and `package.json` default context-aware `check:review --require-allow` wiring.
-- Roadmap/gates/debt: `ai/roadmap/**`, `tools/roadmap-checker.js`, `tools/phase-gate-checker.js`, and `tools/refactor-debt-checker.js`; phase-gate matching covers `sales-order`, `salesOrder`, `sales_order`, and `sales/order` implementation naming variants.
-- Context/document/file-weight gates: `tools/doc-size-checker.js`, `tools/context-pack-checker.js`, `tools/read-budget-checker.js`, and `tools/file-weight-checker.js`.
-- Finalize changed-file hygiene: `scripts/finalize-change.js` now keeps generated `changed-files.json` file-oriented by excluding existing directories.
-- Package and instruction wiring: `package.json`, `AGENTS.md`, `README.md`.
-- Regression coverage: `tests/governance-sales-order-handoff-gate.test.js`, including file-weight directory, deleted-file, and overweight-real-file cases.
+Sample rebate remains separate through `/business/customer/{customerId}/sample-rebate`, which creates `sample_rebate_record` before the internal `SAMPLE_REBATE_GENERATE` fund flow.
 
-Customer business code and sales-order implementation roots are untouched by design.
+No sales-order implementation, governance-rule change, or SQL business table structure change was made.
 
 ## Changed Files
 
-- See `ai/changes/CR-20260624T152423Z-governance-sales-order-handoff-gate/changed-files.json`.
-- Key surfaces: `AGENTS.md`, `README.md`, `package.json`, `ai/roadmap/**`, `ai/context/**`, `scripts/context-build.js`, `scripts/review-feature.js`, `tools/*checker.js`, `tests/governance-sales-order-handoff-gate.test.js`, and memory handoff files.
+- `ai/changes/CR-20260625T022150Z-change/runtime-validation.md`
+- `ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java`
+- `ruoyi-business/src/main/java/com/ruoyi/business/customer/service/ICustomerService.java`
+- `ruoyi-business/src/main/java/com/ruoyi/business/customer/service/impl/CustomerServiceImpl.java`
+- `tests/customer-risk-gate.test.js`
+- `tests/governance-sales-order-handoff-gate.test.js`
+- `features/customer.md`
+- `ai/contracts/customer.api.md`
+- `ruoyi-ui/src/api/customer.contract.md`
+- `memory/API_CATALOG.md`
+- `memory/PROJECT_STATE.md`
+- `memory/TASKS.json`
+- `memory/CHANGELOG.md`
+- `memory/sessions/2026-06-25-customer-fund-deposit-boundary.md`
+- `ai/changes/CR-20260625T022150Z-change/*`
+- `ai/reviews/RV-20260625T022214Z-review/*`
 
 ## Commands
 
 - `npm run resume`
-- `npm run scan:all`
 - `npm run context:build -- customer`
-- `npm run finalize:change -- --summary "新增销售订单前治理接手机制"`
-- `npm run check:review`
-- `npm run check:phase-gate`
+- `npm run ai:do -- "功能迭代：客户管理"`
+- `npm run review:feature -- "功能预审：客户管理定金入口资金边界收口" --feature customer`
+- `node --test tests/customer-risk-gate.test.js`
+- `node --test tests/governance-sales-order-handoff-gate.test.js`
+- `C:\Users\11131\.cache\codex-tools\apache-maven-3.9.9\bin\mvn.cmd -pl ruoyi-admin -am -DskipTests compile`
+- `C:\Users\11131\.cache\codex-tools\apache-maven-3.9.9\bin\mvn.cmd -pl ruoyi-admin -am -DskipTests package`
+- Live API/DB validation on backend `http://127.0.0.1:18080`, database `my_ry_vue_runtime`, Redis DB1
+- `npm run scan:all`
+- `npm run finalize:change -- --summary "客户管理定金入口资金边界收口"`
 - `npm run check`
 - `npm test`
 - `git diff --check`
-- Push-preflight EISDIR fix: `npm run check:file-weight`
 
 ## Verification
 
-Passed before final gate:
+Passed: `node --test tests/customer-risk-gate.test.js` with 7 tests, `node --test tests/governance-sales-order-handoff-gate.test.js` with 16 tests, cached Maven backend compile/package for `ruoyi-admin`, live API/DB validation on backend `http://127.0.0.1:18080` against database `my_ry_vue_runtime`, `npm run scan:all`, `npm run finalize:change -- --summary "客户管理定金入口资金边界收口"`, full `npm run check` including 120 Node tests after live runtime validation, standalone `npm test` with 120 Node tests after live runtime validation, and `git diff --check` after live runtime validation.
 
-- `npm run resume`
-- `npm run context:build -- customer`
-- `npm run check:roadmap`
-- `npm run check:phase-gate`
-- `npm run check:refactor-debt`
-- `npm run check:context-pack`
-- `npm run check:read-budget`
-- `npm run check:doc-size`
-- `npm run check:file-weight`
-- `npm run check:review`
-- `node --test tests/governance-sales-order-handoff-gate.test.js` with 12 tests after M1/L1 hardening
-- `npm run scan:all`
-- `npm run finalize:change -- --summary "新增销售订单前治理接手机制"`
-
-Final verification passed:
-
-- `npm run check` passed after M1/L1 hardening, including the new governance gates and 114 Node tests.
-- Standalone `npm test` passed with 114 Node tests.
-- `git diff --check` passed.
-- Forbidden-path audit returned `FORBIDDEN_PATH_AUDIT_OK`.
-- Push-preflight EISDIR regression passed: `npm run check:file-weight` passed, and `node --test tests/governance-sales-order-handoff-gate.test.js` passed with 16 tests after adding file-weight changed-files coverage.
-- Pre-amend verification after the file-weight fix passed: `npm run context:build -- customer`, `npm run check` with 118 Node tests, standalone `npm test` with 118 Node tests, `git diff --check`, and business implementation path audit.
+Runtime validation used test customer `customer_id=25`, `customer_code=KH202606000021`, marker `RT_DEPOSIT_BOUNDARY_20260625031150`. Omitted and explicit `CUSTOMER_DEPOSIT` deposit requests wrote `CUSTOMER_DEPOSIT / DEPOSIT_IN / CUSTOMER_DEPOSIT_BATCH`; forbidden `SAMPLE_REBATE` and `INVALID_ACCOUNT` deposit requests failed before balance, flow, or batch mutation; `/sample-rebate` created `sample_rebate_record` and then wrote `SAMPLE_REBATE_GENERATE`; `PUB_DIRECT_SALE` deposit was rejected without creating funds data. Captcha was restored to `true` in `sys_config` and Redis DB0/DB1, and `/captchaImage` returned `captchaEnabled=true`.
 
 ## Risks
 
-- `beforeSalesOrder` is not ready for business implementation because snapshot, state-machine, and fund-boundary contracts remain required.
-- Governance checks do not replace future runtime/API/UI acceptance tests for sales order.
-- Do not bulk-read all historical `ai/changes`, `ai/reviews`, feature files, or source code in a new window; start with `ai/context/current-context.md`.
+- Test REAL customer `25 / KH202606000021` and its fund evidence remain in local development data for audit traceability.
+- `CustomerServiceImpl.java` remains an existing over-threshold service and is covered by a scoped current-CR `weight-exception.md`.
+- Sales-order, delivery, finance settlement, automatic deduction, and order-level deposit behavior remain future modules.
 
 ## Next Actions
 
-- Keep this batch uncommitted/unpushed unless the user explicitly asks to publish it.
-- Future sales-order implementation must first pass `beforeSalesOrder` and multi-role pre-review.
+Rerun closeout gates after this runtime evidence update. If they pass, commit and push only the current customer CR scope.

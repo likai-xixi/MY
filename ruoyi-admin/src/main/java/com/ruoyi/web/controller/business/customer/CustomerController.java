@@ -139,7 +139,7 @@ public class CustomerController extends BaseController
     @PostMapping("/{customerId}/fund/deposit")
     public AjaxResult fundDeposit(@PathVariable Long customerId, @RequestBody CustomerFundEntry entry)
     {
-        return success(customerService.recordFundEntry(customerId, entry, getUserId(), getUsername()));
+        return success(customerService.recordCustomerDeposit(customerId, entry, getUserId(), getUsername()));
     }
 
     @PreAuthorize("@ss.hasPermi('business:customer:fund:flow')")

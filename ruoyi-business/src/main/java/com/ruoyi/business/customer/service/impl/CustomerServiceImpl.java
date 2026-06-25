@@ -77,6 +77,7 @@ public class CustomerServiceImpl implements ICustomerService
     private static final String DEPOSIT_REFUND = "DEPOSIT_REFUND";
     private static final String DEPOSIT_ADJUST = "DEPOSIT_ADJUST";
     private static final String DEPOSIT_REVERSE = "DEPOSIT_REVERSE";
+    private static final String DEPOSIT_ACCOUNT_ONLY_MESSAGE = "定金录入接口只允许写入CUSTOMER_DEPOSIT账户，样品返现请通过样品返现入口处理。";
     private static final String DEPOSIT_IN_ONLY_MESSAGE = "定金录入接口只允许入金，扣减、退款、调整、冲正请走独立资金处理流程。";
     private static final BigDecimal ZERO = BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP);
     private static final String CUSTOMER_CODE_PREFIX = "KH";
@@ -332,6 +333,19 @@ public class CustomerServiceImpl implements ICustomerService
         }
         initFundAccounts(customer, null);
         return customerMapper.selectFundAccountsByCustomerId(customerId);
+    }
+
+    @Override
+    @Transactional
+    public CustomerFundFlow recordCustomerDeposit(Long customerId, CustomerFundEntry entry, Long operatorId, String operatorName)
+    {
+        if (entry == null)
+        {
+            entry = new CustomerFundEntry();
+        }
+        validateCustomerDepositAccountType(entry.getAccountType());
+        entry.setAccountType(CUSTOMER_DEPOSIT);
+        return recordFundEntry(customerId, entry, operatorId, operatorName);
     }
 
     @Override
@@ -1267,6 +1281,15 @@ public class CustomerServiceImpl implements ICustomerService
             return accountType;
         }
         throw new ServiceException("资金账户类型不合法");
+    }
+
+    private void validateCustomerDepositAccountType(String accountType)
+    {
+        if (StringUtils.isEmpty(accountType) || CUSTOMER_DEPOSIT.equals(accountType))
+        {
+            return;
+        }
+        throw new ServiceException(DEPOSIT_ACCOUNT_ONLY_MESSAGE);
     }
 
     private String resolveFlowType(String accountType, String flowType)

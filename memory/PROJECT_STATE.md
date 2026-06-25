@@ -22,6 +22,13 @@ Customer management is the first active business feature. The customer model rem
 - sample rebate remains separate as `SAMPLE_REBATE`;
 - customer-level fund changes continue through `customer_fund_flow`; direct balance edits remain out of scope.
 
+Current customer change `CR-20260625T022150Z-change` closes the deposit account boundary for `/business/customer/{customerId}/fund/deposit`:
+
+- omitted `accountType` and explicit `CUSTOMER_DEPOSIT` remain valid and are stamped as `CUSTOMER_DEPOSIT`;
+- `SAMPLE_REBATE` and any other non-`CUSTOMER_DEPOSIT` `accountType` are rejected before account balance, deposit batch, or fund flow mutation;
+- sample rebate remains separate through `/business/customer/{customerId}/sample-rebate`, which creates `sample_rebate_record` before the internal service writes `SAMPLE_REBATE_GENERATE`;
+- no sales-order code, governance-rule change, or SQL business table structure change is included.
+
 Current change `CR-20260624T010638Z-change` tightens customer runtime validation and evidence:
 
 - `/business/customer/{customerId}/fund/deposit` is入金-only: omitted `flowType` or `DEPOSIT_IN` writes `DEPOSIT_IN`; `DEPOSIT_DEDUCT`、`DEPOSIT_REFUND`、`DEPOSIT_ADJUST`、`DEPOSIT_REVERSE` are rejected with a clear service message.
@@ -50,15 +57,15 @@ Sales order, shipment, finance settlement, automatic deduction, receipt claiming
 
 ## Active Task
 
-`TASK-CUSTOMER` is the active customer task in `memory/TASKS.json`. The current iteration is `CR-20260624T010638Z-change`: customer deposit entry is入金-only, REAL phone trim/validation is tightened, PUBLIC fixed-classification evidence is documented, owner-log ordering is stabilized, and a customer risk regression gate has been added.
+`TASK-CUSTOMER` is the active customer task in `memory/TASKS.json`. The current iteration is `CR-20260625T022150Z-change`: customer deposit entry is both 入金-only and account-locked to `CUSTOMER_DEPOSIT`, while internal sample rebate generation stays on the separate `/sample-rebate` path.
 
 ## Latest Session
 
-`memory/sessions/2026-06-24-customer-fund-public-validation-tightening.md`
+`memory/sessions/2026-06-25-customer-fund-deposit-boundary.md`
 
 ## Next Actions
 
-- Commit and push `CR-20260624T010638Z-change` only if explicitly requested.
+- Finish verification for `CR-20260625T022150Z-change`; do not commit or push unless explicitly requested.
 - Before any future runtime claim about PUBLIC data cleanliness, rerun the invariant SQL in `sql/customer.ownership.md` to confirm only `PUB_DIRECT_SALE` and `PUB_SELF_MEDIA` exist as active PUBLIC rows.
 - Do not commit or push unless explicitly requested after gates pass.
 
@@ -85,6 +92,12 @@ Sales order, shipment, finance settlement, automatic deduction, receipt claiming
 - Old data migration or old fund-account compatibility.
 
 ## Last Verification
+
+For `CR-20260625T022150Z-change`, `npm run resume`, `npm run context:build -- customer`, `npm run ai:do -- "功能迭代：客户管理"`, `npm run review:feature -- "功能预审：客户管理定金入口资金边界收口" --feature customer`, `node --test tests/customer-risk-gate.test.js`, `node --test tests/governance-sales-order-handoff-gate.test.js`, `npm run scan:all`, `npm run finalize:change -- --summary "客户管理定金入口资金边界收口"`, `npm run check` with 120 Node tests, standalone `npm test` with 120 Node tests, and `git diff --check` passed.
+
+The change confirmed that external `/business/customer/{customerId}/fund/deposit` now accepts omitted `accountType` or explicit `CUSTOMER_DEPOSIT`, rejects `SAMPLE_REBATE` and other non-`CUSTOMER_DEPOSIT` values before account/batch/flow mutation, and preserves internal sample rebate creation through `/business/customer/{customerId}/sample-rebate`.
+
+No sales-order implementation, governance-rule change, SQL business table structure change, commit, or push was made.
 
 For `CR-20260624T010638Z-change`, `npm run resume`, `npm run ai:do -- "功能迭代：客户管理"`, `npm run impact -- 客户管理`, cached Maven backend compile, frontend `build:prod`, cached Maven package after stopping the MY backend jar lock, runtime API/DB validation, captcha restore check, `npm run scan:all`, `npm run finalize:change -- --summary "客户管理资金入金与公共客户口径校验收口"`, `npm run check`, standalone `npm test`, and `git diff --check` passed. After adding the risk gate, `node --test tests/customer-risk-gate.test.js`, `npm run scan:all`, `npm run finalize:change -- --summary "客户管理风险防复发门禁"`, `npm run check` with 102 Node tests, standalone `npm test` with 102 Node tests, and final `git diff --check` also passed.
 

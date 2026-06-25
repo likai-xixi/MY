@@ -42,6 +42,8 @@ public interface ICustomerService
 
     public List<CustomerFundAccount> selectFundAccounts(Long customerId);
 
+    public CustomerFundFlow recordCustomerDeposit(Long customerId, CustomerFundEntry entry, Long operatorId, String operatorName);
+
     public CustomerFundFlow recordFundEntry(Long customerId, CustomerFundEntry entry, Long operatorId, String operatorName);
 
     public List<CustomerFundFlow> selectFundFlows(CustomerFundFlow flow);

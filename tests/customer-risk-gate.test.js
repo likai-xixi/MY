@@ -3,6 +3,8 @@ import assert from 'node:assert/strict';
 import { fileExists, readJson, readText } from '../tools/common.js';
 
 const CUSTOMER_SERVICE = 'ruoyi-business/src/main/java/com/ruoyi/business/customer/service/impl/CustomerServiceImpl.java';
+const CUSTOMER_SERVICE_INTERFACE = 'ruoyi-business/src/main/java/com/ruoyi/business/customer/service/ICustomerService.java';
+const CUSTOMER_CONTROLLER = 'ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java';
 const CUSTOMER_API = 'ruoyi-ui/src/api/customer.js';
 const CUSTOMER_API_CONTRACT = 'ruoyi-ui/src/api/customer.contract.md';
 const CUSTOMER_UI_CONTRACT = 'ai/contracts/customer.ui.md';
@@ -71,6 +73,61 @@ test('customer deposit entry endpoint stays deposit-in only', () => {
   for (const flowType of BLOCKED_DEPOSIT_FLOW_TYPES) {
     assert.match(service, new RegExp(`${flowType}\\.equals\\(flowType\\)`), `${flowType} must be explicitly rejected`);
   }
+});
+
+test('customer deposit endpoint is account-locked to customer deposit', () => {
+  const controller = readText(CUSTOMER_CONTROLLER);
+  const serviceInterface = readText(CUSTOMER_SERVICE_INTERFACE);
+  const service = readText(CUSTOMER_SERVICE);
+  const fundDeposit = methodBody(controller, 'public AjaxResult fundDeposit');
+  const recordCustomerDeposit = methodBody(service, 'public CustomerFundFlow recordCustomerDeposit');
+  const validateAccountType = methodBody(service, 'private void validateCustomerDepositAccountType');
+
+  assert.match(serviceInterface, /recordCustomerDeposit\(Long customerId, CustomerFundEntry entry, Long operatorId, String operatorName\)/);
+  assert.match(fundDeposit, /customerService\.recordCustomerDeposit\(customerId, entry, getUserId\(\), getUsername\(\)\)/);
+  assert.doesNotMatch(fundDeposit, /recordFundEntry/, 'external fund deposit endpoint must not call the generic fund-entry path directly');
+
+  assert.match(recordCustomerDeposit, /validateCustomerDepositAccountType\(entry\.getAccountType\(\)\)/);
+  assert.match(recordCustomerDeposit, /entry\.setAccountType\(CUSTOMER_DEPOSIT\)/);
+  assert.match(recordCustomerDeposit, /return recordFundEntry\(customerId, entry, operatorId, operatorName\)/);
+
+  const validateIndex = recordCustomerDeposit.indexOf('validateCustomerDepositAccountType(entry.getAccountType())');
+  const setIndex = recordCustomerDeposit.indexOf('entry.setAccountType(CUSTOMER_DEPOSIT)');
+  const recordIndex = recordCustomerDeposit.indexOf('recordFundEntry(customerId, entry, operatorId, operatorName)');
+  assert.ok(validateIndex < setIndex, 'account type must be validated before defaulting/stamping CUSTOMER_DEPOSIT');
+  assert.ok(setIndex < recordIndex, 'CUSTOMER_DEPOSIT must be stamped before the shared fund-entry transaction runs');
+  assert.doesNotMatch(
+    recordCustomerDeposit,
+    /ensureFundAccount|updateFundAccountBalance|insertDepositBatch|insertFundFlow/,
+    'rejected account types must fail before account balances, batches, or fund flows can be mutated'
+  );
+
+  assert.match(validateAccountType, /StringUtils\.isEmpty\(accountType\)/, 'omitted accountType must be accepted for default CUSTOMER_DEPOSIT');
+  assert.match(validateAccountType, /CUSTOMER_DEPOSIT\.equals\(accountType\)/, 'explicit CUSTOMER_DEPOSIT must be accepted');
+  assert.doesNotMatch(
+    validateAccountType,
+    /SAMPLE_REBATE\.equals\(accountType\)[\s\S]{0,120}return/,
+    'SAMPLE_REBATE must not be accepted by the external deposit endpoint'
+  );
+  assert.match(validateAccountType, /throw new ServiceException\(DEPOSIT_ACCOUNT_ONLY_MESSAGE\)/, 'all non-CUSTOMER_DEPOSIT account types must fail');
+});
+
+test('sample rebate keeps its internal sample-rebate fund flow path', () => {
+  const service = readText(CUSTOMER_SERVICE);
+  const createSampleRebate = methodBody(service, 'public SampleRebateRecord createSampleRebateRecord');
+  const recordFundEntry = methodBody(service, 'public CustomerFundFlow recordFundEntry');
+
+  assert.match(createSampleRebate, /customerMapper\.insertSampleRebateRecord\(record\)/);
+  assert.match(createSampleRebate, /entry\.setAccountType\(SAMPLE_REBATE\)/);
+  assert.match(createSampleRebate, /entry\.setFlowType\(SAMPLE_REBATE_GENERATE\)/);
+  assert.match(createSampleRebate, /recordFundEntry\(record\.getCustomerId\(\), entry, operatorId, operatorName\)/);
+  assert.doesNotMatch(createSampleRebate, /recordCustomerDeposit/, 'sample rebate must not go through the external deposit-only wrapper');
+
+  const insertRecordIndex = createSampleRebate.indexOf('customerMapper.insertSampleRebateRecord(record)');
+  const internalFundIndex = createSampleRebate.indexOf('recordFundEntry(record.getCustomerId(), entry, operatorId, operatorName)');
+  assert.ok(insertRecordIndex < internalFundIndex, 'sample rebate must create sample_rebate_record before internal SAMPLE_REBATE flow');
+  assert.match(recordFundEntry, /String accountType = normalizeAccountType\(entry\.getAccountType\(\)\)/);
+  assert.match(recordFundEntry, /SAMPLE_REBATE\.equals\(accountType\)/, 'generic internal fund-entry path must still support SAMPLE_REBATE');
 });
 
 test('customer api contract Client Methods match customer.js exports', () => {

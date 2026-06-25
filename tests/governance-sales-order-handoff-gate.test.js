@@ -259,6 +259,9 @@ test('file-weight checker skips missing deleted files', () => {
 test('file-weight checker still detects overweight real files when directories are present', () => {
   const result = validateFileWeight({
     changedFiles: ['docs', 'src/HugeService.java'],
+    readJsonFile: (file) => file === 'ai/changes/CURRENT_CHANGE.json'
+      ? { current: 'CR-TEST-WITHOUT-WEIGHT-JUSTIFICATION' }
+      : readJson(file),
     statFile: (file) => file === 'docs' ? fakeStats('directory') : fakeStats('file'),
     readTextFile: () => `${Array.from({ length: 1201 }, (_, index) => `// line ${index + 1}`).join('\n')}\n`
   });

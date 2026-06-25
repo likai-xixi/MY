@@ -1,3 +1,5 @@
+# Context
+
 # Current Context
 
 Current feature: `customer`
@@ -32,8 +34,6 @@ Profile: adapter `ruoyi`, locked `true`
 - `ai/registry/features.json`
 - `ai/registry/modules.json`
 - `ai/changes`
-- `ai/reviews`
-- `ai/context`
 - `ai/generated`
 - `graph`
 - `memory`

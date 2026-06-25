@@ -77,8 +77,8 @@
       "status": "in_progress",
       "owner": "workflow",
       "priority": "normal",
-      "statusReason": "CR-20260624T010638Z-change tightens customer deposit entry to??-only, trims REAL phone fields before validation/save, ignores invalid phones in duplicate-warning phone lookup, stabilizes same-second owner-log ordering, documents PUBLIC runtime cleanup, adds tests/customer-risk-gate.test.js for customer risk regression coverage, and passes the required gates after local PUBLIC data cleanup.",
-      "nextStep": "Commit and push CR-20260624T010638Z-change only if explicitly requested. Before any future runtime claim about PUBLIC data cleanliness, rerun sql/customer.ownership.md invariant checks so only PUB_DIRECT_SALE and PUB_SELF_MEDIA remain as PUBLIC rows. Keep sales order, delivery, finance, source/channel/account, maintenance-fee calculation, commission calculation, automatic deduction, receipt claiming, reconciliation, and order-level deposit behavior in separate future feature changes.",
+      "statusReason": "CR-20260625T022150Z-change tightens /business/customer/{customerId}/fund/deposit so the external deposit endpoint can only write CUSTOMER_DEPOSIT. Omitted accountType and explicit CUSTOMER_DEPOSIT are accepted; SAMPLE_REBATE and other non-CUSTOMER_DEPOSIT values are rejected before account balance, deposit batch, or fund flow mutation. Internal sample rebate remains separate through /sample-rebate and SAMPLE_REBATE_GENERATE.",
+      "nextStep": "Do not commit or push unless explicitly requested. Keep sales order, delivery, finance, source/channel/account, maintenance-fee calculation, commission calculation, automatic deduction, receipt claiming, reconciliation, and order-level deposit behavior in separate future feature changes.",
       "blockedBy": [],
       "verification": [
         "npm run resume",
@@ -236,12 +236,24 @@
         "final git diff --check passed after standalone tests for CR-20260624T010638Z-change",
         "CR-20260624T010638Z-change local development DB PUBLIC cleanup backed up 8 PUBLIC rows with suffix 20260624_211203, deleted 6 non-seed PUBLIC rows, and normalized PUB_DIRECT_SALE/PUB_SELF_MEDIA",
         "CR-20260624T010638Z-change post-clean SQL invariant check passed with PUBLIC total 2, non-seed PUBLIC count 0, duplicate public_channel count 0, both seed rows MATCH, and PUBLIC child dirty counts 0",
-        "CR-20260624T010638Z-change post-clean runtime API validation rejected PUBLIC create, seed edit, seed status change, seed delete, and owner transfer; captcha restored to true in sys_config and Redis DB0/DB1"
+        "CR-20260624T010638Z-change post-clean runtime API validation rejected PUBLIC create, seed edit, seed status change, seed delete, and owner transfer; captcha restored to true in sys_config and Redis DB0/DB1",
+        "CR-20260625T022150Z-change routes /business/customer/{customerId}/fund/deposit through recordCustomerDeposit and no longer calls the generic recordFundEntry path directly from the controller",
+        "CR-20260625T022150Z-change accepts omitted accountType and explicit CUSTOMER_DEPOSIT, rejects SAMPLE_REBATE and other non-CUSTOMER_DEPOSIT values before account/batch/flow mutation, and preserves internal SAMPLE_REBATE_GENERATE through /sample-rebate",
+        "CR-20260625T022150Z-change live API/DB validation passed on backend http://127.0.0.1:18080, database my_ry_vue_runtime, Redis DB1",
+        "CR-20260625T022150Z-change runtime test customer 25 / KH202606000021 verified omitted accountType, explicit CUSTOMER_DEPOSIT, SAMPLE_REBATE rejection without mutation, INVALID_ACCOUNT rejection without mutation, sample_rebate_record before SAMPLE_REBATE_GENERATE, and PUBLIC deposit rejection without funds data",
+        "CR-20260625T022150Z-change captcha restored to true in sys_config and Redis DB0/DB1 after runtime validation",
+        "node --test tests/customer-risk-gate.test.js passed with 7 tests for CR-20260625T022150Z-change",
+        "node --test tests/governance-sales-order-handoff-gate.test.js passed with 16 tests after hermetic file-weight fixture isolation for CR-20260625T022150Z-change",
+        "npm run scan:all passed for CR-20260625T022150Z-change",
+        "npm run finalize:change -- --summary \"客户管理定金入口资金边界收口\" passed for CR-20260625T022150Z-change",
+        "npm run check passed with 120 Node tests for CR-20260625T022150Z-change",
+        "standalone npm test passed with 120 Node tests for CR-20260625T022150Z-change",
+        "git diff --check passed for CR-20260625T022150Z-change"
       ],
-      "latestSession": "memory/sessions/2026-06-24-customer-fund-public-validation-tightening.md",
-      "latestChange": "CR-20260624T010638Z-change",
+      "latestSession": "memory/sessions/2026-06-25-customer-fund-deposit-boundary.md",
+      "latestChange": "CR-20260625T022150Z-change",
       "handoverRequired": true,
-      "updatedAt": "2026-06-24"
+      "updatedAt": "2026-06-25"
     }
   ]
 }

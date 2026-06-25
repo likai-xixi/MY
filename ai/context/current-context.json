@@ -3,50 +3,47 @@
   "generatedBy": "scripts/context-build.js",
   "generatedAt": "stable",
   "currentFeature": "customer",
-  "currentChange": "CR-20260624T152423Z-governance-sales-order-handoff-gate",
+  "currentChange": "CR-20260625T022150Z-change",
   "repositoryProfile": {
     "adapter": "ruoyi",
     "locked": true,
     "stack": "RuoYi + Vue3 + Codex Auto Dev OS"
   },
   "allowedEditRoots": [
-    "AGENTS.md",
-    "README.md",
-    "package.json",
-    "docs",
-    "ai/roadmap",
-    "ai/context",
-    "ai/reviews",
-    "ai/changes",
-    "ai/rule-proposals",
-    "memory/PROJECT_STATE.md",
-    "memory/HANDOVER.md",
-    "memory/CHANGELOG.md",
-    "memory/TASKS.json",
-    "memory/sessions",
-    "scripts/context-build.js",
-    "scripts/finalize-change.js",
-    "scripts/review-feature.js",
-    "tools/doc-size-checker.js",
-    "tools/context-pack-checker.js",
-    "tools/read-budget-checker.js",
-    "tools/file-weight-checker.js",
-    "tools/roadmap-checker.js",
-    "tools/phase-gate-checker.js",
-    "tools/refactor-debt-checker.js",
-    "tools/review-checker.js",
-    "tests"
-  ],
-  "forbiddenEditRoots": [
+    "features/customer.md",
     "ruoyi-business/src/main/java/com/ruoyi/business/customer",
     "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer",
-    "ruoyi-business/src/main/resources/mapper/customer",
     "ruoyi-ui/src/views/customer",
+    "ruoyi-ui/src/utils/region-data.js",
+    "ruoyi-ui/src/api/customer.contract.md",
     "ruoyi-ui/src/api/customer.js",
+    "ai/contracts/customer.api.md",
+    "ai/contracts/customer.db.md",
+    "ai/contracts/customer.delete-ownership.md",
+    "ai/contracts/customer.permission.md",
+    "ai/contracts/customer.ui.md",
+    "graph/api-graph.json",
+    "graph/ui-graph.json",
+    "memory/API_CATALOG.md",
+    "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/README.md",
+    "ruoyi-business/src/main/java/com/ruoyi/business/customer/README.md",
+    "ruoyi-ui/src/views/customer/README.md",
     "sql/customer.ownership.md",
-    "ruoyi-business/src/main/java/com/ruoyi/business/salesorder",
-    "ruoyi-ui/src/views/sales-order"
+    "ruoyi-business/src/main/resources/mapper/customer/CustomerMapper.xml",
+    "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
+    "ruoyi-ui/src/views/customer/index.vue",
+    "ai/registry/features.json",
+    "ai/registry/modules.json",
+    "ai/changes",
+    "ai/reviews",
+    "ai/context",
+    "ai/generated",
+    "graph",
+    "memory",
+    "features",
+    "tests"
   ],
+  "forbiddenEditRoots": [],
   "mustReadFiles": [
     {
       "path": "AGENTS.md",
@@ -93,15 +90,15 @@
       "reason": "Governance backlog and required/deferred evidence."
     },
     {
-      "path": "ai/changes/CR-20260624T152423Z-governance-sales-order-handoff-gate/impact.json",
+      "path": "ai/changes/CR-20260625T022150Z-change/impact.json",
       "reason": "Current change allowed and forbidden edit roots."
     },
     {
-      "path": "ai/changes/CR-20260624T152423Z-governance-sales-order-handoff-gate/plan.md",
+      "path": "ai/changes/CR-20260625T022150Z-change/plan.md",
       "reason": "Current change execution plan."
     },
     {
-      "path": "ai/changes/CR-20260624T152423Z-governance-sales-order-handoff-gate/verification.md",
+      "path": "ai/changes/CR-20260625T022150Z-change/verification.md",
       "reason": "Current change verification evidence."
     }
   ],

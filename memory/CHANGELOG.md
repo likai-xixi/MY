@@ -1,5 +1,16 @@
 # Changelog
 
+## 2026-06-25 - runtime-validation
+
+- Change: `ai/changes/CR-20260625T022150Z-change`.
+- Live API/DB validation passed on backend `http://127.0.0.1:18080`, database `my_ry_vue_runtime`, Redis DB1.
+- Runtime test customer: `customer_id=25`, `customer_code=KH202606000021`, marker `RT_DEPOSIT_BOUNDARY_20260625031150`.
+- Omitted and explicit `CUSTOMER_DEPOSIT` deposit requests wrote `CUSTOMER_DEPOSIT / DEPOSIT_IN / CUSTOMER_DEPOSIT_BATCH`.
+- `SAMPLE_REBATE` and `INVALID_ACCOUNT` deposit requests failed before balance, fund-flow, or deposit-batch mutation.
+- `/sample-rebate` created `sample_rebate_record` and then wrote internal `SAMPLE_REBATE_GENERATE` without creating a deposit batch.
+- `PUB_DIRECT_SALE` deposit was rejected without creating funds data.
+- Captcha was restored to `true` in `sys_config` and Redis DB0/DB1, and `/captchaImage` returned `captchaEnabled=true`.
+
 ## 2026-06-21 — Codex Auto Dev OS
 
 - Completed chat-driven add, update preparation, deletion dry-run, and deletion apply workflows.
@@ -224,4 +235,16 @@
 - Corrected the current `changed-files.json` by removing directory entries and adding `scripts/finalize-change.js`.
 - Added regression coverage for directory entries, deleted missing files, continued real-file checking, and overweight real-file rejection.
 - Verification passed: `npm run check:file-weight`, `node --test tests/governance-sales-order-handoff-gate.test.js` with 16 tests, `npm run context:build -- customer`, `npm run check` with 118 Node tests, standalone `npm test` with 118 Node tests, and `git diff --check`.
-- No customer-management business code, sales-order implementation, or database business table structure was modified.
+- No customer-management business code, sales-order implementation, or database business table structure was modified.## 2026-06-25 — update
+- Change: `ai/changes/CR-20260625T022150Z-change`.
+- 客户管理定金入口资金边界收口
+- Feature: `customer`.
+
+## 2026-06-25 - verification-note
+
+- Change: `ai/changes/CR-20260625T022150Z-change`.
+- `/business/customer/{customerId}/fund/deposit` now routes through a deposit-only service method and can only write `CUSTOMER_DEPOSIT`.
+- Omitted `accountType` and explicit `CUSTOMER_DEPOSIT` are accepted; `SAMPLE_REBATE` and other non-`CUSTOMER_DEPOSIT` values are rejected before account balance, deposit batch, or fund flow mutation.
+- Sample rebate remains separate through `/business/customer/{customerId}/sample-rebate`, which creates `sample_rebate_record` before internal `SAMPLE_REBATE_GENERATE` fund flow.
+- Verification passed: `npm run scan:all`, `npm run finalize:change -- --summary "客户管理定金入口资金边界收口"`, `npm run check` with 120 Node tests, standalone `npm test` with 120 Node tests, and `git diff --check`.
+- No sales-order implementation, governance-rule change, SQL business table structure change, commit, or push was made.
