@@ -11,12 +11,14 @@
   },
   "allowedEditRoots": [
     ".github/workflows",
+    ".gitignore",
     "tools",
     "tests",
     "ai/changes",
     "ai/context",
     "memory",
-    "README.md"
+    "README.md",
+    "ruoyi-ui/src/views/tool/build"
   ],
   "forbiddenEditRoots": [
     "ruoyi-business/src/main/java/com/ruoyi/business/customer",

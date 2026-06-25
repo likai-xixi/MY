@@ -6,6 +6,8 @@ node_modules/
 coverage/
 dist/
 build/
+!ruoyi-ui/src/views/tool/build/
+!ruoyi-ui/src/views/tool/build/*.vue
 target/
 .vite/
 tmp/

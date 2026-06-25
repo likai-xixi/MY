@@ -300,3 +300,12 @@
 - Local verification passed: `npm test` with 137 Node tests, `npm run check:ci-coverage-declaration`, `npm run check:verification-provenance`, full `npm run check` with 137 Node tests, `mvn -pl ruoyi-admin -am -DskipTests compile`, `npm --prefix ruoyi-ui run build:prod`, `git diff --check`, and forbidden-path audit.
 - [ci-planned] GitHub Actions workflow includes Node governance, Maven compile, and ruoyi-ui build; actual CI result is determined after push.
 - No customer runtime code, sales-order implementation code, customer business rules, or business database table structure was changed.
+
+## 2026-06-25 - governance/ci follow-up
+
+- Change: `ai/changes/CR-20260625T112646Z-ci-backend-frontend-governance-checks`.
+- First pushed GitHub Actions run `28168635884` failed only in `governance` at `scan:frontend-routes:check`; `backend-compile` and `frontend-build` passed.
+- Root cause: `.gitignore` pattern `build/` ignored pre-existing `ruoyi-ui/src/views/tool/build/*.vue` source files while committed generated route artifacts already referenced those RuoYi tool routes.
+- Repair: add a narrow `.gitignore` exception for `ruoyi-ui/src/views/tool/build/*.vue` and track those source files so clean GitHub Actions checkout matches local route scan input.
+- Local repair verification passed: `npm run scan:frontend-routes`, `npm run scan:frontend-routes:check`, `npm run check:ci-coverage-declaration`, `npm run check:verification-provenance`, `npm test`, `npm run check`, Maven compile, ruoyi-ui production build, and `git diff --check`.
+- [ci-planned] A new GitHub Actions result is required after pushing this repair; do not treat the local checks as CI passed evidence.

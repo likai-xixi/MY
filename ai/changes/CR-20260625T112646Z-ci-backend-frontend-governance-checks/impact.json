@@ -30,6 +30,17 @@
       "memory/CHANGELOG.md",
       "memory/sessions/2026-06-25-ci-backend-frontend-governance-checks.md"
     ],
+    "gitIgnore": [
+      ".gitignore"
+    ],
+    "routeScanSourceFiles": [
+      "ruoyi-ui/src/views/tool/build/CodeTypeDialog.vue",
+      "ruoyi-ui/src/views/tool/build/DraggableItem.vue",
+      "ruoyi-ui/src/views/tool/build/IconsDialog.vue",
+      "ruoyi-ui/src/views/tool/build/RightPanel.vue",
+      "ruoyi-ui/src/views/tool/build/TreeNodeDialog.vue",
+      "ruoyi-ui/src/views/tool/build/index.vue"
+    ],
     "changeRecord": [
       "ai/changes/CR-20260625T112646Z-ci-backend-frontend-governance-checks",
       "ai/changes/CR-20260625T112646Z-ci-backend-frontend-governance-checks/boundary-exception.md",
@@ -38,12 +49,14 @@
   },
   "allowedEditRoots": [
     ".github/workflows",
+    ".gitignore",
     "tools",
     "tests",
     "ai/changes",
     "ai/context",
     "memory",
-    "README.md"
+    "README.md",
+    "ruoyi-ui/src/views/tool/build"
   ],
   "forbiddenEditRoots": [
     "ruoyi-business/src/main/java/com/ruoyi/business/customer",

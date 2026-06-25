@@ -8,8 +8,8 @@
       "status": "in_progress",
       "owner": "Codex",
       "priority": "high",
-      "statusReason": "Governance change CR-20260625T112646Z-ci-backend-frontend-governance-checks adds real baseline GitHub Actions coverage for Node governance, backend Maven compile, and ruoyi-ui production build while hardening CI coverage/provenance checkers.",
-      "nextStep": "Finish CR-2 local verification, review the governance/ci diff, then handle commit/push and post-push GitHub Actions confirmation separately. Keep CR-3 high-risk semantic gates and CR-4 sales-order contracts separate.",
+      "statusReason": "Governance change CR-20260625T112646Z-ci-backend-frontend-governance-checks adds real baseline GitHub Actions coverage and is repairing the first pushed governance CI failure by tracking pre-existing RuoYi tool/build route source files that were hidden by .gitignore.",
+      "nextStep": "Verify, commit, and push the CR-2 CI repair, then confirm the new GitHub Actions run. Keep CR-3 high-risk semantic gates and CR-4 sales-order contracts separate.",
       "blockedBy": [],
       "verification": [
         "npm run profile:setup",
@@ -73,7 +73,11 @@
         "mvn -pl ruoyi-admin -am -DskipTests compile passed with BUILD SUCCESS for CR-20260625T112646Z-ci-backend-frontend-governance-checks",
         "npm --prefix ruoyi-ui run build:prod passed with Vite build success for CR-20260625T112646Z-ci-backend-frontend-governance-checks",
         "git diff --check passed for CR-20260625T112646Z-ci-backend-frontend-governance-checks",
-        "forbidden-path audit returned FORBIDDEN_PATH_AUDIT_OK for CR-20260625T112646Z-ci-backend-frontend-governance-checks"
+        "forbidden-path audit returned FORBIDDEN_PATH_AUDIT_OK for CR-20260625T112646Z-ci-backend-frontend-governance-checks",
+        "GitHub Actions run 28168635884 failed only in governance at scan:frontend-routes:check; backend-compile and frontend-build passed",
+        ".gitignore previously ignored ruoyi-ui/src/views/tool/build/*.vue even though generated frontend route artifacts referenced those routes",
+        "CR-2 CI repair tracks pre-existing ruoyi-ui/src/views/tool/build/*.vue source files with a narrow .gitignore exception",
+        "CR-2 CI repair local verification passed scan:frontend-routes, scan:frontend-routes:check, ci coverage declaration, verification provenance, npm test, npm run check, Maven compile, ruoyi-ui build, and git diff --check"
       ],
       "latestSession": "memory/sessions/2026-06-25-ci-backend-frontend-governance-checks.md",
       "handoverRequired": true,

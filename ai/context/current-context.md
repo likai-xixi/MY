@@ -8,12 +8,14 @@ Profile: adapter `ruoyi`, locked `true`
 ## Allowed Edit Roots
 
 - `.github/workflows`
+- `.gitignore`
 - `tools`
 - `tests`
 - `ai/changes`
 - `ai/context`
 - `memory`
 - `README.md`
+- `ruoyi-ui/src/views/tool/build`
 
 ## Forbidden Edit Roots
 

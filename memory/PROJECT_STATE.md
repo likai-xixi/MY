@@ -22,7 +22,7 @@ Customer management is the first active business feature. The customer model rem
 - sample rebate remains separate as `SAMPLE_REBATE`;
 - customer-level fund changes continue through `customer_fund_flow`; direct balance edits remain out of scope.
 
-Current governance change `CR-20260625T112646Z-ci-backend-frontend-governance-checks` adds CR-2 baseline CI coverage. The GitHub Actions workflow now contains real jobs for Node governance (`npm run check`), backend Maven compile (`mvn -pl ruoyi-admin -am -DskipTests compile`), and ruoyi-ui production build (`npm --prefix ruoyi-ui run build:prod`). CI coverage and provenance checkers now parse actual workflow `run:` commands and support `[ci-planned]` without treating it as passed CI evidence.
+Current governance change `CR-20260625T112646Z-ci-backend-frontend-governance-checks` adds CR-2 baseline CI coverage. The GitHub Actions workflow now contains real jobs for Node governance (`npm run check`), backend Maven compile (`mvn -pl ruoyi-admin -am -DskipTests compile`), and ruoyi-ui production build (`npm --prefix ruoyi-ui run build:prod`). CI coverage and provenance checkers now parse actual workflow `run:` commands and support `[ci-planned]` without treating it as passed CI evidence. The first pushed Actions run failed only in `governance` because clean Linux checkout lacked the ignored `ruoyi-ui/src/views/tool/build/*.vue` route source files already referenced by generated route artifacts; the follow-up repair tracks those pre-existing RuoYi tool sources with a narrow `.gitignore` exception.
 
 Current customer fund concurrency change `CR-20260625T042041Z-change`:
 

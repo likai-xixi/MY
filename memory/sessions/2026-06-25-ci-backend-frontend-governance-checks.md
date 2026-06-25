@@ -14,6 +14,7 @@
 - Make CI coverage declarations depend on real workflow `run:` commands, not broad text labels.
 - Add `[ci-planned]` provenance for workflow coverage that will run in GitHub Actions after push, without treating it as passed CI evidence.
 - Keep the change governance-only: no customer runtime code, no sales-order code, and no business DDL.
+- Repair the first pushed `governance` CI failure by making the committed frontend route scan source set match clean GitHub Actions checkout.
 
 ## Changed Files
 
@@ -23,6 +24,7 @@
 - `tools/verification-provenance-checker.js`
 - `tests/governance-gates.test.js`
 - `README.md`
+- `.gitignore`
 - `ai/context/current-context.md`
 - `ai/context/current-context.json`
 - `ai/changes/CR-20260625T112646Z-ci-backend-frontend-governance-checks/*`
@@ -30,6 +32,7 @@
 - `memory/PROJECT_STATE.md`
 - `memory/TASKS.json`
 - `memory/CHANGELOG.md`
+- `ruoyi-ui/src/views/tool/build/*.vue`
 
 ## Commands
 
@@ -45,6 +48,11 @@
 - [local] `npm --prefix ruoyi-ui run build:prod` - passed; Vite transformed 2546 modules and built successfully.
 - [local] `git diff --check` - passed.
 - [local] forbidden-path audit - passed with `FORBIDDEN_PATH_AUDIT_OK`.
+- [ci] First pushed GitHub Actions run `28168635884` failed in `governance` / `npm run check` because `scan:frontend-routes:check` reported stale `ai/generated/frontend-routes.json`.
+- [local] The stale generated route failure was traced to `.gitignore` ignoring `ruoyi-ui/src/views/tool/build/*.vue`, while generated route artifacts already referenced those RuoYi tool routes.
+- [local] `.gitignore` now has a narrow exception for `ruoyi-ui/src/views/tool/build/*.vue`, and the pre-existing RuoYi tool build source files are tracked for clean CI checkout parity.
+- [local] Frontend route scan and permission scan completed with no contract changes; no route, screen, API client, menu, auth string, or permission ownership is changed by this repair.
+- [local] Repair verification passed: `npm run scan:frontend-routes`, `npm run scan:frontend-routes:check`, `npm run check:ci-coverage-declaration`, `npm run check:verification-provenance`, `npm test`, `npm run check`, Maven compile, ruoyi-ui production build, and `git diff --check`.
 
 ## Verification
 
@@ -52,7 +60,10 @@
 - [local] CI coverage and provenance checkers passed against the updated workflow and docs.
 - [local] Maven backend compile and ruoyi-ui production build passed locally.
 - [local] `git diff --check` and forbidden-path audit passed after evidence updates.
-- [ci-planned] GitHub Actions workflow includes Node governance, Maven compile, and ruoyi-ui build; actual CI result is determined after push.
+- [ci] First pushed GitHub Actions run failed only in `governance`; `backend-compile` and `frontend-build` passed.
+- [ci-planned] GitHub Actions workflow includes Node governance, Maven compile, and ruoyi-ui build; actual CI result for this repair is determined after push.
+- [local] The repair is source-tracking only for pre-existing RuoYi tool files already present in generated governance artifacts.
+- [local] Final local repair verification passed before committing the follow-up fix.
 
 ## Risks
 
