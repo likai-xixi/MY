@@ -193,4 +193,35 @@
 - Feature: `customer`.## 2026-06-24 — update
 - Change: `ai/changes/CR-20260624T010638Z-change`.
 - 清理本地开发库历史 PUBLIC 验证数据
-- Feature: `customer`.
+- Feature: `customer`.## 2026-06-24 — rule-change
+- Change: `ai/changes/CR-20260624T152423Z-governance-sales-order-handoff-gate`.
+- 新增销售订单前治理接手机制
+- Feature: `platform`.
+# Changelog Note - 2026-06-24 - governance/rule-change
+
+- Change: `ai/changes/CR-20260624T152423Z-governance-sales-order-handoff-gate`.
+- Added sales-order-before governance handoff mechanism: roadmap, `beforeSalesOrder`, refactor debt, current-context, multi-role review scaffold, document/read/context/file-weight gates, package check wiring, and tests.
+- No sales-order implementation was added.
+- No customer-management business code was modified.
+- No database business table structure was modified.
+- Future sales-order implementation must pass `beforeSalesOrder` and a multi-role review decision containing `Allow Implementation`.
+- Verification passed: `npm run check` with 109 Node tests, standalone `npm test` with 109 Node tests, and `git diff --check`.
+
+## 2026-06-25 - governance/rule-change follow-up
+
+- Change: `ai/changes/CR-20260624T152423Z-governance-sales-order-handoff-gate`.
+- Closed the M1 review-gate gap by wiring default `check:review` to context-aware `node tools/review-checker.js --require-allow`, so `npm run check` fails business implementation changes without an approved review but does not force `Allow Implementation` on governance/docs/context/review/memory-only changes.
+- Closed the L1 phase-gate gap by expanding `tools/phase-gate-checker.js` sales-order implementation matching to common naming variants under real implementation roots, while keeping governance docs out of the block.
+- Added regression coverage; targeted governance handoff test now passes with 12 tests.
+- Follow-up verification passed: `npm run scan:all`, `npm run check` with 114 Node tests, standalone `npm test` with 114 Node tests, `git diff --check`, and forbidden-path audit.
+- No sales-order implementation was added and no customer-management business code was modified.
+
+## 2026-06-25 - governance/rule-change file-weight follow-up
+
+- Change: `ai/changes/CR-20260624T152423Z-governance-sales-order-handoff-gate`.
+- Fixed push-preflight `check:file-weight` EISDIR failure by making `tools/file-weight-checker.js` stat changed paths before reading and check only real files.
+- Updated `scripts/finalize-change.js` so generated `changed-files.json` records exclude existing directories, while missing deleted-file paths remain safe to record.
+- Corrected the current `changed-files.json` by removing directory entries and adding `scripts/finalize-change.js`.
+- Added regression coverage for directory entries, deleted missing files, continued real-file checking, and overweight real-file rejection.
+- Verification passed: `npm run check:file-weight`, `node --test tests/governance-sales-order-handoff-gate.test.js` with 16 tests, `npm run context:build -- customer`, `npm run check` with 118 Node tests, standalone `npm test` with 118 Node tests, and `git diff --check`.
+- No customer-management business code, sales-order implementation, or database business table structure was modified.

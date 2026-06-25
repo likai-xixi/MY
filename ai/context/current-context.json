@@ -1,0 +1,322 @@
+{
+  "schemaVersion": 1,
+  "generatedBy": "scripts/context-build.js",
+  "generatedAt": "stable",
+  "currentFeature": "customer",
+  "currentChange": "CR-20260624T152423Z-governance-sales-order-handoff-gate",
+  "repositoryProfile": {
+    "adapter": "ruoyi",
+    "locked": true,
+    "stack": "RuoYi + Vue3 + Codex Auto Dev OS"
+  },
+  "allowedEditRoots": [
+    "AGENTS.md",
+    "README.md",
+    "package.json",
+    "docs",
+    "ai/roadmap",
+    "ai/context",
+    "ai/reviews",
+    "ai/changes",
+    "ai/rule-proposals",
+    "memory/PROJECT_STATE.md",
+    "memory/HANDOVER.md",
+    "memory/CHANGELOG.md",
+    "memory/TASKS.json",
+    "memory/sessions",
+    "scripts/context-build.js",
+    "scripts/finalize-change.js",
+    "scripts/review-feature.js",
+    "tools/doc-size-checker.js",
+    "tools/context-pack-checker.js",
+    "tools/read-budget-checker.js",
+    "tools/file-weight-checker.js",
+    "tools/roadmap-checker.js",
+    "tools/phase-gate-checker.js",
+    "tools/refactor-debt-checker.js",
+    "tools/review-checker.js",
+    "tests"
+  ],
+  "forbiddenEditRoots": [
+    "ruoyi-business/src/main/java/com/ruoyi/business/customer",
+    "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer",
+    "ruoyi-business/src/main/resources/mapper/customer",
+    "ruoyi-ui/src/views/customer",
+    "ruoyi-ui/src/api/customer.js",
+    "sql/customer.ownership.md",
+    "ruoyi-business/src/main/java/com/ruoyi/business/salesorder",
+    "ruoyi-ui/src/views/sales-order"
+  ],
+  "mustReadFiles": [
+    {
+      "path": "AGENTS.md",
+      "reason": "Top-level workflow and boundary contract."
+    },
+    {
+      "path": "ai/context/current-context.md",
+      "reason": "Compact current handoff for new Codex windows."
+    },
+    {
+      "path": "memory/HANDOVER.md",
+      "reason": "Latest project handoff and verification boundary."
+    },
+    {
+      "path": "ai/project-profile.json",
+      "reason": "Locked adapter and profile-rule state."
+    },
+    {
+      "path": "package.json",
+      "reason": "Available workflow and check scripts."
+    },
+    {
+      "path": "ai/registry/features.json",
+      "reason": "Feature ownership and active customer context."
+    },
+    {
+      "path": "ai/registry/modules.json",
+      "reason": "Module ownership roots."
+    },
+    {
+      "path": "ai/context/features/customer.md",
+      "reason": "Focused context for customer."
+    },
+    {
+      "path": "ai/roadmap/phase-gates.json",
+      "reason": "beforeSalesOrder gate state."
+    },
+    {
+      "path": "ai/roadmap/refactor-debt.json",
+      "reason": "Known debt affecting sales-order handoff."
+    },
+    {
+      "path": "ai/roadmap/enhancement-backlog.json",
+      "reason": "Governance backlog and required/deferred evidence."
+    },
+    {
+      "path": "ai/changes/CR-20260624T152423Z-governance-sales-order-handoff-gate/impact.json",
+      "reason": "Current change allowed and forbidden edit roots."
+    },
+    {
+      "path": "ai/changes/CR-20260624T152423Z-governance-sales-order-handoff-gate/plan.md",
+      "reason": "Current change execution plan."
+    },
+    {
+      "path": "ai/changes/CR-20260624T152423Z-governance-sales-order-handoff-gate/verification.md",
+      "reason": "Current change verification evidence."
+    }
+  ],
+  "mustNotBreak": [
+    "Do not implement sales-order in this governance change.",
+    "Do not modify customer-management business code in governance/rule-change work.",
+    "Do not change database business table structure in this governance change.",
+    "Do not loosen existing governance gates or profile lock."
+  ],
+  "roadmapBlockers": [
+    {
+      "id": "multi-role-review",
+      "status": "in-progress",
+      "reason": "Complex feature work needs product, architecture, backend, frontend, and QA review before implementation.",
+      "futureAction": "Run review:feature for the sales-order proposal and record the decision before implementation."
+    },
+    {
+      "id": "current-context",
+      "status": "in-progress",
+      "reason": "New Codex windows need a compact, deterministic handoff instead of reading all history.",
+      "futureAction": "Run npm run context:build -- customer before sales-order planning."
+    },
+    {
+      "id": "context-pack",
+      "status": "in-progress",
+      "reason": "The generated current context must stay bounded, structured, and reasoned.",
+      "futureAction": "Keep current-context deterministic and below the line/read-budget thresholds."
+    },
+    {
+      "id": "doc-size",
+      "status": "in-progress",
+      "reason": "AGENTS, README, project state, handover, context, and review summaries must not grow without control.",
+      "futureAction": "Split or summarize oversized governance docs instead of appending indefinitely."
+    },
+    {
+      "id": "read-budget",
+      "status": "in-progress",
+      "reason": "New sessions should read the smallest useful context set.",
+      "futureAction": "Add extra must-read files only with a written reason."
+    },
+    {
+      "id": "file-weight",
+      "status": "in-progress",
+      "reason": "Large Vue, Java service, and mapper files need split plans or exceptions when touched.",
+      "futureAction": "Before touching heavy files, add a split plan or weight exception to the change record."
+    },
+    {
+      "id": "roadmap-check",
+      "status": "in-progress",
+      "reason": "The enhancement backlog must stay complete enough to drive gate decisions.",
+      "futureAction": "Keep backlog item evidence and futureAction fields non-empty."
+    },
+    {
+      "id": "phase-gate-check",
+      "status": "in-progress",
+      "reason": "Sales-order, delivery, finance, and production sequencing must be machine-checkable.",
+      "futureAction": "Mark beforeSalesOrder ready only after required items are completed."
+    },
+    {
+      "id": "refactor-debt-check",
+      "status": "in-progress",
+      "reason": "Known customer debt must be visible before order-dependent modules are started.",
+      "futureAction": "Resolve or explicitly accept debt before dependent sales-order behavior is implemented."
+    },
+    {
+      "id": "snapshot-contract",
+      "status": "required",
+      "reason": "Sales order must preserve customer/contact/address state even if customer master data changes later.",
+      "futureAction": "Draft snapshot contract in the sales-order pre-review batch."
+    },
+    {
+      "id": "state-machine-contract",
+      "status": "required",
+      "reason": "Order state transitions must be stable before delivery, finance, and production depend on them.",
+      "futureAction": "Draft state-machine contract in the sales-order pre-review batch."
+    },
+    {
+      "id": "fund-boundary-contract",
+      "status": "required",
+      "reason": "Customer deposit, order deposit, receipt, deduction, refund, and adjustment responsibilities must not blur.",
+      "futureAction": "Draft fund-boundary contract before order fund behavior."
+    }
+  ],
+  "phaseGates": {
+    "beforeSalesOrder": {
+      "title": "Before sales-order implementation",
+      "status": "blocked",
+      "allowsGovernanceRuleChange": true,
+      "blocksImplementationOf": [
+        "sales-order"
+      ],
+      "required": [
+        "multi-role-review",
+        "current-context",
+        "doc-size",
+        "read-budget",
+        "context-pack",
+        "file-weight",
+        "roadmap-check",
+        "phase-gate-check",
+        "refactor-debt-check",
+        "snapshot-contract",
+        "state-machine-contract",
+        "fund-boundary-contract"
+      ],
+      "deferred": [
+        {
+          "id": "code-index",
+          "reason": "Can wait until the current-context package and sales-order contract scope are stable."
+        },
+        {
+          "id": "context-select",
+          "reason": "Dependency-closure selection should be added after the first compact context workflow is proven."
+        },
+        {
+          "id": "feature-coverage",
+          "reason": "Deep feature coverage checks need approved sales-order contract files first."
+        },
+        {
+          "id": "module-dependencies",
+          "reason": "Dependency matrix visualization is deferred until sales-order/delivery/finance boundaries exist."
+        },
+        {
+          "id": "api-integration-test",
+          "reason": "Requires approved API contracts and runtime fixtures."
+        },
+        {
+          "id": "ui-smoke-test",
+          "reason": "Requires approved UI screens and browser acceptance path."
+        },
+        {
+          "id": "github-actions",
+          "reason": "CI is deferred to avoid fake echo-success automation before local gates are stable."
+        }
+      ],
+      "evidence": "This governance change creates the gate and its checkers; business implementation remains blocked until required contract items are completed. The phase-gate checker covers canonical sales-order roots plus common sales-order, salesOrder, sales_order, and sales/order naming variants under implementation roots."
+    },
+    "beforeDelivery": {
+      "title": "Before delivery implementation",
+      "status": "not-ready",
+      "required": [
+        "beforeSalesOrder",
+        "sales-order-state-machine",
+        "delivery-boundary-contract"
+      ],
+      "deferred": [],
+      "evidence": "Delivery is deferred until sales-order state and shipment boundaries exist."
+    },
+    "beforeFinance": {
+      "title": "Before finance implementation",
+      "status": "not-ready",
+      "required": [
+        "beforeSalesOrder",
+        "fund-boundary-contract",
+        "receipt-reconciliation-contract"
+      ],
+      "deferred": [],
+      "evidence": "Finance is deferred until fund and receipt responsibilities are explicit."
+    },
+    "beforeProduction": {
+      "title": "Before production implementation",
+      "status": "not-ready",
+      "required": [
+        "beforeSalesOrder",
+        "production-release-policy",
+        "payment-state-contract"
+      ],
+      "deferred": [],
+      "evidence": "Production is deferred until payment and release policy are explicit."
+    }
+  },
+  "refactorDebt": [
+    {
+      "id": "customer-contact-address-reinsert",
+      "title": "Customer contacts and addresses are soft-deleted and reinserted",
+      "status": "open",
+      "guard": "beforeSalesOrder remains blocked until the snapshot contract defines required customer/contact/address snapshot fields."
+    },
+    {
+      "id": "customer-put-full-update",
+      "title": "PUT /business/customer is a full-update API",
+      "status": "open",
+      "guard": "Current-context and sales-order review must call out the full-update boundary."
+    },
+    {
+      "id": "database-direction-mysql",
+      "title": "Database direction is MySQL",
+      "status": "open",
+      "guard": "Roadmap and context files must keep MySQL as the default database assumption."
+    },
+    {
+      "id": "change-salesman-mode-residue",
+      "title": "CHANGE_SALESMAN owner-change mode is incomplete",
+      "status": "open",
+      "guard": "Sales-order review must not depend on unclear owner-change semantics."
+    },
+    {
+      "id": "reserved-fund-adjust-permission",
+      "title": "business:customer:fund:adjust is reserved",
+      "status": "open",
+      "guard": "Fund-boundary contract must distinguish deposit entry, deduction, refund, adjustment, and reversal responsibilities."
+    }
+  ],
+  "verificationCommands": [
+    "npm run resume",
+    "npm run scan:all",
+    "npm run context:build -- customer",
+    "npm run finalize:change -- --summary \"新增销售订单前治理接手机制\"",
+    "npm run check",
+    "npm test",
+    "git diff --check"
+  ],
+  "nextSteps": [
+    "Keep this change governance-only.",
+    "Before sales-order implementation, run review:feature and require decision.md to explicitly contain Allow Implementation.",
+    "Complete snapshot, state-machine, and fund-boundary contracts before creating sales-order code or tables."
+  ]
+}

@@ -10,6 +10,22 @@ function pathExists(relativePath) {
   return fs.existsSync(projectPath(relativePath));
 }
 
+function pathIsFile(relativePath) {
+  try {
+    return fs.statSync(projectPath(relativePath)).isFile();
+  } catch {
+    return false;
+  }
+}
+
+function pathIsDirectory(relativePath) {
+  try {
+    return fs.statSync(projectPath(relativePath)).isDirectory();
+  } catch {
+    return false;
+  }
+}
+
 const TEMPLATE_PHRASES = [
   'Status: prepared',
   'Status: pending',
@@ -83,8 +99,14 @@ function flattenImpactFiles(impact) {
     ...(affected.generatedScans || []),
     ...(impact.removeFiles || []),
     ...(impact.updateFiles || []),
-    ...(impact.allowedEditRoots || []).filter((item) => pathExists(item) && !['ai/changes', 'ai/generated', 'graph', 'memory', 'features', 'tests'].includes(item))
+    ...(impact.allowedEditRoots || []).filter((item) => pathIsFile(item) && !['ai/changes', 'ai/generated', 'graph', 'memory', 'features', 'tests'].includes(item))
   ]);
+}
+
+export function filterChangedFileRecords(files) {
+  return unique(files)
+    .filter((file) => !file.startsWith('node_modules/') && !file.startsWith('.git/'))
+    .filter((file) => !pathIsDirectory(file));
 }
 
 function changeRecordFiles(id) {
@@ -280,12 +302,12 @@ export function finalizeChange({
   const featureId = impact.feature?.id || impact.slug || impact.feature || '';
   const mode = impact.mode || 'update';
   const gitOrRecorded = collectChangedFiles();
-  const files = unique([
+  const files = filterChangedFileRecords([
     ...changedFiles,
     ...gitOrRecorded,
     ...flattenImpactFiles(impact),
     ...changeRecordFiles(id)
-  ]).filter((file) => !file.startsWith('node_modules/') && !file.startsWith('.git/'));
+  ]);
 
   const safeFiles = files.length ? files : changeRecordFiles(id);
   writeOrCheck(`${dir}/changed-files.json`, formatJson({ schemaVersion: 1, files: safeFiles }), false, errors);

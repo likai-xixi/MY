@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "id": "2026-06-24-governance-sales-order-handoff-gate",
+  "title": "governance-sales-order-handoff-gate",
+  "reason": "Register governance/rule-change for sales-order-before handoff gates, current-context, review precheck, roadmap, and document/read/file-weight checks without touching customer or sales-order business code.",
+  "status": "proposed",
+  "requiredChangeMode": "rule-change",
+  "checklist": [
+    "Explain old rule and new rule.",
+    "List affected scanners and registries.",
+    "List sample files proving the project base needs this rule.",
+    "Run npm run check after the rule proposal is accepted."
+  ]
+}

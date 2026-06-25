@@ -1,0 +1,110 @@
+{
+  "schemaVersion": 1,
+  "mode": "rule-change",
+  "changeType": "governance/rule-change",
+  "feature": {
+    "id": "platform",
+    "name": "Governance Platform"
+  },
+  "title": "governance-sales-order-handoff-gate",
+  "businessCodeTouched": false,
+  "noSalesOrderImplementation": true,
+  "noCustomerBusinessChange": true,
+  "databaseBusinessTableStructureChanged": false,
+  "allowedEditRoots": [
+    "AGENTS.md",
+    "README.md",
+    "package.json",
+    "docs",
+    "ai/roadmap",
+    "ai/context",
+    "ai/reviews",
+    "ai/changes",
+    "ai/rule-proposals",
+    "memory/PROJECT_STATE.md",
+    "memory/HANDOVER.md",
+    "memory/CHANGELOG.md",
+    "memory/TASKS.json",
+    "memory/sessions",
+    "scripts/context-build.js",
+    "scripts/finalize-change.js",
+    "scripts/review-feature.js",
+    "tools/doc-size-checker.js",
+    "tools/context-pack-checker.js",
+    "tools/read-budget-checker.js",
+    "tools/file-weight-checker.js",
+    "tools/roadmap-checker.js",
+    "tools/phase-gate-checker.js",
+    "tools/refactor-debt-checker.js",
+    "tools/review-checker.js",
+    "tests"
+  ],
+  "forbiddenEditRoots": [
+    "ruoyi-business/src/main/java/com/ruoyi/business/customer",
+    "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer",
+    "ruoyi-business/src/main/resources/mapper/customer",
+    "ruoyi-ui/src/views/customer",
+    "ruoyi-ui/src/api/customer.js",
+    "sql/customer.ownership.md",
+    "ruoyi-business/src/main/java/com/ruoyi/business/salesorder",
+    "ruoyi-ui/src/views/sales-order"
+  ],
+  "affected": {
+    "docs": [
+      "AGENTS.md",
+      "README.md",
+      "docs/multi-role-review-workflow.md",
+      "ai/roadmap/GOVERNANCE_ROADMAP.md",
+      "ai/roadmap/BUSINESS_ROADMAP.md"
+    ],
+    "governanceArtifacts": [
+      "ai/roadmap/enhancement-backlog.json",
+      "ai/roadmap/phase-gates.json",
+      "ai/roadmap/refactor-debt.json",
+      "ai/context/current-context.md",
+      "ai/context/current-context.json"
+    ],
+    "scripts": [
+      "scripts/context-build.js",
+      "scripts/finalize-change.js",
+      "scripts/review-feature.js"
+    ],
+    "tools": [
+      "tools/doc-size-checker.js",
+      "tools/context-pack-checker.js",
+      "tools/read-budget-checker.js",
+      "tools/file-weight-checker.js",
+      "tools/roadmap-checker.js",
+      "tools/phase-gate-checker.js",
+      "tools/refactor-debt-checker.js",
+      "tools/review-checker.js"
+    ],
+    "tests": [
+      "tests/governance-sales-order-handoff-gate.test.js"
+    ],
+    "memory": [
+      "memory/PROJECT_STATE.md",
+      "memory/HANDOVER.md",
+      "memory/CHANGELOG.md",
+      "memory/TASKS.json",
+      "memory/sessions/2026-06-24-governance-sales-order-handoff-gate.md"
+    ]
+  },
+  "blockers": [],
+  "requiredVerification": [
+    "npm run resume",
+    "npm run scan:all",
+    "npm run context:build -- customer",
+    "npm run check:file-weight",
+    "npm run finalize:change -- --summary \"新增销售订单前治理接手机制\"",
+    "npm run check",
+    "npm test",
+    "git diff --check"
+  ],
+  "guards": [
+    "No customer-management business path may change.",
+    "No sales-order implementation path may be added.",
+    "No database business table structure may change.",
+    "No gate may be loosened to pass this change."
+  ]
+}

@@ -153,3 +153,17 @@ This scaffold can force Codex to keep ownership, scope, memory, graph, component
 ## Chat Command Entry
 
 Use `npm run ai:do -- "新增功能：客户管理"`, `npm run ai:do -- "功能迭代：客户管理"`, `npm run ai:do -- "删除功能预分析：客户管理"`, or `npm run ai:do -- "确认删除：客户管理"` as the single Codex App chat-driven entry. Runtime implementation must stay inside `impact.allowedEditRoots` and finish with `npm run check`.
+## Governance Pre-Review And Current Context
+
+For complex feature discussion or pre-implementation review, use:
+
+```bash
+npm run context:build -- customer
+npm run review:feature -- "功能预审：..."
+```
+
+`context:build` writes a compact `ai/context/current-context.md` and `ai/context/current-context.json` so new Codex windows can start from the current handoff instead of bulk-reading all historical changes, reviews, features, or source code.
+
+`review:feature` writes a structured `ai/reviews/RV-*` package. Complex implementation stays blocked until the review decision intentionally contains `Allow Implementation`.
+
+Sales-order implementation must pass the `beforeSalesOrder` gate first. Governance/rule-change work may improve the gate itself, but it must not create sales-order code, change customer business code, or alter business database table structure.

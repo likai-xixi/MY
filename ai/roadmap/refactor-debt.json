@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "items": [
+    {
+      "id": "customer-contact-address-reinsert",
+      "title": "Customer contacts and addresses are soft-deleted and reinserted",
+      "risk": "Sales orders could lose historical contact/address evidence if they reference mutable customer child rows.",
+      "decision": "Sales order must store contact and address snapshots instead of depending on current customer child rows.",
+      "status": "open",
+      "guard": "beforeSalesOrder remains blocked until the snapshot contract defines required customer/contact/address snapshot fields.",
+      "futureAction": "Draft and approve the sales-order snapshot contract before implementation."
+    },
+    {
+      "id": "customer-put-full-update",
+      "title": "PUT /business/customer is a full-update API",
+      "risk": "Future partial customer changes could overwrite fields unintentionally if they reuse the full-update endpoint.",
+      "decision": "Local partial changes must use dedicated PATCH or business-specific APIs instead of overloading full update.",
+      "status": "open",
+      "guard": "Current-context and sales-order review must call out the full-update boundary.",
+      "futureAction": "Add a PATCH/business API proposal when partial customer updates become necessary."
+    },
+    {
+      "id": "database-direction-mysql",
+      "title": "Database direction is MySQL",
+      "risk": "Switching design language back to PostgreSQL would create migration and SQL ambiguity.",
+      "decision": "Use MySQL as the project database direction unless a separate approved migration plan changes it.",
+      "status": "open",
+      "guard": "Roadmap and context files must keep MySQL as the default database assumption.",
+      "futureAction": "Review future SQL proposals for accidental PostgreSQL-specific assumptions."
+    },
+    {
+      "id": "change-salesman-mode-residue",
+      "title": "CHANGE_SALESMAN owner-change mode is incomplete",
+      "risk": "A backend or enum residue without a clear frontend entry can confuse owner-change workflows.",
+      "decision": "Either add the intended frontend entry in a future customer change or remove the residual mode.",
+      "status": "open",
+      "guard": "Sales-order review must not depend on unclear owner-change semantics.",
+      "futureAction": "Resolve in a dedicated customer/governance cleanup before order owner attribution depends on it."
+    },
+    {
+      "id": "reserved-fund-adjust-permission",
+      "title": "business:customer:fund:adjust is reserved",
+      "risk": "Ordinary roles could misuse a reserved fund-adjustment permission before a full flow exists.",
+      "decision": "Do not expose or depend on fund adjustment until the complete adjustment flow is designed and gated.",
+      "status": "open",
+      "guard": "Fund-boundary contract must distinguish deposit entry, deduction, refund, adjustment, and reversal responsibilities.",
+      "futureAction": "Define a dedicated fund-adjustment process before enabling the permission."
+    }
+  ]
+}

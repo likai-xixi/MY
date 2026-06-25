@@ -8,6 +8,12 @@ Maintain the MY door-industry ERP on the locked RuoYi + Vue3 + Codex Auto Dev OS
 
 The governance layer is attached to the RuoYi Spring Boot backend and RuoYi Vue3 frontend base. Feature ownership is tracked through registry, graph, generated scans, change records, memory, and handover files.
 
+Governance change `CR-20260624T152423Z-governance-sales-order-handoff-gate` adds the sales-order-before handoff mechanism. This is a `governance/rule-change` batch: it does not implement sales order, does not modify customer-management business code, and does not change database business table structure. Future sales-order work must pass `beforeSalesOrder` and multi-role pre-review before any sales-order code, route, API client, SQL table, or permission is created.
+
+The same governance change closes the M1/L1 review gaps found after the initial batch: the default `check:review` package script runs context-aware with `--require-allow`, requiring `Allow Implementation` only when the current changed files touch business implementation paths, and `check:phase-gate` recognizes common sales-order implementation naming variants only under real implementation roots.
+
+New Codex windows should start from `AGENTS.md`, `ai/context/current-context.md`, and `memory/HANDOVER.md`, then follow `ai/context/current-context.json` must-read reasons instead of bulk-reading all historical change records, reviews, feature files, or source code.
+
 Customer management is the first active business feature. The customer model remains:
 
 - customer nature is `REAL` or `PUBLIC`;

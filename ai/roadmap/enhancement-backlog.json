@@ -1,0 +1,225 @@
+{
+  "schemaVersion": 1,
+  "items": [
+    {
+      "id": "multi-role-review",
+      "title": "Multi-role pre-review",
+      "category": "workflow",
+      "status": "in-progress",
+      "requiredBefore": ["beforeSalesOrder"],
+      "reason": "Complex feature work needs product, architecture, backend, frontend, and QA review before implementation.",
+      "guard": "Complex add/update implementation must not proceed unless decision.md explicitly contains Allow Implementation; npm run check invokes context-aware check:review with --require-allow.",
+      "evidence": "docs/multi-role-review-workflow.md, scripts/review-feature.js, tools/review-checker.js, package.json check:review --require-allow, tests/governance-sales-order-handoff-gate.test.js context-aware review gate cases",
+      "futureAction": "Run review:feature for the sales-order proposal and record the decision before implementation."
+    },
+    {
+      "id": "current-context",
+      "title": "Current context pack",
+      "category": "context",
+      "status": "in-progress",
+      "requiredBefore": ["beforeSalesOrder"],
+      "reason": "New Codex windows need a compact, deterministic handoff instead of reading all history.",
+      "guard": "context:build must generate current-context markdown/json with bounded must-read files.",
+      "evidence": "scripts/context-build.js and ai/context/current-context.*",
+      "futureAction": "Run npm run context:build -- customer before sales-order planning."
+    },
+    {
+      "id": "context-pack",
+      "title": "Context pack structure check",
+      "category": "context",
+      "status": "in-progress",
+      "requiredBefore": ["beforeSalesOrder"],
+      "reason": "The generated current context must stay bounded, structured, and reasoned.",
+      "guard": "check:context-pack validates current-context files, feature context size, and must-read reasons.",
+      "evidence": "tools/context-pack-checker.js",
+      "futureAction": "Keep current-context deterministic and below the line/read-budget thresholds."
+    },
+    {
+      "id": "doc-size",
+      "title": "Document size gate",
+      "category": "quality-gate",
+      "status": "in-progress",
+      "requiredBefore": ["beforeSalesOrder"],
+      "reason": "AGENTS, README, project state, handover, context, and review summaries must not grow without control.",
+      "guard": "check:doc-size reads real files and reports line-count failures.",
+      "evidence": "tools/doc-size-checker.js",
+      "futureAction": "Split or summarize oversized governance docs instead of appending indefinitely."
+    },
+    {
+      "id": "read-budget",
+      "title": "Read budget gate",
+      "category": "quality-gate",
+      "status": "in-progress",
+      "requiredBefore": ["beforeSalesOrder"],
+      "reason": "New sessions should read the smallest useful context set.",
+      "guard": "check:read-budget validates mustReadFiles count and reasons.",
+      "evidence": "tools/read-budget-checker.js",
+      "futureAction": "Add extra must-read files only with a written reason."
+    },
+    {
+      "id": "file-weight",
+      "title": "File weight gate",
+      "category": "quality-gate",
+      "status": "in-progress",
+      "requiredBefore": ["beforeSalesOrder"],
+      "reason": "Large Vue, Java service, and mapper files need split plans or exceptions when touched.",
+      "guard": "check:file-weight reads current changed files and enforces split-plan or weight-exception notes for oversized touched files.",
+      "evidence": "tools/file-weight-checker.js",
+      "futureAction": "Before touching heavy files, add a split plan or weight exception to the change record."
+    },
+    {
+      "id": "roadmap-check",
+      "title": "Roadmap structure gate",
+      "category": "quality-gate",
+      "status": "in-progress",
+      "requiredBefore": ["beforeSalesOrder"],
+      "reason": "The enhancement backlog must stay complete enough to drive gate decisions.",
+      "guard": "check:roadmap validates required backlog IDs and fields.",
+      "evidence": "tools/roadmap-checker.js",
+      "futureAction": "Keep backlog item evidence and futureAction fields non-empty."
+    },
+    {
+      "id": "phase-gate-check",
+      "title": "Phase gate structure gate",
+      "category": "quality-gate",
+      "status": "in-progress",
+      "requiredBefore": ["beforeSalesOrder"],
+      "reason": "Sales-order, delivery, finance, and production sequencing must be machine-checkable.",
+      "guard": "check:phase-gate validates required/deferred gate items and blocks attempted sales-order implementation naming variants while beforeSalesOrder is incomplete.",
+      "evidence": "tools/phase-gate-checker.js and tests/governance-sales-order-handoff-gate.test.js naming-variant coverage",
+      "futureAction": "Mark beforeSalesOrder ready only after required items are completed."
+    },
+    {
+      "id": "refactor-debt-check",
+      "title": "Refactor debt gate",
+      "category": "quality-gate",
+      "status": "in-progress",
+      "requiredBefore": ["beforeSalesOrder"],
+      "reason": "Known customer debt must be visible before order-dependent modules are started.",
+      "guard": "check:refactor-debt validates risk, decision, guard, and futureAction fields.",
+      "evidence": "tools/refactor-debt-checker.js",
+      "futureAction": "Resolve or explicitly accept debt before dependent sales-order behavior is implemented."
+    },
+    {
+      "id": "code-index",
+      "title": "Code index",
+      "category": "deferred-automation",
+      "status": "deferred",
+      "requiredBefore": [],
+      "reason": "Useful for large follow-up work, but not required to establish the first sales-order handoff gate.",
+      "guard": "Deferred item must remain documented with a reason.",
+      "evidence": "enhancement-backlog entry",
+      "futureAction": "Add a code index once sales-order implementation scope is approved."
+    },
+    {
+      "id": "context-select",
+      "title": "Dependency-closure context selection",
+      "category": "deferred-automation",
+      "status": "deferred",
+      "requiredBefore": [],
+      "reason": "Dependency-closure selection is valuable but can wait until the compact current-context pack is stable.",
+      "guard": "Deferred item must remain documented with a reason.",
+      "evidence": "enhancement-backlog entry",
+      "futureAction": "Design dependency closure after module contracts stabilize."
+    },
+    {
+      "id": "feature-coverage",
+      "title": "Feature coverage fracture check",
+      "category": "deferred-automation",
+      "status": "deferred",
+      "requiredBefore": [],
+      "reason": "Deep coverage checks require more complete feature contracts than this governance bootstrap has.",
+      "guard": "Deferred item must remain documented with a reason.",
+      "evidence": "enhancement-backlog entry",
+      "futureAction": "Add after the sales-order contract set exists."
+    },
+    {
+      "id": "module-dependencies",
+      "title": "Module dependency matrix",
+      "category": "deferred-automation",
+      "status": "deferred",
+      "requiredBefore": [],
+      "reason": "Visualization is helpful but not necessary for the first gate wiring.",
+      "guard": "Deferred item must remain documented with a reason.",
+      "evidence": "enhancement-backlog entry",
+      "futureAction": "Generate after sales-order, delivery, and finance contracts are drafted."
+    },
+    {
+      "id": "snapshot-contract",
+      "title": "Sales-order snapshot contract",
+      "category": "business-contract",
+      "status": "required",
+      "requiredBefore": ["beforeSalesOrder"],
+      "reason": "Sales order must preserve customer/contact/address state even if customer master data changes later.",
+      "guard": "Sales-order implementation is blocked until snapshot fields and invariants are documented.",
+      "evidence": "Pending sales-order contract",
+      "futureAction": "Draft snapshot contract in the sales-order pre-review batch."
+    },
+    {
+      "id": "state-machine-contract",
+      "title": "Sales-order state-machine contract",
+      "category": "business-contract",
+      "status": "required",
+      "requiredBefore": ["beforeSalesOrder"],
+      "reason": "Order state transitions must be stable before delivery, finance, and production depend on them.",
+      "guard": "Sales-order implementation is blocked until allowed states and transitions are documented.",
+      "evidence": "Pending sales-order contract",
+      "futureAction": "Draft state-machine contract in the sales-order pre-review batch."
+    },
+    {
+      "id": "fund-boundary-contract",
+      "title": "Fund boundary contract",
+      "category": "business-contract",
+      "status": "required",
+      "requiredBefore": ["beforeSalesOrder"],
+      "reason": "Customer deposit, order deposit, receipt, deduction, refund, and adjustment responsibilities must not blur.",
+      "guard": "Sales-order implementation is blocked until fund boundaries are documented.",
+      "evidence": "Pending sales-order contract",
+      "futureAction": "Draft fund-boundary contract before order fund behavior."
+    },
+    {
+      "id": "db-migrations-seeds-invariants",
+      "title": "Database migration, seed, and invariant plan",
+      "category": "business-contract",
+      "status": "deferred",
+      "requiredBefore": [],
+      "reason": "Database changes are explicitly out of scope for this governance batch.",
+      "guard": "No sales-order table or seed may be added in this change.",
+      "evidence": "No DB business table structure changed.",
+      "futureAction": "Prepare migration and invariant plan during sales-order implementation planning."
+    },
+    {
+      "id": "api-integration-test",
+      "title": "API integration test framework",
+      "category": "deferred-automation",
+      "status": "deferred",
+      "requiredBefore": [],
+      "reason": "Integration tests require approved API contracts and runtime setup.",
+      "guard": "Deferred item must remain documented with a reason.",
+      "evidence": "enhancement-backlog entry",
+      "futureAction": "Add after sales-order API contracts are approved."
+    },
+    {
+      "id": "ui-smoke-test",
+      "title": "UI smoke test framework",
+      "category": "deferred-automation",
+      "status": "deferred",
+      "requiredBefore": [],
+      "reason": "UI smoke tests require approved screens and runtime flow.",
+      "guard": "Deferred item must remain documented with a reason.",
+      "evidence": "enhancement-backlog entry",
+      "futureAction": "Add after sales-order UI screens are designed."
+    },
+    {
+      "id": "github-actions",
+      "title": "GitHub Actions",
+      "category": "deferred-automation",
+      "status": "deferred",
+      "requiredBefore": [],
+      "reason": "CI is useful but explicitly out of this local governance batch.",
+      "guard": "Do not create fake CI that only echoes success.",
+      "evidence": "enhancement-backlog entry",
+      "futureAction": "Add real CI after local gates are stable and approved."
+    }
+  ]
+}

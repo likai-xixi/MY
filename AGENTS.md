@@ -172,3 +172,29 @@ Before closing a business task, report:
 ## Chat Command Entry
 
 Use `npm run ai:do -- "新增功能：客户管理"`, `npm run ai:do -- "功能迭代：客户管理"`, `npm run ai:do -- "删除功能预分析：客户管理"`, or `npm run ai:do -- "确认删除：客户管理"` as the single Codex App chat-driven entry. Runtime implementation must stay inside `impact.allowedEditRoots` and finish with `npm run check`.
+## Governance Discussion And Pre-Review Modes
+
+Use these modes before complex business implementation:
+
+| User intent | Codex mode | First action |
+| --- | --- | --- |
+| `功能讨论：...` | discussion-review | run `npm run resume`, then `npm run context:build -- customer`, then `npm run review:feature -- "功能讨论：..."` |
+| `功能预审：...` | pre-implementation-review | run `npm run resume`, then `npm run context:build -- customer`, then `npm run review:feature -- "功能预审：..."` |
+
+Complex add/update work must complete multi-role pre-review before implementation. If `ai/reviews/RV-*/decision.md` does not explicitly contain `Allow Implementation`, Codex must not implement the complex add/update request.
+
+New Codex windows should first read:
+
+- `AGENTS.md`
+- `ai/context/current-context.md`
+- `memory/HANDOVER.md`
+
+Do not default to full reads of all `ai/changes`, all `ai/reviews`, all feature files, or all source code. Use `current-context` first, then open only the files whose reasons are listed in `ai/context/current-context.json`.
+
+Business change 不允许改治理规则. If business implementation needs scanner, rule, script, workflow, package, skill, or profile changes, stop and create a separate `governance/rule-change` record.
+
+治理 change 不允许改业务代码. Governance/rule-change work must stay on governance docs, scripts, tools, tests, registry/context/roadmap artifacts, change records, and memory unless the user explicitly opens business scope.
+
+Do not create fake tests, fake CI, or scripts that only echo success. Every gate wired into `npm run check` must read real files or run real validation.
+
+Sales-order development must pass the `beforeSalesOrder` gate before any sales-order controller, service, mapper, Vue page, API client, SQL table, route, or permission is created.

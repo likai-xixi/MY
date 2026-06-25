@@ -1,0 +1,77 @@
+{
+  "schemaVersion": 1,
+  "gates": {
+    "beforeSalesOrder": {
+      "title": "Before sales-order implementation",
+      "status": "blocked",
+      "allowsGovernanceRuleChange": true,
+      "blocksImplementationOf": ["sales-order"],
+      "required": [
+        "multi-role-review",
+        "current-context",
+        "doc-size",
+        "read-budget",
+        "context-pack",
+        "file-weight",
+        "roadmap-check",
+        "phase-gate-check",
+        "refactor-debt-check",
+        "snapshot-contract",
+        "state-machine-contract",
+        "fund-boundary-contract"
+      ],
+      "deferred": [
+        {
+          "id": "code-index",
+          "reason": "Can wait until the current-context package and sales-order contract scope are stable."
+        },
+        {
+          "id": "context-select",
+          "reason": "Dependency-closure selection should be added after the first compact context workflow is proven."
+        },
+        {
+          "id": "feature-coverage",
+          "reason": "Deep feature coverage checks need approved sales-order contract files first."
+        },
+        {
+          "id": "module-dependencies",
+          "reason": "Dependency matrix visualization is deferred until sales-order/delivery/finance boundaries exist."
+        },
+        {
+          "id": "api-integration-test",
+          "reason": "Requires approved API contracts and runtime fixtures."
+        },
+        {
+          "id": "ui-smoke-test",
+          "reason": "Requires approved UI screens and browser acceptance path."
+        },
+        {
+          "id": "github-actions",
+          "reason": "CI is deferred to avoid fake echo-success automation before local gates are stable."
+        }
+      ],
+      "evidence": "This governance change creates the gate and its checkers; business implementation remains blocked until required contract items are completed. The phase-gate checker covers canonical sales-order roots plus common sales-order, salesOrder, sales_order, and sales/order naming variants under implementation roots."
+    },
+    "beforeDelivery": {
+      "title": "Before delivery implementation",
+      "status": "not-ready",
+      "required": ["beforeSalesOrder", "sales-order-state-machine", "delivery-boundary-contract"],
+      "deferred": [],
+      "evidence": "Delivery is deferred until sales-order state and shipment boundaries exist."
+    },
+    "beforeFinance": {
+      "title": "Before finance implementation",
+      "status": "not-ready",
+      "required": ["beforeSalesOrder", "fund-boundary-contract", "receipt-reconciliation-contract"],
+      "deferred": [],
+      "evidence": "Finance is deferred until fund and receipt responsibilities are explicit."
+    },
+    "beforeProduction": {
+      "title": "Before production implementation",
+      "status": "not-ready",
+      "required": ["beforeSalesOrder", "production-release-policy", "payment-state-contract"],
+      "deferred": [],
+      "evidence": "Production is deferred until payment and release policy are explicit."
+    }
+  }
+}
