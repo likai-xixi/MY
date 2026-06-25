@@ -12,6 +12,8 @@ This CR adds baseline GitHub Actions CI with real Node governance, Maven backend
 
 Follow-up CI repair: the first pushed Actions run failed in `governance` because `scan:frontend-routes:check` produced a different route scan on a clean Linux checkout. The cause was `.gitignore` pattern `build/` ignoring pre-existing `ruoyi-ui/src/views/tool/build/*.vue` RuoYi tool source files that the committed generated route scan already referenced. The repair tracks those source files through a narrow `.gitignore` exception without relaxing scanner or CI gates.
 
+Second follow-up CI repair: the next pushed Actions run passed `scan:frontend-routes:check` but failed in `check:change-handoff` because root `npm install` generated an untracked `package-lock.json` in the clean runner checkout. The workflow now uses `npm install --package-lock=false` for root and `npm --prefix ruoyi-ui install --package-lock=false` for the frontend because neither package has a committed lockfile for `npm ci`.
+
 No customer runtime Java, Vue, mapper XML, API client, business SQL, customer business rule, sales-order implementation, or business database table structure is part of this change.
 
 ## Changed Files
@@ -65,6 +67,9 @@ No customer runtime Java, Vue, mapper XML, API client, business SQL, customer bu
 - [local] `npm run scan:frontend-routes` produced no JSON diff after the tool/build source-tracking fix.
 - [local] Frontend route scan completed with no contract changes; this repair does not add or change routes, screens, API clients, or UI graph content.
 - [local] Permission scan completed with no contract changes; this repair does not add or change menus, auth strings, or permission ownership.
+- [ci] Second pushed GitHub Actions run `28169688512` passed `scan:frontend-routes:check` but failed in `governance` / `npm run check` at `check:change-handoff` due root `npm install` creating an untracked `package-lock.json`.
+- [local] Workflow install commands now use `--package-lock=false` while still running real npm installs.
+- [local] Root and `ruoyi-ui` install commands completed with `--package-lock=false` and did not generate lockfiles.
 - [local] Repair verification passed: `npm run scan:frontend-routes`, `npm run scan:frontend-routes:check`, `npm run check:ci-coverage-declaration`, `npm run check:verification-provenance`, `npm test`, `npm run check`, Maven compile, ruoyi-ui production build, and `git diff --check`.
 
 ## Verification
@@ -73,10 +78,10 @@ No customer runtime Java, Vue, mapper XML, API client, business SQL, customer bu
 - [local] Workflow jobs are real command jobs: `governance`, `backend-compile`, and `frontend-build`.
 - [local] Full `npm run check`, Maven compile, and ruoyi-ui production build all passed locally for this CR.
 - [ci] First pushed GitHub Actions run failed only in `governance`; `backend-compile` and `frontend-build` passed.
-- [ci-planned] GitHub Actions workflow includes Node governance, Maven compile, and ruoyi-ui build; actual CI result for this repair is determined after push.
+- [ci-planned] GitHub Actions workflow includes Node governance, Maven compile, ruoyi-ui build, and lockfile-free install commands; actual CI result for this repair is determined after push.
 - [local] Final `git diff --check` and forbidden-path audit passed after evidence updates.
 - [local] Frontend route and permission semantic surfaces have no contract changes; the fix makes clean checkout include source files already referenced by generated governance artifacts.
-- [local] Final local repair verification passed before committing the follow-up fix.
+- [local] Final local repair verification passed before committing the follow-up install-side-effect fix.
 
 ## Risks
 

@@ -15,6 +15,7 @@
 - Add `[ci-planned]` provenance for workflow coverage that will run in GitHub Actions after push, without treating it as passed CI evidence.
 - Keep the change governance-only: no customer runtime code, no sales-order code, and no business DDL.
 - Repair the first pushed `governance` CI failure by making the committed frontend route scan source set match clean GitHub Actions checkout.
+- Repair the second pushed `governance` CI failure by preventing CI npm install steps from generating untracked lockfiles in clean checkout.
 
 ## Changed Files
 
@@ -52,6 +53,9 @@
 - [local] The stale generated route failure was traced to `.gitignore` ignoring `ruoyi-ui/src/views/tool/build/*.vue`, while generated route artifacts already referenced those RuoYi tool routes.
 - [local] `.gitignore` now has a narrow exception for `ruoyi-ui/src/views/tool/build/*.vue`, and the pre-existing RuoYi tool build source files are tracked for clean CI checkout parity.
 - [local] Frontend route scan and permission scan completed with no contract changes; no route, screen, API client, menu, auth string, or permission ownership is changed by this repair.
+- [ci] Second pushed GitHub Actions run `28169688512` passed `scan:frontend-routes:check` but failed in `governance` / `npm run check` at `check:change-handoff` because root `npm install` created an untracked `package-lock.json`.
+- [local] Workflow install commands now use `npm install --package-lock=false` and `npm --prefix ruoyi-ui install --package-lock=false`; these remain real installs and avoid lockfile writes while no lockfile exists.
+- [local] Root and `ruoyi-ui` install commands completed with `--package-lock=false` and did not generate lockfiles.
 - [local] Repair verification passed: `npm run scan:frontend-routes`, `npm run scan:frontend-routes:check`, `npm run check:ci-coverage-declaration`, `npm run check:verification-provenance`, `npm test`, `npm run check`, Maven compile, ruoyi-ui production build, and `git diff --check`.
 
 ## Verification
@@ -61,9 +65,9 @@
 - [local] Maven backend compile and ruoyi-ui production build passed locally.
 - [local] `git diff --check` and forbidden-path audit passed after evidence updates.
 - [ci] First pushed GitHub Actions run failed only in `governance`; `backend-compile` and `frontend-build` passed.
-- [ci-planned] GitHub Actions workflow includes Node governance, Maven compile, and ruoyi-ui build; actual CI result for this repair is determined after push.
+- [ci-planned] GitHub Actions workflow includes Node governance, Maven compile, ruoyi-ui build, and lockfile-free install commands; actual CI result for this repair is determined after push.
 - [local] The repair is source-tracking only for pre-existing RuoYi tool files already present in generated governance artifacts.
-- [local] Final local repair verification passed before committing the follow-up fix.
+- [local] Final local repair verification passed before committing the follow-up install-side-effect fix.
 
 ## Risks
 
@@ -71,7 +75,7 @@
 - [inconclusive] Migration gating remains non-blocking for sales-order.
 - [inconclusive] Idempotency, state-machine, and contract-to-test gates remain future CRs.
 - [inconclusive] Sales-order three contracts remain uncreated.
-- [ci-planned] GitHub Actions workflow includes Node governance, Maven compile, and ruoyi-ui build; actual CI result is determined after push.
+- [ci-planned] GitHub Actions workflow includes Node governance, Maven compile, ruoyi-ui build, and lockfile-free install commands; actual CI result is determined after push.
 
 ## Next Entry Point
 

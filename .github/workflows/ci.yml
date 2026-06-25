@@ -16,7 +16,7 @@ jobs:
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: 20
-      - run: npm install
+      - run: npm install --package-lock=false
       - run: npm run check
 
   backend-compile:
@@ -39,5 +39,5 @@ jobs:
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: 20
-      - run: npm --prefix ruoyi-ui install
+      - run: npm --prefix ruoyi-ui install --package-lock=false
       - run: npm --prefix ruoyi-ui run build:prod

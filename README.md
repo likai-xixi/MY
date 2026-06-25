@@ -139,11 +139,11 @@ npm run check
 
 `.github/workflows/ci.yml` contains three real baseline jobs:
 
-- `governance`: root `npm install`, then `npm run check`.
+- `governance`: root `npm install --package-lock=false`, then `npm run check`.
 - `backend-compile`: Java 17 with Maven cache, then `mvn -pl ruoyi-admin -am -DskipTests compile`.
-- `frontend-build`: `npm --prefix ruoyi-ui install`, then `npm --prefix ruoyi-ui run build:prod`.
+- `frontend-build`: `npm --prefix ruoyi-ui install --package-lock=false`, then `npm --prefix ruoyi-ui run build:prod`.
 
-The repository root and `ruoyi-ui` currently have no `package-lock.json`, so the CI workflow uses `npm install` instead of `npm ci` and does not generate or commit lockfile changes.
+The repository root and `ruoyi-ui` currently have no `package-lock.json`, so the CI workflow uses `npm install --package-lock=false` instead of `npm ci` and does not generate or commit lockfile changes.
 
 ## Directory map
 

@@ -307,5 +307,8 @@
 - First pushed GitHub Actions run `28168635884` failed only in `governance` at `scan:frontend-routes:check`; `backend-compile` and `frontend-build` passed.
 - Root cause: `.gitignore` pattern `build/` ignored pre-existing `ruoyi-ui/src/views/tool/build/*.vue` source files while committed generated route artifacts already referenced those RuoYi tool routes.
 - Repair: add a narrow `.gitignore` exception for `ruoyi-ui/src/views/tool/build/*.vue` and track those source files so clean GitHub Actions checkout matches local route scan input.
+- Second pushed GitHub Actions run `28169688512` passed `scan:frontend-routes:check` but failed at `check:change-handoff` because root `npm install` generated an untracked `package-lock.json` in the clean runner checkout.
+- Repair: keep real npm installs and add `--package-lock=false` to root and `ruoyi-ui` install commands until committed lockfiles exist.
+- Local install verification confirmed both install commands completed without generating root or `ruoyi-ui` lockfiles.
 - Local repair verification passed: `npm run scan:frontend-routes`, `npm run scan:frontend-routes:check`, `npm run check:ci-coverage-declaration`, `npm run check:verification-provenance`, `npm test`, `npm run check`, Maven compile, ruoyi-ui production build, and `git diff --check`.
 - [ci-planned] A new GitHub Actions result is required after pushing this repair; do not treat the local checks as CI passed evidence.
