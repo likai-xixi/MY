@@ -7,7 +7,7 @@ Governance/CI rule-change only. Do not edit customer runtime code, sales-order i
 ## Steps
 
 1. Replace the single Node-only GitHub Actions job with three real jobs:
-   - `governance`: checkout, setup Node 20, root `npm install --package-lock=false`, `npm run check`.
+   - `governance`: checkout, setup Java 17 for `check:runtime`, setup Node 20, root `npm install --package-lock=false`, `npm run check`.
    - `backend-compile`: checkout, setup Java 17 with Maven cache, `mvn -pl ruoyi-admin -am -DskipTests compile`.
    - `frontend-build`: checkout, setup Node 20, `npm --prefix ruoyi-ui install --package-lock=false`, `npm --prefix ruoyi-ui run build:prod`.
 2. Update CI coverage declaration parsing so it recognizes only real workflow `run:` commands for Node governance, Maven compile, and ruoyi-ui production build.

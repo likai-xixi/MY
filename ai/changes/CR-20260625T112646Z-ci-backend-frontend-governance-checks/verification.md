@@ -25,6 +25,8 @@ Status: [local] verified for CR-2 governance/ci scope.
 - [ci] Second pushed GitHub Actions run `28169688512` passed `scan:frontend-routes:check` but failed in `governance` / `npm run check` at `check:change-handoff` because root `npm install` generated an untracked `package-lock.json` in the clean runner checkout.
 - [local] Install side-effect fix keeps real dependency installation and changes CI install commands to `npm install --package-lock=false` and `npm --prefix ruoyi-ui install --package-lock=false`, because neither root nor `ruoyi-ui` currently has a lockfile to use with `npm ci`.
 - [local] `npm install --package-lock=false` and `npm --prefix ruoyi-ui install --package-lock=false` both completed without generating `package-lock.json` or `ruoyi-ui/package-lock.json`.
+- [ci] Third pushed GitHub Actions run `28170129447` passed `scan:frontend-routes:check`, `check:change-handoff`, `backend-compile`, and `frontend-build`, but failed in `governance` / `npm run check` at `check:runtime` because `mvn` was unavailable in the Node-only governance job.
+- [local] Governance job now sets up Java 17 before Node so `npm run check` can run the existing runtime checker without skipping or relaxing it.
 - [local] `npm run context:build -- customer` - passed after the repair and refreshed `ai/context/current-context.*`.
 - [local] `npm test` - passed with 137 Node tests after the repair.
 - [local] `npm run check` - passed after the repair; `scan:frontend-routes:check`, `scan:permissions:check`, `check:change-handoff`, and 137 Node tests all passed.
@@ -41,4 +43,4 @@ Status: [local] verified for CR-2 governance/ci scope.
 - [local] Current-CR boundary and component exceptions are scoped to pre-existing RuoYi system/tool baseline findings; no customer runtime or sales-order implementation paths are changed.
 - [local] `npm run scan:frontend-routes` produced no JSON diff after the source-tracking fix, confirming the generated route scan already matched the intended RuoYi tool routes.
 - [local] The repair does not add or change routes, menus, permissions, API clients, or UI contracts; it only makes already-referenced RuoYi tool route source files present in clean checkout.
-- [ci-planned] GitHub Actions workflow includes Node governance, Maven compile, ruoyi-ui build, and lockfile-free install commands; actual CI result for this fix is determined after push.
+- [ci-planned] GitHub Actions workflow includes Node governance with Java/Maven available for `check:runtime`, Maven compile, ruoyi-ui build, and lockfile-free install commands; actual CI result for this fix is determined after push.
