@@ -34,6 +34,7 @@
     "check:current-doc-state": "node tools/current-doc-state-checker.js",
     "check:feature-test-ownership": "node tools/feature-test-ownership-checker.js",
     "check:config-safety": "node tools/config-safety-checker.js",
+    "check:prod-safety": "node tools/config-safety-checker.js --prod",
     "check:verification-provenance": "node tools/verification-provenance-checker.js",
     "check:ci-coverage-declaration": "node tools/ci-coverage-declaration-checker.js",
     "check:after-push": "node tools/after-push-handover-checker.js",
@@ -82,6 +83,7 @@
     "ai:do": "node scripts/ai-do.js",
     "check:ownership": "node tools/ownership-checker.js",
     "check:runtime": "node tools/runtime-checker.js",
+    "verify:release": "npm run check && npm run check:prod-safety && mvn -pl ruoyi-admin -am -DskipTests compile && npm --prefix ruoyi-ui run build:prod",
     "sync:ownership": "node tools/ownership-syncer.js",
     "build": "npm run build:graph",
     "sync:ownership:check": "node tools/ownership-syncer.js --check"

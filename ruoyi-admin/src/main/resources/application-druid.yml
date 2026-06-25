@@ -1,3 +1,4 @@
+# Development/default Druid profile only. Production must override secrets and console exposure in application-prod.yml.
 # 数据源配置
 spring:
     datasource:

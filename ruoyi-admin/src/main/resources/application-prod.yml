@@ -1,0 +1,35 @@
+# Production profile. Secrets and endpoints must be supplied by environment variables.
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driverClassName: com.mysql.cj.jdbc.Driver
+    druid:
+      master:
+        url: ${DB_URL}
+        username: ${DB_USERNAME}
+        password: ${DB_PASSWORD}
+      slave:
+        enabled: false
+      webStatFilter:
+        enabled: false
+      statViewServlet:
+        enabled: false
+        allow: ${DRUID_ALLOW:127.0.0.1}
+        login-username: ${DRUID_LOGIN_USERNAME}
+        login-password: ${DRUID_LOGIN_PASSWORD}
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT:6379}
+      database: ${REDIS_DATABASE:0}
+      password: ${REDIS_PASSWORD}
+
+token:
+  secret: ${TOKEN_SECRET}
+  expireTime: ${TOKEN_EXPIRE_TIME:30}
+
+springdoc:
+  api-docs:
+    enabled: false
+  swagger-ui:
+    enabled: false

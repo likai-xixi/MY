@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "files": [
+    "README.md",
+    "ai/changes/CR-20260625T162821Z-production-safety-baseline/boundary-exception.md",
+    "ai/changes/CR-20260625T162821Z-production-safety-baseline/changed-files.json",
+    "ai/changes/CR-20260625T162821Z-production-safety-baseline/component-exception.md",
+    "ai/changes/CR-20260625T162821Z-production-safety-baseline/handover.md",
+    "ai/changes/CR-20260625T162821Z-production-safety-baseline/impact.json",
+    "ai/changes/CR-20260625T162821Z-production-safety-baseline/plan.md",
+    "ai/changes/CR-20260625T162821Z-production-safety-baseline/request.md",
+    "ai/changes/CR-20260625T162821Z-production-safety-baseline/verification.md",
+    "ai/changes/CURRENT_CHANGE.json",
+    "ai/context/current-context.json",
+    "ai/context/current-context.md",
+    "docs/production-readiness.md",
+    "memory/CHANGELOG.md",
+    "memory/HANDOVER.md",
+    "memory/PROJECT_STATE.md",
+    "memory/TASKS.json",
+    "package.json",
+    "ruoyi-admin/src/main/resources/application-druid.yml",
+    "ruoyi-admin/src/main/resources/application-prod.yml",
+    "ruoyi-admin/src/main/resources/application.yml",
+    "ruoyi-framework/src/main/java/com/ruoyi/framework/config/SecurityConfig.java",
+    "tests/production-safety.test.js",
+    "tools/config-safety-checker.js"
+  ]
+}

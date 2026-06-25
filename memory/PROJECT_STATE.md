@@ -30,7 +30,9 @@ CR-3 blocking is intentionally narrow. Schema/registry format errors, malformed 
 
 Previous governance change `CR-20260625T143256Z-pre-release-breaking-change-policy` adds the pre-release breaking-change policy. Because the project is not released yet, Codex should replace old code/data contracts by default during feature iteration instead of adding compatibility layers. Development data may be reset or rebuilt when recorded in the active change; compatibility layers require explicit user approval, and production or already-released data still needs migration and rollback evidence.
 
-Current governance change `CR-20260625T155756Z-post-push-handover-consistency-fix` is R-01. It fixes only CR-3 post-push handover consistency by replacing stale no-commit/no-push wording with the recorded CR-3 commit and conservative CI wording. CI result not confirmed in this evidence pass. Do not claim GitHub Actions passed until actual run id and conclusion are recorded.
+Previous governance change `CR-20260625T155756Z-post-push-handover-consistency-fix` is R-01. It fixed only CR-3 post-push handover consistency by replacing stale no-commit/no-push wording with the recorded CR-3 commit and conservative CI wording. CI result was not confirmed in that evidence pass.
+
+Current governance change `CR-20260625T162821Z-production-safety-baseline` is R-02. It removes `/druid/**` from explicit Spring Security anonymous access, adds `application-prod.yml` with environment-variable production configuration, disables production Druid console and Swagger UI by default, adds blocking `check:prod-safety`, adds explicit `verify:release`, and documents that default/dev configuration is not production release configuration. It does not modify customer runtime code, sales-order runtime code, customer fund model code, migration/idempotency registry, or business database table structure.
 
 Current customer fund concurrency change `CR-20260625T042041Z-change`:
 
@@ -79,7 +81,7 @@ Sales order, shipment, finance settlement, automatic deduction, receipt claiming
 
 ## Active Task
 
-`TASK-0002` is the active governance/platform task in `memory/TASKS.json` for `CR-20260625T155756Z-post-push-handover-consistency-fix`. The customer concurrency CR remains historical context; this R-01 rule-change batch must not modify customer runtime code, sales-order code, production safety config, fund model code, migrations, package/tool/test code, or business database table structure.
+`TASK-0002` is the active governance/platform task in `memory/TASKS.json` for `CR-20260625T162821Z-production-safety-baseline`. The customer concurrency CR remains historical context; this R-02 rule-change batch must not modify customer runtime code, sales-order code, customer fund model code, migrations, idempotency registry, or business database table structure.
 
 ## Latest Session
 
@@ -87,9 +89,8 @@ Sales order, shipment, finance settlement, automatic deduction, receipt claiming
 
 ## Next Actions
 
-- Start R-02 production safety baseline.
-- Then handle customer fund vocabulary source cleanup.
-- Then clarify governance/runtime verification boundaries.
+- Review/commit R-02 production safety baseline if accepted.
+- Then handle R-03 customer fund vocabulary source cleanup or R-04 governance/runtime verification boundary clarification.
 - Then harden customer salesman candidate handling.
 - Keep `beforeSalesOrder` blocked unless required contracts and review explicitly unlock it later.
 - Before any future runtime claim about PUBLIC data cleanliness, rerun the invariant SQL in `sql/customer.ownership.md` to confirm only `PUB_DIRECT_SALE` and `PUB_SELF_MEDIA` exist as active PUBLIC rows.
@@ -117,6 +118,8 @@ Sales order, shipment, finance settlement, automatic deduction, receipt claiming
 - Old data migration or old fund-account compatibility.
 
 ## Last Verification
+
+For `CR-20260625T162821Z-production-safety-baseline`, [local] `npm run resume` passed before the new change record was created. [local] `npm run start:change -- --mode rule-change production-safety-baseline` created the current CR. [local] `node --test tests/production-safety.test.js` passed with 7 tests. [local] `npm run check:config-safety` passed with development/default warnings only. [local] `npm run check:prod-safety` passed. [local] `npm test` passed with 185/185 Node tests. [local] `npm run check` passed with 185/185 Node tests after provenance handover correction. [local] `git diff --check` passed. [not-run] Plain `mvn -pl ruoyi-admin -am -DskipTests compile` is not runnable on local PATH. [local] `C:\Users\11131\.cache\codex-tools\apache-maven-3.9.9\bin\mvn.cmd -pl ruoyi-admin -am -DskipTests compile` passed with reactor `BUILD SUCCESS`. [local] `npm --prefix ruoyi-ui run build:prod` passed with Vite production build success. [inconclusive] `npm run verify:release` ran `npm run check` and `npm run check:prod-safety` successfully, then failed because plain `mvn` is not available on PATH; do not claim release verification passed until the script itself passes. No customer runtime code, sales-order runtime code, customer fund model code, migration/idempotency registry, or business database table structure was modified.
 
 For `CR-20260625T155756Z-post-push-handover-consistency-fix`, [local] `npm run resume` passed before the new change record was created. [local] `npm run start:change -- --mode rule-change post-push-handover-consistency-fix` created the current CR. [local] `git show -s --format="%H%n%s%n%D" a49b678644dddc16ce45f094bff5459fd9a716e2` confirmed commit `a49b678644dddc16ce45f094bff5459fd9a716e2` with message `governance: add high-risk semantic framework`. [local] `git branch --contains a49b678644dddc16ce45f094bff5459fd9a716e2` confirmed the commit is contained by local `master`. [inconclusive] `npm run check:after-push` exited non-zero with `check:after-push: inconclusive` because the working tree is not clean during this R-01 development pass. [local] `npm run context:build -- customer` passed. [local] `npm run check` passed with 178/178 Node tests after fixing handover Verification wording and regenerating current context; existing warnings remained warning-only. [local] `git diff --check` passed. [inconclusive] CI result not confirmed in this evidence pass. Do not claim GitHub Actions passed until actual run id and conclusion are recorded. This R-01 change does not modify customer runtime code, sales-order runtime code, production safety config, fund model code, migrations, package/tool/test code, or business database table structure.
 

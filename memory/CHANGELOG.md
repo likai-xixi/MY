@@ -345,3 +345,15 @@
 - Next action is R-02 production safety baseline, followed by customer fund vocabulary source cleanup, governance/runtime verification boundary clarification, and customer salesman candidate hardening.
 - Local verification passed after context regeneration: `npm run check` with 178/178 Node tests and `git diff --check`. `npm run check:after-push` remained inconclusive because the R-01 worktree was not clean.
 - No customer runtime code, sales-order runtime code, production safety config, fund model code, migrations, package/tool/test code, or business database table structure was changed.
+
+## 2026-06-25 - governance/production safety
+
+- Change: `ai/changes/CR-20260625T162821Z-production-safety-baseline`.
+- R-02 removed `/druid/**` from explicit Spring Security anonymous `permitAll`.
+- Added `ruoyi-admin/src/main/resources/application-prod.yml` with production DB, Redis, Druid login values, and token secret supplied through environment placeholders.
+- Production Druid console and Swagger UI are disabled by default.
+- Added `check:prod-safety` as the blocking production safety baseline and `verify:release` as the explicit release verification entry.
+- Added `docs/production-readiness.md` and README/memory/context notes clarifying that default/dev config is not production release config and `npm run check` is not production safety approval.
+- [local] Verification passed: `node --test tests/production-safety.test.js` with 7 tests, `npm run check:config-safety` with development/default warnings only, `npm run check:prod-safety`, `npm test` with 185 tests, `npm run check` with 185 tests, `git diff --check`, cached Maven compile with `BUILD SUCCESS`, and `npm --prefix ruoyi-ui run build:prod`.
+- [inconclusive] `npm run verify:release` ran `npm run check` and `npm run check:prod-safety` successfully, then failed because plain `mvn` is not available on local PATH. Do not claim release verification passed until the script itself passes.
+- No customer runtime code, sales-order runtime code, customer fund model code, migration/idempotency registry, or business database table structure was changed.

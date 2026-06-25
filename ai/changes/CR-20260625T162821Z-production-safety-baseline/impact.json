@@ -1,0 +1,92 @@
+{
+  "schemaVersion": 1,
+  "mode": "rule-change",
+  "feature": {
+    "id": "platform",
+    "name": "Production safety baseline"
+  },
+  "slug": "production-safety-baseline",
+  "affected": {
+    "docs": [
+      "README.md",
+      "docs/production-readiness.md",
+      "memory/HANDOVER.md",
+      "memory/PROJECT_STATE.md",
+      "memory/CHANGELOG.md",
+      "ai/context/current-context.md",
+      "ai/context/current-context.json"
+    ],
+    "tests": [
+      "tests/production-safety.test.js"
+    ],
+    "config": [
+      "ruoyi-admin/src/main/resources/application.yml",
+      "ruoyi-admin/src/main/resources/application-druid.yml",
+      "ruoyi-admin/src/main/resources/application-prod.yml",
+      "ruoyi-framework/src/main/java/com/ruoyi/framework/config/SecurityConfig.java",
+      "tools/config-safety-checker.js",
+      "package.json"
+    ],
+    "memory": [
+      "memory/TASKS.json"
+    ]
+  },
+  "allowedEditRoots": [
+    "ruoyi-framework/src/main/java/com/ruoyi/framework/config/SecurityConfig.java",
+    "ruoyi-admin/src/main/resources/application.yml",
+    "ruoyi-admin/src/main/resources/application-druid.yml",
+    "ruoyi-admin/src/main/resources/application-prod.yml",
+    "tools/config-safety-checker.js",
+    "tests/production-safety.test.js",
+    "package.json",
+    "docs/production-readiness.md",
+    "README.md",
+    "memory/HANDOVER.md",
+    "memory/PROJECT_STATE.md",
+    "memory/CHANGELOG.md",
+    "memory/TASKS.json",
+    "ai/context/current-context.md",
+    "ai/context/current-context.json",
+    "ai/changes/CR-20260625T162821Z-production-safety-baseline",
+    "ai/changes/CURRENT_CHANGE.json"
+  ],
+  "forbiddenEditRoots": [
+    "ruoyi-business/src/main/java/com/ruoyi/business/customer",
+    "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer",
+    "ruoyi-business/src/main/resources/mapper/customer",
+    "ruoyi-ui/src/views/customer",
+    "ruoyi-ui/src/api/customer.js",
+    "sql/customer.ownership.md",
+    "MY客户管理模块上下文说明.md",
+    "ruoyi-business/src/main/java/com/ruoyi/business/sales-order",
+    "ruoyi-business/src/main/java/com/ruoyi/business/salesorder",
+    "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/sales-order",
+    "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/salesorder",
+    "ruoyi-ui/src/views/sales-order",
+    "ruoyi-ui/src/views/salesorder",
+    "ruoyi-ui/src/api/sales-order.js",
+    "ruoyi-ui/src/api/salesOrder.js",
+    "sql/sales-order.ownership.md",
+    "sql/sales_order_init.sql",
+    "fund model Java/Vue/SQL",
+    "migration registry",
+    "idempotency registry",
+    "business database table structure"
+  ],
+  "requiredCommands": [
+    "npm run resume",
+    "node --test tests/production-safety.test.js",
+    "npm run check:config-safety",
+    "npm run check:prod-safety",
+    "npm test",
+    "npm run check",
+    "git diff --check",
+    "mvn -pl ruoyi-admin -am -DskipTests compile",
+    "npm --prefix ruoyi-ui run build:prod",
+    "npm run verify:release"
+  ],
+  "blockers": [
+    "beforeSalesOrder remains blocked; this change must not create sales-order runtime files.",
+    "Customer runtime, fund model, migration registry, and idempotency registry are outside this R-02 change."
+  ]
+}

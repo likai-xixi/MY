@@ -12,6 +12,8 @@ Codex Auto Dev OS is kept in the repository as the workflow and evidence layer: 
 - Implemented business module: `customer` / 客户管理.
 - Current closeout focus: keep feature briefs, context, registry ownership, README, memory handoff, verification provenance, and CI-coverage declarations in sync.
 - CI baseline: [ci-planned] GitHub Actions workflow includes Node governance, Maven compile, and ruoyi-ui build; actual CI result is determined after push.
+- Production safety baseline: default/dev configuration is not production-ready; production must use `ruoyi-admin/src/main/resources/application-prod.yml`.
+- Production gate: use `npm run check:prod-safety` to block unsafe production defaults, and use `npm run verify:release` as the release verification entry.
 
 ## What is included
 
@@ -132,9 +134,11 @@ npm run scan:all
 npm run finalize:change
 npm run close:change
 npm run check
+npm run check:prod-safety
+npm run verify:release
 ```
 
-`npm run check` is the repository governance gate. It does not replace runtime business tests. Once a real backend/frontend stack exists, add stack-specific build, unit, integration, browser, migration, and permission checks.
+`npm run check` is the repository governance gate. It does not prove production safety and does not replace runtime business tests. `npm run check:prod-safety` is the production safety baseline gate, and `npm run verify:release` explicitly runs governance, production safety, backend compile, and frontend production build before a release candidate is considered.
 
 ## GitHub Actions CI Baseline
 

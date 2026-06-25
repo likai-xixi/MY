@@ -2,15 +2,13 @@
 
 ## Summary
 
-Current change record: `ai/changes/CR-20260625T162821Z-production-safety-baseline`.
-
-R-02 production safety baseline is in progress. This change removes Druid monitor anonymous access, adds a production profile, adds `check:prod-safety`, adds `verify:release`, and documents that default/dev configuration is not production release configuration.
+R-02 production safety baseline for `ai/changes/CR-20260625T162821Z-production-safety-baseline`.
 
 ## Impact
 
-No customer runtime code, sales-order runtime code, customer fund model code, migration/idempotency registry, or business database table structure is changed. `beforeSalesOrder` remains blocked.
+This rule-change removes anonymous Druid monitor exposure, adds a production profile, adds a blocking production safety checker, and documents the release verification boundary.
 
-No API, UI, permission, database object, or component ownership contract is changed. Current edits are production safety configuration, governance checker/test/script wiring, docs, memory, context, and the current change record.
+No customer runtime code, sales-order code, customer fund model code, migration/idempotency registry, or business database table structure is changed. No API, UI, permission, database object, or component ownership contract is changed.
 
 ## Changed Files
 
@@ -36,7 +34,7 @@ No API, UI, permission, database object, or component ownership contract is chan
 
 - [local] `npm run resume` - passed before this change record was created.
 - [local] `node --test tests/production-safety.test.js` - passed with 7 tests.
-- [local] `npm run check:config-safety` - passed with warning-only development/default findings.
+- [local] `npm run check:config-safety` - passed with development/default warnings only.
 - [local] `npm run check:prod-safety` - passed.
 - [local] `npm test` - passed with 185/185 Node tests.
 - [local] `npm run check` - passed with 185/185 Node tests.
@@ -48,17 +46,16 @@ No API, UI, permission, database object, or component ownership contract is chan
 
 ## Verification
 
-- [local] `/druid/**` is removed from the explicit Spring Security `permitAll` matcher list.
-- [local] Search found no other `/druid/**` `permitAll` or anonymous source; remaining Druid references are servlet URL-pattern configuration.
-- [local] `application-prod.yml` exists and uses environment placeholders for DB, Redis, Druid login values, and token secret.
+- [local] `SecurityConfig` no longer has `/druid/**` in the explicit permit-all matcher.
+- [local] Repository search found no other `/druid/**` `permitAll` or anonymous source; remaining `/druid/*` references are Druid servlet URL-pattern configuration, not Spring Security anonymous access.
+- [local] `application-prod.yml` exists and uses environment variables/placeholders for production DB, Redis, Druid login values, and token secret.
 - [local] Production Druid console and Swagger UI are disabled by default.
-- [local] `npm run check:prod-safety` can block production default passwords, local DB URLs, missing required environment placeholders, Druid permit-all exposure, enabled Druid console, and enabled Swagger UI.
-- [local] `npm run check` is still a governance gate, not a production safety approval; `npm run verify:release` is the release verification entry.
+- [local] `check:prod-safety` blocks production default passwords, local DB URLs, missing environment placeholders, `/druid/**` permit-all, enabled Druid console, and enabled Swagger UI.
 
 ## Risks
 
-- [inconclusive] Final release verification is incomplete because `npm run verify:release` failed at plain `mvn`.
-- [local] Runtime acceptance still needs Java/Spring/MySQL/browser/manual checks before production launch.
+- [inconclusive] Final release verification is not complete because `npm run verify:release` failed at plain `mvn`.
+- [local] `npm run check:config-safety` intentionally keeps development/default risky values as warnings, so it must not be used as production approval.
 
 ## Next Actions
 

@@ -8,8 +8,8 @@
       "status": "in_progress",
       "owner": "Codex",
       "priority": "high",
-      "statusReason": "Governance change CR-20260625T155756Z-post-push-handover-consistency-fix is R-01: it corrects CR-3 post-push handover consistency by recording commit a49b678644dddc16ce45f094bff5459fd9a716e2 / governance: add high-risk semantic framework and keeping CI result unconfirmed without a run id/conclusion. It is governance-memory only and does not modify customer runtime code, create sales-order runtime code, change production safety config, change fund model code, alter migrations, edit package/tool/test code, or change business database structure.",
-      "nextStep": "Start R-02 production safety baseline, then customer fund vocabulary source cleanup, governance/runtime verification boundary clarification, and customer salesman candidate hardening. Keep beforeSalesOrder blocked unless required contracts and review explicitly unlock it later.",
+      "statusReason": "Governance change CR-20260625T162821Z-production-safety-baseline is R-02: it removes /druid/** from explicit permitAll, adds application-prod.yml with environment-variable production configuration, disables production Druid console and Swagger UI by default, adds check:prod-safety, adds verify:release, and documents that default/dev config is not production-ready. It does not modify customer runtime code, create sales-order runtime code, change customer fund model code, alter migration/idempotency registry, or change business database structure.",
+      "nextStep": "Review/commit R-02 production safety baseline if accepted, then choose R-03 customer fund vocabulary source cleanup or R-04 governance/runtime verification boundary clarification. Keep beforeSalesOrder blocked unless required contracts and review explicitly unlock it later.",
       "blockedBy": [],
       "verification": [
         "npm run profile:setup",
@@ -113,12 +113,26 @@
         "npm run context:build -- customer passed and restored generated current-context idempotence",
         "npm run check passed with 178 Node tests for CR-20260625T155756Z-post-push-handover-consistency-fix",
         "git diff --check passed for CR-20260625T155756Z-post-push-handover-consistency-fix",
-        "CI result not confirmed in this evidence pass; actual GitHub Actions run id, URL, and conclusion must be checked before claiming CI passed"
+        "CI result not confirmed in this evidence pass; actual GitHub Actions run id, URL, and conclusion must be checked before claiming CI passed",
+        "CR-20260625T162821Z-production-safety-baseline created R-02 production safety baseline",
+        "SecurityConfig no longer includes /druid/** in the explicit permitAll matcher",
+        "application-prod.yml uses environment placeholders for DB, Redis, Druid login values, and TOKEN_SECRET",
+        "production Druid console and Swagger UI are disabled by default",
+        "node --test tests/production-safety.test.js passed with 7 tests for CR-20260625T162821Z-production-safety-baseline",
+        "npm run check:config-safety passed with development/default warnings only for CR-20260625T162821Z-production-safety-baseline",
+        "npm run check:prod-safety passed for CR-20260625T162821Z-production-safety-baseline",
+        "npm test passed with 185 Node tests for CR-20260625T162821Z-production-safety-baseline",
+        "npm run check passed with 185 Node tests for CR-20260625T162821Z-production-safety-baseline",
+        "git diff --check passed for CR-20260625T162821Z-production-safety-baseline",
+        "[not-run] plain mvn -pl ruoyi-admin -am -DskipTests compile is not runnable on local PATH for CR-20260625T162821Z-production-safety-baseline",
+        "cached Maven compile passed for CR-20260625T162821Z-production-safety-baseline using C:\\Users\\11131\\.cache\\codex-tools\\apache-maven-3.9.9\\bin\\mvn.cmd",
+        "npm --prefix ruoyi-ui run build:prod passed for CR-20260625T162821Z-production-safety-baseline",
+        "[inconclusive] npm run verify:release ran npm run check and check:prod-safety successfully, then failed because plain mvn is not available on PATH"
       ],
       "latestSession": "memory/sessions/2026-06-25-pre-release-breaking-change-policy.md",
       "handoverRequired": true,
       "updatedAt": "2026-06-25",
-      "latestChange": "CR-20260625T155756Z-post-push-handover-consistency-fix"
+      "latestChange": "CR-20260625T162821Z-production-safety-baseline"
     },
     {
       "id": "TASK-CUSTOMER",
