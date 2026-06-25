@@ -2,13 +2,11 @@
 
 ## Summary
 
-Current change record: `ai/changes/CR-20260625T143256Z-pre-release-breaking-change-policy`.
-
-This governance/rule-change makes the unreleased project default to breaking-change development: do not add old-code or old-data compatibility by default, allow recorded development data reset/rebuild, and require explicit user approval before adding compatibility layers.
+未发布阶段默认破坏式迭代，不做旧代码旧数据兼容
 
 ## Impact
 
-The active project policy is now `ai/rules/pre-release-policy.json`, and `npm run check` includes `check:pre-release-policy`. Future feature iterations should replace old API/UI/enum/permission/SQL/development-data contracts by default while the project remains unreleased. Customer runtime code, sales-order runtime code, delivery/finance/production runtime code, and business database table structure were not modified.
+This governance/rule-change adds a machine-readable pre-release policy and wires it into `npm run check`. Future Codex feature iterations should replace old API/UI/enum/permission/SQL/development-data contracts by default while the project is unreleased, and add compatibility only after explicit user approval.
 
 ## Changed Files
 
@@ -54,6 +52,5 @@ The active project policy is now `ai/rules/pre-release-policy.json`, and `npm ru
 
 ## Next Actions
 
-- Review `CR-20260625T143256Z-pre-release-breaking-change-policy`.
-- Use the policy for future feature iterations: replace old contracts by default during pre-release work, and add compatibility only after explicit user approval.
+- Review this governance CR, then use the policy for future feature iterations: replace old contracts by default during pre-release work, and add compatibility only after explicit user approval.
 - Commit or push only after explicit user confirmation.

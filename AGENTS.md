@@ -134,6 +134,20 @@ Multi-agent mode is explicit: only create parallel agents or threads when the us
 - If the real project base needs a new scanner rule, create a rule proposal with `npm run rule:propose -- <title>` and use a change record whose impact mode is `rule-change`.
 - Do not loosen a gate only to make the current task pass. Move code into the expected boundary or expand the change record with evidence.
 
+## Pre-Release Breaking Change Policy
+
+The project is still unreleased. Until a separate release-readiness change declares otherwise, Codex must use the machine-readable policy in `ai/rules/pre-release-policy.json`.
+
+- Default mode is breaking change, not backward compatibility.
+- Do not add old-code or old-data compatibility by default.
+- Replace old API, UI, enum, permission, SQL, and data contracts with the new approved contract when a feature iteration changes them.
+- Development data may be reset or rebuilt when the active change record, handover, and verification evidence say so.
+- Remove stale code inside the approved impact scope instead of leaving unused legacy paths.
+- Compatibility layers require explicit user approval, a documented reason, and a follow-up removal or sunset note.
+- Cross-module breaking changes must expand the active change record and allowed edit roots; do not hide cross-module impact behind local compatibility adapters.
+- Production or released data changes still require executable migration and rollback evidence. Pre-release reset rules do not apply to released data.
+- Feature deletion still requires the deletion dry-run and explicit confirmation workflow.
+
 ## Hard Rules
 
 - Do not edit business code before running `npm run resume`.

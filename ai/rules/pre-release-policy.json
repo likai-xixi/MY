@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "name": "pre-release-policy",
+  "releaseStage": "pre-release",
+  "defaultCompatibilityMode": "breaking-change",
+  "rules": {
+    "doNotAddLegacyCompatibilityByDefault": true,
+    "requireExplicitUserApprovalForCompatibility": true,
+    "preferReplacingOldContracts": true,
+    "removeStaleCodeWithinApprovedScope": true,
+    "allowDevelopmentDataReset": true,
+    "requireProductionMigrationPlanForReleasedData": true,
+    "requireCrossModuleImpactExpansion": true
+  },
+  "allowedDuringPreRelease": [
+    "Replace old API, UI, enum, permission, SQL, and data contracts instead of preserving compatibility.",
+    "Rebuild or reset development data after documenting the requirement in the change record.",
+    "Remove stale implementation paths when they are inside the approved impact scope."
+  ],
+  "stillRequiresApproval": [
+    "Feature deletion still requires deletion dry-run and explicit confirmation.",
+    "Compatibility layers require explicit user approval and a documented sunset reason.",
+    "Cross-module edits require expanded allowed edit roots in the active change record.",
+    "Production or released data changes require an executable migration and rollback plan."
+  ]
+}

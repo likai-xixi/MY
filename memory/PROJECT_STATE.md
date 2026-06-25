@@ -28,6 +28,8 @@ Current governance change `CR-20260625T130657Z-high-risk-semantic-governance-fra
 
 CR-3 blocking is intentionally narrow. Schema/registry format errors, malformed machine evidence manifests, missing covered evidence files, incomplete required entries, executable migration violations, generic edit permissions on required high-risk APIs, and invalid state-machine transitions fail. Missing evidence manifests do not fail. Stale evidence hashes and current customer migration baseline DDL warn unless explicitly declared blocking.
 
+Current governance change `CR-20260625T143256Z-pre-release-breaking-change-policy` adds the pre-release breaking-change policy. Because the project is not released yet, Codex should replace old code/data contracts by default during feature iteration instead of adding compatibility layers. Development data may be reset or rebuilt when recorded in the active change; compatibility layers require explicit user approval, and production or already-released data still needs migration and rollback evidence.
+
 Current customer fund concurrency change `CR-20260625T042041Z-change`:
 
 - extracts customer fund mutation from `CustomerServiceImpl` into `CustomerFundServiceImpl` behind `ICustomerFundService`;
@@ -75,15 +77,16 @@ Sales order, shipment, finance settlement, automatic deduction, receipt claiming
 
 ## Active Task
 
-`TASK-0002` is the active governance/platform task in `memory/TASKS.json` for `CR-20260625T130657Z-high-risk-semantic-governance-framework`. The customer concurrency CR remains historical context; this rule-change batch must not modify customer runtime code.
+`TASK-0002` is the active governance/platform task in `memory/TASKS.json` for `CR-20260625T143256Z-pre-release-breaking-change-policy`. The customer concurrency CR remains historical context; this rule-change batch must not modify customer runtime code.
 
 ## Latest Session
 
-`memory/sessions/2026-06-25-high-risk-semantic-governance-framework.md`
+`memory/sessions/2026-06-25-pre-release-breaking-change-policy.md`
 
 ## Next Actions
 
-- Review CR-3, then commit and push only after explicit user confirmation.
+- Review `CR-20260625T143256Z-pre-release-breaking-change-policy`, then commit and push only after explicit user confirmation.
+- Use the pre-release policy for future feature iterations: replace old contracts by default and add compatibility only after explicit user approval.
 - Keep CR-4 as the sales-order contract package: customer snapshot contract, state-machine contract, fund-boundary contract, idempotency contract, contract-to-test matrix, and migration plan.
 - Keep sales order, delivery, finance, source/channel/account, maintenance-fee calculation, commission calculation, automatic deduction, receipt claiming, reconciliation, and order-level deposit behavior in separate future feature changes.
 - Before any future runtime claim about PUBLIC data cleanliness, rerun the invariant SQL in `sql/customer.ownership.md` to confirm only `PUB_DIRECT_SALE` and `PUB_SELF_MEDIA` exist as active PUBLIC rows.
@@ -111,6 +114,8 @@ Sales order, shipment, finance settlement, automatic deduction, receipt claiming
 - Old data migration or old fund-account compatibility.
 
 ## Last Verification
+
+For `CR-20260625T143256Z-pre-release-breaking-change-policy`, [local] `npm run resume` passed. [local] `npm run rule:propose -- "pre-release breaking change policy" --reason "..."` created `ai/rule-proposals/2026-06-25-pre-release-breaking-change-policy.json`. [local] `npm run start:change -- --mode rule-change "pre-release breaking change policy"` created the current CR. [local] `npm run context:build -- customer` regenerated current context. [local] `node --test tests/pre-release-policy.test.js` passed with 4 tests. [local] `npm run check:pre-release-policy` passed. [local] `node --test tests/boundary-lint.test.js` passed with 9 tests after current-CR baseline exception files. [local] `node --test tests/component-checker.test.js` passed with 8 tests after current-CR baseline exception files. [local] `npm test` passed with 178 tests. [local] `npm run check` passed with 178 tests after provenance markers were recorded. [local] `git diff --check` passed. [local] forbidden-path audit returned `FORBIDDEN_PATH_AUDIT_OK`. This rule-change did not modify customer runtime code, sales-order runtime code, customer business rules, or business database table structure.
 
 For `CR-20260625T130657Z-high-risk-semantic-governance-framework`, [local] `npm run resume` passed during startup and final verification. [local] `npm run rule:propose -- "high-risk semantic governance framework" --reason "..."`
 created `ai/rule-proposals/2026-06-25-high-risk-semantic-governance-framework.json`. [local] `npm run start:change -- --mode rule-change "high-risk semantic governance framework"` created the current CR. [local] `node --test tests/high-risk-governance.test.js` passed with 36 tests. [local] `npm test` passed with 174 tests. [local] `npm run check:high-risk-governance` passed with one expected non-blocking warning for the existing customer baseline DDL document in `sql/customer.ownership.md`. [local] `npm run check` passed with the new high-risk gate wired into the existing gate sequence and `npm test` with 174 tests. [not-run] `mvn -pl ruoyi-admin -am -DskipTests compile` because plain `mvn` is not runnable on local PATH; [local] `C:\Users\11131\.cache\codex-tools\apache-maven-3.9.9\bin\mvn.cmd -pl ruoyi-admin -am -DskipTests compile` passed with reactor `BUILD SUCCESS`. [local] `npm --prefix ruoyi-ui run build:prod` passed with Vite production build success. [local] `git diff --check` passed. [local] forbidden-path audit returned `FORBIDDEN_PATH_AUDIT_OK`.

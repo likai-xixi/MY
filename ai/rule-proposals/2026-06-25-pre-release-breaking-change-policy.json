@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "id": "2026-06-25-pre-release-breaking-change-policy",
+  "title": "pre-release breaking change policy",
+  "reason": "Project is not released yet; user wants Codex to replace old code/data contracts instead of adding compatibility layers unless explicitly requested.",
+  "status": "proposed",
+  "requiredChangeMode": "rule-change",
+  "checklist": [
+    "Explain old rule and new rule.",
+    "List affected scanners and registries.",
+    "List sample files proving the project base needs this rule.",
+    "Run npm run check after the rule proposal is accepted."
+  ]
+}

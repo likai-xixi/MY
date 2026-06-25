@@ -59,3 +59,17 @@ Chinese-only feature names are resolved through `ai/registry/feature-id-dictiona
 ## Chat Command Entry
 
 Use `npm run ai:do -- "新增功能：客户管理"`, `npm run ai:do -- "功能迭代：客户管理"`, `npm run ai:do -- "删除功能预分析：客户管理"`, or `npm run ai:do -- "确认删除：客户管理"` as the single Codex App chat-driven entry. Runtime implementation must stay inside `impact.allowedEditRoots` and finish with `npm run check`.
+
+## Pre-release breaking-change mode
+
+This project has not been released yet. The default is breaking: Codex should replace old contracts instead of adding compatibility layers for old code, old APIs, old enum values, old UI state, old permissions, or old development data.
+
+When a feature iteration changes a contract, Codex should:
+
+1. Run impact analysis and expand the change record when downstream modules are affected.
+2. Update every affected backend, frontend, API, SQL, permission, registry, graph, memory, and test artifact to the new contract.
+3. Rebuild or reset development data when needed, and record that requirement in the change record and handover.
+4. Avoid old-data migrations for local development data unless the user explicitly asks for one.
+5. Add compatibility only after explicit user approval, and document the sunset or removal path.
+
+This does not bypass deletion safety. Removing a full feature still starts with `删除功能预分析：<功能名>` and requires `确认删除：<功能名>` before applying deletion.

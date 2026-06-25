@@ -8,8 +8,8 @@
       "status": "in_progress",
       "owner": "Codex",
       "priority": "high",
-      "statusReason": "Governance change CR-20260625T130657Z-high-risk-semantic-governance-framework establishes CR-3 high-risk semantic registries, schemas, checker, tests, and npm run check wiring. It is framework-only and does not modify customer runtime code, create sales-order runtime code, or change business database structure.",
-      "nextStep": "Review CR-3, then commit and push only after explicit user confirmation. Keep CR-4 as the sales-order contract package.",
+      "statusReason": "Governance change CR-20260625T143256Z-pre-release-breaking-change-policy establishes the pre-release breaking-change policy: replace old code/data contracts by default while unreleased, allow recorded development data reset/rebuild, and require explicit user approval before adding compatibility layers. It is governance-only and does not modify customer runtime code, create sales-order runtime code, or change business database structure.",
+      "nextStep": "Review CR-20260625T143256Z-pre-release-breaking-change-policy, then commit and push only after explicit user confirmation. Use the policy for future feature iterations and keep CR-4 as the sales-order contract package.",
       "blockedBy": [],
       "verification": [
         "npm run profile:setup",
@@ -97,12 +97,20 @@
         "cached Maven compile passed for CR-20260625T130657Z-high-risk-semantic-governance-framework using C:\\Users\\11131\\.cache\\codex-tools\\apache-maven-3.9.9\\bin\\mvn.cmd",
         "npm --prefix ruoyi-ui run build:prod passed for CR-20260625T130657Z-high-risk-semantic-governance-framework",
         "git diff --check passed for CR-20260625T130657Z-high-risk-semantic-governance-framework",
-        "forbidden-path audit returned FORBIDDEN_PATH_AUDIT_OK for CR-20260625T130657Z-high-risk-semantic-governance-framework"
+        "forbidden-path audit returned FORBIDDEN_PATH_AUDIT_OK for CR-20260625T130657Z-high-risk-semantic-governance-framework",
+        "CR-20260625T143256Z-pre-release-breaking-change-policy added ai/rules/pre-release-policy.json with defaultCompatibilityMode breaking-change",
+        "CR-20260625T143256Z-pre-release-breaking-change-policy added tools/pre-release-policy-checker.js and npm script check:pre-release-policy",
+        "node --test tests/pre-release-policy.test.js passed with 4 tests for CR-20260625T143256Z-pre-release-breaking-change-policy",
+        "npm run check:pre-release-policy passed for CR-20260625T143256Z-pre-release-breaking-change-policy",
+        "npm test passed with 178 tests for CR-20260625T143256Z-pre-release-breaking-change-policy",
+        "npm run check passed with 178 tests for CR-20260625T143256Z-pre-release-breaking-change-policy after provenance markers were recorded",
+        "git diff --check passed for CR-20260625T143256Z-pre-release-breaking-change-policy",
+        "forbidden-path audit returned FORBIDDEN_PATH_AUDIT_OK for CR-20260625T143256Z-pre-release-breaking-change-policy"
       ],
-      "latestSession": "memory/sessions/2026-06-25-high-risk-semantic-governance-framework.md",
+      "latestSession": "memory/sessions/2026-06-25-pre-release-breaking-change-policy.md",
       "handoverRequired": true,
       "updatedAt": "2026-06-25",
-      "latestChange": "CR-20260625T130657Z-high-risk-semantic-governance-framework"
+      "latestChange": "CR-20260625T143256Z-pre-release-breaking-change-policy"
     },
     {
       "id": "TASK-CUSTOMER",

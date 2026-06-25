@@ -326,3 +326,12 @@
 - No customer runtime code, sales-order runtime code, customer business rules, or business database table structure was changed.
 - [local] Verification passed: `node --test tests/high-risk-governance.test.js` with 36 tests, `npm test` with 174 tests, `npm run check:high-risk-governance` with the expected non-blocking customer baseline migration warning, full `npm run check`, cached Maven backend compile, ruoyi-ui production build, `git diff --check`, and forbidden-path audit.
 - [not-run] Plain `mvn -pl ruoyi-admin -am -DskipTests compile` is not runnable on local PATH; [local] the project configured Maven command in `ai/rules/runtime-policy.json` passed with `BUILD SUCCESS`.
+
+## 2026-06-25 - governance/pre-release policy
+
+- Change: `ai/changes/CR-20260625T143256Z-pre-release-breaking-change-policy`.
+- Added `ai/rules/pre-release-policy.json`, `tools/pre-release-policy-checker.js`, `tests/pre-release-policy.test.js`, and `check:pre-release-policy` in `package.json`.
+- Default compatibility mode is now breaking-change while the project is unreleased: replace old code/data contracts by default, allow recorded development data reset/rebuild, and require explicit user approval before adding compatibility layers.
+- Updated `AGENTS.md`, `docs/chat-driven-codex-workflow.md`, current context, handover, task memory, and session memory for the policy.
+- No customer runtime code, sales-order runtime code, delivery/finance/production runtime code, customer business rules, or business database table structure was changed.
+- [local] Verification passed: `node --test tests/pre-release-policy.test.js` with 4 tests, `npm run check:pre-release-policy`, `node --test tests/boundary-lint.test.js` with 9 tests, `node --test tests/component-checker.test.js` with 8 tests, `npm test` with 178 tests, `npm run check` with 178 tests after provenance markers were recorded, `git diff --check`, and forbidden-path audit.

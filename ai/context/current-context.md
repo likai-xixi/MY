@@ -1,23 +1,22 @@
 # Current Context
 
 Current feature: `customer`
-Current change: `CR-20260625T130657Z-high-risk-semantic-governance-framework`
+Current change: `CR-20260625T143256Z-pre-release-breaking-change-policy`
 Repository: RuoYi + Vue3 + Codex Auto Dev OS
 Profile: adapter `ruoyi`, locked `true`
 
 ## Allowed Edit Roots
 
+- `AGENTS.md`
+- `docs`
+- `package.json`
 - `tools`
 - `tests`
-- `ai/registry`
 - `ai/rules`
 - `ai/rule-proposals`
 - `ai/changes`
 - `ai/context`
 - `memory`
-- `README.md`
-- `docs`
-- `package.json`
 
 ## Forbidden Edit Roots
 
@@ -54,9 +53,9 @@ Profile: adapter `ruoyi`, locked `true`
 - `ai/roadmap/phase-gates.json` - beforeSalesOrder gate state.
 - `ai/roadmap/refactor-debt.json` - Known debt affecting sales-order handoff.
 - `ai/roadmap/enhancement-backlog.json` - Governance backlog and required/deferred evidence.
-- `ai/changes/CR-20260625T130657Z-high-risk-semantic-governance-framework/impact.json` - Current change allowed and forbidden edit roots.
-- `ai/changes/CR-20260625T130657Z-high-risk-semantic-governance-framework/plan.md` - Current change execution plan.
-- `ai/changes/CR-20260625T130657Z-high-risk-semantic-governance-framework/verification.md` - Current change verification evidence.
+- `ai/changes/CR-20260625T143256Z-pre-release-breaking-change-policy/impact.json` - Current change allowed and forbidden edit roots.
+- `ai/changes/CR-20260625T143256Z-pre-release-breaking-change-policy/plan.md` - Current change execution plan.
+- `ai/changes/CR-20260625T143256Z-pre-release-breaking-change-policy/verification.md` - Current change verification evidence.
 
 ## Must Not Break
 
@@ -118,11 +117,10 @@ Deferred:
 ## Planned Verification Commands
 
 - `npm run resume`
+- `node --test tests/pre-release-policy.test.js`
+- `npm run check:pre-release-policy`
 - `npm test`
-- `npm run check:high-risk-governance`
 - `npm run check`
-- `mvn -pl ruoyi-admin -am -DskipTests compile`
-- `npm --prefix ruoyi-ui run build:prod`
 - `git diff --check`
 - `forbidden-path audit`
 

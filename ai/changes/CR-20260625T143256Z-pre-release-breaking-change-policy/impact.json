@@ -1,0 +1,91 @@
+{
+  "schemaVersion": 1,
+  "mode": "rule-change",
+  "changeType": "governance/pre-release-breaking-change-policy",
+  "feature": {
+    "id": "platform",
+    "name": "Platform Governance",
+    "status": "active"
+  },
+  "summary": "Make the unreleased project default to breaking-change development: no old-code or old-data compatibility by default, documented development data reset allowed, compatibility only with explicit user approval.",
+  "affected": {
+    "rules": [
+      "ai/rules/pre-release-policy.json"
+    ],
+    "governanceScripts": [
+      "tools/pre-release-policy-checker.js"
+    ],
+    "tests": [
+      "tests/pre-release-policy.test.js"
+    ],
+    "docsAndWorkflow": [
+      "AGENTS.md",
+      "docs/chat-driven-codex-workflow.md",
+      "package.json"
+    ],
+    "changeRecord": [
+      "ai/changes/CR-20260625T143256Z-pre-release-breaking-change-policy",
+      "ai/rule-proposals/2026-06-25-pre-release-breaking-change-policy.json"
+    ],
+    "memory": [
+      "memory/HANDOVER.md",
+      "memory/PROJECT_STATE.md",
+      "memory/TASKS.json",
+      "memory/CHANGELOG.md",
+      "memory/sessions/2026-06-25-pre-release-breaking-change-policy.md"
+    ],
+    "context": [
+      "ai/context/current-context.md",
+      "ai/context/current-context.json"
+    ]
+  },
+  "allowedEditRoots": [
+    "AGENTS.md",
+    "docs",
+    "package.json",
+    "tools",
+    "tests",
+    "ai/rules",
+    "ai/rule-proposals",
+    "ai/changes",
+    "ai/context",
+    "memory"
+  ],
+  "forbiddenEditRoots": [
+    "ruoyi-business/src/main/java/com/ruoyi/business/customer",
+    "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer",
+    "ruoyi-business/src/main/resources/mapper/customer",
+    "ruoyi-ui/src/views/customer",
+    "ruoyi-ui/src/api/customer.js",
+    "sql/customer.ownership.md",
+    "ruoyi-business/src/main/java/com/ruoyi/business/sales-order",
+    "ruoyi-business/src/main/java/com/ruoyi/business/salesorder",
+    "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/sales-order",
+    "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/salesorder",
+    "ruoyi-ui/src/views/sales-order",
+    "ruoyi-ui/src/views/salesorder",
+    "ruoyi-ui/src/api/sales-order.js",
+    "ruoyi-ui/src/api/salesOrder.js",
+    "sql/sales-order.ownership.md",
+    "sql/sales_order_init.sql",
+    "delivery runtime business code",
+    "finance runtime business code",
+    "production runtime business code"
+  ],
+  "blockers": [],
+  "nonGoals": [
+    "Do not modify customer runtime Java, Vue, mapper XML, frontend API client, SQL ownership DDL, or customer business rules.",
+    "Do not create sales-order controller, service, mapper, domain, Vue, API client, SQL table, route, or permission files.",
+    "Do not implement production security hardening in this CR.",
+    "Do not delete any feature; deletion still requires dry-run and explicit confirmation."
+  ],
+  "requiredCommands": [
+    "npm run resume",
+    "node --test tests/pre-release-policy.test.js",
+    "npm run check:pre-release-policy",
+    "npm test",
+    "npm run check",
+    "git diff --check",
+    "forbidden-path audit"
+  ]
+}
