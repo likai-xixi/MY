@@ -22,7 +22,9 @@ Customer management is the first active business feature. The customer model rem
 - sample rebate remains separate as `SAMPLE_REBATE`;
 - customer-level fund changes continue through `customer_fund_flow`; direct balance edits remain out of scope.
 
-Current customer change `CR-20260625T022150Z-change` closes the deposit account boundary for `/business/customer/{customerId}/fund/deposit`:
+GitHub master currently includes the pushed customer deposit-boundary commit `d103b0d fix(customer): restrict deposit endpoint to customer deposit`. Current closeout change `CR-20260625T035514Z-change` only reconciles handoff, context, README, feature brief, registry ownership, memory, changelog, and task state; it does not modify customer runtime code, customer fund business logic, SQL, Java, XML, Vue, or API client files.
+
+Previous customer business change `CR-20260625T022150Z-change` closes the deposit account boundary for `/business/customer/{customerId}/fund/deposit`:
 
 - omitted `accountType` and explicit `CUSTOMER_DEPOSIT` remain valid and are stamped as `CUSTOMER_DEPOSIT`;
 - `SAMPLE_REBATE` and any other non-`CUSTOMER_DEPOSIT` `accountType` are rejected before account balance, deposit batch, or fund flow mutation;
@@ -57,7 +59,7 @@ Sales order, shipment, finance settlement, automatic deduction, receipt claiming
 
 ## Active Task
 
-`TASK-CUSTOMER` is the active customer task in `memory/TASKS.json`. The current iteration is `CR-20260625T022150Z-change`: customer deposit entry is both 入金-only and account-locked to `CUSTOMER_DEPOSIT`, while internal sample rebate generation stays on the separate `/sample-rebate` path.
+`TASK-CUSTOMER` is the active customer task in `memory/TASKS.json`. The current iteration is `CR-20260625T035514Z-change`: customer management handoff state is being reconciled after the pushed `d103b0d` deposit-boundary commit, while customer runtime behavior remains unchanged in this closeout.
 
 ## Latest Session
 
@@ -65,9 +67,9 @@ Sales order, shipment, finance settlement, automatic deduction, receipt claiming
 
 ## Next Actions
 
-- Finish verification for `CR-20260625T022150Z-change`; do not commit or push unless explicitly requested.
+- Complete governance closeout verification for `CR-20260625T035514Z-change`.
 - Before any future runtime claim about PUBLIC data cleanliness, rerun the invariant SQL in `sql/customer.ownership.md` to confirm only `PUB_DIRECT_SALE` and `PUB_SELF_MEDIA` exist as active PUBLIC rows.
-- Do not commit or push unless explicitly requested after gates pass.
+- Keep sales order, delivery, finance, source/channel/account, maintenance-fee calculation, commission calculation, automatic deduction, receipt claiming, reconciliation, and order-level deposit behavior in separate future feature changes.
 
 ## Deferred Scope
 
@@ -97,7 +99,7 @@ For `CR-20260625T022150Z-change`, `npm run resume`, `npm run context:build -- cu
 
 The change confirmed that external `/business/customer/{customerId}/fund/deposit` now accepts omitted `accountType` or explicit `CUSTOMER_DEPOSIT`, rejects `SAMPLE_REBATE` and other non-`CUSTOMER_DEPOSIT` values before account/batch/flow mutation, and preserves internal sample rebate creation through `/business/customer/{customerId}/sample-rebate`.
 
-No sales-order implementation, governance-rule change, SQL business table structure change, commit, or push was made.
+No sales-order implementation, governance-rule change, or SQL business table structure change was made.
 
 For `CR-20260624T010638Z-change`, `npm run resume`, `npm run ai:do -- "功能迭代：客户管理"`, `npm run impact -- 客户管理`, cached Maven backend compile, frontend `build:prod`, cached Maven package after stopping the MY backend jar lock, runtime API/DB validation, captcha restore check, `npm run scan:all`, `npm run finalize:change -- --summary "客户管理资金入金与公共客户口径校验收口"`, `npm run check`, standalone `npm test`, and `git diff --check` passed. After adding the risk gate, `node --test tests/customer-risk-gate.test.js`, `npm run scan:all`, `npm run finalize:change -- --summary "客户管理风险防复发门禁"`, `npm run check` with 102 Node tests, standalone `npm test` with 102 Node tests, and final `git diff --check` also passed.
 

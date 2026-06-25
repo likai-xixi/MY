@@ -5,7 +5,9 @@
 - ID: `customer`
 - Name: 客户管理
 - Adapter: locked RuoYi adapter
-- Current change: `CR-20260624T010638Z-change`
+- Current change: `CR-20260625T035514Z-change`
+- Current closeout scope: handoff/status ownership sync only. This closeout does not change customer runtime Java/XML/Vue/API/SQL code or customer fund business logic.
+- Previous pushed business commit on GitHub master: `d103b0d fix(customer): restrict deposit endpoint to customer deposit`.
 
 ## Business Problem
 

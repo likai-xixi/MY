@@ -6,11 +6,9 @@
 
 ## Impact
 
-GitHub master includes `d103b0d fix(customer): restrict deposit endpoint to customer deposit`. This closeout reconciles repository handoff state after that pushed customer business commit: README positioning, customer feature brief current change, current context, customer test ownership, project state, changelog, task memory, and this handover now point at the same closeout record.
+This is a governance/handoff closeout for the customer feature. It reconciles README positioning, `features/customer.md` current-change state, current context, customer test ownership in `ai/registry/features.json`, project state, task memory, changelog, and handover after GitHub master included `d103b0d fix(customer): restrict deposit endpoint to customer deposit`.
 
-The customer risk gate `tests/customer-risk-gate.test.js` is registered under customer `tests` and `ownership.tests` in `ai/registry/features.json`. The test assertions were not edited.
-
-No customer runtime Java/XML/Vue/API/SQL code, customer fund business logic, governance gate logic, or sales-order implementation files were changed.
+No customer runtime Java/XML/Vue/API/SQL code, customer fund business logic, governance gate logic, or sales-order implementation files are changed.
 
 ## Changed Files
 
@@ -45,15 +43,15 @@ No customer runtime Java/XML/Vue/API/SQL code, customer fund business logic, gov
 
 ## Verification
 
-Pre-gate workflow commands passed through `npm run scan:all` and `npm run finalize:change -- --summary "客户管理交接状态收口"`. `scan:all` completed all scanner steps and ownership sync without producing generated scan or graph diffs.
+Pre-gate workflow commands passed through `npm run scan:all` and `npm run finalize:change -- --summary "客户管理交接状态收口"`. `scan:all` did not create separate generated scan or graph diffs; the only registry ownership delta is registering `tests/customer-risk-gate.test.js` under customer `tests` and `ownership.tests`.
 
 The first `npm run check` failed at `check:components` on pre-existing RuoYi system/tool/generator Vue files. The second run advanced past components and failed at `check:boundaries` on pre-existing RuoYi router/tool-generator imports. The third run reached `close:change` and failed because generated `impact.allowedEditRoots` omitted user-approved closeout files `README.md` and `ai/context`. The fourth run reached `npm test` and failed because current-context was out of date, then `npm run context:build -- customer` regenerated it from the current CR. After those scoped fixes, `npm run check` passed end to end with 120 Node tests, standalone `npm test` passed with 120 Node tests, and `git diff --check` passed. No router, Vue, Java, XML, API client, SQL, or customer business logic files were edited.
 
 ## Risks
 
-- No live runtime validation was rerun because this closeout does not change business runtime behavior.
-- Historical generated notes still contain older encoding artifacts; this batch only fixes current customer handoff/status drift.
+- This closeout does not rerun live backend/frontend runtime validation because no runtime business code changed.
+- The repository still contains historical mojibake text in older generated notes; this batch only fixes current closeout drift and does not rewrite unrelated history.
 
 ## Next Actions
 
-- Report the final worktree state, verification results, and suggested commit message for user review.
+- Report gate results, remaining worktree state, and a suggested commit message for user review.

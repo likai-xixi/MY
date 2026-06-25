@@ -9,7 +9,7 @@
       "owner": "Codex",
       "priority": "high",
       "statusReason": "Governance change CR-20260624T152423Z-governance-sales-order-handoff-gate adds sales-order-before handoff gates, current-context generation, multi-role review scaffolding, roadmap/debt checks, document/read/file-weight checks, and tests without touching customer business code. Follow-up M1/L1 hardening makes default check:review require Allow Implementation context-aware for business implementation paths and broadens phase-gate sales-order implementation naming detection. Push-preflight EISDIR follow-up makes file-weight checking skip directory entries safely and keeps finalize-generated changed-files records file-oriented.",
-      "nextStep": "Keep local CR-20260624T152423Z-governance-sales-order-handoff-gate commit unpushed unless explicitly requested. Future sales-order work must pass beforeSalesOrder and multi-role pre-review before implementation.",
+      "nextStep": "Future sales-order work must pass beforeSalesOrder and multi-role pre-review before implementation.",
       "blockedBy": [],
       "verification": [
         "npm run profile:setup",
@@ -77,8 +77,8 @@
       "status": "in_progress",
       "owner": "workflow",
       "priority": "normal",
-      "statusReason": "CR-20260625T022150Z-change tightens /business/customer/{customerId}/fund/deposit so the external deposit endpoint can only write CUSTOMER_DEPOSIT. Omitted accountType and explicit CUSTOMER_DEPOSIT are accepted; SAMPLE_REBATE and other non-CUSTOMER_DEPOSIT values are rejected before account balance, deposit batch, or fund flow mutation. Internal sample rebate remains separate through /sample-rebate and SAMPLE_REBATE_GENERATE.",
-      "nextStep": "Do not commit or push unless explicitly requested. Keep sales order, delivery, finance, source/channel/account, maintenance-fee calculation, commission calculation, automatic deduction, receipt claiming, reconciliation, and order-level deposit behavior in separate future feature changes.",
+      "statusReason": "CR-20260625T035514Z-change reconciles customer handoff state after GitHub master included d103b0d fix(customer): restrict deposit endpoint to customer deposit. This closeout updates README, feature brief, context, registry ownership, memory, changelog, and task state without changing customer runtime code or customer fund business logic.",
+      "nextStep": "Review the CR-20260625T035514Z-change closeout diff and suggested commit message. Keep sales order, delivery, finance, source/channel/account, maintenance-fee calculation, commission calculation, automatic deduction, receipt claiming, reconciliation, and order-level deposit behavior in separate future feature changes.",
       "blockedBy": [],
       "verification": [
         "npm run resume",
@@ -248,10 +248,17 @@
         "npm run finalize:change -- --summary \"客户管理定金入口资金边界收口\" passed for CR-20260625T022150Z-change",
         "npm run check passed with 120 Node tests for CR-20260625T022150Z-change",
         "standalone npm test passed with 120 Node tests for CR-20260625T022150Z-change",
-        "git diff --check passed for CR-20260625T022150Z-change"
+        "git diff --check passed for CR-20260625T022150Z-change",
+        "CR-20260625T035514Z-change reconciled customer handoff state after GitHub master included d103b0d fix(customer): restrict deposit endpoint to customer deposit",
+        "CR-20260625T035514Z-change registered tests/customer-risk-gate.test.js in customer tests and ownership.tests without changing test assertions",
+        "CR-20260625T035514Z-change updated README, features/customer.md, ai/context/current-context.*, memory/HANDOVER.md, memory/PROJECT_STATE.md, memory/CHANGELOG.md, and memory/TASKS.json without Java/XML/Vue/API client/SQL/customer fund logic changes",
+        "CR-20260625T035514Z-change used scoped current-CR component and boundary exceptions for pre-existing RuoYi system/tool/generator baseline findings",
+        "npm run check passed with 120 Node tests for CR-20260625T035514Z-change",
+        "standalone npm test passed with 120 Node tests for CR-20260625T035514Z-change",
+        "git diff --check passed for CR-20260625T035514Z-change"
       ],
       "latestSession": "memory/sessions/2026-06-25-customer-fund-deposit-boundary.md",
-      "latestChange": "CR-20260625T022150Z-change",
+      "latestChange": "CR-20260625T035514Z-change",
       "handoverRequired": true,
       "updatedAt": "2026-06-25"
     }

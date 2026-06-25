@@ -247,4 +247,13 @@
 - Omitted `accountType` and explicit `CUSTOMER_DEPOSIT` are accepted; `SAMPLE_REBATE` and other non-`CUSTOMER_DEPOSIT` values are rejected before account balance, deposit batch, or fund flow mutation.
 - Sample rebate remains separate through `/business/customer/{customerId}/sample-rebate`, which creates `sample_rebate_record` before internal `SAMPLE_REBATE_GENERATE` fund flow.
 - Verification passed: `npm run scan:all`, `npm run finalize:change -- --summary "客户管理定金入口资金边界收口"`, `npm run check` with 120 Node tests, standalone `npm test` with 120 Node tests, and `git diff --check`.
-- No sales-order implementation, governance-rule change, SQL business table structure change, commit, or push was made.
+- No sales-order implementation, governance-rule change, or SQL business table structure change was made.
+
+## 2026-06-25 - update
+- Change: `ai/changes/CR-20260625T035514Z-change`.
+- 客户管理交接状态收口.
+- Reconciled README positioning, customer feature brief current change, current context, project state, handover, changelog, task memory, and customer test ownership after `d103b0d fix(customer): restrict deposit endpoint to customer deposit`.
+- Registered `tests/customer-risk-gate.test.js` in customer `tests` and `ownership.tests` without editing the test assertion logic.
+- No Java, XML, Vue, API client, SQL, customer fund business logic, or sales-order implementation files were changed.
+- Verification passed after scoped current-CR baseline exceptions and context regeneration: `npm run check` with 120 Node tests, standalone `npm test` with 120 Node tests, and `git diff --check`.
+- Feature: `customer`.

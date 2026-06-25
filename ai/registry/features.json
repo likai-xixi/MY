@@ -94,7 +94,9 @@
         "/business/customer/{customerId}/sample-rebate",
         "/customer"
       ],
-      "tests": [],
+      "tests": [
+        "tests/customer-risk-gate.test.js"
+      ],
       "docs": [
         "ai/contracts/customer.api.md",
         "ai/contracts/customer.db.md",
@@ -225,7 +227,9 @@
           "sql/customer.ownership.md"
         ],
         "components": [],
-        "tests": [],
+        "tests": [
+          "tests/customer-risk-gate.test.js"
+        ],
         "docs": [
           "ai/contracts/customer.api.md",
           "ai/contracts/customer.db.md",
@@ -271,8 +275,8 @@
           "ruoyi-business/src/main/java/com/ruoyi/business/customer/domain/SampleRebateRecord.java"
         ]
       },
-      "lastChangedBy": "CR-20260623T235902Z-change",
-      "updatedAt": "2026-06-24"
+      "lastChangedBy": "CR-20260625T035514Z-change",
+      "updatedAt": "2026-06-25"
     },
     {
       "id": "monitor",

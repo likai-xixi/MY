@@ -1,6 +1,16 @@
-# Codex Auto Dev OS
+# MY Door ERP - RuoYi + Vue3 + Codex Auto Dev OS
 
-This package is a chat-driven Codex App governance layer for long-running business software projects. It is not an ERP runtime and it does not contain production business code. Place it at the root of a real project so Codex sessions can resume context, keep feature ownership explicit, restrict edit scope, update memory, and run deterministic gates.
+This repository is the MY door-industry ERP workspace. It combines a RuoYi Spring Boot backend, a RuoYi Vue3 frontend, the Codex Auto Dev OS governance layer, and the currently implemented `customer` customer-management business module.
+
+Codex Auto Dev OS is kept in the repository as the workflow and evidence layer: it resumes context, keeps feature ownership explicit, restricts edit scope, updates project memory, and runs deterministic governance gates around the real ERP codebase.
+
+## Current project status
+
+- Runtime stack: RuoYi + Vue3.
+- Governance layer: Codex Auto Dev OS with locked RuoYi adapter rules.
+- Business domain: MY 门业 ERP.
+- Implemented business module: `customer` / 客户管理.
+- Current closeout focus: keep GitHub master, feature briefs, context, registry ownership, README, and memory handoff in sync.
 
 ## What is included
 
