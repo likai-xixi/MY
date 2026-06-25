@@ -5,11 +5,11 @@
       "id": "TASK-0002",
       "feature": "platform",
       "title": "Track RuoYi + Vue3 base integration and runtime validation",
-      "status": "verified",
+      "status": "in_progress",
       "owner": "Codex",
       "priority": "high",
-      "statusReason": "Governance change CR-20260624T152423Z-governance-sales-order-handoff-gate adds sales-order-before handoff gates, current-context generation, multi-role review scaffolding, roadmap/debt checks, document/read/file-weight checks, and tests without touching customer business code. Follow-up M1/L1 hardening makes default check:review require Allow Implementation context-aware for business implementation paths and broadens phase-gate sales-order implementation naming detection. Push-preflight EISDIR follow-up makes file-weight checking skip directory entries safely and keeps finalize-generated changed-files records file-oriented.",
-      "nextStep": "Future sales-order work must pass beforeSalesOrder and multi-role pre-review before implementation.",
+      "statusReason": "Governance change CR-20260625T093416Z-p0-governance-stability-gates adds P0 gates for current-doc drift, feature test ownership, config safety, verification provenance, CI declaration coverage, and after-push handover checks without touching customer business code or sales-order implementation.",
+      "nextStep": "Review and commit the P0 governance gate change when ready, then leave Maven/frontend CI for CR-2, high-risk semantic gates for CR-3, and sales-order contracts for CR-4.",
       "blockedBy": [],
       "verification": [
         "npm run profile:setup",
@@ -65,10 +65,10 @@
         "standalone npm test passed with 109 Node tests for CR-20260624T152423Z-governance-sales-order-handoff-gate",
         "git diff --check passed for CR-20260624T152423Z-governance-sales-order-handoff-gate"
       ],
-      "latestSession": "memory/sessions/2026-06-24-governance-sales-order-handoff-gate.md",
+      "latestSession": "memory/sessions/2026-06-25-p0-governance-stability-gates.md",
       "handoverRequired": true,
-      "updatedAt": "2026-06-24",
-      "latestChange": "CR-20260624T152423Z-governance-sales-order-handoff-gate"
+      "updatedAt": "2026-06-25",
+      "latestChange": "CR-20260625T093416Z-p0-governance-stability-gates"
     },
     {
       "id": "TASK-CUSTOMER",
@@ -77,7 +77,7 @@
       "status": "in_progress",
       "owner": "workflow",
       "priority": "normal",
-      "statusReason": "CR-20260625T042041Z-change verifies customer fund concurrency safety: fund mutation is extracted into CustomerFundServiceImpl, customer_fund_account is locked with selectFundAccountForUpdate before balance calculation, concurrent first account creation uses DuplicateKeyException plus locked re-read, and flow_no/deposit_batch_no unique collisions use bounded retry. Final verification passed; no commit or push has been made.",
+      "statusReason": "CR-20260625T042041Z-change verifies customer fund concurrency safety: fund mutation is extracted into CustomerFundServiceImpl, customer_fund_account is locked with selectFundAccountForUpdate before balance calculation, concurrent first account creation uses DuplicateKeyException plus locked re-read, and flow_no/deposit_batch_no unique collisions use bounded retry. Final verification passed; current Git/push state is read from Git and CI.",
       "nextStep": "Review the CR-20260625T042041Z-change diff and, if approved, commit with fix(customer): make fund entries concurrency safe. Keep sales order, delivery, finance, deduction, refund, adjustment, reversal, governance-rule, and SQL business table structure changes out of this CR.",
       "blockedBy": [],
       "verification": [

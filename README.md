@@ -10,7 +10,7 @@ Codex Auto Dev OS is kept in the repository as the workflow and evidence layer: 
 - Governance layer: Codex Auto Dev OS with locked RuoYi adapter rules.
 - Business domain: MY 门业 ERP.
 - Implemented business module: `customer` / 客户管理.
-- Current closeout focus: keep GitHub master, feature briefs, context, registry ownership, README, and memory handoff in sync.
+- Current closeout focus: keep feature briefs, context, registry ownership, README, memory handoff, verification provenance, and CI-coverage declarations in sync.
 
 ## What is included
 

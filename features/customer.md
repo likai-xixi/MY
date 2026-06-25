@@ -7,7 +7,7 @@
 - Adapter: locked RuoYi adapter
 - Current change: `CR-20260625T042041Z-change`
 - Current scope: customer fund concurrency safety closeout. This change extracts `CustomerFundService`, keeps external customer API paths unchanged, row-locks fund accounts before balance calculation, handles concurrent fund-account creation, and retries `flow_no` / `deposit_batch_no` unique-key collisions.
-- Previous pushed commit on GitHub master: `166c3ee docs(customer): close handoff status drift`.
+- Git/CI state: use Git history and workflow results as the source of truth; this brief does not handwrite current push status.
 
 ## Business Problem
 

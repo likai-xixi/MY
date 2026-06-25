@@ -1,48 +1,46 @@
 # Current Context
 
 Current feature: `customer`
-Current change: `CR-20260625T042041Z-change`
+Current change: `CR-20260625T093416Z-p0-governance-stability-gates`
 Repository: RuoYi + Vue3 + Codex Auto Dev OS
 Profile: adapter `ruoyi`, locked `true`
 
 ## Allowed Edit Roots
 
-- `features/customer.md`
-- `ruoyi-business/src/main/java/com/ruoyi/business/customer`
-- `ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer`
-- `ruoyi-ui/src/views/customer`
-- `ruoyi-ui/src/utils/region-data.js`
-- `ruoyi-ui/src/api/customer.contract.md`
-- `ruoyi-ui/src/api/customer.js`
-- `tests/customer-risk-gate.test.js`
-- `ai/contracts/customer.api.md`
-- `ai/contracts/customer.db.md`
-- `ai/contracts/customer.delete-ownership.md`
-- `ai/contracts/customer.permission.md`
-- `ai/contracts/customer.ui.md`
-- `graph/api-graph.json`
-- `graph/ui-graph.json`
-- `memory/API_CATALOG.md`
-- `ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/README.md`
-- `ruoyi-business/src/main/java/com/ruoyi/business/customer/README.md`
-- `ruoyi-ui/src/views/customer/README.md`
-- `sql/customer.ownership.md`
-- `ruoyi-business/src/main/resources/mapper/customer/CustomerMapper.xml`
-- `ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java`
-- `ruoyi-ui/src/views/customer/index.vue`
-- `ai/registry/features.json`
-- `ai/registry/modules.json`
+- `tools`
+- `scripts/context-build.js`
+- `tests`
+- `ai/registry`
+- `ai/rules`
+- `ai/rule-proposals`
+- `ai/generated`
 - `ai/context`
 - `ai/changes`
-- `ai/reviews/RV-20260625T042103Z-review`
-- `ai/generated`
-- `graph`
 - `memory`
-- `features`
-- `tests`
+- `package.json`
+- `.github/workflows`
+- `docs`
+- `README.md`
+- `features/customer.md`
 
 ## Forbidden Edit Roots
 
+- `ruoyi-business/src/main/java/com/ruoyi/business/customer`
+- `ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer`
+- `ruoyi-business/src/main/resources/mapper/customer`
+- `ruoyi-ui/src/views/customer`
+- `ruoyi-ui/src/api/customer.js`
+- `sql/customer.ownership.md`
+- `ruoyi-business/src/main/java/com/ruoyi/business/sales-order`
+- `ruoyi-business/src/main/java/com/ruoyi/business/salesorder`
+- `ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/sales-order`
+- `ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/salesorder`
+- `ruoyi-ui/src/views/sales-order`
+- `ruoyi-ui/src/views/salesorder`
+- `ruoyi-ui/src/api/sales-order.js`
+- `ruoyi-ui/src/api/salesOrder.js`
+- `sql/sales-order.ownership.md`
+- `sql/sales_order_init.sql`
 
 ## Must Read Files
 
@@ -57,9 +55,9 @@ Profile: adapter `ruoyi`, locked `true`
 - `ai/roadmap/phase-gates.json` - beforeSalesOrder gate state.
 - `ai/roadmap/refactor-debt.json` - Known debt affecting sales-order handoff.
 - `ai/roadmap/enhancement-backlog.json` - Governance backlog and required/deferred evidence.
-- `ai/changes/CR-20260625T042041Z-change/impact.json` - Current change allowed and forbidden edit roots.
-- `ai/changes/CR-20260625T042041Z-change/plan.md` - Current change execution plan.
-- `ai/changes/CR-20260625T042041Z-change/verification.md` - Current change verification evidence.
+- `ai/changes/CR-20260625T093416Z-p0-governance-stability-gates/impact.json` - Current change allowed and forbidden edit roots.
+- `ai/changes/CR-20260625T093416Z-p0-governance-stability-gates/plan.md` - Current change execution plan.
+- `ai/changes/CR-20260625T093416Z-p0-governance-stability-gates/verification.md` - Current change verification evidence.
 
 ## Must Not Break
 
@@ -118,14 +116,16 @@ Deferred:
 - change-salesman-mode-residue: open - Sales-order review must not depend on unclear owner-change semantics.
 - reserved-fund-adjust-permission: open - Fund-boundary contract must distinguish deposit entry, deduction, refund, adjustment, and reversal responsibilities.
 
-## Verification Commands
+## Planned Verification Commands
 
 - `npm run resume`
-- `npm run scan:all`
-- `npm run context:build -- customer`
-- `npm run finalize:change -- --summary "新增销售订单前治理接手机制"`
-- `npm run check`
 - `npm test`
+- `npm run check:current-doc-state`
+- `npm run check:feature-test-ownership`
+- `npm run check:config-safety`
+- `npm run check:verification-provenance`
+- `npm run check:ci-coverage-declaration`
+- `npm run check`
 - `git diff --check`
 
 ## Next Steps

@@ -268,3 +268,18 @@
 - Verification passed: cached Maven compile/package, `node --test tests/customer-risk-gate.test.js` with 8 tests, `npm run scan:all`, `npm run finalize:change -- --summary "客户管理资金并发安全收口"`, regenerated current context, `npm run check` with 121 Node tests, standalone `npm test` with 121 Node tests, and `git diff --check`.
 - No sales-order, delivery, finance, deduction, refund, adjustment, reversal, governance-rule, or SQL business table structure change was made. No commit or push has been made.
 - Feature: `customer`.
+
+## 2026-06-25 - governance/rule-change
+
+- Change: `ai/changes/CR-20260625T093416Z-p0-governance-stability-gates`.
+- Added P0 governance gates for current-doc-state drift, feature test ownership, config safety, verification provenance, and CI coverage declarations.
+- Added `check:after-push` for publish handover validation and intentionally kept it out of `npm run check`.
+- Added real temp-root Node tests in `tests/governance-gates.test.js` and registered governance test ownership exceptions.
+- No customer runtime code, sales-order implementation code, or business database table structure was changed.
+- Verification passed: `npm test` with 131 Node tests, all five standalone P0 gates, full `npm run check`, and `git diff --check`.
+- `check:config-safety` warns only on existing development/default values; `check:ci-coverage-declaration` warns that broader build workflow commands are not present and current docs must not claim that coverage.
+
+## 2026-06-25 — rule-change
+- Change: `ai/changes/CR-20260625T093416Z-p0-governance-stability-gates`.
+- 新增 P0 治理稳定门禁
+- Feature: `platform`.

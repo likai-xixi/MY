@@ -87,15 +87,17 @@ function buildContext(feature) {
     roadmapBlockers: roadmapBlockers(),
     phaseGates: phaseGates.gates || {},
     refactorDebt: compactDebt(),
-    verificationCommands: [
-      'npm run resume',
-      'npm run scan:all',
-      `npm run context:build -- ${feature}`,
-      'npm run finalize:change -- --summary "新增销售订单前治理接手机制"',
-      'npm run check',
-      'npm test',
-      'git diff --check'
-    ],
+    verificationCommands: Array.isArray(impact.requiredCommands) && impact.requiredCommands.length > 0
+      ? impact.requiredCommands
+      : [
+        'npm run resume',
+        'npm run scan:all',
+        `npm run context:build -- ${feature}`,
+        'npm run finalize:change -- --summary "新增销售订单前治理接手机制"',
+        'npm run check',
+        'npm test',
+        'git diff --check'
+      ],
     nextSteps: [
       'Keep this change governance-only.',
       'Before sales-order implementation, run review:feature and require decision.md to explicitly contain Allow Implementation.',
@@ -152,7 +154,7 @@ function buildMarkdown(context) {
     '',
     ...debts,
     '',
-    '## Verification Commands',
+    '## Planned Verification Commands',
     '',
     ...context.verificationCommands.map((item) => `- \`${item}\``),
     '',

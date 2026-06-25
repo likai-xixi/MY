@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "description": "Exceptions for tests that are intentionally not owned by one business feature.",
+  "exceptions": [
+    {
+      "file": "tests/governance-gates.test.js",
+      "type": "governance-test",
+      "reason": "validates P0 governance gates",
+      "owner": "governance"
+    },
+    {
+      "file": "tests/governance-sales-order-handoff-gate.test.js",
+      "type": "governance-test",
+      "reason": "validates sales-order pre-implementation governance gates",
+      "owner": "governance",
+      "relatedFeatures": [
+        "customer"
+      ]
+    }
+  ]
+}

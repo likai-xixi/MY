@@ -1,0 +1,102 @@
+{
+  "schemaVersion": 1,
+  "mode": "rule-change",
+  "changeType": "governance/rule-change",
+  "feature": {
+    "id": "platform",
+    "name": "治理门禁",
+    "status": "active"
+  },
+  "summary": "Add P0 governance gates for current-doc drift, feature test ownership, config safety, verification provenance, CI declaration coverage, and after-push handover checks.",
+  "affected": {
+    "governanceScripts": [
+      "tools/current-doc-state-checker.js",
+      "tools/feature-test-ownership-checker.js",
+      "tools/config-safety-checker.js",
+      "tools/verification-provenance-checker.js",
+      "tools/ci-coverage-declaration-checker.js",
+      "tools/after-push-handover-checker.js",
+      "tools/governance-checker-utils.js",
+      "scripts/context-build.js"
+    ],
+    "tests": [
+      "tests/governance-gates.test.js"
+    ],
+    "registry": [
+      "ai/registry/test-ownership-exceptions.json"
+    ],
+    "docsAndMemory": [
+      "README.md",
+      "features/customer.md",
+      "ai/context/current-context.md",
+      "ai/context/current-context.json",
+      "memory/HANDOVER.md",
+      "memory/PROJECT_STATE.md",
+      "memory/TASKS.json",
+      "memory/CHANGELOG.md",
+      "memory/sessions/2026-06-25-p0-governance-stability-gates.md"
+    ],
+    "changeRecord": [
+      "ai/changes/CR-20260625T093416Z-p0-governance-stability-gates"
+    ],
+    "ruleProposal": [
+      "ai/rule-proposals/2026-06-25-p0-governance-stability-gates.json"
+    ],
+    "packageScripts": [
+      "package.json"
+    ]
+  },
+  "allowedEditRoots": [
+    "tools",
+    "scripts/context-build.js",
+    "tests",
+    "ai/registry",
+    "ai/rules",
+    "ai/rule-proposals",
+    "ai/generated",
+    "ai/context",
+    "ai/changes",
+    "memory",
+    "package.json",
+    ".github/workflows",
+    "docs",
+    "README.md",
+    "features/customer.md"
+  ],
+  "forbiddenEditRoots": [
+    "ruoyi-business/src/main/java/com/ruoyi/business/customer",
+    "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer",
+    "ruoyi-business/src/main/resources/mapper/customer",
+    "ruoyi-ui/src/views/customer",
+    "ruoyi-ui/src/api/customer.js",
+    "sql/customer.ownership.md",
+    "ruoyi-business/src/main/java/com/ruoyi/business/sales-order",
+    "ruoyi-business/src/main/java/com/ruoyi/business/salesorder",
+    "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/sales-order",
+    "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/salesorder",
+    "ruoyi-ui/src/views/sales-order",
+    "ruoyi-ui/src/views/salesorder",
+    "ruoyi-ui/src/api/sales-order.js",
+    "ruoyi-ui/src/api/salesOrder.js",
+    "sql/sales-order.ownership.md",
+    "sql/sales_order_init.sql"
+  ],
+  "blockers": [],
+  "nonGoals": [
+    "No customer runtime Java, Vue, mapper, API client, or SQL business table structure changes.",
+    "No sales-order implementation code.",
+    "No Maven/frontend CI expansion in this CR.",
+    "No P1/P2 semantic gates in this CR."
+  ],
+  "requiredCommands": [
+    "npm run resume",
+    "npm test",
+    "npm run check:current-doc-state",
+    "npm run check:feature-test-ownership",
+    "npm run check:config-safety",
+    "npm run check:verification-provenance",
+    "npm run check:ci-coverage-declaration",
+    "npm run check",
+    "git diff --check"
+  ]
+}

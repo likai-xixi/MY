@@ -2,65 +2,71 @@
 
 ## Summary
 
-客户管理资金并发安全收口. Current change record: `ai/changes/CR-20260625T042041Z-change`.
+P0 governance stability gate work for `ai/changes/CR-20260625T093416Z-p0-governance-stability-gates`.
 
 ## Impact
 
-Customer fund mutation has been extracted into `CustomerFundServiceImpl`. The customer deposit path now locks the target `customer_fund_account` row with `selectFundAccountForUpdate` before balance calculation, handles concurrent first account creation with `DuplicateKeyException` plus locked re-read, and retries `flow_no` / `deposit_batch_no` unique-key collisions with bounded insert retry.
+This governance/rule-change batch adds deterministic Node gates for current documentation drift, feature test ownership, production config safety, verification provenance, and CI coverage declarations. It also adds an after-push handover checker that is intentionally not part of `npm run check`.
 
-External API paths are unchanged. No sales-order, delivery, finance, deduction, refund, adjustment, reversal, governance-rule, or SQL business table structure change is included.
+No customer runtime Java, Vue, mapper XML, API client, business SQL, sales-order implementation, or business database table structure is part of this change.
 
 ## Changed Files
 
-- `ruoyi-business/src/main/java/com/ruoyi/business/customer/service/ICustomerFundService.java`
-- `ruoyi-business/src/main/java/com/ruoyi/business/customer/service/impl/CustomerFundServiceImpl.java`
-- `ruoyi-business/src/main/java/com/ruoyi/business/customer/service/impl/CustomerServiceImpl.java`
-- `ruoyi-business/src/main/java/com/ruoyi/business/customer/mapper/CustomerMapper.java`
-- `ruoyi-business/src/main/resources/mapper/customer/CustomerMapper.xml`
-- `tests/customer-risk-gate.test.js`
+- `tools/governance-checker-utils.js`
+- `tools/current-doc-state-checker.js`
+- `tools/feature-test-ownership-checker.js`
+- `tools/config-safety-checker.js`
+- `tools/verification-provenance-checker.js`
+- `tools/ci-coverage-declaration-checker.js`
+- `tools/after-push-handover-checker.js`
+- `tests/governance-gates.test.js`
+- `ai/registry/test-ownership-exceptions.json`
+- `package.json`
+- `README.md`
 - `features/customer.md`
-- `ai/contracts/customer.api.md`
-- `ai/contracts/customer.db.md`
-- `ai/registry/features.json`
-- `ai/context/current-context.json`
+- `scripts/context-build.js`
 - `ai/context/current-context.md`
-- `memory/API_CATALOG.md`
+- `ai/context/current-context.json`
+- `ai/rule-proposals/2026-06-25-p0-governance-stability-gates.json`
+- `ai/changes/CR-20260625T093416Z-p0-governance-stability-gates/*`
 - `memory/HANDOVER.md`
 - `memory/PROJECT_STATE.md`
 - `memory/TASKS.json`
 - `memory/CHANGELOG.md`
-- `memory/sessions/2026-06-25-customer-fund-concurrency.md`
-- `ai/changes/CR-20260625T042041Z-change/*`
-- `ai/reviews/RV-20260625T042103Z-review/*`
+- `memory/sessions/2026-06-25-p0-governance-stability-gates.md`
 
 ## Commands
 
-- `npm run resume`
-- `npm run context:build -- customer`
-- `npm run ai:do -- "功能迭代：客户管理"`
-- `npm run impact -- 客户管理`
-- `npm run review:feature -- "功能预审：客户管理资金并发安全收口" --feature customer`
-- `node --test tests/customer-risk-gate.test.js`
-- `C:\Users\11131\.cache\codex-tools\apache-maven-3.9.9\bin\mvn.cmd -pl ruoyi-admin -am -DskipTests compile`
-- `C:\Users\11131\.cache\codex-tools\apache-maven-3.9.9\bin\mvn.cmd -pl ruoyi-admin -am -DskipTests package`
-- Runtime API/DB validation on backend `http://127.0.0.1:18080`, database `my_ry_vue_runtime`, Redis DB1
-- `npm run scan:all`
-- `npm run finalize:change -- --summary "客户管理资金并发安全收口"`
-- `npm run context:build -- customer`
-- `npm run check` - passed with 121 Node tests.
-- `npm test` - standalone passed with 121 Node tests.
-- `git diff --check` - passed.
+- [local] `npm run resume` - passed before and after this rule-change CR was created.
+- [local] `npm run rule:propose -- "p0 governance stability gates" --reason "..."`
+- [local] `npm run start:change -- --mode rule-change "P0 governance stability gates"`
+- [local] `node --test tests/governance-gates.test.js` - passed with 10 tests.
+- [local] `npm run finalize:change -- --summary "P0 governance stability gates"` - passed.
+- [local] `npm test` - passed with 131 Node tests.
+- [local] `npm run check:current-doc-state` - passed.
+- [local] `npm run check:feature-test-ownership` - passed.
+- [local] `npm run check:config-safety` - passed with dev/default warnings only.
+- [local] `npm run check:verification-provenance` - passed.
+- [local] `npm run check:ci-coverage-declaration` - passed with broader build coverage warnings.
+- [local] `npm run check` - passed after the final evidence update.
+- [local] `git diff --check` - passed after the final evidence update.
 
 ## Verification
 
-Review approval exists at `ai/reviews/RV-20260625T042103Z-review/decision.md` with `Allow Implementation`. Static customer risk gate passed with 8 tests. Maven compile and package passed. Live API/DB validation passed for omitted/explicit deposit, invalid account rejection without mutation, sample rebate record-before-flow without deposit batch, PUBLIC rejection without mutation, and 10 concurrent one-yuan deposits without lost update or duplicate fund/deposit numbers. `npm run scan:all`, `finalize:change`, regenerated current context, full `npm run check` with 121 Node tests, standalone `npm test` with 121 Node tests, and `git diff --check` passed.
+- [local] `npm run resume` - passed and reported this active rule-change CR.
+- [local] `node --test tests/governance-gates.test.js` - passed with 10 tests against temporary fixture roots.
+- [local] `npm test` - passed with 131 Node tests.
+- [local] The five standalone P0 gates passed; config-safety warned only on existing development/default values, and CI-coverage warned only that broader build workflow commands are not present.
+- [local] Full `npm run check` and `git diff --check` passed after this evidence update.
 
 ## Risks
 
-- Runtime validation retained test customer `26 / RT_FUND_CONCURRENCY_202606250432` in local development data for audit traceability.
-- Order-level deposits, deduction, refund, adjustment, reversal, delivery, and finance remain out of scope.
-- No commit or push has been made; publishing still requires explicit user approval.
+- [inconclusive] Evidence freshness is documented but not yet a blocking gate.
+- [inconclusive] Migration gating is not yet blocking sales-order work.
+- [inconclusive] Idempotency, state-machine, and contract-to-test gates remain later CRs.
+- [inconclusive] GitHub Actions currently covers Node governance only; broader build workflow coverage remains CR-2 unless separately added.
 
 ## Next Actions
 
-- Review the diff and, if approved, commit with `fix(customer): make fund entries concurrency safe`.
+- Keep broader build workflow expansion for CR-2, high-risk semantic gates for CR-3, and sales-order contracts for CR-4.
+- Run `npm run check:after-push` only after publish preparation has a clean working tree and an upstream branch.
