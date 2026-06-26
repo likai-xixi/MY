@@ -377,3 +377,12 @@
 - Documented that `check:runtime` detects runtime projects/tooling but does not execute Maven/Vite builds by default, and that `scaffold-ci` pass is not manual business acceptance.
 - `npm run verify:release` was not required for this R-04 boundary batch; do not claim release verification passed until that script itself passes.
 - No customer runtime code, sales-order runtime code, production safety config, customer fund model, migration/idempotency registry, database business table structure, package scripts, tools, or tests were changed.
+
+## 2026-06-26 - governance/rule-change
+
+- Change: `ai/changes/CR-20260626T013800Z-high-risk-active-impact-scope`.
+- Fixed the high-risk governance repo-level customer runtime diff guard so it reads the active change record impact scope instead of hardcoding a blanket customer runtime ban.
+- `impact.forbiddenEditRoots` overrides `impact.allowedEditRoots`, so explicitly forbidden customer/API/SQL roots remain blocked even when related runtime roots are allowed.
+- R-05 salesman candidate hardening was saved to `stash@{0}` before this rule-change CR and was not submitted here.
+- [local] Verification passed: `node --test tests/high-risk-governance.test.js` with 37 tests, `npm test` with 186 tests, full `npm run check` with 186 tests inside the gate, and `git diff --check`.
+- No customer runtime code, sales-order runtime code, customer fund model, migration/idempotency registry, database business table structure, package scripts, or tools were changed.

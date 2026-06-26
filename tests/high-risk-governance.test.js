@@ -14,6 +14,7 @@ import {
   validateMigrationGate,
   validateStateMachines
 } from '../tools/high-risk-governance-checker.js';
+import { isAllowedByRoot } from '../tools/diff-checker.js';
 
 function withRoot(fn) {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'codex-high-risk-governance-'));
@@ -32,6 +33,41 @@ function write(root, file, content) {
 
 function writeJson(root, file, value) {
   write(root, file, `${JSON.stringify(value, null, 2)}\n`);
+}
+
+function repoChangedFiles() {
+  return [
+    ...execFileSync('git', ['diff', '--name-only', '--diff-filter=ACMRTUXB', '--'], { encoding: 'utf8' }).split(/\r?\n/),
+    ...execFileSync('git', ['ls-files', '--others', '--exclude-standard'], { encoding: 'utf8' }).split(/\r?\n/)
+  ].filter(Boolean).map((file) => file.replace(/\\/g, '/'));
+}
+
+function readCurrentImpact() {
+  const current = JSON.parse(fs.readFileSync('ai/changes/CURRENT_CHANGE.json', 'utf8')).current;
+  return JSON.parse(fs.readFileSync(`ai/changes/${current}/impact.json`, 'utf8'));
+}
+
+function isCustomerRuntimePath(file) {
+  return file.startsWith('ruoyi-business/src/main/java/com/ruoyi/business/customer/')
+    || file.startsWith('ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/')
+    || file.startsWith('ruoyi-business/src/main/resources/mapper/customer/')
+    || file.startsWith('ruoyi-ui/src/views/customer/')
+    || file === 'ruoyi-ui/src/api/customer.js'
+    || file === 'sql/customer.ownership.md';
+}
+
+function isAllowedByActiveImpact(file, impact) {
+  const allowedRoots = Array.isArray(impact.allowedEditRoots) ? impact.allowedEditRoots : [];
+  const forbiddenRoots = Array.isArray(impact.forbiddenEditRoots) ? impact.forbiddenEditRoots : [];
+  const allowed = allowedRoots.some((root) => isAllowedByRoot(file, root));
+  const forbidden = forbiddenRoots.some((root) => isAllowedByRoot(file, root));
+  return allowed && !forbidden;
+}
+
+function unauthorizedCustomerRuntimeChanges(changed, impact) {
+  return changed
+    .filter(isCustomerRuntimePath)
+    .filter((file) => !isAllowedByActiveImpact(file, impact));
 }
 
 function sha256(value) {
@@ -627,21 +663,35 @@ test('repo-level safety has no sales-order runtime files', () => {
   assert.deepEqual(runtimePaths.filter((file) => fs.existsSync(file)), []);
 });
 
-test('repo-level safety has no customer runtime changes in this CR', () => {
+test('active impact scope permits approved customer runtime changes only', () => {
   const changed = [
-    ...execFileSync('git', ['diff', '--name-only', '--diff-filter=ACMRTUXB', '--'], { encoding: 'utf8' }).split(/\r?\n/),
-    ...execFileSync('git', ['ls-files', '--others', '--exclude-standard'], { encoding: 'utf8' }).split(/\r?\n/)
-  ].filter(Boolean).map((file) => file.replace(/\\/g, '/'));
-  const forbidden = changed.filter((file) => (
-    file.startsWith('ruoyi-business/src/main/java/com/ruoyi/business/customer/')
-    || file.startsWith('ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/')
-    || file.startsWith('ruoyi-business/src/main/resources/mapper/customer/')
-    || file.startsWith('ruoyi-ui/src/views/customer/')
-    || file === 'ruoyi-ui/src/api/customer.js'
-    || file === 'sql/customer.ownership.md'
-  ));
+    'ruoyi-business/src/main/java/com/ruoyi/business/customer/service/impl/CustomerServiceImpl.java',
+    'ruoyi-ui/src/views/customer/index.vue',
+    'ruoyi-ui/src/api/customer.js',
+    'sql/customer.ownership.md'
+  ];
+  const impact = {
+    allowedEditRoots: [
+      'ruoyi-business/src/main/java/com/ruoyi/business/customer/service/impl/CustomerServiceImpl.java',
+      'ruoyi-ui/src/views/customer/index.vue',
+      'ruoyi-ui/src/api/customer.js'
+    ],
+    forbiddenEditRoots: [
+      'ruoyi-ui/src/api/customer.js',
+      'sql'
+    ]
+  };
 
-  assert.deepEqual(forbidden, []);
+  assert.deepEqual(unauthorizedCustomerRuntimeChanges(changed, impact), [
+    'ruoyi-ui/src/api/customer.js',
+    'sql/customer.ownership.md'
+  ]);
+});
+
+test('repo-level safety has no unauthorized customer runtime changes in this CR', () => {
+  const unauthorized = unauthorizedCustomerRuntimeChanges(repoChangedFiles(), readCurrentImpact());
+
+  assert.deepEqual(unauthorized, []);
 });
 
 test('repo-level safety keeps existing check gates and adds high-risk gate', () => {

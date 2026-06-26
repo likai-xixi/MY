@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "files": [
+    "ai/changes/CR-20260626T013800Z-high-risk-active-impact-scope/boundary-exception.md",
+    "ai/changes/CR-20260626T013800Z-high-risk-active-impact-scope/changed-files.json",
+    "ai/changes/CR-20260626T013800Z-high-risk-active-impact-scope/component-exception.md",
+    "ai/changes/CR-20260626T013800Z-high-risk-active-impact-scope/handover.md",
+    "ai/changes/CR-20260626T013800Z-high-risk-active-impact-scope/impact.json",
+    "ai/changes/CR-20260626T013800Z-high-risk-active-impact-scope/plan.md",
+    "ai/changes/CR-20260626T013800Z-high-risk-active-impact-scope/request.md",
+    "ai/changes/CR-20260626T013800Z-high-risk-active-impact-scope/verification.md",
+    "ai/changes/CURRENT_CHANGE.json",
+    "ai/context/current-context.json",
+    "ai/context/current-context.md",
+    "memory/CHANGELOG.md",
+    "memory/HANDOVER.md",
+    "memory/PROJECT_STATE.md",
+    "memory/TASKS.json",
+    "tests/high-risk-governance.test.js"
+  ]
+}

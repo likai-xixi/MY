@@ -1,25 +1,18 @@
 # Current Context
 
 Current feature: `customer`
-Current change: `CR-20260626T004832Z-governance-runtime-verification-boundary`
+Current change: `CR-20260626T013800Z-high-risk-active-impact-scope`
 Repository: RuoYi + Vue3 + Codex Auto Dev OS
 Profile: adapter `ruoyi`, locked `true`
 
 ## Allowed Edit Roots
 
-- `README.md`
-- `docs/high-risk-semantic-governance.md`
-- `docs/runtime-verification-boundary.md`
-- `docs/production-readiness.md`
-- `ai/registry/modules.json`
-- `memory/HANDOVER.md`
-- `memory/PROJECT_STATE.md`
-- `memory/CHANGELOG.md`
-- `memory/TASKS.json`
+- `tests/high-risk-governance.test.js`
+- `ai/changes/CR-20260626T013800Z-high-risk-active-impact-scope`
+- `ai/changes/CURRENT_CHANGE.json`
 - `ai/context/current-context.md`
 - `ai/context/current-context.json`
-- `ai/changes/CR-20260626T004832Z-governance-runtime-verification-boundary`
-- `ai/changes/CURRENT_CHANGE.json`
+- `memory`
 
 ## Forbidden Edit Roots
 
@@ -28,16 +21,11 @@ Profile: adapter `ruoyi`, locked `true`
 - `ruoyi-business/src/main/resources/mapper/customer`
 - `ruoyi-ui/src/views/customer`
 - `ruoyi-ui/src/api/customer.js`
-- `ruoyi-framework/src/main/java/com/ruoyi/framework/config/SecurityConfig.java`
-- `ruoyi-admin/src/main/resources/application.yml`
-- `ruoyi-admin/src/main/resources/application-druid.yml`
-- `ruoyi-admin/src/main/resources/application-prod.yml`
-- `tools`
-- `tests`
-- `package.json`
 - `sql`
 - `ai/registry/migration-registry.json`
 - `ai/registry/idempotency-registry.json`
+- `package.json`
+- `tools`
 - `sales-order runtime, SQL, Vue, API, permission, or route`
 - `salesorder runtime, SQL, Vue, API, permission, or route`
 - `business database table structure`
@@ -55,9 +43,9 @@ Profile: adapter `ruoyi`, locked `true`
 - `ai/roadmap/phase-gates.json` - beforeSalesOrder gate state.
 - `ai/roadmap/refactor-debt.json` - Known debt affecting sales-order handoff.
 - `ai/roadmap/enhancement-backlog.json` - Governance backlog and required/deferred evidence.
-- `ai/changes/CR-20260626T004832Z-governance-runtime-verification-boundary/impact.json` - Current change allowed and forbidden edit roots.
-- `ai/changes/CR-20260626T004832Z-governance-runtime-verification-boundary/plan.md` - Current change execution plan.
-- `ai/changes/CR-20260626T004832Z-governance-runtime-verification-boundary/verification.md` - Current change verification evidence.
+- `ai/changes/CR-20260626T013800Z-high-risk-active-impact-scope/impact.json` - Current change allowed and forbidden edit roots.
+- `ai/changes/CR-20260626T013800Z-high-risk-active-impact-scope/plan.md` - Current change execution plan.
+- `ai/changes/CR-20260626T013800Z-high-risk-active-impact-scope/verification.md` - Current change verification evidence.
 
 ## Must Not Break
 
@@ -118,9 +106,7 @@ Deferred:
 
 ## Planned Verification Commands
 
-- `npm run resume`
-- `npm run check:runtime`
-- `npm run check:high-risk-governance`
+- `node --test tests/high-risk-governance.test.js`
 - `npm test`
 - `npm run check`
 - `git diff --check`
