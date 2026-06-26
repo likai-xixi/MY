@@ -8,8 +8,8 @@
       "status": "in_progress",
       "owner": "Codex",
       "priority": "high",
-      "statusReason": "R-05 customer salesman candidate hardening is restored as the active business-runtime change. The prerequisite governance CR-20260626T013800Z-high-risk-active-impact-scope is committed, and active impact scope now allows approved customer runtime diffs while forbidden roots remain blocked.",
-      "nextStep": "Finish R-05 submit review and commit only after green verification. Do not start R-06 executable customer migration baseline or R-07 customer fund idempotency until R-05 is closed. Keep beforeSalesOrder blocked unless required contracts and review explicitly unlock it later.",
+      "statusReason": "R-05 customer salesman candidate hardening is on master/origin/master at 818108c. R-06 executable customer migration baseline is now the active local change and keeps sales-order/idempotency/runtime work blocked out of scope.",
+      "nextStep": "Finish R-06 verification and closeout. Then choose either R-07 customer fund idempotency or R-09 sales-order pre-implementation contract package; keep beforeSalesOrder blocked unless required contracts and review explicitly unlock it later.",
       "blockedBy": [],
       "verification": [
         "npm run profile:setup",
@@ -153,8 +153,8 @@
       "status": "in_progress",
       "owner": "workflow",
       "priority": "normal",
-      "statusReason": "CR-20260626T011624Z-salesman-candidate-hardening verifies the R-05 salesman candidate runtime fix: backend candidates no longer fall back to all normal users, UI empty-candidate prompts are explicit, customer contracts/tests are updated, customer risk gate passes, high-risk governance now respects active impact scope, full npm test/check pass, and configured Maven compile passes.",
-      "nextStep": "Prepare the R-05 commit after final green verification review. Keep sales-order, delivery, finance, deduction, refund, adjustment, reversal, governance-rule, and SQL business table structure changes out of this CR.",
+      "statusReason": "CR-20260626T115131Z-executable-customer-migration-baseline is R-06: customer schema, PUBLIC seed rows, RuoYi customer menu/permissions, and runtime validation now have executable SQL baselines and blocking migration-registry entries. Customer Java/Vue runtime, customer fund runtime, sales-order, idempotency, package, and tools remain untouched.",
+      "nextStep": "Finish R-06 full gate and git diff checks, then choose R-07 customer fund idempotency or R-09 sales-order pre-implementation contract package.",
       "blockedBy": [],
       "verification": [
         "npm run resume",
@@ -353,10 +353,21 @@
         "node --test tests/high-risk-governance.test.js passed with 37 tests for CR-20260626T011624Z-salesman-candidate-hardening after CR-20260626T013800Z-high-risk-active-impact-scope",
         "npm test passed with 189 tests for CR-20260626T011624Z-salesman-candidate-hardening",
         "npm run check passed for CR-20260626T011624Z-salesman-candidate-hardening",
-        "plain mvn unavailable; configured Maven path compile passed for CR-20260626T011624Z-salesman-candidate-hardening using C:\\Users\\11131\\.cache\\codex-tools\\apache-maven-3.9.9\\bin\\mvn.cmd"
+        "plain mvn unavailable; configured Maven path compile passed for CR-20260626T011624Z-salesman-candidate-hardening using C:\\Users\\11131\\.cache\\codex-tools\\apache-maven-3.9.9\\bin\\mvn.cmd",
+        "CR-20260626T115131Z-executable-customer-migration-baseline added sql/migrations/V20260625_001_customer_schema.sql for the nine existing customer-owned tables",
+        "CR-20260626T115131Z-executable-customer-migration-baseline added sql/migrations/V20260625_002_customer_seed_public_customer.sql for PUB_DIRECT_SALE and PUB_SELF_MEDIA only",
+        "CR-20260626T115131Z-executable-customer-migration-baseline added sql/migrations/V20260625_003_customer_menu_permission.sql for RuoYi business/customer menu and business:customer:* permissions with not exists guards",
+        "CR-20260626T115131Z-executable-customer-migration-baseline added sql/validation/customer_runtime_validation.sql for PUBLIC seed, public_channel, fund vocabulary, deposit batch, deposit flow, and no-old-deposit-vocabulary checks",
+        "npm run check:high-risk-governance passed for CR-20260626T115131Z-executable-customer-migration-baseline without the previous current customer markdown baseline warning",
+        "node --test tests/high-risk-governance.test.js passed with 39 tests for CR-20260626T115131Z-executable-customer-migration-baseline",
+        "npm run scan:all and npm run context:build -- customer passed for CR-20260626T115131Z-executable-customer-migration-baseline",
+        "npm test passed with 191 tests for CR-20260626T115131Z-executable-customer-migration-baseline",
+        "npm run check passed with 191 tests for CR-20260626T115131Z-executable-customer-migration-baseline",
+        "git diff --check passed for CR-20260626T115131Z-executable-customer-migration-baseline",
+        "[not-run] MySQL execution of the R-06 SQL files was not performed in this environment"
       ],
       "latestSession": "memory/sessions/2026-06-25-customer-fund-concurrency.md",
-      "latestChange": "CR-20260626T011624Z-salesman-candidate-hardening",
+      "latestChange": "CR-20260626T115131Z-executable-customer-migration-baseline",
       "handoverRequired": true,
       "updatedAt": "2026-06-26"
     }

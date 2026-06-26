@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
-  "description": "Registry for executable business migrations. Existing customer DDL in sql/customer.ownership.md is a CR-3 baseline warning, not a blocking executable migration.",
+  "description": "Registry for executable business migrations. sql/customer.ownership.md remains the customer ownership document; the customer baseline is now covered by executable SQL migration and validation files.",
   "entries": [
     {
-      "migrationId": "customer-current-ddl-baseline",
+      "migrationId": "customer-schema-baseline",
       "featureId": "customer",
-      "file": "sql/customer.ownership.md",
-      "type": "baseline-ddl-document",
+      "file": "sql/migrations/V20260625_001_customer_schema.sql",
+      "type": "executable-sql",
       "appliesToTables": [
         "customer",
         "customer_contact",
@@ -18,14 +18,77 @@
         "customer_sample_policy",
         "sample_rebate_record"
       ],
-      "status": "baseline",
-      "phase": "existing-customer-baseline",
-      "rollbackPlan": "Existing customer DDL remains documented as baseline ownership. Future blocking table changes must use executable migration files.",
+      "status": "required",
+      "phase": "R-06-executable-customer-migration-baseline",
+      "rollbackPlan": "For an unreleased development database, restore from backup or drop the customer-owned tables created by this baseline in reverse dependency order, then rerun the previous accepted baseline. Production/released data requires a separate executable rollback plan before use.",
       "verification": [
-        "sql/customer.ownership.md runtime validation SQL"
+        "npm run check:high-risk-governance",
+        "node --test tests/high-risk-governance.test.js",
+        "mysql < sql/migrations/V20260625_001_customer_schema.sql when a disposable MySQL test database is available"
       ],
-      "owner": "governance",
-      "blocking": false
+      "owner": "customer",
+      "blocking": true
+    },
+    {
+      "migrationId": "customer-public-seed-baseline",
+      "featureId": "customer",
+      "file": "sql/migrations/V20260625_002_customer_seed_public_customer.sql",
+      "type": "executable-sql",
+      "appliesToTables": [
+        "customer"
+      ],
+      "status": "required",
+      "phase": "R-06-executable-customer-migration-baseline",
+      "rollbackPlan": "For an unreleased development database, remove only the two built-in PUBLIC customer seed rows PUB_DIRECT_SALE and PUB_SELF_MEDIA after verifying no dependent business data exists. Production/released data requires a separate executable rollback plan before use.",
+      "verification": [
+        "npm run check:high-risk-governance",
+        "node --test tests/high-risk-governance.test.js",
+        "mysql < sql/migrations/V20260625_002_customer_seed_public_customer.sql when a disposable MySQL test database is available",
+        "mysql < sql/validation/customer_runtime_validation.sql when a disposable MySQL test database is available"
+      ],
+      "owner": "customer",
+      "blocking": true
+    },
+    {
+      "migrationId": "customer-menu-permission-baseline",
+      "featureId": "customer",
+      "file": "sql/migrations/V20260625_003_customer_menu_permission.sql",
+      "type": "executable-sql",
+      "appliesToTables": [
+        "sys_menu"
+      ],
+      "status": "required",
+      "phase": "R-06-executable-customer-migration-baseline",
+      "rollbackPlan": "For an unreleased development database, delete only sys_menu rows with permission prefix business:customer:* and the customer menu row business:customer:list; remove the root business menu only if it has no remaining children. Production/released data requires a separate executable rollback plan before use.",
+      "verification": [
+        "npm run check:high-risk-governance",
+        "node --test tests/high-risk-governance.test.js",
+        "mysql < sql/migrations/V20260625_003_customer_menu_permission.sql when a disposable MySQL test database is available"
+      ],
+      "owner": "customer",
+      "blocking": true
+    },
+    {
+      "migrationId": "customer-runtime-validation",
+      "featureId": "customer",
+      "file": "sql/validation/customer_runtime_validation.sql",
+      "type": "runtime-validation-sql",
+      "appliesToTables": [
+        "customer",
+        "customer_fund_account",
+        "customer_fund_flow",
+        "customer_deposit_batch"
+      ],
+      "status": "required",
+      "phase": "R-06-executable-customer-migration-baseline",
+      "rollbackPlan": "Validation SQL is read-only and has no data rollback. If validation finds rows, use a separate approved cleanup or migration change before claiming runtime acceptance.",
+      "verification": [
+        "npm run check:high-risk-governance",
+        "node --test tests/high-risk-governance.test.js",
+        "mysql < sql/validation/customer_runtime_validation.sql when a disposable MySQL test database is available"
+      ],
+      "owner": "customer",
+      "blocking": true
     }
   ]
 }

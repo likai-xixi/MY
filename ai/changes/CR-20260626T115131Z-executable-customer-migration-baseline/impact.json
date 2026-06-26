@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "mode": "update",
+  "feature": {
+    "id": "customer",
+    "name": "客户管理",
+    "status": "active"
+  },
+  "blockers": [],
+  "affected": {
+    "feature": "features/customer.md",
+    "docs": [
+      "docs/customer-database-migration.md",
+      "ai/contracts/customer.db.md",
+      "sql/customer.ownership.md",
+      "memory/HANDOVER.md",
+      "memory/PROJECT_STATE.md",
+      "memory/CHANGELOG.md",
+      "memory/TASKS.json",
+      "ai/context/current-context.md",
+      "ai/context/current-context.json"
+    ],
+    "tests": [
+      "tests/high-risk-governance.test.js"
+    ],
+    "registries": [
+      "ai/registry/features.json",
+      "ai/registry/migration-registry.json"
+    ],
+    "sql": [
+      "sql/migrations/V20260625_001_customer_schema.sql",
+      "sql/migrations/V20260625_002_customer_seed_public_customer.sql",
+      "sql/migrations/V20260625_003_customer_menu_permission.sql",
+      "sql/validation/customer_runtime_validation.sql"
+    ],
+    "generatedScans": [
+      "ai/generated/db-schema.json",
+      "ai/generated/permissions.json"
+    ]
+  },
+  "allowedEditRoots": [
+    "sql/migrations/V20260625_001_customer_schema.sql",
+    "sql/migrations/V20260625_002_customer_seed_public_customer.sql",
+    "sql/migrations/V20260625_003_customer_menu_permission.sql",
+    "sql/validation/customer_runtime_validation.sql",
+    "sql/customer.ownership.md",
+    "ai/registry/migration-registry.json",
+    "docs/customer-database-migration.md",
+    "ai/contracts/customer.db.md",
+    "features/customer.md",
+    "tests/high-risk-governance.test.js",
+    "memory/HANDOVER.md",
+    "memory/PROJECT_STATE.md",
+    "memory/CHANGELOG.md",
+    "memory/TASKS.json",
+    "ai/context/current-context.md",
+    "ai/context/current-context.json",
+    "ai/changes/CR-20260626T115131Z-executable-customer-migration-baseline",
+    "ai/changes/CURRENT_CHANGE.json",
+    "ai/generated/db-schema.json",
+    "ai/generated/permissions.json",
+    "ai/registry/features.json",
+    "graph/ui-graph.json"
+  ],
+  "scopeNotes": [
+    "ai/registry/features.json is included because scan/ownership sync updated the customer feature ownership for the R-06 executable migration baseline files."
+  ],
+  "forbiddenEditRoots": [
+    "ruoyi-business/src/main/java/com/ruoyi/business/customer",
+    "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer",
+    "ruoyi-business/src/main/resources/mapper/customer",
+    "ruoyi-ui/src/views/customer",
+    "ruoyi-ui/src/api/customer.js",
+    "ruoyi-framework/src/main/java/com/ruoyi/framework/config/SecurityConfig.java",
+    "ruoyi-admin/src/main/resources/application.yml",
+    "ruoyi-admin/src/main/resources/application-druid.yml",
+    "ruoyi-admin/src/main/resources/application-prod.yml",
+    "package.json",
+    "tools",
+    "ai/registry/idempotency-registry.json",
+    "sales-order runtime, SQL, Vue, API, permission, or route",
+    "salesorder runtime, SQL, Vue, API, permission, or route",
+    "idempotent_request table",
+    "customer fund runtime code",
+    "non-customer business table structure"
+  ],
+  "requiredCommands": [
+    "npm run resume",
+    "npm run impact -- 客户管理",
+    "npm run check:high-risk-governance",
+    "node --test tests/high-risk-governance.test.js",
+    "npm test",
+    "npm run check",
+    "git diff --check"
+  ]
+}

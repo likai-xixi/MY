@@ -26,7 +26,7 @@ CR-2 baseline CI coverage is already published on `master` at `84886464f7dda693f
 
 Governance change `CR-20260625T130657Z-high-risk-semantic-governance-framework` is CR-3. It adds high-risk semantic governance registries, JSON schemas, a real checker, package script wiring, and temp-root tests. This is a governance/rule-change batch only: it does not modify customer runtime code, does not create sales-order runtime code, does not change business database table structure, and does not open `beforeSalesOrder`. Its commit is recorded on `master` as `a49b678644dddc16ce45f094bff5459fd9a716e2` with message `governance: add high-risk semantic framework`.
 
-CR-3 blocking is intentionally narrow. Schema/registry format errors, malformed machine evidence manifests, missing covered evidence files, incomplete required entries, executable migration violations, generic edit permissions on required high-risk APIs, and invalid state-machine transitions fail. Missing evidence manifests do not fail. Stale evidence hashes and current customer migration baseline DDL warn unless explicitly declared blocking.
+CR-3 blocking is intentionally narrow. Schema/registry format errors, malformed machine evidence manifests, missing covered evidence files, incomplete required entries, executable migration violations, generic edit permissions on required high-risk APIs, and invalid state-machine transitions fail. Missing evidence manifests do not fail. Stale evidence hashes warn unless explicitly declared blocking. The historical customer markdown baseline warning was resolved by R-06 executable customer migration baseline.
 
 Previous governance change `CR-20260625T143256Z-pre-release-breaking-change-policy` adds the pre-release breaking-change policy. Because the project is not released yet, Codex should replace old code/data contracts by default during feature iteration instead of adding compatibility layers. Development data may be reset or rebuilt when recorded in the active change; compatibility layers require explicit user approval, and production or already-released data still needs migration and rollback evidence.
 
@@ -38,9 +38,15 @@ Current governance/context cleanup `CR-20260625T170213Z-customer-fund-vocabulary
 
 Completed governance/runtime clarification `CR-20260626T004832Z-governance-runtime-verification-boundary` is R-04. It documents the boundary between local governance checks, runtime checker detection, production safety checks, CI scaffold jobs, release verification, and manual/runtime acceptance. `npm run check` is governance consistency plus Node structural tests; it is not production readiness, runtime business correctness, database migration safety, browser acceptance, money-flow idempotency, or complete high-risk semantic coverage. `check:runtime` detects tooling by default and does not execute Maven/Vite builds unless `--execute` or policy enables execution. `scaffold-ci` passing is not a manual business acceptance pass. This change does not modify customer runtime code, sales-order runtime code, production safety config, customer fund model, migration/idempotency registry, database business table structure, package scripts, tools, or tests.
 
-Current customer runtime change `CR-20260626T011624Z-salesman-candidate-hardening` is R-05. It fixes the customer salesman candidate boundary so `CustomerServiceImpl.selectSalesmanCandidates` returns only normal users with sales/business roles and returns an empty list when none match instead of falling back to all normal users. The customer UI now warns `未找到销售/业务员角色用户，请先配置销售角色。` when users enter SALESMAN owner selection or submit without configured candidates, while remote search input does not warn on every keystroke. Customer feature/API/UI contracts and `tests/customer-risk-gate.test.js` record the strict no-fallback rule.
+Completed customer runtime change `CR-20260626T011624Z-salesman-candidate-hardening` is R-05. It fixes the customer salesman candidate boundary so `CustomerServiceImpl.selectSalesmanCandidates` returns only normal users with sales/business roles and returns an empty list when none match instead of falling back to all normal users. The customer UI now warns `未找到销售/业务员角色用户，请先配置销售角色。` when users enter SALESMAN owner selection or submit without configured candidates, while remote search input does not warn on every keystroke. Customer feature/API/UI contracts and `tests/customer-risk-gate.test.js` record the strict no-fallback rule. Local Git shows `master` and `origin/master` at `818108c fix: restrict salesman candidates to sales roles`.
 
-R-05 does not modify customer funds, sales-order runtime, security configuration, migration/idempotency registry, SQL ownership, mapper XML, controller, API client, database business table structure, package scripts, or tools. Focused customer risk tests and cached Maven compile pass. The full Node suite is currently blocked by `tests/high-risk-governance.test.js` still asserting that the active CR must have no customer runtime diffs; resolving that requires a separate governance/rule-change decision, not a business-code edit inside R-05.
+R-05 does not modify customer funds, sales-order runtime, security configuration, migration/idempotency registry, SQL ownership, mapper XML, controller, API client, database business table structure, package scripts, or tools. Its focused and full local gates passed before R-06 started.
+
+Current customer migration change `CR-20260626T115131Z-executable-customer-migration-baseline` is R-06. It adds executable SQL baselines for the existing customer schema, the two built-in PUBLIC seed customers, RuoYi business/customer menu and `business:customer:*` permissions, and read-only runtime validation SQL. `ai/registry/migration-registry.json` now treats `customer-schema-baseline`, `customer-public-seed-baseline`, `customer-menu-permission-baseline`, and `customer-runtime-validation` as blocking entries with existing `.sql` files, rollback plans, and verification notes. `sql/customer.ownership.md` remains the ownership document, but it is no longer the only baseline DDL source.
+
+R-06 also includes `ai/registry/features.json` because scan/ownership sync registered the new customer executable SQL baseline, validation SQL, and menu permission SQL files under the customer feature ownership.
+
+R-06 does not modify customer Java/Vue runtime code, customer fund runtime code, sales-order runtime, security configuration, package scripts, tools, idempotency registry, `idempotent_request`, or non-customer business table structure. MySQL execution of the R-06 SQL files has not been performed in this environment unless a later verification note says otherwise.
 
 For future module boundaries, sales-order may select customer, carry default contact/address and owner snapshots, and show `CUSTOMER_DEPOSIT` status during submit, but must not directly deduct customer funds. Delivery / finance contracts must later define `CUSTOMER_DEPOSIT` deduction/refund/adjustment/reversal and `SAMPLE_REBATE` deduction. Every customer-fund mutation must write `customer_fund_flow`.
 
@@ -91,7 +97,7 @@ Sales order, shipment, finance settlement, automatic deduction, receipt claiming
 
 ## Active Task
 
-`TASK-CUSTOMER` is the active customer task in `memory/TASKS.json` for `CR-20260626T011624Z-salesman-candidate-hardening`. `TASK-0002` remains the platform/governance tracking task. `beforeSalesOrder` remains blocked and R-05 must not be treated as sales-order readiness.
+`TASK-CUSTOMER` is the active customer task in `memory/TASKS.json` for `CR-20260626T115131Z-executable-customer-migration-baseline`. `TASK-0002` remains the platform/governance tracking task. `beforeSalesOrder` remains blocked and R-06 must not be treated as sales-order readiness.
 
 ## Latest Session
 
@@ -99,8 +105,8 @@ Sales order, shipment, finance settlement, automatic deduction, receipt claiming
 
 ## Next Actions
 
-- Decide whether to open a separate governance/rule-change record for the high-risk governance test that still blocks approved customer runtime diffs.
-- Then choose R-06 executable customer migration baseline or R-07 customer fund idempotency.
+- Finish R-06 executable customer migration baseline verification and closeout.
+- Then choose R-07 customer fund idempotency or R-09 sales-order pre-implementation contract package.
 - Keep `beforeSalesOrder` blocked unless required contracts and review explicitly unlock it later.
 - Before any future runtime claim about PUBLIC data cleanliness, rerun the invariant SQL in `sql/customer.ownership.md` to confirm only `PUB_DIRECT_SALE` and `PUB_SELF_MEDIA` exist as active PUBLIC rows.
 
@@ -128,7 +134,9 @@ Sales order, shipment, finance settlement, automatic deduction, receipt claiming
 
 ## Last Verification
 
-For `CR-20260626T011624Z-salesman-candidate-hardening`, [local] `npm run resume`, [local] `npm run impact -- 客户管理`, [local] `npm run scan:all`, [local] `node --test tests/customer-risk-gate.test.js` with 11/11 tests, [local] `git diff --check`, and [local] cached Maven compile passed. [not-run] Plain `mvn -pl ruoyi-admin -am -DskipTests compile` is unavailable on PATH. [local] `npm test` failed 187/188 because `tests/high-risk-governance.test.js` still rejects customer runtime changed files in the active CR. [local] `npm run check` passed all scaffold sub-gates through `check:runtime`, then failed at the final `npm test` step for the same high-risk governance assertion. This is a governance-test scope conflict with R-05's approved customer-runtime work.
+For `CR-20260626T115131Z-executable-customer-migration-baseline`, [local] `npm run resume`, [local] `npm run impact -- 客户管理`, [local] `npm run check:high-risk-governance`, [local] `node --test tests/high-risk-governance.test.js` with 39/39 tests, [local] `npm run scan:all`, [local] `npm run context:build -- customer`, [local] `npm test` with 191/191 tests, [local] `npm run check` with 191/191 tests, and [local] `git diff --check` passed. [not-run] MySQL execution of the R-06 SQL files was not performed in this environment.
+
+For `CR-20260626T011624Z-salesman-candidate-hardening`, [local] `npm run resume`, [local] `npm run impact -- 客户管理`, [local] `npm run scan:all`, [local] `node --test tests/customer-risk-gate.test.js` with 11/11 tests, [local] `node --test tests/high-risk-governance.test.js`, [local] `npm test`, [local] `npm run check`, [local] `git diff --check`, and [local] configured Maven compile passed. [not-run] Plain `mvn -pl ruoyi-admin -am -DskipTests compile` is unavailable on PATH. Local Git shows `master` and `origin/master` at `818108c fix: restrict salesman candidates to sales roles`.
 
 For `CR-20260626T004832Z-governance-runtime-verification-boundary`, R-04 required verification was `npm run resume`, `npm run check:runtime`, `npm run check:high-risk-governance`, `npm test`, `npm run check`, and `git diff --check`. `npm run verify:release` was intentionally not required for this documentation/governance boundary clarification; do not claim release verification passed until that script itself passes.
 

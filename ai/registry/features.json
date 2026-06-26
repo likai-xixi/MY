@@ -53,7 +53,8 @@
         "customer_fund_flow",
         "customer_salesman_bind_log",
         "customer_sample_policy",
-        "sample_rebate_record"
+        "sample_rebate_record",
+        "sys_menu"
       ],
       "permissions": [
         "business:customer:add",
@@ -143,18 +144,24 @@
         "ruoyi-ui/src/api/customer.js"
       ],
       "sqlFiles": [
-        "sql/customer.ownership.md"
+        "sql/customer.ownership.md",
+        "sql/migrations/V20260625_001_customer_schema.sql",
+        "sql/migrations/V20260625_002_customer_seed_public_customer.sql",
+        "sql/migrations/V20260625_003_customer_menu_permission.sql",
+        "sql/validation/customer_runtime_validation.sql"
       ],
       "mapperXmlFiles": [
         "ruoyi-business/src/main/resources/mapper/customer/CustomerMapper.xml"
       ],
       "menuSqlFiles": [
-        "sql/customer.ownership.md"
+        "sql/customer.ownership.md",
+        "sql/migrations/V20260625_003_customer_menu_permission.sql"
       ],
       "permissionFiles": [
         "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
         "ruoyi-ui/src/views/customer/index.vue",
-        "sql/customer.ownership.md"
+        "sql/customer.ownership.md",
+        "sql/migrations/V20260625_003_customer_menu_permission.sql"
       ],
       "ownership": {
         "backend": [
@@ -201,7 +208,12 @@
           "customer_salesman_bind_log",
           "customer_sample_policy",
           "sample_rebate_record",
-          "sql/customer.ownership.md"
+          "sql/customer.ownership.md",
+          "sql/migrations/V20260625_001_customer_schema.sql",
+          "sql/migrations/V20260625_002_customer_seed_public_customer.sql",
+          "sql/migrations/V20260625_003_customer_menu_permission.sql",
+          "sql/validation/customer_runtime_validation.sql",
+          "sys_menu"
         ],
         "permissions": [
           "business:customer:add",
@@ -223,10 +235,12 @@
           "business:customer:sample-policy:view",
           "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
           "ruoyi-ui/src/views/customer/index.vue",
-          "sql/customer.ownership.md"
+          "sql/customer.ownership.md",
+          "sql/migrations/V20260625_003_customer_menu_permission.sql"
         ],
         "menus": [
-          "sql/customer.ownership.md"
+          "sql/customer.ownership.md",
+          "sql/migrations/V20260625_003_customer_menu_permission.sql"
         ],
         "components": [],
         "tests": [

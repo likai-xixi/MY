@@ -2,6 +2,17 @@
 
 Feature ID: `customer`
 
+## Executable Baseline
+
+R-06 keeps this file as the customer SQL/menu/permission ownership document, but executable initialization now lives in:
+
+- `sql/migrations/V20260625_001_customer_schema.sql`
+- `sql/migrations/V20260625_002_customer_seed_public_customer.sql`
+- `sql/migrations/V20260625_003_customer_menu_permission.sql`
+- `sql/validation/customer_runtime_validation.sql`
+
+`ai/registry/migration-registry.json` now treats those SQL files as the blocking customer baseline. This markdown file is no longer the only baseline DDL source.
+
 ## Owned Tables
 
 - `customer`

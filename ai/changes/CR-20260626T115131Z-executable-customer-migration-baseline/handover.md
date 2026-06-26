@@ -2,17 +2,13 @@
 
 ## Summary
 
-R-06 executable customer migration baseline is the current change.
-
-Current change record: `ai/changes/CR-20260626T115131Z-executable-customer-migration-baseline`.
+R-06 executable customer migration baseline is the current customer change.
 
 ## Impact
 
-Customer schema, two PUBLIC seed rows, RuoYi customer menu/permissions, and customer runtime validation SQL now have executable baseline files. `ai/registry/migration-registry.json` now registers the customer schema, seed, menu/permission, and runtime validation entries as blocking, executable SQL-backed entries. `sql/customer.ownership.md` remains the ownership document, not the only baseline DDL source.
+The customer schema, two PUBLIC seed rows, customer menu/permissions, and runtime validation SQL now have executable baseline files. `ai/registry/migration-registry.json` now uses blocking SQL entries instead of a current markdown-only customer baseline warning. Customer Java/Vue runtime, customer fund runtime logic, sales-order, security config, idempotency registry, `idempotent_request`, package scripts, tools, and non-customer business tables remain out of scope.
 
-`ai/registry/features.json` is included in R-06 because scan/ownership sync registered the new customer executable SQL baseline, validation SQL, and menu permission SQL files under the customer feature ownership.
-
-No customer Java/Vue runtime code, customer fund runtime logic, sales-order runtime, security config, idempotency registry, `idempotent_request`, package scripts, tools, or non-customer business table structure was changed.
+`ai/registry/features.json` is included in R-06 because `npm run scan:all` / ownership sync registered the new customer executable SQL baseline files, validation SQL, and customer menu permission SQL in the customer feature ownership.
 
 ## Changed Files
 
@@ -57,20 +53,20 @@ No customer Java/Vue runtime code, customer fund runtime logic, sales-order runt
 
 - [local] `npm run resume` passed.
 - [local] `npm run impact -- 客户管理` passed with no blockers.
-- [local] `npm run check:high-risk-governance` passed and no longer emitted the current customer markdown baseline warning.
+- [local] `npm run check:high-risk-governance` passed, and the current customer markdown baseline warning is gone because the registry now points at blocking executable SQL entries.
 - [local] `node --test tests/high-risk-governance.test.js` passed with 39/39 tests.
-- [local] `npm run scan:all` passed.
+- [local] `npm run scan:all` passed and refreshed customer DB ownership scan output.
 - [local] `npm run context:build -- customer` passed.
 - [local] `npm test` passed with 191/191 tests.
 - [local] `npm run check` passed with 191/191 tests.
 - [local] `git diff --check` passed.
-- [not-run] MySQL execution of the R-06 SQL files was not performed in this environment.
+- [not-run] MySQL execution of `sql/migrations/*.sql` and `sql/validation/customer_runtime_validation.sql` was not performed in this environment.
 
 ## Risks
 
-- SQL files were statically checked by governance tests; they were not executed against MySQL locally in this pass.
-- Runtime PUBLIC data cleanliness must still be proven by running `sql/validation/customer_runtime_validation.sql` against the target database before making a runtime data claim.
+- SQL was statically checked by governance and Node tests only; no disposable MySQL runtime execution was performed.
+- The validation SQL is read-only and reports violation rows; it does not clean bad data by itself.
 
 ## Next Actions
 
-- Next suggested work: R-07 customer fund idempotency or R-09 sales-order pre-implementation contract package.
+- Next planned work is either R-07 customer fund idempotency or R-09 sales-order pre-implementation contract package.

@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "files": [
+    "ai/changes/CR-20260626T115131Z-executable-customer-migration-baseline/boundary-exception.md",
+    "ai/changes/CR-20260626T115131Z-executable-customer-migration-baseline/changed-files.json",
+    "ai/changes/CR-20260626T115131Z-executable-customer-migration-baseline/component-exception.md",
+    "ai/changes/CR-20260626T115131Z-executable-customer-migration-baseline/handover.md",
+    "ai/changes/CR-20260626T115131Z-executable-customer-migration-baseline/impact.json",
+    "ai/changes/CR-20260626T115131Z-executable-customer-migration-baseline/plan.md",
+    "ai/changes/CR-20260626T115131Z-executable-customer-migration-baseline/request.md",
+    "ai/changes/CR-20260626T115131Z-executable-customer-migration-baseline/verification.md",
+    "ai/changes/CURRENT_CHANGE.json",
+    "ai/context/current-context.json",
+    "ai/context/current-context.md",
+    "ai/contracts/customer.db.md",
+    "ai/generated/db-schema.json",
+    "ai/registry/features.json",
+    "ai/registry/migration-registry.json",
+    "docs/customer-database-migration.md",
+    "features/customer.md",
+    "memory/CHANGELOG.md",
+    "memory/HANDOVER.md",
+    "memory/PROJECT_STATE.md",
+    "memory/TASKS.json",
+    "sql/customer.ownership.md",
+    "sql/migrations/V20260625_001_customer_schema.sql",
+    "sql/migrations/V20260625_002_customer_seed_public_customer.sql",
+    "sql/migrations/V20260625_003_customer_menu_permission.sql",
+    "sql/validation/customer_runtime_validation.sql",
+    "tests/high-risk-governance.test.js"
+  ]
+}

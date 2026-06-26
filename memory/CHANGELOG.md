@@ -397,3 +397,14 @@
 - [local] Verification passed: `npm run resume`, `npm run impact -- 客户管理`, `npm run scan:all`, `node --test tests/customer-risk-gate.test.js` with 11 tests, `node --test tests/high-risk-governance.test.js` with 37 tests, `npm test` with 189 tests, `npm run check`, `git diff --check`, and configured Maven compile with `BUILD SUCCESS`.
 - [not-run] Plain `mvn -pl ruoyi-admin -am -DskipTests compile` is unavailable on PATH.
 - No customer funds, sales-order runtime, security config, migration/idempotency registry, package/tool code, SQL ownership, mapper XML, controller, API client, or database business table structure was changed.
+
+## 2026-06-26 - customer migration baseline
+
+- Change: `ai/changes/CR-20260626T115131Z-executable-customer-migration-baseline`.
+- R-06 added executable customer SQL baselines for schema, PUBLIC seed rows, RuoYi menu/permissions, and runtime validation.
+- `ai/registry/migration-registry.json` now registers `customer-schema-baseline`, `customer-public-seed-baseline`, `customer-menu-permission-baseline`, and `customer-runtime-validation` as blocking entries with existing `.sql` files, rollback plans, and verification notes.
+- The previous customer markdown baseline warning is no longer a current expected high-risk governance warning; `sql/customer.ownership.md` remains the ownership document.
+- [local] Verification passed: `npm run resume`, `npm run impact -- customer`, `npm run check:high-risk-governance`, `node --test tests/high-risk-governance.test.js` with 39 tests, `npm run scan:all`, `npm run context:build -- customer`, `npm test` with 191 tests, `npm run check` with 191 tests, and `git diff --check`.
+- [not-run] MySQL execution of the new SQL files was not performed in this environment.
+- No customer Java/Vue runtime, sales-order runtime, security config, customer fund runtime code, idempotency registry, `idempotent_request`, package scripts, tools, or non-customer business tables were changed.
+- Feature: `customer`.

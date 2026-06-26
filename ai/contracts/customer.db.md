@@ -14,7 +14,15 @@ Feature ID: `customer`
 - `customer_sample_policy`
 - `sample_rebate_record`
 
-DDL, menu SQL, and permission SQL are documented in `sql/customer.ownership.md`. Mapper XML ownership is `ruoyi-business/src/main/resources/mapper/customer/CustomerMapper.xml`.
+DDL, menu SQL, and permission SQL ownership remains documented in `sql/customer.ownership.md`. The executable R-06 baseline is registered in `ai/registry/migration-registry.json` and lives in `sql/migrations/V20260625_001_customer_schema.sql`, `sql/migrations/V20260625_002_customer_seed_public_customer.sql`, `sql/migrations/V20260625_003_customer_menu_permission.sql`, and `sql/validation/customer_runtime_validation.sql`. Mapper XML ownership is `ruoyi-business/src/main/resources/mapper/customer/CustomerMapper.xml`.
+
+## Executable Migration Baseline
+
+- `customer-schema-baseline` is a blocking executable SQL baseline for the nine customer-owned tables.
+- `customer-public-seed-baseline` is a blocking executable SQL baseline for the two built-in PUBLIC seed rows.
+- `customer-menu-permission-baseline` is a blocking executable SQL baseline for RuoYi business/customer menu and `business:customer:*` permissions.
+- `customer-runtime-validation` is a blocking read-only SQL validation entry for runtime data invariants.
+- `sql/customer.ownership.md` remains the ownership document but is no longer the only baseline DDL source.
 
 ## Customer Nature
 
@@ -44,7 +52,7 @@ DDL, menu SQL, and permission SQL are documented in `sql/customer.ownership.md`.
 - `customer.province_code`, `customer.city_code`, and `customer.district_code` store nullable administrative division codes for the customer master address.
 - `customer_address.province_code`, `customer_address.city_code`, and `customer_address.district_code` store nullable administrative division codes for shipping addresses.
 - Chinese names remain in `province`, `city`, and `district` for list, detail, and export display.
-- This project is still in development; the SQL ownership file documents the final initialized structure and does not include old-data compatibility migrations.
+- This project is still in development; the executable R-06 baseline documents the final initialized structure and does not include old-data compatibility migrations.
 
 ## Fund Rule
 
@@ -77,3 +85,6 @@ DDL, menu SQL, and permission SQL are documented in `sql/customer.ownership.md`.
 
 - `npm run scan:db`
 - `npm run check:ownership`
+- `npm run check:high-risk-governance`
+- `node --test tests/high-risk-governance.test.js`
+- `mysql < sql/validation/customer_runtime_validation.sql` when a disposable MySQL test database is available

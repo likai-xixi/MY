@@ -3,47 +3,54 @@
   "generatedBy": "scripts/context-build.js",
   "generatedAt": "stable",
   "currentFeature": "customer",
-  "currentChange": "CR-20260626T011624Z-salesman-candidate-hardening",
+  "currentChange": "CR-20260626T115131Z-executable-customer-migration-baseline",
   "repositoryProfile": {
     "adapter": "ruoyi",
     "locked": true,
     "stack": "RuoYi + Vue3 + Codex Auto Dev OS"
   },
   "allowedEditRoots": [
+    "sql/migrations/V20260625_001_customer_schema.sql",
+    "sql/migrations/V20260625_002_customer_seed_public_customer.sql",
+    "sql/migrations/V20260625_003_customer_menu_permission.sql",
+    "sql/validation/customer_runtime_validation.sql",
+    "sql/customer.ownership.md",
+    "ai/registry/migration-registry.json",
+    "docs/customer-database-migration.md",
+    "ai/contracts/customer.db.md",
     "features/customer.md",
-    "ruoyi-business/src/main/java/com/ruoyi/business/customer/service/impl/CustomerServiceImpl.java",
-    "ruoyi-ui/src/views/customer/index.vue",
-    "tests/customer-risk-gate.test.js",
-    "ai/contracts/customer.api.md",
-    "ai/contracts/customer.ui.md",
+    "tests/high-risk-governance.test.js",
+    "memory/HANDOVER.md",
+    "memory/PROJECT_STATE.md",
+    "memory/CHANGELOG.md",
+    "memory/TASKS.json",
     "ai/context/current-context.md",
     "ai/context/current-context.json",
-    "ai/changes/CR-20260626T011624Z-salesman-candidate-hardening",
+    "ai/changes/CR-20260626T115131Z-executable-customer-migration-baseline",
     "ai/changes/CURRENT_CHANGE.json",
-    "ai/generated",
-    "graph",
-    "memory"
+    "ai/generated/db-schema.json",
+    "ai/generated/permissions.json",
+    "ai/registry/features.json",
+    "graph/ui-graph.json"
   ],
   "forbiddenEditRoots": [
-    "ruoyi-business/src/main/java/com/ruoyi/business/customer/service/impl/CustomerFundServiceImpl.java",
-    "ruoyi-business/src/main/java/com/ruoyi/business/customer/domain/CustomerFundEntry.java",
-    "ruoyi-business/src/main/java/com/ruoyi/business/customer/domain/SampleRebateRecord.java",
-    "ruoyi-business/src/main/resources/mapper/customer/CustomerMapper.xml",
-    "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
+    "ruoyi-business/src/main/java/com/ruoyi/business/customer",
+    "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer",
+    "ruoyi-business/src/main/resources/mapper/customer",
+    "ruoyi-ui/src/views/customer",
     "ruoyi-ui/src/api/customer.js",
-    "sql",
-    "ai/registry/migration-registry.json",
-    "ai/registry/idempotency-registry.json",
     "ruoyi-framework/src/main/java/com/ruoyi/framework/config/SecurityConfig.java",
     "ruoyi-admin/src/main/resources/application.yml",
     "ruoyi-admin/src/main/resources/application-druid.yml",
     "ruoyi-admin/src/main/resources/application-prod.yml",
     "package.json",
     "tools",
+    "ai/registry/idempotency-registry.json",
     "sales-order runtime, SQL, Vue, API, permission, or route",
     "salesorder runtime, SQL, Vue, API, permission, or route",
-    "customer fund logic",
-    "business database table structure"
+    "idempotent_request table",
+    "customer fund runtime code",
+    "non-customer business table structure"
   ],
   "mustReadFiles": [
     {
@@ -91,15 +98,15 @@
       "reason": "Governance backlog and required/deferred evidence."
     },
     {
-      "path": "ai/changes/CR-20260626T011624Z-salesman-candidate-hardening/impact.json",
+      "path": "ai/changes/CR-20260626T115131Z-executable-customer-migration-baseline/impact.json",
       "reason": "Current change allowed and forbidden edit roots."
     },
     {
-      "path": "ai/changes/CR-20260626T011624Z-salesman-candidate-hardening/plan.md",
+      "path": "ai/changes/CR-20260626T115131Z-executable-customer-migration-baseline/plan.md",
       "reason": "Current change execution plan."
     },
     {
-      "path": "ai/changes/CR-20260626T011624Z-salesman-candidate-hardening/verification.md",
+      "path": "ai/changes/CR-20260626T115131Z-executable-customer-migration-baseline/verification.md",
       "reason": "Current change verification evidence."
     }
   ],
@@ -306,11 +313,11 @@
   "verificationCommands": [
     "npm run resume",
     "npm run impact -- 客户管理",
-    "npm run scan:all",
+    "npm run check:high-risk-governance",
+    "node --test tests/high-risk-governance.test.js",
     "npm test",
     "npm run check",
-    "git diff --check",
-    "mvn -pl ruoyi-admin -am -DskipTests compile"
+    "git diff --check"
   ],
   "nextSteps": [
     "Keep this change governance-only.",

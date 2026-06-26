@@ -5,8 +5,8 @@
 - ID: `customer`
 - Name: 客户管理
 - Adapter: locked RuoYi adapter
-- Current change: `CR-20260625T170213Z-customer-fund-vocabulary-source-cleanup`
-- Current scope: customer fund vocabulary source cleanup. This change updates current briefs, contracts, context, README, and memory so active customer-fund wording is two-account only; it does not change customer runtime code or fund table structure.
+- Current change: `CR-20260626T115131Z-executable-customer-migration-baseline`
+- Current scope: executable customer migration baseline. This change turns the current customer schema, PUBLIC seed, menu/permission seed, and runtime validation from markdown-only ownership documentation into executable SQL files; it does not change customer Java/Vue runtime logic, customer fund runtime behavior, idempotency, or sales-order runtime.
 - Git/CI state: use Git history and workflow results as the source of truth; this brief does not handwrite current push status.
 
 ## Business Problem
@@ -96,6 +96,7 @@
 - Frontend region data: `ruoyi-ui/src/utils/region-data.js`
 - Frontend API client: `ruoyi-ui/src/api/customer.js`
 - SQL/menu/permission ownership: `sql/customer.ownership.md`
+- Executable SQL baseline: `sql/migrations/V20260625_001_customer_schema.sql`, `sql/migrations/V20260625_002_customer_seed_public_customer.sql`, `sql/migrations/V20260625_003_customer_menu_permission.sql`, and `sql/validation/customer_runtime_validation.sql`
 - Canonical runtime route: `/business/customer`
 - RuoYi menu segment: `business/customer`
 - Direct `/customer` is not supported.
@@ -227,6 +228,7 @@ Sample rebate generation remains separate from deposit: `POST /business/customer
 - 前端不再出现旧定金分类和旧录入文案。
 - 后端新业务只使用 `CUSTOMER_DEPOSIT` 表示客户级定金，`SAMPLE_REBATE` 表示样品返现；不再设计额外定金账户类型。
 - SQL ownership 是最终结构，不写旧数据兼容迁移。
+- Customer schema, PUBLIC seed, customer menu/permission seed, and customer runtime validation have executable R-06 SQL baselines registered as blocking migrations.
 - 不引入 sales-order / delivery / finance 模块代码。
 - API、UI、DB、权限、菜单、registry、graph、memory、handover 和 change record 同步。
 - `npm run scan:all`, `npm run finalize:change -- --summary "客户管理厂内归属与业务员维护口径"`, `npm run check` 完成后方可关闭。
@@ -242,6 +244,8 @@ Sample rebate generation remains separate from deposit: `POST /business/customer
 - `npm run finalize:change -- --summary "客户管理厂内归属与业务员维护口径"`
 - `npm run check`
 - `npm test`
+- `npm run check:high-risk-governance`
+- `node --test tests/high-risk-governance.test.js`
 
 ## Traceability
 

@@ -592,6 +592,51 @@ test('migration existing customer baseline warning does not fail', () => withRoo
   assert.ok(result.warnings.some((warning) => warning.code === 'baseline-migration-document'));
 }));
 
+test('repo-level customer migration baseline is executable blocking SQL', () => {
+  const registry = JSON.parse(fs.readFileSync('ai/registry/migration-registry.json', 'utf8'));
+  const entriesById = new Map((registry.entries || []).map((entry) => [entry.migrationId, entry]));
+  const expected = [
+    'customer-schema-baseline',
+    'customer-public-seed-baseline',
+    'customer-menu-permission-baseline',
+    'customer-runtime-validation'
+  ];
+
+  for (const migrationId of expected) {
+    const entry = entriesById.get(migrationId);
+    assert.ok(entry, `${migrationId} should be registered`);
+    assert.equal(entry.featureId, 'customer');
+    assert.equal(entry.blocking, true);
+    assert.equal(entry.status, 'required');
+    assert.equal(path.extname(entry.file), '.sql');
+    assert.equal(fs.existsSync(entry.file), true, `${entry.file} should exist`);
+    assert.ok(String(entry.rollbackPlan || '').trim(), `${migrationId} should record a rollbackPlan`);
+    assert.ok(Array.isArray(entry.verification) && entry.verification.length > 0, `${migrationId} should record verification`);
+  }
+
+  const currentCustomerMarkdownBaselines = (registry.entries || []).filter((entry) => (
+    entry.featureId === 'customer'
+    && entry.file === 'sql/customer.ownership.md'
+    && (entry.blocking === true || entry.status === 'required' || entry.type === 'baseline-ddl-document')
+  ));
+  assert.deepEqual(currentCustomerMarkdownBaselines, []);
+
+  const result = validateMigrationGate({ root: process.cwd() });
+  assert.deepEqual(result.failures, []);
+  assert.deepEqual(result.warnings.filter((warning) => warning.code === 'baseline-migration-document'), []);
+});
+
+test('repo-level migration registry points only to existing files', () => {
+  const registry = JSON.parse(fs.readFileSync('ai/registry/migration-registry.json', 'utf8'));
+  for (const entry of registry.entries || []) {
+    assert.equal(fs.existsSync(entry.file), true, `${entry.migrationId} points to missing file ${entry.file}`);
+    if (entry.blocking === true || entry.status === 'required') {
+      assert.ok(String(entry.rollbackPlan || '').trim(), `${entry.migrationId} missing rollbackPlan`);
+      assert.ok(Array.isArray(entry.verification) && entry.verification.length > 0, `${entry.migrationId} missing verification`);
+    }
+  }
+});
+
 test('migration empty registry passes', () => withRoot((root) => {
   writeJson(root, 'ai/registry/migration-registry.json', { schemaVersion: 1, entries: [] });
 
