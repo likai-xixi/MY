@@ -5,8 +5,8 @@
 - ID: `customer`
 - Name: 客户管理
 - Adapter: locked RuoYi adapter
-- Current change: `CR-20260626T124443Z-customer-fund-idempotency`
-- Current scope: R-07 customer fund idempotency. This change adds mandatory `idempotentKey` handling for customer deposit entry and sample rebate generation, plus the platform-level `idempotent_request` migration/service. It does not add sales-order runtime, production safety configuration, the old three-account fund model, or deduction/refund/adjustment/reversal runtime.
+- Current change: `CR-20260626T145150Z-customer-runtime-tests`
+- Current scope: R-08 customer runtime tests. This change adds Java service/unit tests and an opt-in MySQL/Testcontainers profile for the existing R-07 customer fund idempotency behavior. It does not change customer runtime behavior, sales-order runtime, production safety configuration, the fund model, database business table structure, or deduction/refund/adjustment/reversal runtime.
 - Git/CI state: use Git history and workflow results as the source of truth; this brief does not handwrite current push status.
 
 ## Business Problem
@@ -253,6 +253,7 @@ Sample rebate idempotency rules:
 - Customer schema, PUBLIC seed, customer menu/permission seed, and customer runtime validation have executable R-06 SQL baselines registered as blocking migrations.
 - `idempotent_request` has an executable R-07 migration registered as a blocking platform migration, with a unique key on `(biz_type, idempotent_key)`.
 - Customer deposit entry and sample rebate generation require `idempotentKey` and canonical request hashing; duplicate successful requests replay the original result and mismatched requests are rejected.
+- R-08 service tests cover missing `idempotentKey`, same-key/different-hash rejection, `PROCESSING` duplicate rejection, `SUCCESS` replay, customer deposit `CUSTOMER_DEPOSIT / DEPOSIT_IN` enforcement, sample rebate `SAMPLE_REBATE_GENERATE`, PUBLIC customer fund rejection, and salesman-candidate no-fallback behavior.
 - The customer page generates a hidden stable `idempotentKey` per fund-entry or sample-rebate dialog cycle and submits it without changing `ruoyi-ui/src/api/customer.js` or API paths.
 - 不引入 sales-order / delivery / finance 模块代码。
 - API、UI、DB、权限、菜单、registry、graph、memory、handover 和 change record 同步。
@@ -264,6 +265,8 @@ Sample rebate idempotency rules:
 - `npm run ai:do -- "功能迭代：客户管理"`
 - `npm run impact -- 客户管理`
 - Backend compile when Maven is available
+- `mvn -pl ruoyi-business -am test` for R-08 Java service/unit runtime tests
+- `mvn -pl ruoyi-business -am -Pintegration-test verify` for R-08 disposable MySQL/Testcontainers checks when Docker/MySQL Testcontainers are available
 - `npm --prefix ruoyi-ui run build:prod`
 - `npm run scan:all`
 - `npm run finalize:change -- --summary "客户管理厂内归属与业务员维护口径"`

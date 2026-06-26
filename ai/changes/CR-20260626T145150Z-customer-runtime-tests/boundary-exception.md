@@ -1,0 +1,11 @@
+# Boundary Exception
+
+Scope: `CR-20260626T145150Z-customer-runtime-tests`
+
+This R-08 customer runtime-test change does not add frontend routes or cross-feature frontend imports. The following files are pre-existing RuoYi platform/router/tool-generator files that the generic RuoYi boundary checker flags because original RuoYi routes and generator screens import `system`, `monitor`, or `tool` view/API internals.
+
+They are not owned by the `customer` feature, were not introduced by this change, and remain outside customer business code. The exception is limited to these exact paths:
+
+- `ruoyi-ui/src/router/index.js`
+- `ruoyi-ui/src/views/tool/gen/editTable.vue`
+- `ruoyi-ui/src/views/tool/gen/genInfoForm.vue`

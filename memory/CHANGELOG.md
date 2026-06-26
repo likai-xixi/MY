@@ -422,3 +422,14 @@
 - [not-run] MySQL execution of `sql/migrations/V20260625_004_idempotent_request.sql` and `sql/validation/customer_runtime_validation.sql` was not performed in this environment.
 - No sales-order runtime, production safety config, package/tools, old three-account fund model, deduction/refund/adjustment/reversal runtime, or non-`idempotent_request` database table was changed.
 - Feature: `customer`.
+
+## 2026-06-26 - customer runtime tests
+
+- Change: `ai/changes/CR-20260626T145150Z-customer-runtime-tests`.
+- R-08 adds Java runtime tests for customer deposit/sample-rebate idempotency, `idempotent_request` conflict/replay behavior, PUBLIC customer fund-entry rejection, CUSTOMER_DEPOSIT/DEPOSIT_IN enforcement, SAMPLE_REBATE_GENERATE stamping, and salesman candidate no-fallback behavior.
+- Added an opt-in `integration-test` Maven profile for MySQL/Testcontainers concurrent deposit and uniqueness verification.
+- Updated customer/high-risk governance tests, idempotency and migration registries, customer feature docs/contracts, context, and memory to record runtime-test ownership.
+- [local] Verification passed: `npm run resume`, `npm run impact -- 客户管理`, `npm run scan:all`, `node --test tests/customer-risk-gate.test.js` with 16 tests, `npm run check:high-risk-governance`, `node --test tests/high-risk-governance.test.js` with 40 tests, `npm test` with 197 tests, configured Maven `ruoyi-business` unit tests with 19 tests, configured Maven `ruoyi-business -Pintegration-test verify` with `CustomerFundMySqlIT` 1 test, configured Maven `ruoyi-admin -am -DskipTests compile`, `npm run check` with 197 tests, and `git diff --check`.
+- [not-run] Plain `mvn` is unavailable on PATH; configured Maven path passed.
+- No customer runtime behavior, sales-order runtime, production safety config, package scripts, tools, old three-account fund model, deduction/refund/adjustment/reversal runtime, production config, or database business table structure was changed.
+- Feature: `customer`.

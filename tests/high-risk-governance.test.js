@@ -497,6 +497,10 @@ test('repo-level customer fund idempotency entries are required and complete', (
     assert.equal(entry.conflictBehavior, 'reject-payload-mismatch');
     assert.equal(entry.resultReplay, 'same-response');
     assert.ok(Array.isArray(entry.tests) && entry.tests.includes('tests/customer-risk-gate.test.js'));
+    assert.ok(
+      entry.tests.some((testFile) => testFile.startsWith('ruoyi-business/src/test/java/')),
+      `${api} should include Java runtime test ownership`
+    );
   }
 
   const result = validateIdempotencyRegistry({ root: process.cwd() });

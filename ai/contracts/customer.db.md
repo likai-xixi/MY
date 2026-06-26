@@ -100,3 +100,5 @@ DDL, menu SQL, and permission SQL ownership remains documented in `sql/customer.
 - `npm run check:high-risk-governance`
 - `node --test tests/high-risk-governance.test.js`
 - `mysql < sql/validation/customer_runtime_validation.sql` when a disposable MySQL test database is available
+- `mvn -pl ruoyi-business -am test` covers R-08 Java service/unit customer fund and idempotency behavior without changing schema.
+- `mvn -pl ruoyi-business -am -Pintegration-test verify` applies the existing customer/idempotency SQL in disposable MySQL and checks concurrent deposit row-lock balance plus unique-key enforcement when Docker/MySQL Testcontainers are available.

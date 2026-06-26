@@ -87,3 +87,5 @@ Endpoint IDs are recorded in `graph/api-graph.json` and `memory/API_CATALOG.md`.
 - `npm run scan:api-clients`
 - `npm run check:registry`
 - `npm run check:graph`
+- `mvn -pl ruoyi-business -am test` covers R-08 Java service/unit idempotency cases for customer deposit, sample rebate, public-customer fund rejection, and salesman-candidate no-fallback behavior.
+- `mvn -pl ruoyi-business -am -Pintegration-test verify` covers R-08 disposable MySQL/Testcontainers deposit idempotency/concurrency checks when Docker/MySQL Testcontainers are available.

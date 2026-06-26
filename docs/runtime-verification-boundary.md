@@ -44,3 +44,10 @@
 - MySQL row-lock/concurrency tests
 - browser smoke tests
 - manual acceptance for customer/sales/production/fund workflows
+
+## R-08 customer runtime tests
+
+- `mvn -pl ruoyi-business -am test` is the customer Java service/unit test layer for R-08.
+- `ruoyi-business` also defines an opt-in `integration-test` Maven profile for MySQL/Testcontainers checks. It is not part of default `npm run check`.
+- R-08 Java tests may prove customer service/idempotency behavior, but they do not prove browser acceptance, production readiness, released-data migration safety, or sales-order readiness.
+- MySQL/Testcontainers results must be recorded as run only when `mvn -pl ruoyi-business -am -Pintegration-test verify` actually passes in the current environment.

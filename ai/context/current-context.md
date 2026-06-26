@@ -1,50 +1,50 @@
 # Current Context
 
 Current feature: `customer`
-Current change: `CR-20260626T124443Z-customer-fund-idempotency`
+Current change: `CR-20260626T145150Z-customer-runtime-tests`
 Repository: RuoYi + Vue3 + Codex Auto Dev OS
 Profile: adapter `ruoyi`, locked `true`
 
 ## Allowed Edit Roots
 
-- `ruoyi-business/src/main/java/com/ruoyi/business/customer/domain/CustomerFundEntry.java`
-- `ruoyi-business/src/main/java/com/ruoyi/business/customer/domain/SampleRebateRecord.java`
-- `ruoyi-business/src/main/java/com/ruoyi/business/customer/service/impl/CustomerFundServiceImpl.java`
-- `ruoyi-business/src/main/java/com/ruoyi/business/customer/service/impl/CustomerServiceImpl.java`
-- `ruoyi-business/src/main/java/com/ruoyi/business/customer/mapper/CustomerMapper.java`
-- `ruoyi-business/src/main/resources/mapper/customer/CustomerMapper.xml`
-- `ruoyi-business/src/main/java/com/ruoyi/business/common/idempotency`
-- `ruoyi-business/src/main/resources/mapper/common/IdempotentRequestMapper.xml`
-- `sql/migrations/V20260625_004_idempotent_request.sql`
-- `sql/validation/customer_runtime_validation.sql`
-- `ai/registry/features.json`
-- `ai/registry/idempotency-registry.json`
-- `ai/registry/migration-registry.json`
+- `ruoyi-business/pom.xml`
+- `ruoyi-business/src/test/java`
+- `ruoyi-admin/src/test/java`
+- `tests/customer-risk-gate.test.js`
+- `tests/high-risk-governance.test.js`
 - `ai/contracts/customer.api.md`
 - `ai/contracts/customer.db.md`
 - `features/customer.md`
-- `ruoyi-ui/src/views/customer/index.vue`
-- `tests/customer-risk-gate.test.js`
-- `tests/high-risk-governance.test.js`
+- `docs/runtime-verification-boundary.md`
+- `docs/customer-database-migration.md`
+- `ai/registry/idempotency-registry.json`
+- `ai/registry/migration-registry.json`
+- `ai/registry/features.json`
 - `memory/HANDOVER.md`
-- `memory/API_CATALOG.md`
 - `memory/PROJECT_STATE.md`
 - `memory/CHANGELOG.md`
 - `memory/TASKS.json`
 - `ai/context/current-context.md`
 - `ai/context/current-context.json`
-- `ai/changes/CR-20260626T124443Z-customer-fund-idempotency`
+- `ai/changes/CR-20260626T145150Z-customer-runtime-tests`
 - `ai/changes/CURRENT_CHANGE.json`
-- `ai/generated`
 
 ## Forbidden Edit Roots
 
+- `ruoyi-business/src/main/java/com/ruoyi/business/customer`
+- `ruoyi-business/src/main/java/com/ruoyi/business/common/idempotency`
+- `ruoyi-business/src/main/resources/mapper/customer`
+- `ruoyi-business/src/main/resources/mapper/common`
+- `ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer`
+- `ruoyi-ui/src/views/customer`
+- `ruoyi-ui/src/api/customer.js`
 - `ruoyi-framework/src/main/java/com/ruoyi/framework/config/SecurityConfig.java`
 - `ruoyi-admin/src/main/resources/application.yml`
 - `ruoyi-admin/src/main/resources/application-druid.yml`
 - `ruoyi-admin/src/main/resources/application-prod.yml`
 - `package.json`
 - `tools`
+- `sql`
 - `ruoyi-business/src/main/java/com/ruoyi/business/sales-order`
 - `ruoyi-business/src/main/java/com/ruoyi/business/salesorder`
 - `ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/sales-order`
@@ -65,6 +65,7 @@ Profile: adapter `ruoyi`, locked `true`
 - `DEPOSIT_REFUND runtime`
 - `DEPOSIT_ADJUST runtime`
 - `DEPOSIT_REVERSE runtime`
+- `database business table structure`
 
 ## Must Read Files
 
@@ -79,9 +80,9 @@ Profile: adapter `ruoyi`, locked `true`
 - `ai/roadmap/phase-gates.json` - beforeSalesOrder gate state.
 - `ai/roadmap/refactor-debt.json` - Known debt affecting sales-order handoff.
 - `ai/roadmap/enhancement-backlog.json` - Governance backlog and required/deferred evidence.
-- `ai/changes/CR-20260626T124443Z-customer-fund-idempotency/impact.json` - Current change allowed and forbidden edit roots.
-- `ai/changes/CR-20260626T124443Z-customer-fund-idempotency/plan.md` - Current change execution plan.
-- `ai/changes/CR-20260626T124443Z-customer-fund-idempotency/verification.md` - Current change verification evidence.
+- `ai/changes/CR-20260626T145150Z-customer-runtime-tests/impact.json` - Current change allowed and forbidden edit roots.
+- `ai/changes/CR-20260626T145150Z-customer-runtime-tests/plan.md` - Current change execution plan.
+- `ai/changes/CR-20260626T145150Z-customer-runtime-tests/verification.md` - Current change verification evidence.
 
 ## Must Not Break
 
@@ -151,7 +152,8 @@ Deferred:
 - `npm test`
 - `npm run check`
 - `git diff --check`
-- `mvn -pl ruoyi-admin -am -DskipTests compile or configured runtime-policy Maven path`
+- `mvn -pl ruoyi-business -am test or configured runtime-policy Maven path`
+- `mvn -pl ruoyi-admin -am test or mvn -pl ruoyi-admin -am -DskipTests compile, using configured runtime-policy Maven path when plain mvn is unavailable`
 
 ## Next Steps
 

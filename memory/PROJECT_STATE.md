@@ -65,6 +65,10 @@ Final R-07 submit-scope audit explicitly includes `ai/registry/features.json` an
 
 R-07 does not add sales-order runtime, salesorder runtime, production safety configuration, package scripts, tools, the old `LONG_TERM_DEPOSIT` / `ROLLING_ORDER_DEPOSIT` model, `CUSTOMER_DEPOSIT` deduction/refund/adjustment/reversal runtime, `SAMPLE_REBATE` deduction runtime, or database tables other than `idempotent_request`. Runtime MySQL execution of the R-07 migration has not been performed in this environment unless a later verification note says otherwise.
 
+Current customer runtime-test change `CR-20260626T145150Z-customer-runtime-tests` is R-08. It adds Java service/runtime tests and an opt-in MySQL/Testcontainers integration profile for customer fund idempotency without changing customer production behavior. The tests cover missing idempotent keys, same-key/different-hash rejection, PROCESSING duplicate rejection, SUCCESS replay, CUSTOMER_DEPOSIT/DEPOSIT_IN enforcement, PUBLIC customer fund entry rejection, SAMPLE_REBATE_GENERATE stamping, salesman candidate no-fallback behavior, concurrent deposit balance consistency, `idempotent_request` uniqueness, and retry-safe `flow_no` / `deposit_batch_no` generation.
+
+R-08 does not modify customer production Java, idempotency production Java, mapper XML, customer controller, customer Vue/API, production safety configuration, package scripts, tools, SQL business table structure, sales-order/salesorder runtime, old three-account fund model, or deduction/refund/adjustment/reversal runtime.
+
 For future module boundaries, sales-order may select customer, carry default contact/address and owner snapshots, and show `CUSTOMER_DEPOSIT` status during submit, but must not directly deduct customer funds. Delivery / finance contracts must later define `CUSTOMER_DEPOSIT` deduction/refund/adjustment/reversal and `SAMPLE_REBATE` deduction. Every customer-fund mutation must write `customer_fund_flow`.
 
 Current customer fund concurrency change `CR-20260625T042041Z-change`:
@@ -114,7 +118,7 @@ Sales order, shipment, finance settlement, automatic deduction, receipt claiming
 
 ## Active Task
 
-`TASK-CUSTOMER` is the active customer task in `memory/TASKS.json` for `CR-20260626T124443Z-customer-fund-idempotency`. `TASK-0002` remains the platform/governance tracking task. `beforeSalesOrder` remains blocked and R-07 must not be treated as sales-order readiness.
+`TASK-CUSTOMER` is the active customer task in `memory/TASKS.json` for `CR-20260626T145150Z-customer-runtime-tests`. `TASK-0002` remains the platform/governance tracking task. `beforeSalesOrder` remains blocked and R-08 must not be treated as sales-order readiness.
 
 ## Latest Session
 
@@ -122,8 +126,8 @@ Sales order, shipment, finance settlement, automatic deduction, receipt claiming
 
 ## Next Actions
 
-- R-07 customer fund idempotency is locally verified and ready for review.
-- Choose R-08 customer runtime tests or R-09 sales-order pre-implementation contract package.
+- R-08 customer runtime tests are locally verified and ready for review.
+- Continue with R-09 sales-order pre-implementation contract package.
 - Keep `beforeSalesOrder` blocked unless required contracts and review explicitly unlock it later.
 - Before any future runtime claim about PUBLIC data cleanliness, rerun the invariant SQL in `sql/customer.ownership.md` to confirm only `PUB_DIRECT_SALE` and `PUB_SELF_MEDIA` exist as active PUBLIC rows.
 
@@ -150,6 +154,8 @@ Sales order, shipment, finance settlement, automatic deduction, receipt claiming
 - Old data migration or old fund-account compatibility.
 
 ## Last Verification
+
+For `CR-20260626T145150Z-customer-runtime-tests`, [local] `npm run resume`, [local] `npm run impact -- 客户管理`, [local] `npm run scan:all`, [local] `node --test tests/customer-risk-gate.test.js` with 16/16 tests, [local] `npm run check:high-risk-governance`, [local] `node --test tests/high-risk-governance.test.js` with 40/40 tests, [local] `npm test` with 197/197 tests, [local] configured Maven `-pl ruoyi-business -am test` with 19/19 tests, [local] configured Maven `-pl ruoyi-business -am -Pintegration-test verify` with `CustomerFundMySqlIT` 1/1 using MySQL Testcontainers, [local] configured Maven `-pl ruoyi-admin -am -DskipTests compile`, [local] `npm run check` with 197/197 Node tests, and [local] `git diff --check` passed. [not-run] Plain `mvn` is unavailable on PATH; configured Maven path passed.
 
 For `CR-20260626T124443Z-customer-fund-idempotency`, [local] `npm run resume`, [local] frontend `idempotentKey` precheck commands, [local] `npm run impact -- 客户管理`, [local] `npm run scan:all`, [local] `npm run context:build -- customer`, [local] `node --test tests/customer-risk-gate.test.js` with 15/15 tests, [local] `npm --prefix ruoyi-ui run build:prod`, [local] `npm run check:high-risk-governance`, [local] `node --test tests/high-risk-governance.test.js` with 40/40 tests, [local] `npm test` with 196/196 tests, [local] configured Maven path compile passed with `BUILD SUCCESS`, [local] `npm run check` passed with 196/196 Node tests, and [local] `git diff --check` passed. [not-run] Plain `mvn -pl ruoyi-admin -am -DskipTests compile` is unavailable on PATH. [not-run] MySQL execution of the R-07 SQL files was not performed in this environment.
 

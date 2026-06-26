@@ -105,6 +105,8 @@
         "npm run check:high-risk-governance",
         "node --test tests/high-risk-governance.test.js",
         "node --test tests/customer-risk-gate.test.js",
+        "C:\\Users\\11131\\.cache\\codex-tools\\apache-maven-3.9.9\\bin\\mvn.cmd -pl ruoyi-business -am test",
+        "C:\\Users\\11131\\.cache\\codex-tools\\apache-maven-3.9.9\\bin\\mvn.cmd -pl ruoyi-business -am -Pintegration-test verify when Docker/MySQL Testcontainers are available",
         "mysql < sql/migrations/V20260625_004_idempotent_request.sql when a disposable MySQL test database is available"
       ],
       "owner": "platform",

@@ -26,6 +26,8 @@ Each blocking entry must keep a non-empty `rollbackPlan`, non-empty `verificatio
 
 R-06 does not add `idempotent_request`, sales-order tables, sales-order permissions, sales-order routes, customer fund runtime logic, Java runtime changes, Vue runtime changes, or non-customer business tables.
 
+R-08 adds customer runtime tests only. It does not change executable SQL files, customer table structure, `idempotent_request` structure, production database configuration, or business fund behavior.
+
 The current final customer fund vocabulary remains:
 
 - `CUSTOMER_DEPOSIT`
@@ -45,3 +47,13 @@ mysql < sql/validation/customer_runtime_validation.sql
 ```
 
 The validation SQL is read-only. A passing validation run returns no violation rows for every query.
+
+## R-08 Runtime Test Boundary
+
+The R-08 `integration-test` Maven profile uses Testcontainers MySQL for disposable runtime checks:
+
+```bash
+mvn -pl ruoyi-business -am -Pintegration-test verify
+```
+
+The profile applies the existing R-06 customer schema SQL and R-07 `idempotent_request` SQL in a container database, then checks customer deposit row-lock balance consistency, `idempotent_request` unique-key behavior, and generated fund-flow/deposit-batch number uniqueness. It is not part of default `npm run check`.

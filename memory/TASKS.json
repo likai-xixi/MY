@@ -153,8 +153,8 @@
       "status": "in_progress",
       "owner": "workflow",
       "priority": "normal",
-      "statusReason": "CR-20260626T124443Z-customer-fund-idempotency is R-07: customer deposit entry and sample rebate generation now require idempotentKey, the customer page generates stable hidden keys for both submit flows, and platform idempotent_request support handles canonical request hashing, success replay, processing rejection, and mismatch rejection. Sales-order runtime, production safety config, package/tools, old three-account funds, and deduction/refund/adjustment/reversal runtime remain untouched.",
-      "nextStep": "Choose R-08 customer runtime tests or R-09 sales-order pre-implementation contract package.",
+      "statusReason": "CR-20260626T145150Z-customer-runtime-tests is R-08: customer runtime idempotency tests now cover missing idempotent keys, same-key/different-hash rejection, PROCESSING duplicate rejection, SUCCESS replay, CUSTOMER_DEPOSIT/DEPOSIT_IN enforcement, PUBLIC customer fund entry rejection, SAMPLE_REBATE_GENERATE stamping, salesman candidate no-fallback behavior, and MySQL/Testcontainers concurrent deposit/idempotent_request uniqueness. Sales-order runtime, production safety config, package/tools, old three-account funds, database business table structure, and deduction/refund/adjustment/reversal runtime remain untouched.",
+      "nextStep": "Continue with R-09 sales-order pre-implementation contract package.",
       "blockedBy": [],
       "verification": [
         "npm run resume",
@@ -364,10 +364,21 @@
         "npm test passed with 191 tests for CR-20260626T115131Z-executable-customer-migration-baseline",
         "npm run check passed with 191 tests for CR-20260626T115131Z-executable-customer-migration-baseline",
         "git diff --check passed for CR-20260626T115131Z-executable-customer-migration-baseline",
-        "[not-run] MySQL execution of the R-06 SQL files was not performed in this environment"
+        "[not-run] MySQL execution of the R-06 SQL files was not performed in this environment",
+        "CR-20260626T145150Z-customer-runtime-tests added Java runtime tests for customer fund idempotency and salesman candidate no-fallback behavior without customer production runtime changes",
+        "CR-20260626T145150Z-customer-runtime-tests added an opt-in integration-test Maven profile for MySQL/Testcontainers customer fund concurrency and idempotent_request uniqueness checks",
+        "node --test tests/customer-risk-gate.test.js passed with 16 tests for CR-20260626T145150Z-customer-runtime-tests",
+        "node --test tests/high-risk-governance.test.js passed with 40 tests for CR-20260626T145150Z-customer-runtime-tests",
+        "npm test passed with 197 tests for CR-20260626T145150Z-customer-runtime-tests",
+        "plain mvn unavailable; configured Maven path passed for CR-20260626T145150Z-customer-runtime-tests using C:\\Users\\11131\\.cache\\codex-tools\\apache-maven-3.9.9\\bin\\mvn.cmd",
+        "configured Maven ruoyi-business unit tests passed 19/19 for CR-20260626T145150Z-customer-runtime-tests",
+        "configured Maven ruoyi-business -Pintegration-test verify passed CustomerFundMySqlIT 1/1 with MySQL Testcontainers for CR-20260626T145150Z-customer-runtime-tests",
+        "configured Maven ruoyi-admin -am -DskipTests compile passed for CR-20260626T145150Z-customer-runtime-tests",
+        "npm run check passed with 197 tests for CR-20260626T145150Z-customer-runtime-tests",
+        "git diff --check passed for CR-20260626T145150Z-customer-runtime-tests"
       ],
       "latestSession": "memory/sessions/2026-06-25-customer-fund-concurrency.md",
-      "latestChange": "CR-20260626T124443Z-customer-fund-idempotency",
+      "latestChange": "CR-20260626T145150Z-customer-runtime-tests",
       "handoverRequired": true,
       "updatedAt": "2026-06-26"
     }

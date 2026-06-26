@@ -17,7 +17,10 @@
       "lockStrategy": "unique-biz-type-key-and-row-lock",
       "resultReplay": "same-response",
       "tests": [
-        "tests/customer-risk-gate.test.js"
+        "tests/customer-risk-gate.test.js",
+        "ruoyi-business/src/test/java/com/ruoyi/business/common/idempotency/IdempotencyServiceTest.java",
+        "ruoyi-business/src/test/java/com/ruoyi/business/customer/service/CustomerFundServiceTest.java",
+        "ruoyi-business/src/test/java/com/ruoyi/business/customer/service/CustomerFundMySqlIT.java"
       ],
       "status": "required"
     },
@@ -36,7 +39,10 @@
       "lockStrategy": "unique-biz-type-key-and-row-lock",
       "resultReplay": "same-response",
       "tests": [
-        "tests/customer-risk-gate.test.js"
+        "tests/customer-risk-gate.test.js",
+        "ruoyi-business/src/test/java/com/ruoyi/business/common/idempotency/IdempotencyServiceTest.java",
+        "ruoyi-business/src/test/java/com/ruoyi/business/customer/service/CustomerFundServiceTest.java",
+        "ruoyi-business/src/test/java/com/ruoyi/business/customer/service/CustomerServiceTest.java"
       ],
       "status": "required"
     }

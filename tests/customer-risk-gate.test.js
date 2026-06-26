@@ -24,6 +24,10 @@ const IDEMPOTENCY_MAPPER_XML = 'ruoyi-business/src/main/resources/mapper/common/
 const IDEMPOTENT_MIGRATION = 'sql/migrations/V20260625_004_idempotent_request.sql';
 const IDEMPOTENCY_REGISTRY = 'ai/registry/idempotency-registry.json';
 const MIGRATION_REGISTRY = 'ai/registry/migration-registry.json';
+const IDEMPOTENCY_SERVICE_TEST = 'ruoyi-business/src/test/java/com/ruoyi/business/common/idempotency/IdempotencyServiceTest.java';
+const CUSTOMER_FUND_SERVICE_TEST = 'ruoyi-business/src/test/java/com/ruoyi/business/customer/service/CustomerFundServiceTest.java';
+const CUSTOMER_SERVICE_TEST = 'ruoyi-business/src/test/java/com/ruoyi/business/customer/service/CustomerServiceTest.java';
+const CUSTOMER_FUND_MYSQL_IT = 'ruoyi-business/src/test/java/com/ruoyi/business/customer/service/CustomerFundMySqlIT.java';
 
 const BLOCKED_DEPOSIT_FLOW_TYPES = [
   'DEPOSIT_DEDUCT',
@@ -259,6 +263,31 @@ test('customer fund idempotency payload migration and registries are required', 
   assert.equal(migrationEntry.file, IDEMPOTENT_MIGRATION);
   assert.equal(migrationEntry.blocking, true);
   assert.ok(migrationEntry.appliesToTables.includes('idempotent_request'));
+});
+
+test('customer runtime idempotency Java tests are registered as idempotency evidence', () => {
+  const idempotencyRegistry = readJson(IDEMPOTENCY_REGISTRY);
+  const runtimeTests = [
+    IDEMPOTENCY_SERVICE_TEST,
+    CUSTOMER_FUND_SERVICE_TEST,
+    CUSTOMER_SERVICE_TEST,
+    CUSTOMER_FUND_MYSQL_IT
+  ];
+
+  for (const file of runtimeTests) {
+    assert.equal(fileExists(file), true, `${file} must exist`);
+  }
+
+  const entriesByApi = new Map(idempotencyRegistry.entries.map((entry) => [entry.api, entry]));
+  const depositTests = entriesByApi.get('/business/customer/{customerId}/fund/deposit').tests;
+  const rebateTests = entriesByApi.get('/business/customer/{customerId}/sample-rebate').tests;
+
+  assert.ok(depositTests.includes(IDEMPOTENCY_SERVICE_TEST));
+  assert.ok(depositTests.includes(CUSTOMER_FUND_SERVICE_TEST));
+  assert.ok(depositTests.includes(CUSTOMER_FUND_MYSQL_IT));
+  assert.ok(rebateTests.includes(IDEMPOTENCY_SERVICE_TEST));
+  assert.ok(rebateTests.includes(CUSTOMER_FUND_SERVICE_TEST));
+  assert.ok(rebateTests.includes(CUSTOMER_SERVICE_TEST));
 });
 
 test('customer page submits stable idempotentKey for fund entry and sample rebate', () => {
