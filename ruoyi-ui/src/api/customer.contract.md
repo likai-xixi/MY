@@ -8,6 +8,9 @@ Runtime API client: `ruoyi-ui/src/api/customer.js`.
 
 - Controller: `ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java`
 - Base path: `/business/customer`
+- Canonical runtime route: `/business/customer`
+- RuoYi menu segment: `business/customer`
+- Direct `/customer` is not supported.
 - Java class prefix: `Customer`
 
 ## Client Methods
@@ -36,9 +39,17 @@ The customer export endpoint is invoked by the page through RuoYi `proxy.downloa
 
 The API client exposes customer-level deposit and sample rebate entry points only. It must not expose direct account-balance update calls.
 
+Customer fund account vocabulary has exactly two active source values:
+
+- `CUSTOMER_DEPOSIT`: 客户级定金.
+- `SAMPLE_REBATE`: 样品返现.
+
 - `addFundDeposit(customerId, data)` keeps the path `/business/customer/{customerId}/fund/deposit`.
 - New deposit entries use `CUSTOMER_DEPOSIT`. The frontend may omit `accountType`; the backend defaults deposit entries to `CUSTOMER_DEPOSIT`. If a caller submits `accountType=SAMPLE_REBATE` or any other non-`CUSTOMER_DEPOSIT` value, the backend rejects it before account balance, batch, or flow mutation.
 - This client method is deposit-in only. If `flowType` is omitted or `DEPOSIT_IN`, the backend records an incoming deposit. `DEPOSIT_DEDUCT`, `DEPOSIT_REFUND`, `DEPOSIT_ADJUST`, and `DEPOSIT_REVERSE` are rejected by this endpoint and must wait for a separate fund-processing flow.
+- Current customer management only implements `CUSTOMER_DEPOSIT` incoming deposit. It does not implement deduction, refund, adjustment, or reversal.
+- Sales-order may show `CUSTOMER_DEPOSIT` status at submit time, but must not directly deduct customer funds.
+- Delivery / finance contracts must later define `CUSTOMER_DEPOSIT` deduction/refund/adjustment/reversal and `SAMPLE_REBATE` deduction. Every fund mutation must write `customer_fund_flow`.
 - Public customers must not show customer-level deposit entry UI and are rejected by the backend if called directly.
 - Sample rebate remains separate: callers must use `/business/customer/{customerId}/sample-rebate`, which creates `sample_rebate_record` and then writes internal `SAMPLE_REBATE_GENERATE` flow against the `SAMPLE_REBATE` account.
 

@@ -33,7 +33,7 @@ Endpoint IDs are recorded in `graph/api-graph.json` and `memory/API_CATALOG.md`.
 - `PUT /business/customer` is the normal REAL customer edit endpoint. Built-in PUBLIC customers are rejected with `内置公共客户不允许在普通客户编辑中修改。`; REAL customers cannot be changed to PUBLIC and are rejected with `真实客户不允许改为公共客户。`
 - `PUT /business/customer/changeStatus` rejects built-in PUBLIC customers with `内置公共客户不允许停用。`
 - `DELETE /business/customer/{customerIds}` rejects built-in PUBLIC customers with `内置公共客户不允许删除。`
-- Public customers are only order-classification masters. They do not require contact, phone, address, or fixed owner fields; later sales-order payloads must capture the actual buyer, phone, shipping address, receiving salesperson, and source-channel snapshots.
+- Public customers are only order-classification masters. They do not require contact, phone, address, or fixed owner fields; later sales-order payloads must capture the actual buyer, phone, shipping address, receiving salesperson, and source-channel snapshots. Sales-order submit may show `CUSTOMER_DEPOSIT` status, but must not directly deduct customer funds.
 - Customer create/update/detail/list payloads include ownership fields:
   - `ownerType`: `FACTORY`, `SALESMAN`, or `NONE`
   - `ownerSource`: `FACTORY_POOL`, `FACTORY_ASSIGNED`, `SALESMAN_SELF`, or `NONE`
@@ -62,9 +62,11 @@ Endpoint IDs are recorded in `graph/api-graph.json` and `memory/API_CATALOG.md`.
 
 - Other modules may call only documented API endpoints, not internal service or mapper code.
 - Sales order and shipment modules may later read customer defaults and policy data through documented APIs or explicit service contracts recorded in a future change.
-- Fund deposit endpoint path remains `POST /business/customer/{customerId}/fund/deposit`. New customer-level deposit entries use only `CUSTOMER_DEPOSIT`; the request may omit `accountType`, and the backend defaults it to `CUSTOMER_DEPOSIT`. Explicit `CUSTOMER_DEPOSIT` is accepted; `SAMPLE_REBATE` or any other non-`CUSTOMER_DEPOSIT` `accountType` is rejected before account balance, deposit batch, or fund flow mutation. There is no API path diff in the `CR-20260625T042041Z-change` fund concurrency slice.
+- Fund deposit endpoint path remains `POST /business/customer/{customerId}/fund/deposit`. New customer-level deposit entries use only `CUSTOMER_DEPOSIT` for 客户级定金; the request may omit `accountType`, and the backend defaults it to `CUSTOMER_DEPOSIT`. Explicit `CUSTOMER_DEPOSIT` is accepted; `SAMPLE_REBATE` or any other non-`CUSTOMER_DEPOSIT` `accountType` is rejected before account balance, deposit batch, or fund flow mutation. There is no API path diff in the `CR-20260625T042041Z-change` fund concurrency slice.
 - `POST /business/customer/{customerId}/fund/deposit` is deposit-in only: omitted `flowType` or `DEPOSIT_IN` records an incoming deposit; `DEPOSIT_DEDUCT`, `DEPOSIT_REFUND`, `DEPOSIT_ADJUST`, and `DEPOSIT_REVERSE` are rejected with `定金录入接口只允许入金，扣减、退款、调整、冲正请走独立资金处理流程。`
 - Sample rebate must enter through `POST /business/customer/{customerId}/sample-rebate`, which creates `sample_rebate_record` and then lets the internal service write `SAMPLE_REBATE_GENERATE` against the `SAMPLE_REBATE` account.
+- Current customer APIs do not implement `CUSTOMER_DEPOSIT` deduction, refund, adjustment, or reversal. Delivery / finance contracts must define those operations later, and every fund mutation must write `customer_fund_flow`.
+- `SAMPLE_REBATE` deduction is also reserved for later delivery / finance contracts.
 - Public customers must be rejected by customer-level deposit, sample-policy save, and sample-rebate generation operations.
 - Fund account balances must not be modified by ad hoc APIs. Mutating fund endpoints must call `CustomerFundService`, lock the `customer_fund_account` row with `selectFundAccountForUpdate`, update balances, and write `customer_fund_flow` in the same Spring transaction. Missing account creation and `flow_no` / `deposit_batch_no` unique-key collisions must be handled with bounded `DuplicateKeyException` retry.
 - Salesman ownership uses existing RuoYi user, role, and dept structures. This feature must not create a separate salesman-management API.

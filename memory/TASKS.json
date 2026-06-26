@@ -8,8 +8,8 @@
       "status": "in_progress",
       "owner": "Codex",
       "priority": "high",
-      "statusReason": "Governance change CR-20260625T162821Z-production-safety-baseline is R-02: it removes /druid/** from explicit permitAll, adds application-prod.yml with environment-variable production configuration, disables production Druid console and Swagger UI by default, adds check:prod-safety, adds verify:release, and documents that default/dev config is not production-ready. It does not modify customer runtime code, create sales-order runtime code, change customer fund model code, alter migration/idempotency registry, or change business database structure.",
-      "nextStep": "Review/commit R-02 production safety baseline if accepted, then choose R-03 customer fund vocabulary source cleanup or R-04 governance/runtime verification boundary clarification. Keep beforeSalesOrder blocked unless required contracts and review explicitly unlock it later.",
+      "statusReason": "Governance/context cleanup CR-20260625T170213Z-customer-fund-vocabulary-source-cleanup is R-03: it cleans current customer fund vocabulary sources so active context uses only CUSTOMER_DEPOSIT for 客户级定金 and SAMPLE_REBATE for 样品返现. Local verification passed. It does not modify customer runtime code, create sales-order runtime code, change production safety config, change customer fund runtime code, alter migration/idempotency registry, or change business database structure.",
+      "nextStep": "Choose R-04 governance/runtime verification boundary clarification or R-05 customer salesman candidate hardening. Keep beforeSalesOrder blocked unless required contracts and review explicitly unlock it later.",
       "blockedBy": [],
       "verification": [
         "npm run profile:setup",
@@ -127,12 +127,20 @@
         "[not-run] plain mvn -pl ruoyi-admin -am -DskipTests compile is not runnable on local PATH for CR-20260625T162821Z-production-safety-baseline",
         "cached Maven compile passed for CR-20260625T162821Z-production-safety-baseline using C:\\Users\\11131\\.cache\\codex-tools\\apache-maven-3.9.9\\bin\\mvn.cmd",
         "npm --prefix ruoyi-ui run build:prod passed for CR-20260625T162821Z-production-safety-baseline",
-        "[inconclusive] npm run verify:release ran npm run check and check:prod-safety successfully, then failed because plain mvn is not available on PATH"
+        "[inconclusive] npm run verify:release ran npm run check and check:prod-safety successfully, then failed because plain mvn is not available on PATH",
+        "CR-20260625T170213Z-customer-fund-vocabulary-source-cleanup created R-03 customer fund vocabulary source cleanup",
+        "R-03 current-doc old-fund-vocabulary scan found no active matches in current customer brief, context, contracts, README, handover, project state, changelog, or tasks",
+        "R-03 recursive repository scan found remaining old fund vocabulary only in historical change evidence, runtime logs, and one historical session note",
+        "npm run scan:all passed for CR-20260625T170213Z-customer-fund-vocabulary-source-cleanup",
+        "npm run check:high-risk-governance passed for CR-20260625T170213Z-customer-fund-vocabulary-source-cleanup with the expected non-blocking customer baseline DDL warning",
+        "npm test passed with 185 Node tests for CR-20260625T170213Z-customer-fund-vocabulary-source-cleanup after scoped current-CR baseline exceptions and context regeneration",
+        "npm run check passed for CR-20260625T170213Z-customer-fund-vocabulary-source-cleanup with 185 Node tests",
+        "git diff --check passed for CR-20260625T170213Z-customer-fund-vocabulary-source-cleanup"
       ],
       "latestSession": "memory/sessions/2026-06-25-pre-release-breaking-change-policy.md",
       "handoverRequired": true,
-      "updatedAt": "2026-06-25",
-      "latestChange": "CR-20260625T162821Z-production-safety-baseline"
+      "updatedAt": "2026-06-26",
+      "latestChange": "CR-20260625T170213Z-customer-fund-vocabulary-source-cleanup"
     },
     {
       "id": "TASK-CUSTOMER",

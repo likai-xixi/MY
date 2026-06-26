@@ -5,7 +5,9 @@ Feature ID: `customer`
 ## Owned Screens
 
 - `customer:customer`
-- Runtime route: `/business/customer`
+- Canonical runtime route: `/business/customer`
+- RuoYi menu segment: `business/customer`
+- Direct `/customer` is not supported.
 - Menu: `业务管理 / 客户管理`
 - File: `ruoyi-ui/src/views/customer/index.vue`
 - Region data: `ruoyi-ui/src/utils/region-data.js`
@@ -54,7 +56,7 @@ The route is the RuoYi menu route produced by parent path `business` plus child 
   - `同步到默认收货地址`: syncs master contact, phone, province/city/district code/name fields, and detail address to the default shipping address. It is checked by default when editing real customers and can be manually cancelled before save.
 - User requirement: when editing a REAL customer, both default-contact and default-address sync options must start checked by default, and users may still cancel either one before saving.
 - If users do not check the sync options during edit, changing master contact/address fields must not overwrite existing default child records.
-- Funds and policy display only `定金` and `样品返现`. The UI must not show old long-term or rolling deposit labels.
+- Funds and policy display only `客户级定金账户`, `样品返现账户`, and `资金流水`. The UI must not show deprecated multi-deposit account labels.
 - Deposit entry dialog captures `收款金额`, optional `收款凭证号`, and `备注`; it must not show account-type selection or source-order fields.
 - Deposit entry dialog must submit deposit-in intent only. It must not expose deduction, refund, adjustment, or reversal actions from the customer deposit-entry button.
 - The accepted page route is `/business/customer`; `/customer` remains outside the runtime contract.

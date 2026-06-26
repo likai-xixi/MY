@@ -10,10 +10,11 @@ Codex Auto Dev OS is kept in the repository as the workflow and evidence layer: 
 - Governance layer: Codex Auto Dev OS with locked RuoYi adapter rules.
 - Business domain: MY 门业 ERP.
 - Implemented business module: `customer` / 客户管理.
-- Current closeout focus: keep feature briefs, context, registry ownership, README, memory handoff, verification provenance, and CI-coverage declarations in sync.
+- Current closeout focus: R-03 customer fund vocabulary source cleanup keeps current customer context, contracts, README, and memory aligned to two account types: `CUSTOMER_DEPOSIT` (客户级定金) and `SAMPLE_REBATE` (样品返现).
 - CI baseline: [ci-planned] GitHub Actions workflow includes Node governance, Maven compile, and ruoyi-ui build; actual CI result is determined after push.
 - Production safety baseline: default/dev configuration is not production-ready; production must use `ruoyi-admin/src/main/resources/application-prod.yml`.
 - Production gate: use `npm run check:prod-safety` to block unsafe production defaults, and use `npm run verify:release` as the release verification entry.
+- Customer fund boundary: current customer management implements `CUSTOMER_DEPOSIT` incoming deposit only; sales-order may show deposit status but must not deduct customer funds directly; later delivery / finance contracts define `CUSTOMER_DEPOSIT` deduction/refund/adjustment/reversal and `SAMPLE_REBATE` deduction.
 
 ## What is included
 

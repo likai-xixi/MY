@@ -1,20 +1,19 @@
 # Current Context
 
 Current feature: `customer`
-Current change: `CR-20260625T162821Z-production-safety-baseline`
+Current change: `CR-20260625T170213Z-customer-fund-vocabulary-source-cleanup`
 Repository: RuoYi + Vue3 + Codex Auto Dev OS
 Profile: adapter `ruoyi`, locked `true`
 
 ## Allowed Edit Roots
 
-- `ruoyi-framework/src/main/java/com/ruoyi/framework/config/SecurityConfig.java`
-- `ruoyi-admin/src/main/resources/application.yml`
-- `ruoyi-admin/src/main/resources/application-druid.yml`
-- `ruoyi-admin/src/main/resources/application-prod.yml`
-- `tools/config-safety-checker.js`
-- `tests/production-safety.test.js`
-- `package.json`
-- `docs/production-readiness.md`
+- `features/customer.md`
+- `ai/context/features/customer.md`
+- `ruoyi-ui/src/api/customer.contract.md`
+- `ai/contracts/customer.api.md`
+- `ai/contracts/customer.db.md`
+- `ai/contracts/customer.ui.md`
+- `sql/customer.ownership.md`
 - `README.md`
 - `memory/HANDOVER.md`
 - `memory/PROJECT_STATE.md`
@@ -22,7 +21,7 @@ Profile: adapter `ruoyi`, locked `true`
 - `memory/TASKS.json`
 - `ai/context/current-context.md`
 - `ai/context/current-context.json`
-- `ai/changes/CR-20260625T162821Z-production-safety-baseline`
+- `ai/changes/CR-20260625T170213Z-customer-fund-vocabulary-source-cleanup`
 - `ai/changes/CURRENT_CHANGE.json`
 
 ## Forbidden Edit Roots
@@ -32,21 +31,18 @@ Profile: adapter `ruoyi`, locked `true`
 - `ruoyi-business/src/main/resources/mapper/customer`
 - `ruoyi-ui/src/views/customer`
 - `ruoyi-ui/src/api/customer.js`
-- `sql/customer.ownership.md`
-- `MY客户管理模块上下文说明.md`
-- `ruoyi-business/src/main/java/com/ruoyi/business/sales-order`
-- `ruoyi-business/src/main/java/com/ruoyi/business/salesorder`
-- `ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/sales-order`
-- `ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/salesorder`
-- `ruoyi-ui/src/views/sales-order`
-- `ruoyi-ui/src/views/salesorder`
-- `ruoyi-ui/src/api/sales-order.js`
-- `ruoyi-ui/src/api/salesOrder.js`
-- `sql/sales-order.ownership.md`
-- `sql/sales_order_init.sql`
-- `fund model Java/Vue/SQL`
+- `ruoyi-framework/src/main/java/com/ruoyi/framework/config/SecurityConfig.java`
+- `ruoyi-admin/src/main/resources/application.yml`
+- `ruoyi-admin/src/main/resources/application-druid.yml`
+- `ruoyi-admin/src/main/resources/application-prod.yml`
+- `package.json`
+- `tools`
+- `tests`
 - `migration registry`
 - `idempotency registry`
+- `sales-order runtime, SQL, Vue, API, permission, or route`
+- `salesorder runtime, SQL, Vue, API, permission, or route`
+- `Java/Vue customer fund runtime code`
 - `business database table structure`
 
 ## Must Read Files
@@ -62,9 +58,9 @@ Profile: adapter `ruoyi`, locked `true`
 - `ai/roadmap/phase-gates.json` - beforeSalesOrder gate state.
 - `ai/roadmap/refactor-debt.json` - Known debt affecting sales-order handoff.
 - `ai/roadmap/enhancement-backlog.json` - Governance backlog and required/deferred evidence.
-- `ai/changes/CR-20260625T162821Z-production-safety-baseline/impact.json` - Current change allowed and forbidden edit roots.
-- `ai/changes/CR-20260625T162821Z-production-safety-baseline/plan.md` - Current change execution plan.
-- `ai/changes/CR-20260625T162821Z-production-safety-baseline/verification.md` - Current change verification evidence.
+- `ai/changes/CR-20260625T170213Z-customer-fund-vocabulary-source-cleanup/impact.json` - Current change allowed and forbidden edit roots.
+- `ai/changes/CR-20260625T170213Z-customer-fund-vocabulary-source-cleanup/plan.md` - Current change execution plan.
+- `ai/changes/CR-20260625T170213Z-customer-fund-vocabulary-source-cleanup/verification.md` - Current change verification evidence.
 
 ## Must Not Break
 
@@ -126,15 +122,12 @@ Deferred:
 ## Planned Verification Commands
 
 - `npm run resume`
-- `node --test tests/production-safety.test.js`
-- `npm run check:config-safety`
-- `npm run check:prod-safety`
+- `Select-String old fund vocabulary scan`
+- `npm run scan:all`
+- `npm run check:high-risk-governance`
 - `npm test`
 - `npm run check`
 - `git diff --check`
-- `mvn -pl ruoyi-admin -am -DskipTests compile`
-- `npm --prefix ruoyi-ui run build:prod`
-- `npm run verify:release`
 
 ## Next Steps
 

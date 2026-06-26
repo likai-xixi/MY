@@ -76,7 +76,7 @@
 - Rebuilt the development customer tables from final `sql/customer.ownership.md` DDL and initialized `PUB_DIRECT_SALE` / `PUB_SELF_MEDIA`.
 - Runtime-validated `/business/customer` for REAL/PUBLIC add, edit, detail, default contact/address behavior, unified REAL customer deposit, and PUBLIC customer-level fund-policy rejection.
 - Added the missing PUBLIC detail order-classification notice in `ruoyi-ui/src/views/customer/index.vue`.
-- Verified no legacy `长期定金`, `滚动定金`, `来源订单号`, `LONG_TERM_DEPOSIT`, or `ROLLING_ORDER_DEPOSIT` text remains in the customer scope.
+- Verified no legacy multi-deposit account labels or source-order deposit text remained in the then-current customer scope.
 - Feature: `customer`.
 
 ## 2026-06-22 — customer
@@ -357,3 +357,13 @@
 - [local] Verification passed: `node --test tests/production-safety.test.js` with 7 tests, `npm run check:config-safety` with development/default warnings only, `npm run check:prod-safety`, `npm test` with 185 tests, `npm run check` with 185 tests, `git diff --check`, cached Maven compile with `BUILD SUCCESS`, and `npm --prefix ruoyi-ui run build:prod`.
 - [inconclusive] `npm run verify:release` ran `npm run check` and `npm run check:prod-safety` successfully, then failed because plain `mvn` is not available on local PATH. Do not claim release verification passed until the script itself passes.
 - No customer runtime code, sales-order runtime code, customer fund model code, migration/idempotency registry, or business database table structure was changed.
+
+## 2026-06-26 - governance/customer context
+
+- Change: `ai/changes/CR-20260625T170213Z-customer-fund-vocabulary-source-cleanup`.
+- R-03 cleaned current customer fund vocabulary sources so active context uses only `CUSTOMER_DEPOSIT` for 客户级定金 and `SAMPLE_REBATE` for 样品返现.
+- Documented that current customer management implements only customer-level deposit incoming funds, while delivery / finance must later define customer-level deposit deduction/refund/adjustment/reversal and sample-rebate deduction.
+- Documented that sales-order may show customer-level deposit status during submit but must not directly deduct customer funds.
+- Regenerated current context, added scoped RuoYi baseline exception notes for inherited boundary/component checker findings, and kept historical old-vocabulary evidence unchanged.
+- [local] Verification passed: `npm run scan:all`, `npm run check:high-risk-governance` with the expected non-blocking customer baseline DDL warning, `npm test` with 185 tests, `npm run check` with 185 tests, and `git diff --check`.
+- No customer runtime code, sales-order runtime code, production safety config, Java/Vue customer fund runtime code, migration/idempotency registry, or business database table structure was changed.

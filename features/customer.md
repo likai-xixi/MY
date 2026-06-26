@@ -5,13 +5,13 @@
 - ID: `customer`
 - Name: 客户管理
 - Adapter: locked RuoYi adapter
-- Current change: `CR-20260625T042041Z-change`
-- Current scope: customer fund concurrency safety closeout. This change extracts `CustomerFundService`, keeps external customer API paths unchanged, row-locks fund accounts before balance calculation, handles concurrent fund-account creation, and retries `flow_no` / `deposit_batch_no` unique-key collisions.
+- Current change: `CR-20260625T170213Z-customer-fund-vocabulary-source-cleanup`
+- Current scope: customer fund vocabulary source cleanup. This change updates current briefs, contracts, context, README, and memory so active customer-fund wording is two-account only; it does not change customer runtime code or fund table structure.
 - Git/CI state: use Git history and workflow results as the source of truth; this brief does not handwrite current push status.
 
 ## Business Problem
 
-客户管理是门业 ERP 的第一个业务主数据模块。它不是普通通讯录，而是后续销售订单、发货、收款、对账、样品政策、客户级定金抵扣的客户主数据中心。
+客户管理是门业 ERP 的第一个业务主数据模块。它不是普通通讯录，而是后续销售订单、发货、收款、对账、样品政策、客户级定金状态提示和样品返现政策的客户主数据中心。
 
 当前开发阶段直接采用最终口径：区分真实客户和公共客户，把客户级定金统一为一种 `CUSTOMER_DEPOSIT`，并记录真实客户归属方式、归属来源、收益口径和归属生效时间。不保留旧定金分类、旧数据迁移或旧前端文案兼容。
 
@@ -20,7 +20,7 @@
 - 销售/业务员：维护真实客户资料、联系人、默认地址和业务员自有/维护客户关系。
 - 销售主管：查看真实客户厂内归属、分配业务员维护、收回厂内和归属变更日志。
 - 财务/内勤：查看真实客户资金账户、录入客户级定金、维护样品支持政策和样品返现记录。
-- 后续订单/发货模块：读取真实客户默认联系人、默认地址、归属业务员快照和资金政策；公共客户订单的实际购买人、联系电话、收货地址、接待业务员、来源渠道由销售订单保存快照。
+- 后续订单/发货/财务模块：读取真实客户默认联系人、默认地址、归属业务员快照和资金政策；销售订单提交阶段只提示 `CUSTOMER_DEPOSIT` 状态，不直接抵扣客户资金；公共客户订单的实际购买人、联系电话、收货地址、接待业务员、来源渠道由销售订单保存快照。
 
 ## Customer Nature
 
@@ -67,7 +67,7 @@
 - 真实客户多联系人维护，只允许一个默认联系人。
 - 真实客户多收货地址维护，只允许一个默认收货地址。
 - 真实客户归属方式选择、归属业务员和部门带出、归属来源/收益口径记录、列表筛选、详情展示和归属变更日志。
-- 真实客户资金与政策详情：定金账户、样品返现账户、定金录入、资金流水查看、样品政策配置、样品返现记录生成/查看。
+- 真实客户资金与政策详情：客户级定金账户、样品返现账户、客户级定金入金、资金流水查看、样品政策配置、样品返现记录生成/查看。
 - 菜单、权限、SQL ownership、API/UI/DB/permission graph 和 registry 登记。
 - 客户编码、字典展示、省市区选择和列表显示体验优化。
 - 新增/编辑弹窗使用完整中国省市区三级行政区划数据源，覆盖省、直辖市、自治区、地级市/州/盟、区/县/县级市，并同时保存行政区划 code 与中文名称。
@@ -77,6 +77,8 @@
 ## Non-goals
 
 - 不实现销售订单、发货单、自动抵扣、收款认领、对账、发票、合同、提成、公海、小程序。
+- 不在客户模块实现 `CUSTOMER_DEPOSIT` 的扣减、退款、调整、冲正；这些由后续 delivery / finance 合同定义。
+- 不在客户模块实现 `SAMPLE_REBATE` 的抵扣；该抵扣由后续 delivery / finance 合同定义。
 - 不开发订单本单定金表、真实购买人订单字段落库、复杂收款规则、授信规则、全款后生产规则。
 - 不为公共客户创建每个直销/自媒体买家的客户档案。
 - 不实现单门定金或订单明细级定金。
@@ -93,7 +95,9 @@
 - Frontend region data: `ruoyi-ui/src/utils/region-data.js`
 - Frontend API client: `ruoyi-ui/src/api/customer.js`
 - SQL/menu/permission ownership: `sql/customer.ownership.md`
-- Runtime menu route: `/business/customer` (`业务管理 / 客户管理`)
+- Canonical runtime route: `/business/customer`
+- RuoYi menu segment: `business/customer`
+- Direct `/customer` is not supported.
 
 ## Display And Entry Rules
 
@@ -153,10 +157,12 @@
 
 Funds are modeled as account plus flow plus batch/policy records. Balance, frozen amount, and available amount are updated only inside `CustomerFundService` transactions that write `customer_fund_flow`.
 
-Fund account types:
+Customer funds are split into two account types:
 
-- `CUSTOMER_DEPOSIT`：客户级定金。
-- `SAMPLE_REBATE`：样品返现。
+1. `CUSTOMER_DEPOSIT`：客户级定金
+   用于客户级预存、合作定金、订单前置定金等统一定金场景。系统不再区分旧定金分类。当前客户模块只实现入金，不实现抵扣、退款、调整、冲正。
+2. `SAMPLE_REBATE`：样品返现
+   由样品政策和样品返现记录产生。与客户级定金分账户、分流水。
 
 Deposit batch type:
 
@@ -166,7 +172,7 @@ Deposit flow types:
 
 - `DEPOSIT_IN`
 
-The current customer deposit-entry endpoint is account-locked and 入金-only: `POST /business/customer/{customerId}/fund/deposit` accepts omitted `accountType` or explicit `CUSTOMER_DEPOSIT`, stamps the entry as `CUSTOMER_DEPOSIT`, and rejects `SAMPLE_REBATE` or any other non-`CUSTOMER_DEPOSIT` value before account balance, deposit batch, or fund flow mutation. It accepts omitted `flowType` or `DEPOSIT_IN` and rejects `DEPOSIT_DEDUCT`、`DEPOSIT_REFUND`、`DEPOSIT_ADJUST`、`DEPOSIT_REVERSE` with a service error. Dedicated deduction/refund/adjust/reversal flows are not implemented in this customer iteration.
+The current customer deposit-entry endpoint is account-locked and 入金-only: `POST /business/customer/{customerId}/fund/deposit` accepts omitted `accountType` or explicit `CUSTOMER_DEPOSIT`, stamps the entry as `CUSTOMER_DEPOSIT`, and rejects `SAMPLE_REBATE` or any other non-`CUSTOMER_DEPOSIT` value before account balance, deposit batch, or fund flow mutation. It accepts omitted `flowType` or `DEPOSIT_IN` and rejects `DEPOSIT_DEDUCT`、`DEPOSIT_REFUND`、`DEPOSIT_ADJUST`、`DEPOSIT_REVERSE` with a service error. Dedicated deduction/refund/adjust/reversal flows are not implemented in this customer iteration. All customer-fund changes must write `customer_fund_flow`.
 
 Fund-entry concurrency rules:
 
@@ -177,6 +183,23 @@ Fund-entry concurrency rules:
 - `insertFundFlow` and `insertDepositBatch` catch `DuplicateKeyException`, regenerate `flow_no` or `deposit_batch_no`, and retry up to a bounded maximum before throwing a clear service error.
 
 Sample rebate generation remains separate from deposit: `POST /business/customer/{customerId}/sample-rebate` creates `sample_rebate_record`, then the internal service path writes the `SAMPLE_REBATE` account flow with `SAMPLE_REBATE_GENERATE`.
+
+## Future Module Boundary
+
+`sales-order`:
+
+- customer selection;
+- default contact carry-over;
+- default address carry-over;
+- owner/salesman snapshot carry-over;
+- `CUSTOMER_DEPOSIT` status prompt only;
+- no direct customer-fund deduction.
+
+`delivery` / `finance`:
+
+- define `CUSTOMER_DEPOSIT` deduction, refund, adjustment, and reversal;
+- define `SAMPLE_REBATE` deduction;
+- every fund mutation must write `customer_fund_flow`.
 
 ## Permissions
 
@@ -199,9 +222,9 @@ Sample rebate generation remains separate from deposit: `POST /business/customer
 - 新增真实客户默认归厂内，且不要求选择业务员。
 - 真实客户仍可维护联系人、收货地址；选择业务员归属时可以记录厂内分配维护或业务员自有客户口径。
 - 公共客户固定无固定归属，不允许归属变更。
-- 资金与政策页面只显示“定金”和“样品返现”。
+- 资金与政策页面统一显示“客户级定金账户”“样品返现账户”“资金流水”。
 - 前端不再出现旧定金分类和旧录入文案。
-- 后端新业务只使用 `CUSTOMER_DEPOSIT`，不再使用旧定金账户和旧定金类型。
+- 后端新业务只使用 `CUSTOMER_DEPOSIT` 表示客户级定金，`SAMPLE_REBATE` 表示样品返现；不再设计额外定金账户类型。
 - SQL ownership 是最终结构，不写旧数据兼容迁移。
 - 不引入 sales-order / delivery / finance 模块代码。
 - API、UI、DB、权限、菜单、registry、graph、memory、handover 和 change record 同步。
