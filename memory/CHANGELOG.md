@@ -386,3 +386,14 @@
 - R-05 salesman candidate hardening was saved to `stash@{0}` before this rule-change CR and was not submitted here.
 - [local] Verification passed: `node --test tests/high-risk-governance.test.js` with 37 tests, `npm test` with 186 tests, full `npm run check` with 186 tests inside the gate, and `git diff --check`.
 - No customer runtime code, sales-order runtime code, customer fund model, migration/idempotency registry, database business table structure, package scripts, or tools were changed.
+
+## 2026-06-26 - customer runtime hardening
+
+- Change: `ai/changes/CR-20260626T011624Z-salesman-candidate-hardening`.
+- R-05 hardened customer salesman candidates so `/business/customer/salesmen` returns only normal users with sales/business roles and does not fall back to all normal users when no roles match.
+- The customer UI now prompts `未找到销售/业务员角色用户，请先配置销售角色。` when entering SALESMAN owner selection or submitting without configured candidates, while remote search input does not warn on every keystroke.
+- Updated `features/customer.md`, `ai/contracts/customer.api.md`, `ai/contracts/customer.ui.md`, and `tests/customer-risk-gate.test.js` to document and enforce the no-fallback rule.
+- The prerequisite governance fix `CR-20260626T013800Z-high-risk-active-impact-scope` was committed first, so high-risk governance now respects active impact allowed/forbidden roots.
+- [local] Verification passed: `npm run resume`, `npm run impact -- 客户管理`, `npm run scan:all`, `node --test tests/customer-risk-gate.test.js` with 11 tests, `node --test tests/high-risk-governance.test.js` with 37 tests, `npm test` with 189 tests, `npm run check`, `git diff --check`, and configured Maven compile with `BUILD SUCCESS`.
+- [not-run] Plain `mvn -pl ruoyi-admin -am -DskipTests compile` is unavailable on PATH.
+- No customer funds, sales-order runtime, security config, migration/idempotency registry, package/tool code, SQL ownership, mapper XML, controller, API client, or database business table structure was changed.

@@ -42,6 +42,7 @@ The route is the RuoYi menu route produced by parent path `business` plus child 
   - Always required for normal REAL save: customer name, customer nature, customer type, and customer level.
   - Required for REAL customers only: main contact, contact phone, complete province/city/district selection down to district/county, and detail address.
   - REAL customers default owner type to `FACTORY`. Owner salesman and owner source are required only when owner type is `SALESMAN`.
+  - 业务员候选只返回拥有销售/业务员角色的正常用户；若无匹配返回空列表并提示先配置销售角色，不回退到全部用户。The UI warns with `未找到销售/业务员角色用户，请先配置销售角色。` when entering SALESMAN owner selection or submitting without configured candidates, but remote search typing must not warn on every input.
   - REAL `SALESMAN` owner source is one of two fixed pairs: `FACTORY_ASSIGNED` maps to `MAINTENANCE_FEE`, and `SALESMAN_SELF` maps to `SALES_COMMISSION`.
   - REAL customer contact phone is trimmed and must match an 11-digit mainland China mobile number. Optional contact-tab phone and shipping-address receiver phone fields are also trimmed and validated only when filled.
   - Optional: customer short name, WeChat, remark, generated customer code, status default, and owner department derived from owner salesman when a salesman owner is selected.

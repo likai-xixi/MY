@@ -11,8 +11,10 @@ const CUSTOMER_MAPPER_XML = 'ruoyi-business/src/main/resources/mapper/customer/C
 const CUSTOMER_CONTROLLER = 'ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java';
 const CUSTOMER_API = 'ruoyi-ui/src/api/customer.js';
 const CUSTOMER_API_CONTRACT = 'ruoyi-ui/src/api/customer.contract.md';
+const CUSTOMER_API_OWNERSHIP_CONTRACT = 'ai/contracts/customer.api.md';
 const CUSTOMER_UI_CONTRACT = 'ai/contracts/customer.ui.md';
 const CUSTOMER_FEATURE = 'features/customer.md';
+const CUSTOMER_VIEW = 'ruoyi-ui/src/views/customer/index.vue';
 const CUSTOMER_SQL = 'sql/customer.ownership.md';
 
 const BLOCKED_DEPOSIT_FLOW_TYPES = [
@@ -204,6 +206,36 @@ test('customer api contract Client Methods match customer.js exports', () => {
   const contractMethods = contractClientMethods(readText(CUSTOMER_API_CONTRACT));
 
   assert.deepEqual(sorted(contractMethods), sorted(apiExports));
+});
+
+test('salesman candidates do not fallback to all normal users', () => {
+  const service = readText(CUSTOMER_SERVICE);
+  const selectSalesmanCandidates = methodBody(service, 'public List<SysUser> selectSalesmanCandidates');
+
+  assert.doesNotMatch(
+    service,
+    /salesmen\.isEmpty\(\)\s*\?\s*users\s*:\s*salesmen/,
+    'CustomerServiceImpl must not return all normal users when no sales roles match'
+  );
+  assert.match(
+    selectSalesmanCandidates,
+    /return\s+salesmen\s*;/,
+    'selectSalesmanCandidates must return only users with matching sales roles'
+  );
+});
+
+test('salesman candidate contracts document empty no-fallback behavior', () => {
+  for (const file of [CUSTOMER_FEATURE, CUSTOMER_API_OWNERSHIP_CONTRACT, CUSTOMER_UI_CONTRACT]) {
+    const text = readText(file);
+    assert.match(text, /业务员候选只返回拥有销售\/业务员角色的正常用户/, `${file} must define strict salesman candidates`);
+    assert.match(text, /返回空列表/, `${file} must document the empty-list result`);
+    assert.match(text, /不回退到全部用户/, `${file} must reject fallback to all users`);
+  }
+});
+
+test('frontend warns when no salesman role users are configured', () => {
+  const view = readText(CUSTOMER_VIEW);
+  assert.match(view, /未找到销售\/业务员角色用户，请先配置销售角色。/);
 });
 
 test('docs record edit-time default sync as a user requirement', () => {

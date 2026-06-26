@@ -70,6 +70,7 @@ Endpoint IDs are recorded in `graph/api-graph.json` and `memory/API_CATALOG.md`.
 - Public customers must be rejected by customer-level deposit, sample-policy save, and sample-rebate generation operations.
 - Fund account balances must not be modified by ad hoc APIs. Mutating fund endpoints must call `CustomerFundService`, lock the `customer_fund_account` row with `selectFundAccountForUpdate`, update balances, and write `customer_fund_flow` in the same Spring transaction. Missing account creation and `flow_no` / `deposit_batch_no` unique-key collisions must be handled with bounded `DuplicateKeyException` retry.
 - Salesman ownership uses existing RuoYi user, role, and dept structures. This feature must not create a separate salesman-management API.
+- `GET /business/customer/salesmen` 业务员候选只返回拥有销售/业务员角色的正常用户；若无匹配返回空列表并提示先配置销售角色，不回退到全部用户。The endpoint path and payload shape stay unchanged.
 - `PUT /business/customer/transferOwner` keeps the existing path but represents customer owner change:
   - `ASSIGN_MAINTENANCE`: assigns a factory customer to a salesman with `FACTORY_ASSIGNED / MAINTENANCE_FEE`.
   - `MARK_SALESMAN_SELF`: marks a customer as salesman-self with `SALESMAN_SELF / SALES_COMMISSION`.

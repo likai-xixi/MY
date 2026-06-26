@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "files": [
+    "ai/changes/CR-20260626T011624Z-salesman-candidate-hardening/boundary-exception.md",
+    "ai/changes/CR-20260626T011624Z-salesman-candidate-hardening/changed-files.json",
+    "ai/changes/CR-20260626T011624Z-salesman-candidate-hardening/component-exception.md",
+    "ai/changes/CR-20260626T011624Z-salesman-candidate-hardening/handover.md",
+    "ai/changes/CR-20260626T011624Z-salesman-candidate-hardening/impact.json",
+    "ai/changes/CR-20260626T011624Z-salesman-candidate-hardening/plan.md",
+    "ai/changes/CR-20260626T011624Z-salesman-candidate-hardening/request.md",
+    "ai/changes/CR-20260626T011624Z-salesman-candidate-hardening/verification.md",
+    "ai/changes/CURRENT_CHANGE.json",
+    "ai/context/current-context.json",
+    "ai/context/current-context.md",
+    "ai/contracts/customer.api.md",
+    "ai/contracts/customer.ui.md",
+    "features/customer.md",
+    "memory/CHANGELOG.md",
+    "memory/HANDOVER.md",
+    "memory/PROJECT_STATE.md",
+    "memory/TASKS.json",
+    "ruoyi-business/src/main/java/com/ruoyi/business/customer/service/impl/CustomerServiceImpl.java",
+    "ruoyi-ui/src/views/customer/index.vue",
+    "tests/customer-risk-gate.test.js"
+  ]
+}

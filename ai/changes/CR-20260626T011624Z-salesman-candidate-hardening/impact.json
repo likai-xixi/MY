@@ -1,0 +1,92 @@
+{
+  "schemaVersion": 1,
+  "generatedBy": "tools/impact-analyzer.js",
+  "mode": "update",
+  "feature": {
+    "id": "customer",
+    "name": "客户管理",
+    "status": "active"
+  },
+  "blockers": [],
+  "affected": {
+    "feature": "features/customer.md",
+    "backendModules": [
+      "ruoyi-business/src/main/java/com/ruoyi/business/customer"
+    ],
+    "frontendModules": [
+      "ruoyi-ui/src/views/customer"
+    ],
+    "apiEndpoints": [
+      "/business/customer/salesmen"
+    ],
+    "uiScreens": [
+      "customer:customer",
+      "customer:business-customer-salesmen"
+    ],
+    "tests": [
+      "tests/customer-risk-gate.test.js"
+    ],
+    "docs": [
+      "features/customer.md",
+      "ai/contracts/customer.api.md",
+      "ai/contracts/customer.ui.md",
+      "memory/HANDOVER.md",
+      "memory/PROJECT_STATE.md",
+      "memory/CHANGELOG.md",
+      "memory/TASKS.json"
+    ],
+    "generatedScans": [
+      "ai/generated/backend-routes.json",
+      "ai/generated/frontend-routes.json",
+      "ai/generated/api-clients.json",
+      "ai/generated/db-schema.json",
+      "ai/generated/permissions.json",
+      "ai/generated/component-usage.json"
+    ]
+  },
+  "allowedEditRoots": [
+    "features/customer.md",
+    "ruoyi-business/src/main/java/com/ruoyi/business/customer/service/impl/CustomerServiceImpl.java",
+    "ruoyi-ui/src/views/customer/index.vue",
+    "tests/customer-risk-gate.test.js",
+    "ai/contracts/customer.api.md",
+    "ai/contracts/customer.ui.md",
+    "ai/context/current-context.md",
+    "ai/context/current-context.json",
+    "ai/changes/CR-20260626T011624Z-salesman-candidate-hardening",
+    "ai/changes/CURRENT_CHANGE.json",
+    "ai/generated",
+    "graph",
+    "memory"
+  ],
+  "forbiddenEditRoots": [
+    "ruoyi-business/src/main/java/com/ruoyi/business/customer/service/impl/CustomerFundServiceImpl.java",
+    "ruoyi-business/src/main/java/com/ruoyi/business/customer/domain/CustomerFundEntry.java",
+    "ruoyi-business/src/main/java/com/ruoyi/business/customer/domain/SampleRebateRecord.java",
+    "ruoyi-business/src/main/resources/mapper/customer/CustomerMapper.xml",
+    "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
+    "ruoyi-ui/src/api/customer.js",
+    "sql",
+    "ai/registry/migration-registry.json",
+    "ai/registry/idempotency-registry.json",
+    "ruoyi-framework/src/main/java/com/ruoyi/framework/config/SecurityConfig.java",
+    "ruoyi-admin/src/main/resources/application.yml",
+    "ruoyi-admin/src/main/resources/application-druid.yml",
+    "ruoyi-admin/src/main/resources/application-prod.yml",
+    "package.json",
+    "tools",
+    "sales-order runtime, SQL, Vue, API, permission, or route",
+    "salesorder runtime, SQL, Vue, API, permission, or route",
+    "customer fund logic",
+    "business database table structure"
+  ],
+  "requiredCommands": [
+    "npm run resume",
+    "npm run impact -- 客户管理",
+    "npm run scan:all",
+    "npm test",
+    "npm run check",
+    "git diff --check",
+    "mvn -pl ruoyi-admin -am -DskipTests compile"
+  ]
+}

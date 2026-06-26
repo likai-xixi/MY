@@ -51,6 +51,7 @@
 
 - 新增 `REAL` 真实客户默认归厂内客户池：`ownerType=FACTORY`、`ownerSource=FACTORY_POOL`、`ownerProfitMode=NONE`，不要求选择业务员。
 - 真实客户选择 `FACTORY` 厂内时，清空 `ownerUserId/ownerUserName/ownerDeptId/ownerDeptName`，列表归属业务员显示“厂内”。
+- 业务员候选只返回拥有销售/业务员角色的正常用户；若无匹配返回空列表并提示先配置销售角色，不回退到全部用户。
 - 真实客户选择 `SALESMAN` 业务员时必须选择归属业务员，并选择归属来源：
   - `FACTORY_ASSIGNED` 厂内分配维护，对应 `ownerProfitMode=MAINTENANCE_FEE` 维护费口径。
   - `SALESMAN_SELF` 业务员自有客户，对应 `ownerProfitMode=SALES_COMMISSION` 业务提成口径。

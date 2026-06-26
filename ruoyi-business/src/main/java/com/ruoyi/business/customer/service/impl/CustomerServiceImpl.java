@@ -261,7 +261,7 @@ public class CustomerServiceImpl implements ICustomerService
         }
         List<SysUser> users = sysUserMapper.selectUserList(user);
         List<SysUser> salesmen = users.stream().filter(this::hasSalesRole).collect(Collectors.toList());
-        return salesmen.isEmpty() ? users : salesmen;
+        return salesmen;
     }
 
     @Override

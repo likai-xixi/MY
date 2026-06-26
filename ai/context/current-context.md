@@ -1,33 +1,46 @@
 # Current Context
 
 Current feature: `customer`
-Current change: `CR-20260626T013800Z-high-risk-active-impact-scope`
+Current change: `CR-20260626T011624Z-salesman-candidate-hardening`
 Repository: RuoYi + Vue3 + Codex Auto Dev OS
 Profile: adapter `ruoyi`, locked `true`
 
 ## Allowed Edit Roots
 
-- `tests/high-risk-governance.test.js`
-- `ai/changes/CR-20260626T013800Z-high-risk-active-impact-scope`
-- `ai/changes/CURRENT_CHANGE.json`
+- `features/customer.md`
+- `ruoyi-business/src/main/java/com/ruoyi/business/customer/service/impl/CustomerServiceImpl.java`
+- `ruoyi-ui/src/views/customer/index.vue`
+- `tests/customer-risk-gate.test.js`
+- `ai/contracts/customer.api.md`
+- `ai/contracts/customer.ui.md`
 - `ai/context/current-context.md`
 - `ai/context/current-context.json`
+- `ai/changes/CR-20260626T011624Z-salesman-candidate-hardening`
+- `ai/changes/CURRENT_CHANGE.json`
+- `ai/generated`
+- `graph`
 - `memory`
 
 ## Forbidden Edit Roots
 
-- `ruoyi-business/src/main/java/com/ruoyi/business/customer`
-- `ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer`
-- `ruoyi-business/src/main/resources/mapper/customer`
-- `ruoyi-ui/src/views/customer`
+- `ruoyi-business/src/main/java/com/ruoyi/business/customer/service/impl/CustomerFundServiceImpl.java`
+- `ruoyi-business/src/main/java/com/ruoyi/business/customer/domain/CustomerFundEntry.java`
+- `ruoyi-business/src/main/java/com/ruoyi/business/customer/domain/SampleRebateRecord.java`
+- `ruoyi-business/src/main/resources/mapper/customer/CustomerMapper.xml`
+- `ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java`
 - `ruoyi-ui/src/api/customer.js`
 - `sql`
 - `ai/registry/migration-registry.json`
 - `ai/registry/idempotency-registry.json`
+- `ruoyi-framework/src/main/java/com/ruoyi/framework/config/SecurityConfig.java`
+- `ruoyi-admin/src/main/resources/application.yml`
+- `ruoyi-admin/src/main/resources/application-druid.yml`
+- `ruoyi-admin/src/main/resources/application-prod.yml`
 - `package.json`
 - `tools`
 - `sales-order runtime, SQL, Vue, API, permission, or route`
 - `salesorder runtime, SQL, Vue, API, permission, or route`
+- `customer fund logic`
 - `business database table structure`
 
 ## Must Read Files
@@ -43,9 +56,9 @@ Profile: adapter `ruoyi`, locked `true`
 - `ai/roadmap/phase-gates.json` - beforeSalesOrder gate state.
 - `ai/roadmap/refactor-debt.json` - Known debt affecting sales-order handoff.
 - `ai/roadmap/enhancement-backlog.json` - Governance backlog and required/deferred evidence.
-- `ai/changes/CR-20260626T013800Z-high-risk-active-impact-scope/impact.json` - Current change allowed and forbidden edit roots.
-- `ai/changes/CR-20260626T013800Z-high-risk-active-impact-scope/plan.md` - Current change execution plan.
-- `ai/changes/CR-20260626T013800Z-high-risk-active-impact-scope/verification.md` - Current change verification evidence.
+- `ai/changes/CR-20260626T011624Z-salesman-candidate-hardening/impact.json` - Current change allowed and forbidden edit roots.
+- `ai/changes/CR-20260626T011624Z-salesman-candidate-hardening/plan.md` - Current change execution plan.
+- `ai/changes/CR-20260626T011624Z-salesman-candidate-hardening/verification.md` - Current change verification evidence.
 
 ## Must Not Break
 
@@ -106,10 +119,13 @@ Deferred:
 
 ## Planned Verification Commands
 
-- `node --test tests/high-risk-governance.test.js`
+- `npm run resume`
+- `npm run impact -- 客户管理`
+- `npm run scan:all`
 - `npm test`
 - `npm run check`
 - `git diff --check`
+- `mvn -pl ruoyi-admin -am -DskipTests compile`
 
 ## Next Steps
 

@@ -669,9 +669,11 @@ const supportModeOptions = [
   { label: "打折并返现", value: "DISCOUNT_AND_REBATE" }
 ]
 const MOBILE_PHONE_PATTERN = /^1[3-9]\d{9}$/
+const SALESMAN_EMPTY_MESSAGE = "未找到销售/业务员角色用户，请先配置销售角色。"
 
 const customerList = ref([])
 const salesmanOptions = ref([])
+const salesmanEmptyNoticeShown = ref(false)
 const deptOptions = ref([])
 const loading = ref(true)
 const showSearch = ref(true)
@@ -1080,9 +1082,30 @@ function getList() {
 }
 
 function loadSalesmen(keyword) {
-  listSalesmen(keyword).then(response => {
+  return listSalesmen(keyword).then(response => {
     salesmanOptions.value = response.data || []
     deptOptions.value = buildDeptOptions(salesmanOptions.value)
+    if (salesmanOptions.value.length) {
+      salesmanEmptyNoticeShown.value = false
+    }
+    return salesmanOptions.value
+  })
+}
+
+function showSalesmanEmptyMessage(force = false) {
+  if (force || !salesmanEmptyNoticeShown.value) {
+    proxy.$modal.msgError(SALESMAN_EMPTY_MESSAGE)
+    salesmanEmptyNoticeShown.value = true
+  }
+}
+
+function warnIfNoSalesmanCandidates(force = false) {
+  return loadSalesmen("").then(options => {
+    if (!options.length) {
+      showSalesmanEmptyMessage(force)
+      return false
+    }
+    return true
   })
 }
 
@@ -1193,6 +1216,7 @@ function handleFormNatureChange(value) {
 function handleOwnerTypeChange(value) {
   if (value === "SALESMAN") {
     applySalesmanOwnerDefaults()
+    warnIfNoSalesmanCandidates()
   } else {
     applyFactoryOwnerFields()
   }
@@ -1231,6 +1255,16 @@ function cancel() {
 }
 
 function submitForm() {
+  if (form.value.ownerType === "SALESMAN" && !salesmanOptions.value.length) {
+    warnIfNoSalesmanCandidates(true).then(hasCandidates => {
+      if (hasCandidates) {
+        submitForm()
+      } else {
+        editTab.value = "base"
+      }
+    })
+    return
+  }
   proxy.$refs["customerRef"].validate(valid => {
     if (!valid) return
     if (isPublicCustomerForm.value) {
@@ -1355,6 +1389,9 @@ function handleTransfer(row) {
     remark: ""
   }
   transferOpen.value = true
+  if (transferRequiresSalesman()) {
+    warnIfNoSalesmanCandidates()
+  }
 }
 
 function transferRequiresSalesman(mode = transferForm.value.transferMode) {
@@ -1364,6 +1401,8 @@ function transferRequiresSalesman(mode = transferForm.value.transferMode) {
 function handleTransferModeChange(mode) {
   if (!transferRequiresSalesman(mode)) {
     transferForm.value.newOwnerUserId = undefined
+  } else {
+    warnIfNoSalesmanCandidates()
   }
 }
 
@@ -1389,6 +1428,10 @@ function prepareTransferPayload() {
 function submitTransfer() {
   if (!transferForm.value.transferMode) {
     proxy.$modal.msgError("请选择归属变更方式")
+    return
+  }
+  if (transferRequiresSalesman() && !salesmanOptions.value.length) {
+    warnIfNoSalesmanCandidates(true)
     return
   }
   if (transferRequiresSalesman() && !transferForm.value.newOwnerUserId) {
