@@ -48,6 +48,23 @@ R-06 also includes `ai/registry/features.json` because scan/ownership sync regis
 
 R-06 does not modify customer Java/Vue runtime code, customer fund runtime code, sales-order runtime, security configuration, package scripts, tools, idempotency registry, `idempotent_request`, or non-customer business table structure. MySQL execution of the R-06 SQL files has not been performed in this environment unless a later verification note says otherwise.
 
+Current customer runtime change `CR-20260626T124443Z-customer-fund-idempotency` is R-07. It adds mandatory request idempotency to the customer fund high-risk entry points:
+
+- `POST /business/customer/{customerId}/fund/deposit`
+- `POST /business/customer/{customerId}/sample-rebate`
+
+R-07 adds the platform-level `idempotent_request` table through `sql/migrations/V20260625_004_idempotent_request.sql`, with unique key `(biz_type, idempotent_key)` and status vocabulary `PROCESSING`, `SUCCESS`, and `FAILED`. `ai/registry/idempotency-registry.json` now marks both customer fund endpoints as required idempotency entries using `idempotentKey`, canonical request hashes, same-response replay, and reject-payload-mismatch behavior. `ai/registry/migration-registry.json` now registers `platform-idempotent-request-baseline` as the blocking executable SQL migration.
+
+R-07 request hashes are built from normalized business fields, not raw JSON: `biz_type`, `customer_id`, normalized account and flow types, amount scaled to 2 decimals, trimmed receipt/sample order numbers, support mode, normalized support rates, and operator scope. `CustomerFundServiceImpl` replays the original `CUSTOMER_FUND_FLOW` result on same-key/same-hash success. `CustomerServiceImpl` replays the original `SAMPLE_REBATE_RECORD` on same-key/same-hash success. Same-key/different-hash requests are rejected.
+
+R-07 keeps idempotency records and fund mutations in the same Spring transaction. Business failures use rollback-on-failure so the `PROCESSING` idempotency row rolls back with fund account, fund flow, deposit batch, and sample rebate changes, leaving the same request safely retryable.
+
+R-07 frontend closeout adds stable hidden `idempotentKey` generation in `ruoyi-ui/src/views/customer/index.vue` for customer deposit entry and sample rebate dialogs. The same key is reused for repeated submit clicks in that dialog cycle, and `ruoyi-ui/src/api/customer.js` remains unchanged.
+
+Final R-07 submit-scope audit explicitly includes `ai/registry/features.json` and `memory/API_CATALOG.md`. `features.json` records customer/platform idempotency ownership for `idempotent_request`; `API_CATALOG.md` records customer fund idempotency request semantics. The audit found no sales-order/salesorder runtime, security config, production config, old three-account fund model, deduction/refund/adjustment/reversal runtime, non-`idempotent_request` new table, package.json, or tools changes.
+
+R-07 does not add sales-order runtime, salesorder runtime, production safety configuration, package scripts, tools, the old `LONG_TERM_DEPOSIT` / `ROLLING_ORDER_DEPOSIT` model, `CUSTOMER_DEPOSIT` deduction/refund/adjustment/reversal runtime, `SAMPLE_REBATE` deduction runtime, or database tables other than `idempotent_request`. Runtime MySQL execution of the R-07 migration has not been performed in this environment unless a later verification note says otherwise.
+
 For future module boundaries, sales-order may select customer, carry default contact/address and owner snapshots, and show `CUSTOMER_DEPOSIT` status during submit, but must not directly deduct customer funds. Delivery / finance contracts must later define `CUSTOMER_DEPOSIT` deduction/refund/adjustment/reversal and `SAMPLE_REBATE` deduction. Every customer-fund mutation must write `customer_fund_flow`.
 
 Current customer fund concurrency change `CR-20260625T042041Z-change`:
@@ -97,7 +114,7 @@ Sales order, shipment, finance settlement, automatic deduction, receipt claiming
 
 ## Active Task
 
-`TASK-CUSTOMER` is the active customer task in `memory/TASKS.json` for `CR-20260626T115131Z-executable-customer-migration-baseline`. `TASK-0002` remains the platform/governance tracking task. `beforeSalesOrder` remains blocked and R-06 must not be treated as sales-order readiness.
+`TASK-CUSTOMER` is the active customer task in `memory/TASKS.json` for `CR-20260626T124443Z-customer-fund-idempotency`. `TASK-0002` remains the platform/governance tracking task. `beforeSalesOrder` remains blocked and R-07 must not be treated as sales-order readiness.
 
 ## Latest Session
 
@@ -105,8 +122,8 @@ Sales order, shipment, finance settlement, automatic deduction, receipt claiming
 
 ## Next Actions
 
-- Finish R-06 executable customer migration baseline verification and closeout.
-- Then choose R-07 customer fund idempotency or R-09 sales-order pre-implementation contract package.
+- R-07 customer fund idempotency is locally verified and ready for review.
+- Choose R-08 customer runtime tests or R-09 sales-order pre-implementation contract package.
 - Keep `beforeSalesOrder` blocked unless required contracts and review explicitly unlock it later.
 - Before any future runtime claim about PUBLIC data cleanliness, rerun the invariant SQL in `sql/customer.ownership.md` to confirm only `PUB_DIRECT_SALE` and `PUB_SELF_MEDIA` exist as active PUBLIC rows.
 
@@ -133,6 +150,8 @@ Sales order, shipment, finance settlement, automatic deduction, receipt claiming
 - Old data migration or old fund-account compatibility.
 
 ## Last Verification
+
+For `CR-20260626T124443Z-customer-fund-idempotency`, [local] `npm run resume`, [local] frontend `idempotentKey` precheck commands, [local] `npm run impact -- 客户管理`, [local] `npm run scan:all`, [local] `npm run context:build -- customer`, [local] `node --test tests/customer-risk-gate.test.js` with 15/15 tests, [local] `npm --prefix ruoyi-ui run build:prod`, [local] `npm run check:high-risk-governance`, [local] `node --test tests/high-risk-governance.test.js` with 40/40 tests, [local] `npm test` with 196/196 tests, [local] configured Maven path compile passed with `BUILD SUCCESS`, [local] `npm run check` passed with 196/196 Node tests, and [local] `git diff --check` passed. [not-run] Plain `mvn -pl ruoyi-admin -am -DskipTests compile` is unavailable on PATH. [not-run] MySQL execution of the R-07 SQL files was not performed in this environment.
 
 For `CR-20260626T115131Z-executable-customer-migration-baseline`, [local] `npm run resume`, [local] `npm run impact -- 客户管理`, [local] `npm run check:high-risk-governance`, [local] `node --test tests/high-risk-governance.test.js` with 39/39 tests, [local] `npm run scan:all`, [local] `npm run context:build -- customer`, [local] `npm test` with 191/191 tests, [local] `npm run check` with 191/191 tests, and [local] `git diff --check` passed. [not-run] MySQL execution of the R-06 SQL files was not performed in this environment.
 

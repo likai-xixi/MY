@@ -7,6 +7,7 @@ import java.math.BigDecimal;
  */
 public class CustomerFundEntry
 {
+    private String idempotentKey;
     private String accountType;
     private String flowType;
     private String depositType;
@@ -17,6 +18,8 @@ public class CustomerFundEntry
     private String receiptNo;
     private String remark;
 
+    public String getIdempotentKey() { return idempotentKey; }
+    public void setIdempotentKey(String idempotentKey) { this.idempotentKey = idempotentKey; }
     public String getAccountType() { return accountType; }
     public void setAccountType(String accountType) { this.accountType = accountType; }
     public String getFlowType() { return flowType; }

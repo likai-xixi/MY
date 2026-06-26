@@ -5,8 +5,8 @@
 - ID: `customer`
 - Name: 客户管理
 - Adapter: locked RuoYi adapter
-- Current change: `CR-20260626T115131Z-executable-customer-migration-baseline`
-- Current scope: executable customer migration baseline. This change turns the current customer schema, PUBLIC seed, menu/permission seed, and runtime validation from markdown-only ownership documentation into executable SQL files; it does not change customer Java/Vue runtime logic, customer fund runtime behavior, idempotency, or sales-order runtime.
+- Current change: `CR-20260626T124443Z-customer-fund-idempotency`
+- Current scope: R-07 customer fund idempotency. This change adds mandatory `idempotentKey` handling for customer deposit entry and sample rebate generation, plus the platform-level `idempotent_request` migration/service. It does not add sales-order runtime, production safety configuration, the old three-account fund model, or deduction/refund/adjustment/reversal runtime.
 - Git/CI state: use Git history and workflow results as the source of truth; this brief does not handwrite current push status.
 
 ## Business Problem
@@ -69,6 +69,7 @@
 - 真实客户多收货地址维护，只允许一个默认收货地址。
 - 真实客户归属方式选择、归属业务员和部门带出、归属来源/收益口径记录、列表筛选、详情展示和归属变更日志。
 - 真实客户资金与政策详情：客户级定金账户、样品返现账户、客户级定金入金、资金流水查看、样品政策配置、样品返现记录生成/查看。
+- 客户资金高风险入口幂等：客户级定金入金和样品返现生成必须提交 `idempotentKey`，服务端按规范化请求摘要防止双击、重试和弱网重放重复入账。
 - 菜单、权限、SQL ownership、API/UI/DB/permission graph 和 registry 登记。
 - 客户编码、字典展示、省市区选择和列表显示体验优化。
 - 新增/编辑弹窗使用完整中国省市区三级行政区划数据源，覆盖省、直辖市、自治区、地级市/州/盟、区/县/县级市，并同时保存行政区划 code 与中文名称。
@@ -148,6 +149,10 @@
 - `customer_sample_policy`
 - `sample_rebate_record`
 
+Platform-level idempotency support:
+
+- `idempotent_request`
+
 `customer` includes:
 
 - `customer_nature varchar(32) not null default 'REAL'`
@@ -174,7 +179,16 @@ Deposit flow types:
 
 - `DEPOSIT_IN`
 
-The current customer deposit-entry endpoint is account-locked and 入金-only: `POST /business/customer/{customerId}/fund/deposit` accepts omitted `accountType` or explicit `CUSTOMER_DEPOSIT`, stamps the entry as `CUSTOMER_DEPOSIT`, and rejects `SAMPLE_REBATE` or any other non-`CUSTOMER_DEPOSIT` value before account balance, deposit batch, or fund flow mutation. It accepts omitted `flowType` or `DEPOSIT_IN` and rejects `DEPOSIT_DEDUCT`、`DEPOSIT_REFUND`、`DEPOSIT_ADJUST`、`DEPOSIT_REVERSE` with a service error. Dedicated deduction/refund/adjust/reversal flows are not implemented in this customer iteration. All customer-fund changes must write `customer_fund_flow`.
+The current customer deposit-entry endpoint is account-locked, idempotent, and 入金-only: `POST /business/customer/{customerId}/fund/deposit` requires `idempotentKey`, accepts omitted `accountType` or explicit `CUSTOMER_DEPOSIT`, stamps the entry as `CUSTOMER_DEPOSIT`, and rejects `SAMPLE_REBATE` or any other non-`CUSTOMER_DEPOSIT` value before account balance, deposit batch, or fund flow mutation. It accepts omitted `flowType` or `DEPOSIT_IN` and rejects `DEPOSIT_DEDUCT`、`DEPOSIT_REFUND`、`DEPOSIT_ADJUST`、`DEPOSIT_REVERSE` with a service error. Dedicated deduction/refund/adjust/reversal flows are not implemented in this customer iteration. All customer-fund changes must write `customer_fund_flow`.
+
+Deposit idempotency rules:
+
+- Missing `idempotentKey` is rejected before mutation.
+- First key inserts `idempotent_request` as `PROCESSING`, runs fund entry, then marks `SUCCESS` with `result_ref_type=CUSTOMER_FUND_FLOW` and the created `customer_fund_flow.flow_id`.
+- Same key and same normalized request hash with `SUCCESS` returns the original fund flow instead of inserting another batch/flow.
+- Same key and same normalized request hash with `PROCESSING` is rejected as still processing.
+- Same key with a different normalized request hash is rejected as a key/request mismatch.
+- Business failures roll back the idempotency row together with fund-account, fund-flow, and deposit-batch changes, so the same request can be retried safely with the same key after the transaction aborts.
 
 Fund-entry concurrency rules:
 
@@ -184,7 +198,15 @@ Fund-entry concurrency rules:
 - If a fund account does not exist, the service tries to insert it; `DuplicateKeyException` means another concurrent transaction created it, so the service re-reads with `selectFundAccountForUpdate`.
 - `insertFundFlow` and `insertDepositBatch` catch `DuplicateKeyException`, regenerate `flow_no` or `deposit_batch_no`, and retry up to a bounded maximum before throwing a clear service error.
 
-Sample rebate generation remains separate from deposit: `POST /business/customer/{customerId}/sample-rebate` creates `sample_rebate_record`, then the internal service path writes the `SAMPLE_REBATE` account flow with `SAMPLE_REBATE_GENERATE`.
+Sample rebate generation remains separate from deposit and is also idempotent: `POST /business/customer/{customerId}/sample-rebate` requires `idempotentKey`, creates `sample_rebate_record`, then the internal service path writes the `SAMPLE_REBATE` account flow with `SAMPLE_REBATE_GENERATE`.
+
+Sample rebate idempotency rules:
+
+- Missing `idempotentKey` is rejected before mutation.
+- First key inserts `idempotent_request` as `PROCESSING`, runs sample rebate generation, then marks `SUCCESS` with `result_ref_type=SAMPLE_REBATE_RECORD` and the created `sample_rebate_record.rebate_record_id`.
+- Same key and same normalized request hash with `SUCCESS` returns the original sample rebate record instead of creating another rebate/fund flow.
+- Same key and same normalized request hash with `PROCESSING` is rejected as still processing.
+- Same key with a different normalized request hash is rejected as a key/request mismatch.
 
 ## Future Module Boundary
 
@@ -229,6 +251,9 @@ Sample rebate generation remains separate from deposit: `POST /business/customer
 - 后端新业务只使用 `CUSTOMER_DEPOSIT` 表示客户级定金，`SAMPLE_REBATE` 表示样品返现；不再设计额外定金账户类型。
 - SQL ownership 是最终结构，不写旧数据兼容迁移。
 - Customer schema, PUBLIC seed, customer menu/permission seed, and customer runtime validation have executable R-06 SQL baselines registered as blocking migrations.
+- `idempotent_request` has an executable R-07 migration registered as a blocking platform migration, with a unique key on `(biz_type, idempotent_key)`.
+- Customer deposit entry and sample rebate generation require `idempotentKey` and canonical request hashing; duplicate successful requests replay the original result and mismatched requests are rejected.
+- The customer page generates a hidden stable `idempotentKey` per fund-entry or sample-rebate dialog cycle and submits it without changing `ruoyi-ui/src/api/customer.js` or API paths.
 - 不引入 sales-order / delivery / finance 模块代码。
 - API、UI、DB、权限、菜单、registry、graph、memory、handover 和 change record 同步。
 - `npm run scan:all`, `npm run finalize:change -- --summary "客户管理厂内归属与业务员维护口径"`, `npm run check` 完成后方可关闭。

@@ -80,6 +80,12 @@
       "source": "sql-reference"
     },
     {
+      "name": "idempotent_request",
+      "module": "customer",
+      "file": "sql/migrations/V20260625_004_idempotent_request.sql",
+      "source": "create-table"
+    },
+    {
       "name": "QRTZ_JOB_DETAILS",
       "module": "",
       "file": "sql/quartz.sql",
@@ -371,6 +377,18 @@
       "name": "customer_fund_flow",
       "module": "customer",
       "file": "sql/validation/customer_runtime_validation.sql",
+      "source": "sql-reference"
+    },
+    {
+      "name": "idempotent_request",
+      "module": "customer",
+      "file": "sql/validation/customer_runtime_validation.sql",
+      "source": "sql-reference"
+    },
+    {
+      "name": "idempotent_request",
+      "module": "",
+      "file": "ruoyi-business/src/main/resources/mapper/common/IdempotentRequestMapper.xml",
       "source": "sql-reference"
     },
     {

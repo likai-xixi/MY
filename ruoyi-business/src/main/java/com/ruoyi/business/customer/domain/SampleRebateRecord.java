@@ -23,6 +23,7 @@ public class SampleRebateRecord extends BaseEntity
     private BigDecimal usedAmount;
     private BigDecimal remainingAmount;
     private String status;
+    private String idempotentKey;
 
     public Long getRebateRecordId() { return rebateRecordId; }
     public void setRebateRecordId(Long rebateRecordId) { this.rebateRecordId = rebateRecordId; }
@@ -50,4 +51,6 @@ public class SampleRebateRecord extends BaseEntity
     public void setRemainingAmount(BigDecimal remainingAmount) { this.remainingAmount = remainingAmount; }
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
+    public String getIdempotentKey() { return idempotentKey; }
+    public void setIdempotentKey(String idempotentKey) { this.idempotentKey = idempotentKey; }
 }

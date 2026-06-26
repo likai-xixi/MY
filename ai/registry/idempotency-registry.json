@@ -1,5 +1,44 @@
 {
   "schemaVersion": 1,
-  "description": "Registry for high-risk mutating API idempotency requirements. Empty entries are allowed in CR-3; future required entries must be complete and tested.",
-  "entries": []
+  "description": "Registry for high-risk mutating API idempotency requirements. Customer fund entry points require idempotentKey plus canonical request hashing before mutation.",
+  "entries": [
+    {
+      "featureId": "customer",
+      "api": "/business/customer/{customerId}/fund/deposit",
+      "method": "POST",
+      "riskDomain": "customer-fund",
+      "required": true,
+      "idempotencyKey": "idempotentKey",
+      "scope": "biz_type+customerId",
+      "ttl": "persistent-business-ledger",
+      "duplicateBehavior": "return-existing-result",
+      "conflictBehavior": "reject-payload-mismatch",
+      "payloadHashRequired": true,
+      "lockStrategy": "unique-biz-type-key-and-row-lock",
+      "resultReplay": "same-response",
+      "tests": [
+        "tests/customer-risk-gate.test.js"
+      ],
+      "status": "required"
+    },
+    {
+      "featureId": "customer",
+      "api": "/business/customer/{customerId}/sample-rebate",
+      "method": "POST",
+      "riskDomain": "customer-fund",
+      "required": true,
+      "idempotencyKey": "idempotentKey",
+      "scope": "biz_type+customerId",
+      "ttl": "persistent-business-ledger",
+      "duplicateBehavior": "return-existing-result",
+      "conflictBehavior": "reject-payload-mismatch",
+      "payloadHashRequired": true,
+      "lockStrategy": "unique-biz-type-key-and-row-lock",
+      "resultReplay": "same-response",
+      "tests": [
+        "tests/customer-risk-gate.test.js"
+      ],
+      "status": "required"
+    }
+  ]
 }

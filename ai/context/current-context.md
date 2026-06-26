@@ -1,54 +1,70 @@
 # Current Context
 
 Current feature: `customer`
-Current change: `CR-20260626T115131Z-executable-customer-migration-baseline`
+Current change: `CR-20260626T124443Z-customer-fund-idempotency`
 Repository: RuoYi + Vue3 + Codex Auto Dev OS
 Profile: adapter `ruoyi`, locked `true`
 
 ## Allowed Edit Roots
 
-- `sql/migrations/V20260625_001_customer_schema.sql`
-- `sql/migrations/V20260625_002_customer_seed_public_customer.sql`
-- `sql/migrations/V20260625_003_customer_menu_permission.sql`
+- `ruoyi-business/src/main/java/com/ruoyi/business/customer/domain/CustomerFundEntry.java`
+- `ruoyi-business/src/main/java/com/ruoyi/business/customer/domain/SampleRebateRecord.java`
+- `ruoyi-business/src/main/java/com/ruoyi/business/customer/service/impl/CustomerFundServiceImpl.java`
+- `ruoyi-business/src/main/java/com/ruoyi/business/customer/service/impl/CustomerServiceImpl.java`
+- `ruoyi-business/src/main/java/com/ruoyi/business/customer/mapper/CustomerMapper.java`
+- `ruoyi-business/src/main/resources/mapper/customer/CustomerMapper.xml`
+- `ruoyi-business/src/main/java/com/ruoyi/business/common/idempotency`
+- `ruoyi-business/src/main/resources/mapper/common/IdempotentRequestMapper.xml`
+- `sql/migrations/V20260625_004_idempotent_request.sql`
 - `sql/validation/customer_runtime_validation.sql`
-- `sql/customer.ownership.md`
+- `ai/registry/features.json`
+- `ai/registry/idempotency-registry.json`
 - `ai/registry/migration-registry.json`
-- `docs/customer-database-migration.md`
+- `ai/contracts/customer.api.md`
 - `ai/contracts/customer.db.md`
 - `features/customer.md`
+- `ruoyi-ui/src/views/customer/index.vue`
+- `tests/customer-risk-gate.test.js`
 - `tests/high-risk-governance.test.js`
 - `memory/HANDOVER.md`
+- `memory/API_CATALOG.md`
 - `memory/PROJECT_STATE.md`
 - `memory/CHANGELOG.md`
 - `memory/TASKS.json`
 - `ai/context/current-context.md`
 - `ai/context/current-context.json`
-- `ai/changes/CR-20260626T115131Z-executable-customer-migration-baseline`
+- `ai/changes/CR-20260626T124443Z-customer-fund-idempotency`
 - `ai/changes/CURRENT_CHANGE.json`
-- `ai/generated/db-schema.json`
-- `ai/generated/permissions.json`
-- `ai/registry/features.json`
-- `graph/ui-graph.json`
+- `ai/generated`
 
 ## Forbidden Edit Roots
 
-- `ruoyi-business/src/main/java/com/ruoyi/business/customer`
-- `ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer`
-- `ruoyi-business/src/main/resources/mapper/customer`
-- `ruoyi-ui/src/views/customer`
-- `ruoyi-ui/src/api/customer.js`
 - `ruoyi-framework/src/main/java/com/ruoyi/framework/config/SecurityConfig.java`
 - `ruoyi-admin/src/main/resources/application.yml`
 - `ruoyi-admin/src/main/resources/application-druid.yml`
 - `ruoyi-admin/src/main/resources/application-prod.yml`
 - `package.json`
 - `tools`
-- `ai/registry/idempotency-registry.json`
+- `ruoyi-business/src/main/java/com/ruoyi/business/sales-order`
+- `ruoyi-business/src/main/java/com/ruoyi/business/salesorder`
+- `ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/sales-order`
+- `ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/salesorder`
+- `ruoyi-ui/src/views/sales-order`
+- `ruoyi-ui/src/views/salesorder`
+- `ruoyi-ui/src/api/sales-order.js`
+- `ruoyi-ui/src/api/salesOrder.js`
 - `sales-order runtime, SQL, Vue, API, permission, or route`
 - `salesorder runtime, SQL, Vue, API, permission, or route`
-- `idempotent_request table`
-- `customer fund runtime code`
-- `non-customer business table structure`
+- `sales_order table`
+- `sales_order_item table`
+- `state_transition_log table`
+- `production safety configuration`
+- `LONG_TERM_DEPOSIT`
+- `ROLLING_ORDER_DEPOSIT`
+- `DEPOSIT_DEDUCT runtime`
+- `DEPOSIT_REFUND runtime`
+- `DEPOSIT_ADJUST runtime`
+- `DEPOSIT_REVERSE runtime`
 
 ## Must Read Files
 
@@ -63,9 +79,9 @@ Profile: adapter `ruoyi`, locked `true`
 - `ai/roadmap/phase-gates.json` - beforeSalesOrder gate state.
 - `ai/roadmap/refactor-debt.json` - Known debt affecting sales-order handoff.
 - `ai/roadmap/enhancement-backlog.json` - Governance backlog and required/deferred evidence.
-- `ai/changes/CR-20260626T115131Z-executable-customer-migration-baseline/impact.json` - Current change allowed and forbidden edit roots.
-- `ai/changes/CR-20260626T115131Z-executable-customer-migration-baseline/plan.md` - Current change execution plan.
-- `ai/changes/CR-20260626T115131Z-executable-customer-migration-baseline/verification.md` - Current change verification evidence.
+- `ai/changes/CR-20260626T124443Z-customer-fund-idempotency/impact.json` - Current change allowed and forbidden edit roots.
+- `ai/changes/CR-20260626T124443Z-customer-fund-idempotency/plan.md` - Current change execution plan.
+- `ai/changes/CR-20260626T124443Z-customer-fund-idempotency/verification.md` - Current change verification evidence.
 
 ## Must Not Break
 
@@ -128,11 +144,14 @@ Deferred:
 
 - `npm run resume`
 - `npm run impact -- 客户管理`
+- `npm run scan:all`
+- `node --test tests/customer-risk-gate.test.js`
 - `npm run check:high-risk-governance`
 - `node --test tests/high-risk-governance.test.js`
 - `npm test`
 - `npm run check`
 - `git diff --check`
+- `mvn -pl ruoyi-admin -am -DskipTests compile or configured runtime-policy Maven path`
 
 ## Next Steps
 

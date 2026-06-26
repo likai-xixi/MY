@@ -17,6 +17,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.ruoyi.business.common.idempotency.domain.IdempotentRequest;
+import com.ruoyi.business.common.idempotency.service.IdempotencyService;
+import com.ruoyi.business.common.idempotency.support.IdempotencyRequestHash;
 import com.ruoyi.business.customer.domain.Customer;
 import com.ruoyi.business.customer.domain.CustomerAddress;
 import com.ruoyi.business.customer.domain.CustomerContact;
@@ -70,6 +73,10 @@ public class CustomerServiceImpl implements ICustomerService
     private static final String TRANSFER_MARK_SALESMAN_SELF = "MARK_SALESMAN_SELF";
     private static final String TRANSFER_RETURN_FACTORY = "RETURN_FACTORY";
     private static final String TRANSFER_CHANGE_SALESMAN = "CHANGE_SALESMAN";
+    private static final String SAMPLE_REBATE = "SAMPLE_REBATE";
+    private static final String SAMPLE_REBATE_GENERATE = "SAMPLE_REBATE_GENERATE";
+    private static final String BIZ_CUSTOMER_SAMPLE_REBATE = "CUSTOMER_SAMPLE_REBATE";
+    private static final String RESULT_SAMPLE_REBATE_RECORD = "SAMPLE_REBATE_RECORD";
     private static final BigDecimal ZERO = BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP);
     private static final String CUSTOMER_CODE_PREFIX = "KH";
     private static final int CUSTOMER_CODE_MIN_SEQUENCE_WIDTH = 6;
@@ -82,6 +89,9 @@ public class CustomerServiceImpl implements ICustomerService
 
     @Autowired
     private ICustomerFundService customerFundService;
+
+    @Autowired
+    private IdempotencyService idempotencyService;
 
     @Autowired
     private SysUserMapper sysUserMapper;
@@ -387,7 +397,23 @@ public class CustomerServiceImpl implements ICustomerService
     @Transactional
     public SampleRebateRecord createSampleRebateRecord(SampleRebateRecord record, Long operatorId, String operatorName)
     {
+        if (record == null || record.getCustomerId() == null)
+        {
+            throw new ServiceException("样品返现记录不能为空");
+        }
         assertRealCustomerFeature(record.getCustomerId(), "公共客户不启用客户级样品返现。");
+        IdempotentRequest request = idempotencyService.begin(
+            BIZ_CUSTOMER_SAMPLE_REBATE,
+            record.getIdempotentKey(),
+            record.getCustomerId(),
+            sampleRebateRequestHash(record, operatorId, operatorName),
+            operatorName
+        );
+        if (request.isReplay())
+        {
+            return replaySampleRebate(request);
+        }
+
         fillSampleRebateAmounts(record);
         record.setUsedAmount(ZERO);
         record.setRemainingAmount(money(record.getRebateAmount()));
@@ -396,6 +422,7 @@ public class CustomerServiceImpl implements ICustomerService
         customerMapper.insertSampleRebateRecord(record);
 
         customerFundService.recordSampleRebateFlow(record, operatorId, operatorName);
+        idempotencyService.markSuccess(request.getRequestId(), RESULT_SAMPLE_REBATE_RECORD, record.getRebateRecordId());
         return record;
     }
 
@@ -1150,5 +1177,37 @@ public class CustomerServiceImpl implements ICustomerService
         BigDecimal rebate = supportAmount.subtract(instantDiscount).max(BigDecimal.ZERO).setScale(2, RoundingMode.HALF_UP);
         record.setInstantDiscountAmount(instantDiscount);
         record.setRebateAmount(rebate);
+    }
+
+    private SampleRebateRecord replaySampleRebate(IdempotentRequest request)
+    {
+        if (!RESULT_SAMPLE_REBATE_RECORD.equals(request.getResultRefType()) || request.getResultRefId() == null)
+        {
+            throw new ServiceException("幂等请求结果不存在，请联系管理员");
+        }
+        SampleRebateRecord record = customerMapper.selectSampleRebateRecordById(request.getResultRefId());
+        if (record == null)
+        {
+            throw new ServiceException("幂等请求结果不存在，请联系管理员");
+        }
+        return record;
+    }
+
+    private String sampleRebateRequestHash(SampleRebateRecord record, Long operatorId, String operatorName)
+    {
+        String canonical = String.join("\n",
+            "biz_type=" + BIZ_CUSTOMER_SAMPLE_REBATE,
+            "customer_id=" + record.getCustomerId(),
+            "account_type=" + SAMPLE_REBATE,
+            "flow_type=" + SAMPLE_REBATE_GENERATE,
+            "amount=" + IdempotencyRequestHash.money(record.getSampleAmount()),
+            "receipt_no=",
+            "sample_order_no=" + IdempotencyRequestHash.text(record.getSampleOrderNo()),
+            "support_mode=" + IdempotencyRequestHash.text(record.getSupportMode()),
+            "total_support_rate=" + IdempotencyRequestHash.rate(record.getTotalSupportRate(), BigDecimal.ZERO),
+            "instant_discount_rate=" + IdempotencyRequestHash.rate(record.getInstantDiscountRate(), BigDecimal.ONE),
+            "operator_scope=" + IdempotencyRequestHash.operatorScope(operatorId, operatorName)
+        );
+        return IdempotencyRequestHash.sha256(canonical);
     }
 }

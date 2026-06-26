@@ -13,6 +13,7 @@ Feature ID: `customer`
 - `customer_deposit_batch`
 - `customer_sample_policy`
 - `sample_rebate_record`
+- Platform-level `idempotent_request`
 
 DDL, menu SQL, and permission SQL ownership remains documented in `sql/customer.ownership.md`. The executable R-06 baseline is registered in `ai/registry/migration-registry.json` and lives in `sql/migrations/V20260625_001_customer_schema.sql`, `sql/migrations/V20260625_002_customer_seed_public_customer.sql`, `sql/migrations/V20260625_003_customer_menu_permission.sql`, and `sql/validation/customer_runtime_validation.sql`. Mapper XML ownership is `ruoyi-business/src/main/resources/mapper/customer/CustomerMapper.xml`.
 
@@ -22,6 +23,7 @@ DDL, menu SQL, and permission SQL ownership remains documented in `sql/customer.
 - `customer-public-seed-baseline` is a blocking executable SQL baseline for the two built-in PUBLIC seed rows.
 - `customer-menu-permission-baseline` is a blocking executable SQL baseline for RuoYi business/customer menu and `business:customer:*` permissions.
 - `customer-runtime-validation` is a blocking read-only SQL validation entry for runtime data invariants.
+- `platform-idempotent-request-baseline` is a blocking executable SQL migration for the platform-level `idempotent_request` table used by customer fund high-risk entry points.
 - `sql/customer.ownership.md` remains the ownership document but is no longer the only baseline DDL source.
 
 ## Customer Nature
@@ -73,6 +75,16 @@ DDL, menu SQL, and permission SQL ownership remains documented in `sql/customer.
 - Later delivery / finance contracts must define `SAMPLE_REBATE` deduction.
 - Customer-level deposit entries must also create `customer_deposit_batch` records and set fund-flow `related_biz_type=CUSTOMER_DEPOSIT_BATCH`.
 - Sample rebate generation must create `sample_rebate_record` and matching `SAMPLE_REBATE_GENERATE` flow.
+
+## Idempotency Rule
+
+- `idempotent_request` is introduced by `sql/migrations/V20260625_004_idempotent_request.sql`.
+- The table stores `PROCESSING`, `SUCCESS`, and `FAILED` status values.
+- The unique key is `(biz_type, idempotent_key)`, not `idempotent_key` alone, so different business domains can use independent keys.
+- Customer deposit entry uses `biz_type=CUSTOMER_FUND_DEPOSIT` and stores the successful result as `CUSTOMER_FUND_FLOW / customer_fund_flow.flow_id`.
+- Sample rebate generation uses `biz_type=CUSTOMER_SAMPLE_REBATE` and stores the successful result as `SAMPLE_REBATE_RECORD / sample_rebate_record.rebate_record_id`.
+- Request hashes must be generated from normalized business fields, not raw JSON strings: `biz_type`, `customer_id`, normalized `account_type`, normalized `flow_type`, amount scaled to 2 decimals, trimmed `receipt_no`, trimmed `sample_order_no`, `support_mode`, normalized `total_support_rate`, normalized `instant_discount_rate`, and operator scope.
+- Idempotency record changes and customer fund mutations run inside the same Spring transaction. For business failures in this R-07 implementation, the transaction rolls back the `PROCESSING` idempotency row together with fund account, flow, deposit batch, and sample rebate changes, so the same request remains safely retryable.
 
 ## Delete Rule
 

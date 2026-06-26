@@ -671,6 +671,21 @@ const supportModeOptions = [
 const MOBILE_PHONE_PATTERN = /^1[3-9]\d{9}$/
 const SALESMAN_EMPTY_MESSAGE = "未找到销售/业务员角色用户，请先配置销售角色。"
 
+function generateCustomerIdempotentKey(scope) {
+  const cryptoApi = globalThis.crypto
+  const token = cryptoApi && typeof cryptoApi.randomUUID === "function"
+    ? cryptoApi.randomUUID()
+    : `${Date.now()}-${Math.random().toString(36).slice(2, 12)}`
+  return `${scope}-${token}`
+}
+
+function ensureCustomerIdempotentKey(target, scope) {
+  if (!target.idempotentKey) {
+    target.idempotentKey = generateCustomerIdempotentKey(scope)
+  }
+  return target.idempotentKey
+}
+
 const customerList = ref([])
 const salesmanOptions = ref([])
 const salesmanEmptyNoticeShown = ref(false)
@@ -1457,13 +1472,20 @@ function currentDateTimeValue() {
 }
 
 function handleFundEntry() {
-  fundForm.value = { amount: 0, receiptNo: "", remark: "" }
+  fundForm.value = {
+    idempotentKey: generateCustomerIdempotentKey("customer-fund-deposit"),
+    amount: 0,
+    receiptNo: "",
+    remark: ""
+  }
   fundTitle.value = "录入定金"
   fundOpen.value = true
 }
 
 function submitFundEntry() {
+  const idempotentKey = ensureCustomerIdempotentKey(fundForm.value, "customer-fund-deposit")
   addFundDeposit(currentCustomerId.value, {
+    idempotentKey,
     amount: fundForm.value.amount,
     receiptNo: fundForm.value.receiptNo,
     remark: fundForm.value.remark
@@ -1483,6 +1505,7 @@ function submitSamplePolicy() {
 
 function handleSampleRebate() {
   rebateForm.value = {
+    idempotentKey: generateCustomerIdempotentKey("customer-sample-rebate"),
     sampleOrderNo: "",
     sampleAmount: 0,
     supportMode: samplePolicy.value.supportMode || "REBATE_ONLY",
@@ -1495,7 +1518,11 @@ function handleSampleRebate() {
 }
 
 function submitSampleRebate() {
-  createSampleRebate(currentCustomerId.value, rebateForm.value).then(() => {
+  const payload = {
+    ...rebateForm.value,
+    idempotentKey: ensureCustomerIdempotentKey(rebateForm.value, "customer-sample-rebate")
+  }
+  createSampleRebate(currentCustomerId.value, payload).then(() => {
     proxy.$modal.msgSuccess("生成成功")
     rebateOpen.value = false
     loadDetail(currentCustomerId.value)

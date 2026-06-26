@@ -53,6 +53,7 @@
         "customer_fund_flow",
         "customer_salesman_bind_log",
         "customer_sample_policy",
+        "idempotent_request",
         "sample_rebate_record",
         "sys_menu"
       ],
@@ -148,6 +149,7 @@
         "sql/migrations/V20260625_001_customer_schema.sql",
         "sql/migrations/V20260625_002_customer_seed_public_customer.sql",
         "sql/migrations/V20260625_003_customer_menu_permission.sql",
+        "sql/migrations/V20260625_004_idempotent_request.sql",
         "sql/validation/customer_runtime_validation.sql"
       ],
       "mapperXmlFiles": [
@@ -207,11 +209,13 @@
           "customer_fund_flow",
           "customer_salesman_bind_log",
           "customer_sample_policy",
+          "idempotent_request",
           "sample_rebate_record",
           "sql/customer.ownership.md",
           "sql/migrations/V20260625_001_customer_schema.sql",
           "sql/migrations/V20260625_002_customer_seed_public_customer.sql",
           "sql/migrations/V20260625_003_customer_menu_permission.sql",
+          "sql/migrations/V20260625_004_idempotent_request.sql",
           "sql/validation/customer_runtime_validation.sql",
           "sys_menu"
         ],

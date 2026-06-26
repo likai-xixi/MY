@@ -8,6 +8,8 @@ const CUSTOMER_FUND_SERVICE = 'ruoyi-business/src/main/java/com/ruoyi/business/c
 const CUSTOMER_FUND_SERVICE_INTERFACE = 'ruoyi-business/src/main/java/com/ruoyi/business/customer/service/ICustomerFundService.java';
 const CUSTOMER_MAPPER = 'ruoyi-business/src/main/java/com/ruoyi/business/customer/mapper/CustomerMapper.java';
 const CUSTOMER_MAPPER_XML = 'ruoyi-business/src/main/resources/mapper/customer/CustomerMapper.xml';
+const CUSTOMER_FUND_ENTRY = 'ruoyi-business/src/main/java/com/ruoyi/business/customer/domain/CustomerFundEntry.java';
+const SAMPLE_REBATE_RECORD = 'ruoyi-business/src/main/java/com/ruoyi/business/customer/domain/SampleRebateRecord.java';
 const CUSTOMER_CONTROLLER = 'ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java';
 const CUSTOMER_API = 'ruoyi-ui/src/api/customer.js';
 const CUSTOMER_API_CONTRACT = 'ruoyi-ui/src/api/customer.contract.md';
@@ -16,6 +18,12 @@ const CUSTOMER_UI_CONTRACT = 'ai/contracts/customer.ui.md';
 const CUSTOMER_FEATURE = 'features/customer.md';
 const CUSTOMER_VIEW = 'ruoyi-ui/src/views/customer/index.vue';
 const CUSTOMER_SQL = 'sql/customer.ownership.md';
+const IDEMPOTENCY_SERVICE = 'ruoyi-business/src/main/java/com/ruoyi/business/common/idempotency/service/impl/IdempotencyServiceImpl.java';
+const IDEMPOTENCY_HASH = 'ruoyi-business/src/main/java/com/ruoyi/business/common/idempotency/support/IdempotencyRequestHash.java';
+const IDEMPOTENCY_MAPPER_XML = 'ruoyi-business/src/main/resources/mapper/common/IdempotentRequestMapper.xml';
+const IDEMPOTENT_MIGRATION = 'sql/migrations/V20260625_004_idempotent_request.sql';
+const IDEMPOTENCY_REGISTRY = 'ai/registry/idempotency-registry.json';
+const MIGRATION_REGISTRY = 'ai/registry/migration-registry.json';
 
 const BLOCKED_DEPOSIT_FLOW_TYPES = [
   'DEPOSIT_DEDUCT',
@@ -102,7 +110,8 @@ test('customer deposit endpoint is account-locked to customer deposit', () => {
 
   assert.match(fundRecordCustomerDeposit, /validateCustomerDepositAccountType\(entry\.getAccountType\(\)\)/);
   assert.match(fundRecordCustomerDeposit, /entry\.setAccountType\(CUSTOMER_DEPOSIT\)/);
-  assert.match(fundRecordCustomerDeposit, /return recordFundEntryInternal\(customerId, entry, operatorId, operatorName\)/);
+  assert.match(fundRecordCustomerDeposit, /CustomerFundFlow flow = recordFundEntryInternal\(customerId, entry, operatorId, operatorName\)/);
+  assert.match(fundRecordCustomerDeposit, /return flow;/);
 
   const validateIndex = fundRecordCustomerDeposit.indexOf('validateCustomerDepositAccountType(entry.getAccountType())');
   const setIndex = fundRecordCustomerDeposit.indexOf('entry.setAccountType(CUSTOMER_DEPOSIT)');
@@ -199,6 +208,171 @@ test('customer fund service owns concurrency-safe fund mutation', () => {
   assert.match(insertDepositBatchWithRetry, /customerMapper\.insertDepositBatch\(batch\)/);
   assert.match(insertDepositBatchWithRetry, /catch \(DuplicateKeyException e\)/);
   assert.match(insertDepositBatchWithRetry, /定金批次编号生成冲突，请重试/);
+});
+
+test('customer fund idempotency payload migration and registries are required', () => {
+  const fundEntry = readText(CUSTOMER_FUND_ENTRY);
+  const sampleRebateRecord = readText(SAMPLE_REBATE_RECORD);
+  const idempotencyService = readText(IDEMPOTENCY_SERVICE);
+  const migration = readText(IDEMPOTENT_MIGRATION);
+  const mapperXml = readText(IDEMPOTENCY_MAPPER_XML);
+  const idempotencyRegistry = readJson(IDEMPOTENCY_REGISTRY);
+  const migrationRegistry = readJson(MIGRATION_REGISTRY);
+
+  assert.match(fundEntry, /private String idempotentKey;/);
+  assert.match(fundEntry, /getIdempotentKey\(\)/);
+  assert.match(sampleRebateRecord, /private String idempotentKey;/);
+  assert.match(sampleRebateRecord, /getIdempotentKey\(\)/);
+
+  assert.equal(fileExists(IDEMPOTENT_MIGRATION), true);
+  assert.match(migration, /create table idempotent_request \(/i);
+  assert.match(migration, /unique key uk_idempotent_biz_key \(biz_type, idempotent_key\)/i);
+  assert.doesNotMatch(migration, /unique key uk_idempotent_biz_key \(idempotent_key\)/i);
+
+  for (const status of ['PROCESSING', 'SUCCESS', 'FAILED']) {
+    assert.match(idempotencyService, new RegExp(`STATUS_${status} = "${status}"`));
+    assert.match(migration, new RegExp(status));
+  }
+  assert.match(idempotencyService, /required\(trimToNull\(idempotentKey\), "幂等键不能为空"\)/);
+  assert.match(idempotencyService, /幂等键已被不同请求使用/);
+  assert.match(idempotencyService, /请求处理中，请勿重复提交/);
+  assert.match(mapperXml, /for update/);
+  assert.match(mapperXml, /status = 'SUCCESS'/);
+  assert.match(mapperXml, /status = 'FAILED'/);
+
+  const entriesByApi = new Map(idempotencyRegistry.entries.map((entry) => [entry.api, entry]));
+  for (const api of ['/business/customer/{customerId}/fund/deposit', '/business/customer/{customerId}/sample-rebate']) {
+    const entry = entriesByApi.get(api);
+    assert.ok(entry, `${api} must be registered for idempotency`);
+    assert.equal(entry.featureId, 'customer');
+    assert.equal(entry.method, 'POST');
+    assert.equal(entry.required, true);
+    assert.equal(entry.idempotencyKey, 'idempotentKey');
+    assert.equal(entry.payloadHashRequired, true);
+    assert.equal(entry.conflictBehavior, 'reject-payload-mismatch');
+    assert.equal(entry.duplicateBehavior, 'return-existing-result');
+    assert.ok(entry.tests.includes('tests/customer-risk-gate.test.js'));
+  }
+
+  const migrationEntry = migrationRegistry.entries.find((entry) => entry.migrationId === 'platform-idempotent-request-baseline');
+  assert.ok(migrationEntry, 'idempotent_request migration must be registered');
+  assert.equal(migrationEntry.file, IDEMPOTENT_MIGRATION);
+  assert.equal(migrationEntry.blocking, true);
+  assert.ok(migrationEntry.appliesToTables.includes('idempotent_request'));
+});
+
+test('customer page submits stable idempotentKey for fund entry and sample rebate', () => {
+  const view = readText(CUSTOMER_VIEW);
+  const apiClient = readText(CUSTOMER_API);
+  const generateKey = methodBody(view, 'function generateCustomerIdempotentKey');
+  const ensureKey = methodBody(view, 'function ensureCustomerIdempotentKey');
+  const handleFundEntry = methodBody(view, 'function handleFundEntry');
+  const submitFundEntry = methodBody(view, 'function submitFundEntry');
+  const handleSampleRebate = methodBody(view, 'function handleSampleRebate');
+  const submitSampleRebate = methodBody(view, 'function submitSampleRebate');
+
+  assert.match(generateKey, /randomUUID/);
+  assert.match(generateKey, /return `\$\{scope\}-\$\{token\}`/);
+  assert.match(ensureKey, /if \(!target\.idempotentKey\)/);
+  assert.match(ensureKey, /target\.idempotentKey = generateCustomerIdempotentKey\(scope\)/);
+
+  assert.match(handleFundEntry, /idempotentKey: generateCustomerIdempotentKey\("customer-fund-deposit"\)/);
+  assert.match(submitFundEntry, /const idempotentKey = ensureCustomerIdempotentKey\(fundForm\.value, "customer-fund-deposit"\)/);
+  assert.match(submitFundEntry, /addFundDeposit\(currentCustomerId\.value, \{[\s\S]*idempotentKey,[\s\S]*amount: fundForm\.value\.amount/);
+  assert.equal((submitFundEntry.match(/generateCustomerIdempotentKey/g) || []).length, 0, 'fund submit must reuse the dialog key instead of generating a new key per click');
+
+  assert.match(handleSampleRebate, /idempotentKey: generateCustomerIdempotentKey\("customer-sample-rebate"\)/);
+  assert.match(submitSampleRebate, /idempotentKey: ensureCustomerIdempotentKey\(rebateForm\.value, "customer-sample-rebate"\)/);
+  assert.match(submitSampleRebate, /createSampleRebate\(currentCustomerId\.value, payload\)/);
+  assert.equal((submitSampleRebate.match(/generateCustomerIdempotentKey/g) || []).length, 0, 'sample rebate submit must reuse the dialog key instead of generating a new key per click');
+
+  assert.doesNotMatch(apiClient, /idempotentKey/, 'customer API helper should not need path or method changes for idempotentKey payload fields');
+});
+
+test('customer fund idempotency canonical hashes and replay are wired before mutation', () => {
+  const fundService = readText(CUSTOMER_FUND_SERVICE);
+  const service = readText(CUSTOMER_SERVICE);
+  const hashSupport = readText(IDEMPOTENCY_HASH);
+  const recordDeposit = methodBody(fundService, 'public CustomerFundFlow recordCustomerDeposit');
+  const depositHash = methodBody(fundService, 'private String customerDepositRequestHash');
+  const createSampleRebate = methodBody(service, 'public SampleRebateRecord createSampleRebateRecord');
+  const sampleHash = methodBody(service, 'private String sampleRebateRequestHash');
+
+  assert.match(recordDeposit, /idempotencyService\.begin\(/);
+  assert.match(recordDeposit, /customerDepositRequestHash\(customerId, entry, operatorId, operatorName\)/);
+  assert.match(recordDeposit, /request\.isReplay\(\)[\s\S]*return replayCustomerDeposit\(request\)/);
+  assert.match(recordDeposit, /CustomerFundFlow flow = recordFundEntryInternal\(customerId, entry, operatorId, operatorName\)/);
+  assert.match(recordDeposit, /idempotencyService\.markSuccess\(request\.getRequestId\(\), RESULT_CUSTOMER_FUND_FLOW, flow\.getFlowId\(\)\)/);
+  assert.ok(
+    recordDeposit.indexOf('idempotencyService.begin(') < recordDeposit.indexOf('recordFundEntryInternal(customerId, entry, operatorId, operatorName)'),
+    'deposit idempotency row must be created before customer fund mutation'
+  );
+
+  for (const field of [
+    'biz_type=',
+    'customer_id=',
+    'account_type=',
+    'flow_type=',
+    'amount=',
+    'receipt_no=',
+    'sample_order_no=',
+    'support_mode=',
+    'total_support_rate=',
+    'instant_discount_rate=',
+    'operator_scope='
+  ]) {
+    assert.match(depositHash, new RegExp(field));
+    assert.match(sampleHash, new RegExp(field));
+  }
+  assert.match(depositHash, /IdempotencyRequestHash\.money\(entry\.getAmount\(\)\)/);
+  assert.match(depositHash, /IdempotencyRequestHash\.text\(entry\.getReceiptNo\(\)\)/);
+  assert.match(sampleHash, /IdempotencyRequestHash\.money\(record\.getSampleAmount\(\)\)/);
+  assert.match(sampleHash, /IdempotencyRequestHash\.text\(record\.getSampleOrderNo\(\)\)/);
+  assert.match(sampleHash, /IdempotencyRequestHash\.rate\(record\.getTotalSupportRate\(\), BigDecimal\.ZERO\)/);
+  assert.match(sampleHash, /IdempotencyRequestHash\.rate\(record\.getInstantDiscountRate\(\), BigDecimal\.ONE\)/);
+  assert.match(hashSupport, /MessageDigest\.getInstance\("SHA-256"\)/);
+  assert.match(hashSupport, /\.setScale\(2, RoundingMode\.HALF_UP\)/);
+  assert.match(hashSupport, /\.setScale\(4, RoundingMode\.HALF_UP\)/);
+
+  assert.match(createSampleRebate, /idempotencyService\.begin\(/);
+  assert.match(createSampleRebate, /request\.isReplay\(\)[\s\S]*return replaySampleRebate\(request\)/);
+  assert.ok(
+    createSampleRebate.indexOf('idempotencyService.begin(') < createSampleRebate.indexOf('customerMapper.insertSampleRebateRecord(record)'),
+    'sample rebate idempotency row must be created before sample rebate mutation'
+  );
+  assert.match(service, /selectSampleRebateRecordById\(request\.getResultRefId\(\)\)/);
+  assert.match(fundService, /selectFundFlowById\(request\.getResultRefId\(\)\)/);
+});
+
+test('customer fund idempotency keeps fund and sales-order boundaries closed', () => {
+  const scopedTexts = [
+    CUSTOMER_FUND_ENTRY,
+    SAMPLE_REBATE_RECORD,
+    CUSTOMER_FUND_SERVICE,
+    CUSTOMER_SERVICE,
+    IDEMPOTENCY_SERVICE,
+    IDEMPOTENT_MIGRATION,
+    IDEMPOTENCY_REGISTRY
+  ].map((file) => readText(file)).join('\n');
+
+  assert.doesNotMatch(scopedTexts, /LONG_TERM_DEPOSIT|ROLLING_ORDER_DEPOSIT/);
+  assert.match(readText(CUSTOMER_FUND_SERVICE), /CUSTOMER_DEPOSIT/);
+  assert.match(readText(CUSTOMER_FUND_SERVICE), /DEPOSIT_IN/);
+  assert.match(readText(CUSTOMER_FUND_SERVICE), /SAMPLE_REBATE_GENERATE/);
+
+  const forbiddenRuntimePaths = [
+    'ruoyi-business/src/main/java/com/ruoyi/business/sales-order',
+    'ruoyi-business/src/main/java/com/ruoyi/business/salesorder',
+    'ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/sales-order',
+    'ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/salesorder',
+    'ruoyi-ui/src/views/sales-order',
+    'ruoyi-ui/src/views/salesorder',
+    'ruoyi-ui/src/api/sales-order.js',
+    'ruoyi-ui/src/api/salesOrder.js',
+    'sql/sales-order.ownership.md',
+    'sql/sales_order_init.sql'
+  ];
+  assert.deepEqual(forbiddenRuntimePaths.filter((file) => fileExists(file)), []);
 });
 
 test('customer api contract Client Methods match customer.js exports', () => {

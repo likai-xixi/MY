@@ -12,6 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.ruoyi.business.common.idempotency.domain.IdempotentRequest;
+import com.ruoyi.business.common.idempotency.service.IdempotencyService;
+import com.ruoyi.business.common.idempotency.support.IdempotencyRequestHash;
 import com.ruoyi.business.customer.domain.Customer;
 import com.ruoyi.business.customer.domain.CustomerDepositBatch;
 import com.ruoyi.business.customer.domain.CustomerFundAccount;
@@ -39,6 +42,8 @@ public class CustomerFundServiceImpl implements ICustomerFundService
     private static final String DEPOSIT_REFUND = "DEPOSIT_REFUND";
     private static final String DEPOSIT_ADJUST = "DEPOSIT_ADJUST";
     private static final String DEPOSIT_REVERSE = "DEPOSIT_REVERSE";
+    private static final String BIZ_CUSTOMER_FUND_DEPOSIT = "CUSTOMER_FUND_DEPOSIT";
+    private static final String RESULT_CUSTOMER_FUND_FLOW = "CUSTOMER_FUND_FLOW";
     private static final String DEPOSIT_ACCOUNT_ONLY_MESSAGE = "定金录入接口只允许写入CUSTOMER_DEPOSIT账户，样品返现请通过样品返现入口处理。";
     private static final String DEPOSIT_IN_ONLY_MESSAGE = "定金录入接口只允许入金，扣减、退款、调整、冲正请走独立资金处理流程。";
     private static final BigDecimal ZERO = BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP);
@@ -48,6 +53,9 @@ public class CustomerFundServiceImpl implements ICustomerFundService
 
     @Autowired
     private CustomerMapper customerMapper;
+
+    @Autowired
+    private IdempotencyService idempotencyService;
 
     @Override
     @Transactional
@@ -84,7 +92,23 @@ public class CustomerFundServiceImpl implements ICustomerFundService
         }
         validateCustomerDepositAccountType(entry.getAccountType());
         entry.setAccountType(CUSTOMER_DEPOSIT);
-        return recordFundEntryInternal(customerId, entry, operatorId, operatorName);
+        entry.setFlowType(resolveFlowType(CUSTOMER_DEPOSIT, entry.getFlowType()));
+
+        IdempotentRequest request = idempotencyService.begin(
+            BIZ_CUSTOMER_FUND_DEPOSIT,
+            entry.getIdempotentKey(),
+            customerId,
+            customerDepositRequestHash(customerId, entry, operatorId, operatorName),
+            operatorName
+        );
+        if (request.isReplay())
+        {
+            return replayCustomerDeposit(request);
+        }
+
+        CustomerFundFlow flow = recordFundEntryInternal(customerId, entry, operatorId, operatorName);
+        idempotencyService.markSuccess(request.getRequestId(), RESULT_CUSTOMER_FUND_FLOW, flow.getFlowId());
+        return flow;
     }
 
     @Override
@@ -373,6 +397,38 @@ public class CustomerFundServiceImpl implements ICustomerFundService
     {
         return DEPOSIT_DEDUCT.equals(flowType) || DEPOSIT_REFUND.equals(flowType)
             || DEPOSIT_ADJUST.equals(flowType) || DEPOSIT_REVERSE.equals(flowType);
+    }
+
+    private CustomerFundFlow replayCustomerDeposit(IdempotentRequest request)
+    {
+        if (!RESULT_CUSTOMER_FUND_FLOW.equals(request.getResultRefType()) || request.getResultRefId() == null)
+        {
+            throw new ServiceException("幂等请求结果不存在，请联系管理员");
+        }
+        CustomerFundFlow flow = customerMapper.selectFundFlowById(request.getResultRefId());
+        if (flow == null)
+        {
+            throw new ServiceException("幂等请求结果不存在，请联系管理员");
+        }
+        return flow;
+    }
+
+    private String customerDepositRequestHash(Long customerId, CustomerFundEntry entry, Long operatorId, String operatorName)
+    {
+        String canonical = String.join("\n",
+            "biz_type=" + BIZ_CUSTOMER_FUND_DEPOSIT,
+            "customer_id=" + customerId,
+            "account_type=" + CUSTOMER_DEPOSIT,
+            "flow_type=" + DEPOSIT_IN,
+            "amount=" + IdempotencyRequestHash.money(entry.getAmount()),
+            "receipt_no=" + IdempotencyRequestHash.text(entry.getReceiptNo()),
+            "sample_order_no=",
+            "support_mode=",
+            "total_support_rate=" + IdempotencyRequestHash.rate(null, BigDecimal.ZERO),
+            "instant_discount_rate=" + IdempotencyRequestHash.rate(null, BigDecimal.ONE),
+            "operator_scope=" + IdempotencyRequestHash.operatorScope(operatorId, operatorName)
+        );
+        return IdempotencyRequestHash.sha256(canonical);
     }
 
     private String defaultIfEmpty(String value, String fallback)

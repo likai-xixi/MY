@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.business.common.idempotency.mapper.IdempotentRequestMapper">
+
+    <resultMap type="com.ruoyi.business.common.idempotency.domain.IdempotentRequest" id="IdempotentRequestResult">
+        <id property="requestId" column="request_id" />
+        <result property="bizType" column="biz_type" />
+        <result property="idempotentKey" column="idempotent_key" />
+        <result property="bizId" column="biz_id" />
+        <result property="requestHash" column="request_hash" />
+        <result property="status" column="status" />
+        <result property="resultRefType" column="result_ref_type" />
+        <result property="resultRefId" column="result_ref_id" />
+        <result property="errorMessage" column="error_message" />
+        <result property="createBy" column="create_by" />
+        <result property="createTime" column="create_time" />
+        <result property="updateTime" column="update_time" />
+    </resultMap>
+
+    <select id="selectByBizKeyForUpdate" resultMap="IdempotentRequestResult">
+        select *
+        from idempotent_request
+        where biz_type = #{bizType}
+          and idempotent_key = #{idempotentKey}
+        limit 1
+        for update
+    </select>
+
+    <insert id="insertIdempotentRequest" parameterType="com.ruoyi.business.common.idempotency.domain.IdempotentRequest" useGeneratedKeys="true" keyProperty="requestId">
+        insert into idempotent_request(
+            biz_type, idempotent_key, biz_id, request_hash, status,
+            result_ref_type, result_ref_id, error_message, create_by, create_time, update_time
+        ) values (
+            #{bizType}, #{idempotentKey}, #{bizId}, #{requestHash}, #{status},
+            #{resultRefType}, #{resultRefId}, #{errorMessage}, #{createBy}, sysdate(), sysdate()
+        )
+    </insert>
+
+    <update id="updateSuccess">
+        update idempotent_request
+        set status = 'SUCCESS',
+            result_ref_type = #{resultRefType},
+            result_ref_id = #{resultRefId},
+            error_message = null,
+            update_time = sysdate()
+        where request_id = #{requestId}
+    </update>
+
+    <update id="updateFailed">
+        update idempotent_request
+        set status = 'FAILED',
+            error_message = #{errorMessage},
+            update_time = sysdate()
+        where request_id = #{requestId}
+    </update>
+</mapper>

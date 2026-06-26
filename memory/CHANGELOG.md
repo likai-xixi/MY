@@ -408,3 +408,17 @@
 - [not-run] MySQL execution of the new SQL files was not performed in this environment.
 - No customer Java/Vue runtime, sales-order runtime, security config, customer fund runtime code, idempotency registry, `idempotent_request`, package scripts, tools, or non-customer business tables were changed.
 - Feature: `customer`.
+
+## 2026-06-26 - customer fund idempotency
+
+- Change: `ai/changes/CR-20260626T124443Z-customer-fund-idempotency`.
+- R-07 adds mandatory `idempotentKey` handling to `POST /business/customer/{customerId}/fund/deposit` and `POST /business/customer/{customerId}/sample-rebate`.
+- Added platform-level `idempotent_request` migration with unique key `(biz_type, idempotent_key)` and `PROCESSING` / `SUCCESS` / `FAILED` status vocabulary.
+- Added common idempotency service/mapper support, canonical request hashing, same-key/same-hash success replay, same-key processing rejection, and same-key/different-hash conflict rejection.
+- Added customer page hidden stable `idempotentKey` generation for deposit and sample-rebate dialog submit payloads; `ruoyi-ui/src/api/customer.js` and API paths remain unchanged.
+- Updated idempotency and migration registries, customer API/DB contracts, feature brief, API catalog, generated DB scan, current context, handoff memory, and customer/high-risk governance tests.
+- [local] Verification passed: `npm run resume`, frontend `idempotentKey` precheck commands, `npm run impact -- 客户管理`, `npm run scan:all`, `npm run context:build -- customer`, `node --test tests/customer-risk-gate.test.js` with 15 tests, `npm --prefix ruoyi-ui run build:prod`, `npm run check:high-risk-governance`, `node --test tests/high-risk-governance.test.js` with 40 tests, `npm test` with 196 tests, `npm run check` with 196/196 Node tests, `git diff --check`, and configured Maven compile with `BUILD SUCCESS`.
+- [not-run] Plain `mvn -pl ruoyi-admin -am -DskipTests compile` is unavailable on PATH.
+- [not-run] MySQL execution of `sql/migrations/V20260625_004_idempotent_request.sql` and `sql/validation/customer_runtime_validation.sql` was not performed in this environment.
+- No sales-order runtime, production safety config, package/tools, old three-account fund model, deduction/refund/adjustment/reversal runtime, or non-`idempotent_request` database table was changed.
+- Feature: `customer`.

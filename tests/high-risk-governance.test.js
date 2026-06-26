@@ -476,6 +476,33 @@ test('idempotency empty registry passes', () => withRoot((root) => {
   assert.deepEqual(result.failures, []);
 }));
 
+test('repo-level customer fund idempotency entries are required and complete', () => {
+  const registry = JSON.parse(fs.readFileSync('ai/registry/idempotency-registry.json', 'utf8'));
+  const entriesByApi = new Map((registry.entries || []).map((entry) => [entry.api, entry]));
+  const expected = [
+    '/business/customer/{customerId}/fund/deposit',
+    '/business/customer/{customerId}/sample-rebate'
+  ];
+
+  for (const api of expected) {
+    const entry = entriesByApi.get(api);
+    assert.ok(entry, `${api} should be registered`);
+    assert.equal(entry.featureId, 'customer');
+    assert.equal(entry.method, 'POST');
+    assert.equal(entry.riskDomain, 'customer-fund');
+    assert.equal(entry.required, true);
+    assert.equal(entry.idempotencyKey, 'idempotentKey');
+    assert.equal(entry.payloadHashRequired, true);
+    assert.equal(entry.duplicateBehavior, 'return-existing-result');
+    assert.equal(entry.conflictBehavior, 'reject-payload-mismatch');
+    assert.equal(entry.resultReplay, 'same-response');
+    assert.ok(Array.isArray(entry.tests) && entry.tests.includes('tests/customer-risk-gate.test.js'));
+  }
+
+  const result = validateIdempotencyRegistry({ root: process.cwd() });
+  assert.deepEqual(result.failures, []);
+});
+
 test('state-machine legal transition passes', () => withRoot((root) => {
   writeJson(root, 'ai/registry/state-machines.json', {
     schemaVersion: 1,

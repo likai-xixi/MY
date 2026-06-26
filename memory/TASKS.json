@@ -8,8 +8,8 @@
       "status": "in_progress",
       "owner": "Codex",
       "priority": "high",
-      "statusReason": "R-05 customer salesman candidate hardening is on master/origin/master at 818108c. R-06 executable customer migration baseline is now the active local change and keeps sales-order/idempotency/runtime work blocked out of scope.",
-      "nextStep": "Finish R-06 verification and closeout. Then choose either R-07 customer fund idempotency or R-09 sales-order pre-implementation contract package; keep beforeSalesOrder blocked unless required contracts and review explicitly unlock it later.",
+      "statusReason": "R-07 customer fund idempotency is locally verified with frontend payload closeout: the customer page generates stable hidden idempotentKey values for deposit and sample rebate submits. It keeps sales-order runtime, production safety config, package/tools, old three-account funds, and deduction/refund/adjustment/reversal runtime blocked out of scope.",
+      "nextStep": "Choose either R-08 customer runtime tests or R-09 sales-order pre-implementation contract package; keep beforeSalesOrder blocked unless required contracts and review explicitly unlock it later.",
       "blockedBy": [],
       "verification": [
         "npm run profile:setup",
@@ -144,7 +144,7 @@
       "latestSession": "memory/sessions/2026-06-25-pre-release-breaking-change-policy.md",
       "handoverRequired": true,
       "updatedAt": "2026-06-26",
-      "latestChange": "CR-20260626T013800Z-high-risk-active-impact-scope"
+      "latestChange": "CR-20260626T124443Z-customer-fund-idempotency"
     },
     {
       "id": "TASK-CUSTOMER",
@@ -153,8 +153,8 @@
       "status": "in_progress",
       "owner": "workflow",
       "priority": "normal",
-      "statusReason": "CR-20260626T115131Z-executable-customer-migration-baseline is R-06: customer schema, PUBLIC seed rows, RuoYi customer menu/permissions, and runtime validation now have executable SQL baselines and blocking migration-registry entries. Customer Java/Vue runtime, customer fund runtime, sales-order, idempotency, package, and tools remain untouched.",
-      "nextStep": "Finish R-06 full gate and git diff checks, then choose R-07 customer fund idempotency or R-09 sales-order pre-implementation contract package.",
+      "statusReason": "CR-20260626T124443Z-customer-fund-idempotency is R-07: customer deposit entry and sample rebate generation now require idempotentKey, the customer page generates stable hidden keys for both submit flows, and platform idempotent_request support handles canonical request hashing, success replay, processing rejection, and mismatch rejection. Sales-order runtime, production safety config, package/tools, old three-account funds, and deduction/refund/adjustment/reversal runtime remain untouched.",
+      "nextStep": "Choose R-08 customer runtime tests or R-09 sales-order pre-implementation contract package.",
       "blockedBy": [],
       "verification": [
         "npm run resume",
@@ -367,7 +367,7 @@
         "[not-run] MySQL execution of the R-06 SQL files was not performed in this environment"
       ],
       "latestSession": "memory/sessions/2026-06-25-customer-fund-concurrency.md",
-      "latestChange": "CR-20260626T115131Z-executable-customer-migration-baseline",
+      "latestChange": "CR-20260626T124443Z-customer-fund-idempotency",
       "handoverRequired": true,
       "updatedAt": "2026-06-26"
     }

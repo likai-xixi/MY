@@ -89,6 +89,26 @@
       ],
       "owner": "customer",
       "blocking": true
+    },
+    {
+      "migrationId": "platform-idempotent-request-baseline",
+      "featureId": "platform",
+      "file": "sql/migrations/V20260625_004_idempotent_request.sql",
+      "type": "executable-sql",
+      "appliesToTables": [
+        "idempotent_request"
+      ],
+      "status": "required",
+      "phase": "R-07-customer-fund-idempotency",
+      "rollbackPlan": "For an unreleased development database, drop idempotent_request only after confirming no in-flight PROCESSING records are needed. Production/released data requires a separate executable rollback plan before use.",
+      "verification": [
+        "npm run check:high-risk-governance",
+        "node --test tests/high-risk-governance.test.js",
+        "node --test tests/customer-risk-gate.test.js",
+        "mysql < sql/migrations/V20260625_004_idempotent_request.sql when a disposable MySQL test database is available"
+      ],
+      "owner": "platform",
+      "blocking": true
     }
   ]
 }

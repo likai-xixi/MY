@@ -404,6 +404,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         order by occur_time desc, flow_id desc
     </select>
 
+    <select id="selectFundFlowById" parameterType="Long" resultMap="CustomerFundFlowResult">
+        select * from customer_fund_flow where flow_id = #{flowId} limit 1
+    </select>
+
     <insert id="insertDepositBatch" parameterType="CustomerDepositBatch" useGeneratedKeys="true" keyProperty="depositBatchId">
         insert into customer_deposit_batch(deposit_batch_no, customer_id, deposit_type, receipt_no,
             deposit_amount, used_amount, remaining_amount, status, start_time, settle_time, remark, create_by, create_time)
@@ -446,6 +450,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         values(#{customerId}, #{sampleOrderId}, #{sampleOrderNo}, #{sampleAmount}, #{supportMode}, #{totalSupportRate},
             #{instantDiscountRate}, #{instantDiscountAmount}, #{rebateAmount}, #{usedAmount}, #{remainingAmount}, #{status}, #{remark}, #{createBy}, sysdate())
     </insert>
+
+    <select id="selectSampleRebateRecordById" parameterType="Long" resultMap="SampleRebateRecordResult">
+        select * from sample_rebate_record where rebate_record_id = #{rebateRecordId} limit 1
+    </select>
 
     <select id="selectSampleRebateRecordsByCustomerId" parameterType="Long" resultMap="SampleRebateRecordResult">
         select * from sample_rebate_record where customer_id = #{customerId} order by create_time desc, rebate_record_id desc

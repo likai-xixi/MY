@@ -1,0 +1,127 @@
+{
+  "schemaVersion": 1,
+  "mode": "update",
+  "feature": {
+    "id": "customer",
+    "name": "客户管理",
+    "status": "active"
+  },
+  "blockers": [],
+  "affected": {
+    "feature": "features/customer.md",
+    "backendModules": [
+      "ruoyi-business/src/main/java/com/ruoyi/business/customer",
+      "ruoyi-business/src/main/java/com/ruoyi/business/common/idempotency"
+    ],
+    "mapperXml": [
+      "ruoyi-business/src/main/resources/mapper/customer/CustomerMapper.xml",
+      "ruoyi-business/src/main/resources/mapper/common/IdempotentRequestMapper.xml"
+    ],
+    "frontend": [
+      "ruoyi-ui/src/views/customer/index.vue"
+    ],
+    "docs": [
+      "ai/contracts/customer.api.md",
+      "ai/contracts/customer.db.md",
+      "features/customer.md",
+      "memory/API_CATALOG.md",
+      "memory/HANDOVER.md",
+      "memory/PROJECT_STATE.md",
+      "memory/CHANGELOG.md",
+      "memory/TASKS.json",
+      "ai/context/current-context.md",
+      "ai/context/current-context.json"
+    ],
+      "registries": [
+      "ai/registry/features.json",
+      "ai/registry/idempotency-registry.json",
+      "ai/registry/migration-registry.json"
+    ],
+    "sql": [
+      "sql/migrations/V20260625_004_idempotent_request.sql",
+      "sql/validation/customer_runtime_validation.sql"
+    ],
+    "tests": [
+      "tests/customer-risk-gate.test.js",
+      "tests/high-risk-governance.test.js"
+    ]
+  },
+  "allowedEditRoots": [
+    "ruoyi-business/src/main/java/com/ruoyi/business/customer/domain/CustomerFundEntry.java",
+    "ruoyi-business/src/main/java/com/ruoyi/business/customer/domain/SampleRebateRecord.java",
+    "ruoyi-business/src/main/java/com/ruoyi/business/customer/service/impl/CustomerFundServiceImpl.java",
+    "ruoyi-business/src/main/java/com/ruoyi/business/customer/service/impl/CustomerServiceImpl.java",
+    "ruoyi-business/src/main/java/com/ruoyi/business/customer/mapper/CustomerMapper.java",
+    "ruoyi-business/src/main/resources/mapper/customer/CustomerMapper.xml",
+    "ruoyi-business/src/main/java/com/ruoyi/business/common/idempotency",
+    "ruoyi-business/src/main/resources/mapper/common/IdempotentRequestMapper.xml",
+    "sql/migrations/V20260625_004_idempotent_request.sql",
+    "sql/validation/customer_runtime_validation.sql",
+    "ai/registry/features.json",
+    "ai/registry/idempotency-registry.json",
+    "ai/registry/migration-registry.json",
+    "ai/contracts/customer.api.md",
+    "ai/contracts/customer.db.md",
+    "features/customer.md",
+    "ruoyi-ui/src/views/customer/index.vue",
+    "tests/customer-risk-gate.test.js",
+    "tests/high-risk-governance.test.js",
+    "memory/HANDOVER.md",
+    "memory/API_CATALOG.md",
+    "memory/PROJECT_STATE.md",
+    "memory/CHANGELOG.md",
+    "memory/TASKS.json",
+    "ai/context/current-context.md",
+    "ai/context/current-context.json",
+    "ai/changes/CR-20260626T124443Z-customer-fund-idempotency",
+    "ai/changes/CURRENT_CHANGE.json",
+    "ai/generated"
+  ],
+  "scopeNotes": [
+    "The new common idempotency package is allowed only for the platform-level idempotent_request table and customer fund entry points in this R-07 change.",
+    "features.json records customer/platform idempotency ownership for R-07.",
+    "API_CATALOG records customer fund idempotency request semantics.",
+    "The customer Vue page is allowed only to generate and submit stable idempotentKey values for the two R-07 customer fund entry points; API paths and customer.js stay unchanged.",
+    "Controller paths stay out of scope because existing DTO binding reads idempotentKey without controller changes."
+  ],
+  "forbiddenEditRoots": [
+    "ruoyi-framework/src/main/java/com/ruoyi/framework/config/SecurityConfig.java",
+    "ruoyi-admin/src/main/resources/application.yml",
+    "ruoyi-admin/src/main/resources/application-druid.yml",
+    "ruoyi-admin/src/main/resources/application-prod.yml",
+    "package.json",
+    "tools",
+    "ruoyi-business/src/main/java/com/ruoyi/business/sales-order",
+    "ruoyi-business/src/main/java/com/ruoyi/business/salesorder",
+    "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/sales-order",
+    "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/salesorder",
+    "ruoyi-ui/src/views/sales-order",
+    "ruoyi-ui/src/views/salesorder",
+    "ruoyi-ui/src/api/sales-order.js",
+    "ruoyi-ui/src/api/salesOrder.js",
+    "sales-order runtime, SQL, Vue, API, permission, or route",
+    "salesorder runtime, SQL, Vue, API, permission, or route",
+    "sales_order table",
+    "sales_order_item table",
+    "state_transition_log table",
+    "production safety configuration",
+    "LONG_TERM_DEPOSIT",
+    "ROLLING_ORDER_DEPOSIT",
+    "DEPOSIT_DEDUCT runtime",
+    "DEPOSIT_REFUND runtime",
+    "DEPOSIT_ADJUST runtime",
+    "DEPOSIT_REVERSE runtime"
+  ],
+  "requiredCommands": [
+    "npm run resume",
+    "npm run impact -- 客户管理",
+    "npm run scan:all",
+    "node --test tests/customer-risk-gate.test.js",
+    "npm run check:high-risk-governance",
+    "node --test tests/high-risk-governance.test.js",
+    "npm test",
+    "npm run check",
+    "git diff --check",
+    "mvn -pl ruoyi-admin -am -DskipTests compile or configured runtime-policy Maven path"
+  ]
+}

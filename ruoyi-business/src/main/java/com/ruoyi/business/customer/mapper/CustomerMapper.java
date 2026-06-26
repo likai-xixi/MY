@@ -71,6 +71,8 @@ public interface CustomerMapper
 
     public int insertFundFlow(CustomerFundFlow flow);
 
+    public CustomerFundFlow selectFundFlowById(Long flowId);
+
     public List<CustomerFundFlow> selectFundFlows(CustomerFundFlow flow);
 
     public int insertDepositBatch(CustomerDepositBatch batch);
@@ -84,6 +86,8 @@ public interface CustomerMapper
     public int updateSamplePolicy(CustomerSamplePolicy policy);
 
     public int insertSampleRebateRecord(SampleRebateRecord record);
+
+    public SampleRebateRecord selectSampleRebateRecordById(Long rebateRecordId);
 
     public List<SampleRebateRecord> selectSampleRebateRecordsByCustomerId(Long customerId);
 }
