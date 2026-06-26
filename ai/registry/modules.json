@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "description": "Module ownership registry generated and maintained with the module graph.",
+  "description": "Business-feature module ownership registry. It does not enumerate every inherited RuoYi platform/system/monitor/tool module.",
   "modules": [
     {
       "id": "customer",

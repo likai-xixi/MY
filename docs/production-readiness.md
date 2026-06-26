@@ -22,9 +22,14 @@ This repository currently has a RuoYi + Vue3 development/default configuration a
 ## Verification Boundary
 
 - `npm run check` is the governance consistency gate. It is not proof that production safety passed.
+- `npm run check` is not proof of runtime business correctness, database migration safety, browser acceptance, money-flow idempotency, or complete high-risk semantic coverage.
+- `npm run check:runtime` detects runtime projects and required tooling. By default it does not execute Maven or Vite build commands unless `--execute` is used or `ai/rules/runtime-policy.json` enables execution.
 - `npm run check:config-safety` keeps development/default risky values as warnings so local development is not blocked by sample configuration.
 - `npm run check:prod-safety` is the blocking production safety baseline check.
 - Production release verification must start with `npm run verify:release`.
 - `npm run verify:release` explicitly runs governance checks, production safety checks, backend Maven compile, and the frontend production build.
+- Do not weaken `npm run verify:release` just because plain `mvn` is unavailable on one local machine. Record the failure, optionally collect supplementary evidence with the project configured Maven path, and keep the release result inconclusive until `verify:release` itself passes.
 - CI passed does not mean runtime acceptance passed.
 - Before a real production launch, the project still needs Java/Spring runtime acceptance, MySQL acceptance, browser/manual acceptance, deployment-secret review, backup/rollback rehearsal, and operator sign-off.
+
+See `docs/runtime-verification-boundary.md` for the local governance, runtime checker, production safety, CI, release verification, and manual acceptance split.

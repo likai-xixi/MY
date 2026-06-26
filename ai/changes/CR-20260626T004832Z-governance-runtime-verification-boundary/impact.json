@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "mode": "rule-change",
+  "feature": "platform",
+  "slug": "governance-runtime-verification-boundary",
+  "summary": "Clarify the boundary between governance checks, runtime checker detection, production safety, CI, release verification, and manual runtime acceptance.",
+  "allowedEditRoots": [
+    "README.md",
+    "docs/high-risk-semantic-governance.md",
+    "docs/runtime-verification-boundary.md",
+    "docs/production-readiness.md",
+    "ai/registry/modules.json",
+    "memory/HANDOVER.md",
+    "memory/PROJECT_STATE.md",
+    "memory/CHANGELOG.md",
+    "memory/TASKS.json",
+    "ai/context/current-context.md",
+    "ai/context/current-context.json",
+    "ai/changes/CR-20260626T004832Z-governance-runtime-verification-boundary",
+    "ai/changes/CURRENT_CHANGE.json"
+  ],
+  "forbiddenEditRoots": [
+    "ruoyi-business/src/main/java/com/ruoyi/business/customer",
+    "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer",
+    "ruoyi-business/src/main/resources/mapper/customer",
+    "ruoyi-ui/src/views/customer",
+    "ruoyi-ui/src/api/customer.js",
+    "ruoyi-framework/src/main/java/com/ruoyi/framework/config/SecurityConfig.java",
+    "ruoyi-admin/src/main/resources/application.yml",
+    "ruoyi-admin/src/main/resources/application-druid.yml",
+    "ruoyi-admin/src/main/resources/application-prod.yml",
+    "tools",
+    "tests",
+    "package.json",
+    "sql",
+    "ai/registry/migration-registry.json",
+    "ai/registry/idempotency-registry.json",
+    "sales-order runtime, SQL, Vue, API, permission, or route",
+    "salesorder runtime, SQL, Vue, API, permission, or route",
+    "business database table structure"
+  ],
+  "requiredCommands": [
+    "npm run resume",
+    "npm run check:runtime",
+    "npm run check:high-risk-governance",
+    "npm test",
+    "npm run check",
+    "git diff --check"
+  ],
+  "notRun": [
+    "npm run verify:release is not required for this R-04 documentation/governance boundary clarification. Plain mvn is known to be unavailable on this local PATH; do not claim verify:release passed unless that script itself passes."
+  ],
+  "affected": {
+    "docs": [
+      "README.md",
+      "docs/high-risk-semantic-governance.md",
+      "docs/runtime-verification-boundary.md",
+      "docs/production-readiness.md"
+    ],
+    "registries": [
+      "ai/registry/modules.json"
+    ],
+    "memory": [
+      "memory/HANDOVER.md",
+      "memory/PROJECT_STATE.md",
+      "memory/CHANGELOG.md",
+      "memory/TASKS.json"
+    ],
+    "context": [
+      "ai/context/current-context.md",
+      "ai/context/current-context.json"
+    ]
+  },
+  "blockers": []
+}

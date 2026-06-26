@@ -10,7 +10,8 @@ Codex Auto Dev OS is kept in the repository as the workflow and evidence layer: 
 - Governance layer: Codex Auto Dev OS with locked RuoYi adapter rules.
 - Business domain: MY 门业 ERP.
 - Implemented business module: `customer` / 客户管理.
-- Current closeout focus: R-03 customer fund vocabulary source cleanup keeps current customer context, contracts, README, and memory aligned to two account types: `CUSTOMER_DEPOSIT` (客户级定金) and `SAMPLE_REBATE` (样品返现).
+- Current closeout focus: R-04 governance/runtime verification boundary clarification documents what local governance, runtime checker, production safety, CI, release verification, and manual runtime acceptance do and do not prove.
+- V2 target shape remains a Java Web ERP main system plus Windows workstation client plus mobile H5/mini-program. This repository is currently at the Java Web/RuoYi/customer stage.
 - CI baseline: [ci-planned] GitHub Actions workflow includes Node governance, Maven compile, and ruoyi-ui build; actual CI result is determined after push.
 - Production safety baseline: default/dev configuration is not production-ready; production must use `ruoyi-admin/src/main/resources/application-prod.yml`.
 - Production gate: use `npm run check:prod-safety` to block unsafe production defaults, and use `npm run verify:release` as the release verification entry.
@@ -27,8 +28,8 @@ Codex Auto Dev OS is kept in the repository as the workflow and evidence layer: 
 - Git diff range gate: `npm run check:diff` rejects changed files outside `impact.allowedEditRoots`.
 - Component governance: shared components must be registered in the component catalog; generic reusable controls are blocked inside feature-local component folders.
 - Deletion ownership: delete dry-run lists feature files, registries, graph entries, API/UI ownership, database objects, permissions, SQL, mapper XML, menus, components, docs, orphan checks, and rollback notes.
-- Full gate: `npm run check` runs scans, registries, graphs, memory, handoff, components, boundaries, stale-doc checks, orphan checks, rule lock, diff scope, duplicate scan, and tests.
-- High-risk semantic governance: CR-3 adds `check:high-risk-governance`, high-risk domain registries, evidence/contract/idempotency/state-machine/migration/permission schemas, and framework checks. It is framework-only; `beforeSalesOrder` remains blocked and sales-order contracts remain CR-4 scope.
+- Full gate: `npm run check` runs scans, registries, graphs, memory, handoff, components, boundaries, stale-doc checks, orphan checks, rule lock, diff scope, duplicate scan, and Node structural tests.
+- High-risk semantic governance: CR-3 adds `check:high-risk-governance`, high-risk domain registries, evidence/contract/idempotency/state-machine/migration/permission schemas, and framework checks. It is a framework baseline; it is not proof that every high-risk business domain has executable runtime evidence. `beforeSalesOrder` remains blocked and sales-order contracts remain future scope.
 
 ## Normal Codex App workflow
 
@@ -141,6 +142,12 @@ npm run verify:release
 
 `npm run check` is the repository governance gate. It does not prove production safety and does not replace runtime business tests. `npm run check:prod-safety` is the production safety baseline gate, and `npm run verify:release` explicitly runs governance, production safety, backend compile, and frontend production build before a release candidate is considered.
 
+`npm run check` verifies governance consistency, registries, graphs, memory, handoff, component/boundary rules, high-risk framework schemas, and Node structural tests.
+
+It does not prove production readiness, runtime business correctness, database migration safety, browser acceptance, money-flow idempotency, or complete high-risk semantic coverage.
+
+For the full boundary, read `docs/runtime-verification-boundary.md`.
+
 ## GitHub Actions CI Baseline
 
 `.github/workflows/ci.yml` contains three real baseline jobs:
@@ -150,6 +157,8 @@ npm run verify:release
 - `frontend-build`: `npm --prefix ruoyi-ui install --package-lock=false`, then `npm --prefix ruoyi-ui run build:prod`.
 
 The repository root and `ruoyi-ui` currently have no `package-lock.json`, so the CI workflow uses `npm install --package-lock=false` instead of `npm ci` and does not generate or commit lockfile changes.
+
+A green `scaffold-ci` run means the workflow jobs completed: `governance` ran `npm run check`, `backend-compile` ran Maven compile, and `frontend-build` ran the Vite production build. It is not a manual business acceptance pass and does not replace Java/Spring service tests, MySQL migration/concurrency tests, browser smoke tests, or operator acceptance.
 
 ## Directory map
 
@@ -176,6 +185,8 @@ scripts/                           Workflow automation
 ## Guarantee boundary
 
 This scaffold can force Codex to keep ownership, scope, memory, graph, component, and handoff evidence aligned. It can make disorder visible and block many unsafe edits. It cannot prove business semantics, UI acceptance, database migration safety, or production behavior without real tests and review.
+
+The module registry is a business-feature ownership registry. It does not enumerate every inherited RuoYi platform, system, monitor, or tool module.
 
 ## Chat Command Entry
 

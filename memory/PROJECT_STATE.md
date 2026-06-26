@@ -36,6 +36,8 @@ Completed governance change `CR-20260625T162821Z-production-safety-baseline` is 
 
 Current governance/context cleanup `CR-20260625T170213Z-customer-fund-vocabulary-source-cleanup` is R-03. It cleans current customer fund vocabulary sources so the active context is two-account only: `CUSTOMER_DEPOSIT` for 客户级定金 and `SAMPLE_REBATE` for 样品返现. It does not modify customer runtime code, sales-order runtime code, production safety config, Java/Vue customer fund runtime, migration/idempotency registry, or business database table structure.
 
+Current governance/runtime clarification `CR-20260626T004832Z-governance-runtime-verification-boundary` is R-04. It documents the boundary between local governance checks, runtime checker detection, production safety checks, CI scaffold jobs, release verification, and manual/runtime acceptance. `npm run check` is governance consistency plus Node structural tests; it is not production readiness, runtime business correctness, database migration safety, browser acceptance, money-flow idempotency, or complete high-risk semantic coverage. `check:runtime` detects tooling by default and does not execute Maven/Vite builds unless `--execute` or policy enables execution. `scaffold-ci` passing is not a manual business acceptance pass. This change does not modify customer runtime code, sales-order runtime code, production safety config, customer fund model, migration/idempotency registry, database business table structure, package scripts, tools, or tests.
+
 For future module boundaries, sales-order may select customer, carry default contact/address and owner snapshots, and show `CUSTOMER_DEPOSIT` status during submit, but must not directly deduct customer funds. Delivery / finance contracts must later define `CUSTOMER_DEPOSIT` deduction/refund/adjustment/reversal and `SAMPLE_REBATE` deduction. Every customer-fund mutation must write `customer_fund_flow`.
 
 Current customer fund concurrency change `CR-20260625T042041Z-change`:
@@ -85,7 +87,7 @@ Sales order, shipment, finance settlement, automatic deduction, receipt claiming
 
 ## Active Task
 
-`TASK-0002` is the active governance/platform task in `memory/TASKS.json` for `CR-20260625T170213Z-customer-fund-vocabulary-source-cleanup`. The customer concurrency CR remains historical context; this R-03 cleanup must not modify customer runtime code, sales-order code, production safety config, customer fund runtime code, migrations, idempotency registry, or business database table structure.
+`TASK-0002` is the active governance/platform task in `memory/TASKS.json` for `CR-20260626T004832Z-governance-runtime-verification-boundary`. The customer concurrency CR remains historical context; this R-04 clarification must not modify customer runtime code, sales-order code, production safety config, customer fund model, migrations, idempotency registry, database business table structure, package scripts, tools, or tests.
 
 ## Latest Session
 
@@ -93,8 +95,8 @@ Sales order, shipment, finance settlement, automatic deduction, receipt claiming
 
 ## Next Actions
 
-- Finish and review R-03 customer fund vocabulary source cleanup.
-- Then choose R-04 governance/runtime verification boundary clarification or R-05 customer salesman candidate hardening.
+- Finish and review R-04 governance/runtime verification boundary clarification.
+- Then choose R-05 salesman candidate hardening or R-06 executable customer migration baseline.
 - Keep `beforeSalesOrder` blocked unless required contracts and review explicitly unlock it later.
 - Before any future runtime claim about PUBLIC data cleanliness, rerun the invariant SQL in `sql/customer.ownership.md` to confirm only `PUB_DIRECT_SALE` and `PUB_SELF_MEDIA` exist as active PUBLIC rows.
 
@@ -121,6 +123,8 @@ Sales order, shipment, finance settlement, automatic deduction, receipt claiming
 - Old data migration or old fund-account compatibility.
 
 ## Last Verification
+
+For `CR-20260626T004832Z-governance-runtime-verification-boundary`, R-04 required verification is `npm run resume`, `npm run check:runtime`, `npm run check:high-risk-governance`, `npm test`, `npm run check`, and `git diff --check`. `npm run verify:release` is intentionally not required for this documentation/governance boundary clarification; do not claim release verification passed until that script itself passes.
 
 For `CR-20260625T170213Z-customer-fund-vocabulary-source-cleanup`, [local] `npm run resume` passed and confirmed the active current change. [local] Required old-fund-vocabulary scan attempts first failed with unavailable `grep` and unsupported `Select-String -Recurse`, then the equivalent recursive PowerShell scan completed. [local] Current-doc old-fund-vocabulary scan found no active matches in current customer brief, context, contracts, README, handover, project state, changelog, or tasks. [local] Remaining matches are historical evidence only under old change records, runtime logs, and one historical session note. [local] `npm run scan:all` passed. [local] `npm run check:high-risk-governance` passed with the expected non-blocking customer baseline DDL warning. [local] `npm run context:build -- customer` passed. [local] `npm test` passed with 185/185 Node tests after scoped current-CR baseline exceptions and context regeneration. [local] `npm run finalize:change -- --summary "客户资金口径上下文源清理"` passed. [local] `npm run check` passed with 185/185 Node tests. [local] `git diff --check` passed. No customer runtime code, sales-order runtime code, production safety config, Java/Vue customer fund runtime code, migration/idempotency registry, or business database table structure was modified.
 

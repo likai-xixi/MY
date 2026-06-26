@@ -1,27 +1,24 @@
 # Current Context
 
 Current feature: `customer`
-Current change: `CR-20260625T170213Z-customer-fund-vocabulary-source-cleanup`
+Current change: `CR-20260626T004832Z-governance-runtime-verification-boundary`
 Repository: RuoYi + Vue3 + Codex Auto Dev OS
 Profile: adapter `ruoyi`, locked `true`
 
 ## Allowed Edit Roots
 
-- `features/customer.md`
-- `ai/context/features/customer.md`
-- `ruoyi-ui/src/api/customer.contract.md`
-- `ai/contracts/customer.api.md`
-- `ai/contracts/customer.db.md`
-- `ai/contracts/customer.ui.md`
-- `sql/customer.ownership.md`
 - `README.md`
+- `docs/high-risk-semantic-governance.md`
+- `docs/runtime-verification-boundary.md`
+- `docs/production-readiness.md`
+- `ai/registry/modules.json`
 - `memory/HANDOVER.md`
 - `memory/PROJECT_STATE.md`
 - `memory/CHANGELOG.md`
 - `memory/TASKS.json`
 - `ai/context/current-context.md`
 - `ai/context/current-context.json`
-- `ai/changes/CR-20260625T170213Z-customer-fund-vocabulary-source-cleanup`
+- `ai/changes/CR-20260626T004832Z-governance-runtime-verification-boundary`
 - `ai/changes/CURRENT_CHANGE.json`
 
 ## Forbidden Edit Roots
@@ -35,14 +32,14 @@ Profile: adapter `ruoyi`, locked `true`
 - `ruoyi-admin/src/main/resources/application.yml`
 - `ruoyi-admin/src/main/resources/application-druid.yml`
 - `ruoyi-admin/src/main/resources/application-prod.yml`
-- `package.json`
 - `tools`
 - `tests`
-- `migration registry`
-- `idempotency registry`
+- `package.json`
+- `sql`
+- `ai/registry/migration-registry.json`
+- `ai/registry/idempotency-registry.json`
 - `sales-order runtime, SQL, Vue, API, permission, or route`
 - `salesorder runtime, SQL, Vue, API, permission, or route`
-- `Java/Vue customer fund runtime code`
 - `business database table structure`
 
 ## Must Read Files
@@ -58,9 +55,9 @@ Profile: adapter `ruoyi`, locked `true`
 - `ai/roadmap/phase-gates.json` - beforeSalesOrder gate state.
 - `ai/roadmap/refactor-debt.json` - Known debt affecting sales-order handoff.
 - `ai/roadmap/enhancement-backlog.json` - Governance backlog and required/deferred evidence.
-- `ai/changes/CR-20260625T170213Z-customer-fund-vocabulary-source-cleanup/impact.json` - Current change allowed and forbidden edit roots.
-- `ai/changes/CR-20260625T170213Z-customer-fund-vocabulary-source-cleanup/plan.md` - Current change execution plan.
-- `ai/changes/CR-20260625T170213Z-customer-fund-vocabulary-source-cleanup/verification.md` - Current change verification evidence.
+- `ai/changes/CR-20260626T004832Z-governance-runtime-verification-boundary/impact.json` - Current change allowed and forbidden edit roots.
+- `ai/changes/CR-20260626T004832Z-governance-runtime-verification-boundary/plan.md` - Current change execution plan.
+- `ai/changes/CR-20260626T004832Z-governance-runtime-verification-boundary/verification.md` - Current change verification evidence.
 
 ## Must Not Break
 
@@ -122,8 +119,7 @@ Deferred:
 ## Planned Verification Commands
 
 - `npm run resume`
-- `Select-String old fund vocabulary scan`
-- `npm run scan:all`
+- `npm run check:runtime`
 - `npm run check:high-risk-governance`
 - `npm test`
 - `npm run check`

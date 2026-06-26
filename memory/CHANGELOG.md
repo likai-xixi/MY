@@ -367,3 +367,13 @@
 - Regenerated current context, added scoped RuoYi baseline exception notes for inherited boundary/component checker findings, and kept historical old-vocabulary evidence unchanged.
 - [local] Verification passed: `npm run scan:all`, `npm run check:high-risk-governance` with the expected non-blocking customer baseline DDL warning, `npm test` with 185 tests, `npm run check` with 185 tests, and `git diff --check`.
 - No customer runtime code, sales-order runtime code, production safety config, Java/Vue customer fund runtime code, migration/idempotency registry, or business database table structure was changed.
+
+## 2026-06-26 - governance/runtime verification boundary
+
+- Change: `ai/changes/CR-20260626T004832Z-governance-runtime-verification-boundary`.
+- R-04 clarified that `npm run check` verifies governance consistency, registries, graphs, memory, handoff, component/boundary rules, high-risk framework schemas, and Node structural tests.
+- Documented that `npm run check` does not prove production readiness, runtime business correctness, database migration safety, browser acceptance, money-flow idempotency, or complete high-risk semantic coverage.
+- Added `docs/runtime-verification-boundary.md` and synchronized README, production readiness docs, high-risk semantic governance docs, current context, handover, project state, task memory, and the module registry description.
+- Documented that `check:runtime` detects runtime projects/tooling but does not execute Maven/Vite builds by default, and that `scaffold-ci` pass is not manual business acceptance.
+- `npm run verify:release` was not required for this R-04 boundary batch; do not claim release verification passed until that script itself passes.
+- No customer runtime code, sales-order runtime code, production safety config, customer fund model, migration/idempotency registry, database business table structure, package scripts, tools, or tests were changed.

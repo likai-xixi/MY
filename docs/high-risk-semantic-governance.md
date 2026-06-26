@@ -2,6 +2,8 @@
 
 CR-3 establishes the framework for high-risk semantic checks. It is governance-only: it does not modify customer runtime code, create sales-order code, or change business database structures.
 
+CR-3 high-risk governance is a framework baseline. It is not proof that every high-risk business domain has executable tests, evidence manifests, runtime idempotency, complete migration coverage, or browser/manual acceptance.
+
 ## Framework Pieces
 
 - `ai/registry/high-risk-domains.json` records the domain catalog and the current blocking mode for each domain.
