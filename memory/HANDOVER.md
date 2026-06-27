@@ -2,91 +2,75 @@
 
 ## Summary
 
-Current change record: `ai/changes/CR-20260626T145150Z-customer-runtime-tests`.
+Current change record: `ai/changes/CR-20260627T101649Z-r-09a-business-rule-object-governance-core`.
 
-R-08 adds runtime-test coverage for the R-07 customer fund idempotency gap. It does not add business features or change customer production runtime behavior.
+R-09A adds the MY business rule-object governance kernel. It is a `governance/rule-change` batch only.
 
 ## Impact
 
-- Java unit/runtime tests under `ruoyi-business/src/test/java`.
-- `ruoyi-business/pom.xml` adds test dependencies and an opt-in `integration-test` profile for MySQL/Testcontainers.
-- Customer/high-risk Node governance tests now assert runtime-test ownership.
-- Customer feature docs, API/DB contracts, idempotency and migration registries, current context, project state, changelog, and tasks were updated for R-08 evidence.
-- Current change record includes scoped RuoYi baseline boundary/component exception notes for inherited system/tool UI files only.
+The change adds rule-object lifecycle governance at the platform layer:
+
+- `ai/contracts/rule-change-governance.md`
+- `ai/rules/schemas/rule-object.schema.json`
+- `ai/registry/rule-objects.json`
+- `tools/rule-object-checker.js`
+- `scripts/rule-change-preflight.js`
+- `tests/rule-object-governance.test.js`
+
+It also strengthens the existing `tools/phase-gate-checker.js` for sales-order runtime detection while keeping `beforeSalesOrder` blocked.
 
 ## Changed Files
 
-- `ai/changes/CR-20260626T145150Z-customer-runtime-tests/boundary-exception.md`
-- `ai/changes/CR-20260626T145150Z-customer-runtime-tests/changed-files.json`
-- `ai/changes/CR-20260626T145150Z-customer-runtime-tests/component-exception.md`
-- `ai/changes/CR-20260626T145150Z-customer-runtime-tests/handover.md`
-- `ai/changes/CR-20260626T145150Z-customer-runtime-tests/impact.json`
-- `ai/changes/CR-20260626T145150Z-customer-runtime-tests/plan.md`
-- `ai/changes/CR-20260626T145150Z-customer-runtime-tests/request.md`
-- `ai/changes/CR-20260626T145150Z-customer-runtime-tests/verification.md`
-- `ai/changes/CURRENT_CHANGE.json`
-- `ai/context/current-context.json`
+- `ai/contracts/rule-change-governance.md`
+- `ai/rules/schemas/rule-object.schema.json`
+- `ai/registry/rule-objects.json`
+- `tools/rule-object-checker.js`
+- `scripts/rule-change-preflight.js`
+- `tests/rule-object-governance.test.js`
+- `tools/phase-gate-checker.js`
+- `tests/governance-sales-order-handoff-gate.test.js`
+- `package.json`
+- `ai/roadmap/phase-gates.json`
+- `ai/roadmap/enhancement-backlog.json`
 - `ai/context/current-context.md`
-- `ai/contracts/customer.api.md`
-- `ai/contracts/customer.db.md`
-- `ai/registry/idempotency-registry.json`
-- `ai/registry/migration-registry.json`
-- `docs/customer-database-migration.md`
-- `docs/runtime-verification-boundary.md`
-- `features/customer.md`
-- `memory/CHANGELOG.md`
-- `memory/HANDOVER.md`
+- `ai/context/current-context.json`
 - `memory/PROJECT_STATE.md`
+- `memory/CHANGELOG.md`
 - `memory/TASKS.json`
-- `ruoyi-business/pom.xml`
-- `ruoyi-business/src/test/java/com/ruoyi/business/common/idempotency/IdempotencyServiceTest.java`
-- `ruoyi-business/src/test/java/com/ruoyi/business/customer/service/CustomerFundMySqlIT.java`
-- `ruoyi-business/src/test/java/com/ruoyi/business/customer/service/CustomerFundServiceTest.java`
-- `ruoyi-business/src/test/java/com/ruoyi/business/customer/service/CustomerServiceTest.java`
-- `ruoyi-business/src/test/java/com/ruoyi/business/customer/service/CustomerTestSupport.java`
-- `tests/customer-risk-gate.test.js`
-- `tests/high-risk-governance.test.js`
+- `ai/changes/CR-20260627T101649Z-r-09a-business-rule-object-governance-core/*`
 
 ## Commands
 
 - [local] `npm run resume`
-- [local] `npm run impact -- 客户管理`
+- [local] `npm run rule:preflight`
 - [local] `npm run scan:all`
-- [local] `node --test tests/customer-risk-gate.test.js`
-- [local] `npm run check:high-risk-governance`
-- [local] `node --test tests/high-risk-governance.test.js`
+- [local] `npm run check:rule-objects`
+- [local] `node --test tests/rule-object-governance.test.js`
+- [local] `node --test tests/governance-sales-order-handoff-gate.test.js`
 - [local] `npm test`
-- [local] `C:\Users\11131\.cache\codex-tools\apache-maven-3.9.9\bin\mvn.cmd -pl ruoyi-business -am test`
-- [local] `C:\Users\11131\.cache\codex-tools\apache-maven-3.9.9\bin\mvn.cmd -pl ruoyi-business -am -Pintegration-test verify`
-- [local] `C:\Users\11131\.cache\codex-tools\apache-maven-3.9.9\bin\mvn.cmd -pl ruoyi-admin -am -DskipTests compile`
 - [local] `npm run check`
 - [local] `git diff --check`
 
 ## Verification
 
-- [local] `npm run resume` passed.
-- [local] `npm run impact -- 客户管理` passed with no blockers.
-- [local] `npm run scan:all` passed.
-- [local] `node --test tests/customer-risk-gate.test.js` passed 16/16.
-- [local] `npm run check:high-risk-governance` passed.
-- [local] `node --test tests/high-risk-governance.test.js` passed 40/40.
-- [local] `npm test` passed 197/197.
-- [local] Plain `mvn` is unavailable on PATH; configured Maven path was used.
-- [local] `C:\Users\11131\.cache\codex-tools\apache-maven-3.9.9\bin\mvn.cmd -pl ruoyi-business -am test` passed 19/19.
-- [local] `C:\Users\11131\.cache\codex-tools\apache-maven-3.9.9\bin\mvn.cmd -pl ruoyi-business -am -Pintegration-test verify` passed, including `CustomerFundMySqlIT` with MySQL Testcontainers 1/1.
-- [local] `C:\Users\11131\.cache\codex-tools\apache-maven-3.9.9\bin\mvn.cmd -pl ruoyi-admin -am -DskipTests compile` passed with reactor `BUILD SUCCESS`.
-- [local] `npm run check` passed with 197/197 Node tests.
-- [local] `git diff --check` passed.
+- [local] `npm run resume`, `npm run rule:preflight`, `npm run scan:all`, and `npm run check:rule-objects` passed.
+- [local] Focused Node tests passed: rule-object governance 6/6 and sales-order handoff gate 17/17.
+- [local] Full `npm test` passed 204/204 after one earlier 120-second timeout was cleaned up and rerun.
+- [local] First `npm run check` attempt failed at `check:verification-provenance` because generated closeout command bullets lacked provenance labels; this handover and verification evidence were repaired.
+- [local] `npm run check` rerun passed, including `check:change`, `check:rule-objects`, and final `npm test` 204/204. Existing `check:config-safety` development/default warnings remained warning-only.
+- [local] `git diff --check` passed after final evidence updates.
 
 ## Boundaries
 
-No customer production Java, idempotency production Java, mapper XML, customer controller, customer Vue/API, production safety configuration, package scripts, tools, SQL business table structure, sales-order/salesorder runtime, old three-account fund model, or deduction/refund/adjustment/reversal runtime was changed.
+No customer runtime code, sales-order controller/service/mapper/domain/Vue/API client/SQL/route/permission, database business table structure, product/field/formula/tech/material registry family, or parallel sales-order gate is part of R-09A.
+
+`beforeSalesOrder` remains blocked.
 
 ## Risks
 
-- No Spring MVC controller integration test was added because the current admin module has no existing controller test harness; the service/runtime layers and MySQL Testcontainers path cover the R-07 idempotency gap.
-- The MySQL/Testcontainers test is opt-in through `-Pintegration-test` and is not part of default `npm run check`.
+- [local] R-09A does not yet provide R-09B sales-order snapshot, state-machine, or fund-boundary contracts.
+- [local] Future targeted rule changes should pass explicit rule object ids to `rule:preflight`.
 
 ## Next Actions
 
-- R-09 sales-order pre-implementation contract package.
+- [local] Continue next with R-09B sales-order pre-implementation contract package.

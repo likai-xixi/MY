@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "id": "2026-06-27-r-09a-business-rule-object-governance-core",
+  "title": "R-09A business rule object governance core",
+  "reason": "R-09A needs a machine-readable rule-object lifecycle registry and preflight gate before high-risk business rules can be changed, deleted, or superseded.",
+  "status": "proposed",
+  "requiredChangeMode": "rule-change",
+  "checklist": [
+    "Explain old rule and new rule.",
+    "List affected scanners and registries.",
+    "List sample files proving the project base needs this rule.",
+    "Run npm run check after the rule proposal is accepted."
+  ]
+}

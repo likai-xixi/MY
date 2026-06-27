@@ -69,6 +69,10 @@ Current customer runtime-test change `CR-20260626T145150Z-customer-runtime-tests
 
 R-08 does not modify customer production Java, idempotency production Java, mapper XML, customer controller, customer Vue/API, production safety configuration, package scripts, tools, SQL business table structure, sales-order/salesorder runtime, old three-account fund model, or deduction/refund/adjustment/reversal runtime.
 
+Current governance change `CR-20260627T101649Z-r-09a-business-rule-object-governance-core` is R-09A. It introduces the business rule-object governance kernel with `ai/contracts/rule-change-governance.md`, `ai/rules/schemas/rule-object.schema.json`, `ai/registry/rule-objects.json`, `tools/rule-object-checker.js`, `scripts/rule-change-preflight.js`, and `tests/rule-object-governance.test.js`. The first four registered rule objects are `customer-fund-deposit-entry`, `customer-sample-rebate-generation`, `public-customer-invariant`, and `before-sales-order-phase-gate`.
+
+R-09A is a `governance/rule-change` batch. It does not modify customer runtime code, does not create sales-order controller/service/mapper/domain/Vue/API client/SQL/route/permission artifacts, does not create a parallel `check:sales-order-gate`, and does not create product/field/formula/tech/material registry families. It strengthens the existing `check:phase-gate` runtime detection for sales-order naming variants and SQL/Vue/API/menu/permission content while keeping `beforeSalesOrder` blocked.
+
 For future module boundaries, sales-order may select customer, carry default contact/address and owner snapshots, and show `CUSTOMER_DEPOSIT` status during submit, but must not directly deduct customer funds. Delivery / finance contracts must later define `CUSTOMER_DEPOSIT` deduction/refund/adjustment/reversal and `SAMPLE_REBATE` deduction. Every customer-fund mutation must write `customer_fund_flow`.
 
 Current customer fund concurrency change `CR-20260625T042041Z-change`:
@@ -126,8 +130,8 @@ Sales order, shipment, finance settlement, automatic deduction, receipt claiming
 
 ## Next Actions
 
-- R-08 customer runtime tests are locally verified and ready for review.
-- Continue with R-09 sales-order pre-implementation contract package.
+- Complete R-09A verification and closeout for the rule-object governance kernel.
+- Continue next with R-09B sales-order pre-implementation contract package.
 - Keep `beforeSalesOrder` blocked unless required contracts and review explicitly unlock it later.
 - Before any future runtime claim about PUBLIC data cleanliness, rerun the invariant SQL in `sql/customer.ownership.md` to confirm only `PUB_DIRECT_SALE` and `PUB_SELF_MEDIA` exist as active PUBLIC rows.
 
@@ -154,6 +158,8 @@ Sales order, shipment, finance settlement, automatic deduction, receipt claiming
 - Old data migration or old fund-account compatibility.
 
 ## Last Verification
+
+For `CR-20260627T101649Z-r-09a-business-rule-object-governance-core`, [local] `npm run resume`, [local] `npm run rule:preflight`, [local] `npm run scan:all`, [local] `npm run check:rule-objects`, [local] `node --test tests/rule-object-governance.test.js` with 6/6 tests, [local] `node --test tests/governance-sales-order-handoff-gate.test.js` with 17/17 tests, [local] `npm test` with 204/204 tests, [local] `npm run check` with 204/204 Node tests, and [local] `git diff --check` passed. [local] An earlier `npm test` attempt timed out at 120 seconds and was rerun successfully after test-process cleanup. [local] An earlier `npm run check` attempt stopped at `check:verification-provenance` until generated command bullets were repaired with `[local]` labels; the rerun passed. Existing `check:config-safety` development/default warnings remained warning-only. No customer runtime code, sales-order runtime artifact, database business table structure, product/field/formula/tech/material registry family, or parallel sales-order gate was created.
 
 For `CR-20260626T145150Z-customer-runtime-tests`, [local] `npm run resume`, [local] `npm run impact -- 客户管理`, [local] `npm run scan:all`, [local] `node --test tests/customer-risk-gate.test.js` with 16/16 tests, [local] `npm run check:high-risk-governance`, [local] `node --test tests/high-risk-governance.test.js` with 40/40 tests, [local] `npm test` with 197/197 tests, [local] configured Maven `-pl ruoyi-business -am test` with 19/19 tests, [local] configured Maven `-pl ruoyi-business -am -Pintegration-test verify` with `CustomerFundMySqlIT` 1/1 using MySQL Testcontainers, [local] configured Maven `-pl ruoyi-admin -am -DskipTests compile`, [local] `npm run check` with 197/197 Node tests, and [local] `git diff --check` passed. [not-run] Plain `mvn` is unavailable on PATH; configured Maven path passed.
 

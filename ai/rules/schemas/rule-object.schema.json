@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.codex.my/schemas/rule-object.schema.json",
+  "title": "Business rule object registry",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["schemaVersion", "objects"],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "objects": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": [
+          "id",
+          "name",
+          "objectType",
+          "ownerFeature",
+          "lifecycleStatus",
+          "version",
+          "blockingMode",
+          "sourceContracts",
+          "ownedFiles",
+          "tests",
+          "immutableFields",
+          "changePolicy",
+          "deletePolicy",
+          "snapshotPolicy",
+          "supersedes",
+          "supersededBy",
+          "createdByChange",
+          "updatedByChange",
+          "notes"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$"
+          },
+          "name": {
+            "type": "string"
+          },
+          "objectType": {
+            "type": "string"
+          },
+          "ownerFeature": {
+            "type": "string"
+          },
+          "lifecycleStatus": {
+            "enum": ["draft", "published", "deprecated", "superseded", "archived"]
+          },
+          "version": {
+            "type": "string"
+          },
+          "blockingMode": {
+            "enum": ["off", "warning", "blocking", "runtime-bound", "release-bound"]
+          },
+          "sourceContracts": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "ownedFiles": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "tests": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "immutableFields": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "supersedes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "supersededBy": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}

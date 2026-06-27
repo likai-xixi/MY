@@ -1,4 +1,4 @@
-import { ensure, finish, isCli, readJson } from './common.js';
+import { ensure, finish, isCli, readJson, readText } from './common.js';
 import { collectChangedFiles } from './diff-checker.js';
 
 const REQUIRED_GATES = [
@@ -44,6 +44,23 @@ const SALES_ORDER_IMPLEMENTATION_ROOTS = [
   'sql/'
 ];
 
+const SALES_ORDER_RUNTIME_TEXT_ROOTS = [
+  'ruoyi-business/src/main/java/com/ruoyi/business/',
+  'ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/',
+  'ruoyi-business/src/main/resources/mapper/',
+  'ruoyi-admin/src/main/resources/mapper/',
+  'ruoyi-ui/src/views/',
+  'ruoyi-ui/src/api/',
+  'sql/'
+];
+
+const SALES_ORDER_RUNTIME_TEXT_PATTERNS = [
+  /\bcreate\s+table\s+(?:if\s+not\s+exists\s+)?[`"]?sales_order[`"]?/i,
+  /\bcreate\s+table\s+(?:if\s+not\s+exists\s+)?[`"]?sales_order_item[`"]?/i,
+  /['"`][^'"`]*(?:sales-order|salesorder|sales_order|sales\/order|salesOrder|\/sales-order|\/salesorder|\/sales_order|\/sales\/order|\/salesOrder)[^'"`]*['"`]/,
+  /\bbusiness:sales(?::|-|_)?order\b/i
+];
+
 function salesOrderKey(segment) {
   return String(segment || '')
     .split('.')[0]
@@ -70,12 +87,37 @@ export function isSalesOrderImplementationPath(file) {
   });
 }
 
-function salesOrderAttempted({ impact, changedFiles }) {
+function isSalesOrderRuntimeTextRoot(file) {
+  const normalized = String(file).replace(/\\/g, '/').replace(/^\.\/+/, '');
+  return SALES_ORDER_RUNTIME_TEXT_ROOTS.some((root) => normalized.startsWith(root));
+}
+
+function readTextSafe(readTextFile, file) {
+  try {
+    return readTextFile(file);
+  } catch {
+    return '';
+  }
+}
+
+export function isSalesOrderImplementationContent(file, readTextFile = readText) {
+  if (!isSalesOrderRuntimeTextRoot(file)) {
+    return false;
+  }
+  const text = readTextSafe(readTextFile, file);
+  return SALES_ORDER_RUNTIME_TEXT_PATTERNS.some((pattern) => pattern.test(text));
+}
+
+function salesOrderAttempted({ impact, changedFiles, readTextFile }) {
+  const hasRuntimeChange = changedFiles.some((file) => (
+    isSalesOrderImplementationPath(file)
+    || isSalesOrderImplementationContent(file, readTextFile)
+  ));
   if (impact?.noSalesOrderImplementation === true || impact?.mode === 'rule-change' || impact?.mode === 'governance') {
-    return changedFiles.some(isSalesOrderImplementationPath);
+    return hasRuntimeChange;
   }
   const featureId = typeof impact?.feature === 'object' ? impact.feature.id : impact?.feature;
-  return featureId === 'sales-order' || changedFiles.some(isSalesOrderImplementationPath);
+  return featureId === 'sales-order' || hasRuntimeChange;
 }
 
 function backlogStatusMap(readJsonFile) {
@@ -90,6 +132,7 @@ function backlogStatusMap(readJsonFile) {
 export function validatePhaseGates({
   file = 'ai/roadmap/phase-gates.json',
   readJsonFile = readJson,
+  readTextFile = readText,
   changedFiles = collectChangedFiles()
 } = {}) {
   const errors = [];
@@ -125,7 +168,7 @@ export function validatePhaseGates({
   }
 
   const impact = readCurrentImpact(readJsonFile);
-  if (salesOrderAttempted({ impact, changedFiles })) {
+  if (salesOrderAttempted({ impact, changedFiles, readTextFile })) {
     const statuses = backlogStatusMap(readJsonFile);
     const incomplete = REQUIRED_BEFORE_SALES_ORDER.filter((id) => !COMPLETE_STATUSES.has(statuses.get(id)));
     ensure(incomplete.length === 0, `sales-order implementation is blocked until beforeSalesOrder.required is complete: ${incomplete.join(', ')}.`, errors);

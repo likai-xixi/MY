@@ -1,0 +1,213 @@
+{
+  "schemaVersion": 1,
+  "description": "Business rule object registry. Codex must inspect this before changing, deleting, superseding, or overturning high-risk business rules.",
+  "objects": [
+    {
+      "id": "customer-fund-deposit-entry",
+      "name": "Customer fund deposit entry",
+      "objectType": "fund-entry-rule",
+      "ownerFeature": "customer",
+      "lifecycleStatus": "published",
+      "version": "1.0.0",
+      "blockingMode": "runtime-bound",
+      "sourceContracts": [
+        "ai/contracts/customer.api.md",
+        "ai/contracts/customer.db.md",
+        "features/customer.md",
+        "ai/registry/idempotency-registry.json"
+      ],
+      "ownedFiles": [
+        "ruoyi-business/src/main/java/com/ruoyi/business/customer/service/impl/CustomerFundServiceImpl.java",
+        "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
+        "ruoyi-business/src/main/resources/mapper/customer/CustomerMapper.xml",
+        "ruoyi-ui/src/views/customer/index.vue"
+      ],
+      "tests": [
+        "tests/customer-risk-gate.test.js",
+        "ruoyi-business/src/test/java/com/ruoyi/business/customer/service/CustomerFundServiceTest.java"
+      ],
+      "immutableFields": [
+        "CUSTOMER_DEPOSIT only",
+        "DEPOSIT_IN only",
+        "PUBLIC customer fund mutation remains blocked",
+        "idempotentKey required for deposit entry"
+      ],
+      "changePolicy": {
+        "mode": "governance-and-runtime-review",
+        "requires": [
+          "rule:preflight",
+          "impact expansion",
+          "customer contract update",
+          "runtime and idempotency test evidence"
+        ]
+      },
+      "deletePolicy": {
+        "allowed": false,
+        "reason": "Deposit entry is the current customer fund baseline and cannot be removed without a replacement rule object."
+      },
+      "snapshotPolicy": {
+        "strategy": "fund-flow-ledger",
+        "evidence": "Every accepted mutation must write customer_fund_flow and preserve idempotency replay evidence."
+      },
+      "supersedes": [],
+      "supersededBy": [],
+      "createdByChange": "CR-20260627T101649Z-r-09a-business-rule-object-governance-core",
+      "updatedByChange": "CR-20260627T101649Z-r-09a-business-rule-object-governance-core",
+      "notes": "R-09A registers the existing customer deposit entry rule without changing runtime behavior."
+    },
+    {
+      "id": "customer-sample-rebate-generation",
+      "name": "Customer sample rebate generation",
+      "objectType": "fund-entry-rule",
+      "ownerFeature": "customer",
+      "lifecycleStatus": "published",
+      "version": "1.0.0",
+      "blockingMode": "runtime-bound",
+      "sourceContracts": [
+        "ai/contracts/customer.api.md",
+        "ai/contracts/customer.db.md",
+        "features/customer.md",
+        "ai/registry/idempotency-registry.json"
+      ],
+      "ownedFiles": [
+        "ruoyi-business/src/main/java/com/ruoyi/business/customer/service/impl/CustomerServiceImpl.java",
+        "ruoyi-business/src/main/java/com/ruoyi/business/customer/service/impl/CustomerFundServiceImpl.java",
+        "ruoyi-business/src/main/resources/mapper/customer/CustomerMapper.xml",
+        "ruoyi-ui/src/views/customer/index.vue"
+      ],
+      "tests": [
+        "tests/customer-risk-gate.test.js",
+        "ruoyi-business/src/test/java/com/ruoyi/business/customer/service/CustomerServiceTest.java"
+      ],
+      "immutableFields": [
+        "SAMPLE_REBATE remains separate from CUSTOMER_DEPOSIT",
+        "sample_rebate_record is created before SAMPLE_REBATE_GENERATE fund flow",
+        "idempotentKey required for sample rebate generation"
+      ],
+      "changePolicy": {
+        "mode": "governance-and-runtime-review",
+        "requires": [
+          "rule:preflight",
+          "customer API and DB contract update",
+          "sample rebate runtime test evidence"
+        ]
+      },
+      "deletePolicy": {
+        "allowed": false,
+        "reason": "Sample rebate is an active customer fund rule and needs an explicit replacement before removal."
+      },
+      "snapshotPolicy": {
+        "strategy": "rebate-record-before-flow",
+        "evidence": "sample_rebate_record and customer_fund_flow must preserve the generation event."
+      },
+      "supersedes": [],
+      "supersededBy": [],
+      "createdByChange": "CR-20260627T101649Z-r-09a-business-rule-object-governance-core",
+      "updatedByChange": "CR-20260627T101649Z-r-09a-business-rule-object-governance-core",
+      "notes": "R-09A registers the existing sample rebate rule without changing runtime behavior."
+    },
+    {
+      "id": "public-customer-invariant",
+      "name": "Public customer invariant",
+      "objectType": "data-invariant",
+      "ownerFeature": "customer",
+      "lifecycleStatus": "published",
+      "version": "1.0.0",
+      "blockingMode": "blocking",
+      "sourceContracts": [
+        "ai/contracts/customer.api.md",
+        "ai/contracts/customer.db.md",
+        "features/customer.md",
+        "sql/validation/customer_runtime_validation.sql"
+      ],
+      "ownedFiles": [
+        "ruoyi-business/src/main/java/com/ruoyi/business/customer/service/impl/CustomerServiceImpl.java",
+        "ruoyi-business/src/main/resources/mapper/customer/CustomerMapper.xml",
+        "sql/migrations/V20260625_002_customer_seed_public_customer.sql",
+        "sql/validation/customer_runtime_validation.sql"
+      ],
+      "tests": [
+        "tests/customer-risk-gate.test.js",
+        "ruoyi-business/src/test/java/com/ruoyi/business/customer/service/CustomerServiceTest.java"
+      ],
+      "immutableFields": [
+        "PUBLIC customers cannot be manually created",
+        "PUBLIC fixed seed rows cannot be edited, disabled, deleted, or owner-transferred",
+        "public_channel uniqueness is preserved"
+      ],
+      "changePolicy": {
+        "mode": "rule-change-required",
+        "requires": [
+          "rule:preflight",
+          "runtime invariant evidence",
+          "customer contract update"
+        ]
+      },
+      "deletePolicy": {
+        "allowed": false,
+        "reason": "Public customer invariant protects built-in channel classification and cannot be removed silently."
+      },
+      "snapshotPolicy": {
+        "strategy": "seed-and-validation-sql",
+        "evidence": "Seed SQL and validation SQL must stay aligned with runtime service rules."
+      },
+      "supersedes": [],
+      "supersededBy": [],
+      "createdByChange": "CR-20260627T101649Z-r-09a-business-rule-object-governance-core",
+      "updatedByChange": "CR-20260627T101649Z-r-09a-business-rule-object-governance-core",
+      "notes": "R-09A registers the existing PUBLIC invariant without changing customer runtime behavior."
+    },
+    {
+      "id": "before-sales-order-phase-gate",
+      "name": "Before sales-order phase gate",
+      "objectType": "phase-gate",
+      "ownerFeature": "platform",
+      "lifecycleStatus": "published",
+      "version": "1.0.0",
+      "blockingMode": "blocking",
+      "sourceContracts": [
+        "AGENTS.md",
+        "ai/contracts/rule-change-governance.md",
+        "ai/roadmap/phase-gates.json",
+        "ai/roadmap/enhancement-backlog.json",
+        "ai/roadmap/refactor-debt.json"
+      ],
+      "ownedFiles": [
+        "tools/phase-gate-checker.js",
+        "ai/roadmap/phase-gates.json",
+        "ai/roadmap/enhancement-backlog.json",
+        "ai/roadmap/refactor-debt.json"
+      ],
+      "tests": [
+        "tests/governance-sales-order-handoff-gate.test.js",
+        "tests/rule-object-governance.test.js"
+      ],
+      "immutableFields": [
+        "beforeSalesOrder remains blocked until required items are complete",
+        "sales-order runtime paths are blocked before the gate is complete",
+        "no parallel check:sales-order-gate script"
+      ],
+      "changePolicy": {
+        "mode": "governance-rule-change",
+        "requires": [
+          "rule:preflight",
+          "phase-gate checker test evidence",
+          "no sales-order runtime artifact"
+        ]
+      },
+      "deletePolicy": {
+        "allowed": false,
+        "reason": "The sales-order pre-implementation gate is required before any sales-order runtime work."
+      },
+      "snapshotPolicy": {
+        "strategy": "gate-state-and-backlog",
+        "evidence": "phase-gates, enhancement backlog, refactor debt, and current context must preserve blocked gate state."
+      },
+      "supersedes": [],
+      "supersededBy": [],
+      "createdByChange": "CR-20260627T101649Z-r-09a-business-rule-object-governance-core",
+      "updatedByChange": "CR-20260627T101649Z-r-09a-business-rule-object-governance-core",
+      "notes": "R-09A strengthens the existing phase-gate checker and keeps beforeSalesOrder blocked."
+    }
+  ]
+}

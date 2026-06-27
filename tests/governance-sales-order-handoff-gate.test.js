@@ -341,3 +341,49 @@ test('beforeSalesOrder gate blocks sales-order implementation naming variants', 
 
   assert.deepEqual(validatePhaseGates({ readJsonFile, changedFiles: ['ai/roadmap/module-evolution/sales-order.md'] }), []);
 });
+
+test('beforeSalesOrder gate blocks sales-order runtime content in SQL and Vue API files', () => {
+  const readJsonFile = (file) => {
+    if (file === 'ai/roadmap/phase-gates.json') {
+      return readJson(file);
+    }
+    if (file === 'ai/roadmap/enhancement-backlog.json') {
+      return readJson(file);
+    }
+    if (file === 'ai/changes/CURRENT_CHANGE.json') {
+      return { current: 'CR-TEST' };
+    }
+    if (file === 'ai/changes/CR-TEST/impact.json') {
+      return { schemaVersion: 1, mode: 'rule-change', noSalesOrderImplementation: true };
+    }
+    throw new Error(`unexpected read ${file}`);
+  };
+
+  const samples = [
+    {
+      file: 'sql/customer.ownership.md',
+      text: 'create table sales_order (order_id bigint);'
+    },
+    {
+      file: 'sql/customer.ownership.md',
+      text: 'create table sales_order_item (item_id bigint);'
+    },
+    {
+      file: 'ruoyi-ui/src/api/customer.js',
+      text: "export const createSalesOrder = () => request({ url: '/sales/order', method: 'post' })"
+    },
+    {
+      file: 'ruoyi-ui/src/views/customer/index.vue',
+      text: "<el-button v-hasPermi=\"['business:sales:order']\">Create</el-button>"
+    }
+  ];
+
+  for (const sample of samples) {
+    const errors = validatePhaseGates({
+      readJsonFile,
+      readTextFile: (file) => file === sample.file ? sample.text : '',
+      changedFiles: [sample.file]
+    });
+    assert.ok(errors.some((error) => error.includes('sales-order implementation is blocked')), `${sample.file} should be blocked`);
+  }
+});

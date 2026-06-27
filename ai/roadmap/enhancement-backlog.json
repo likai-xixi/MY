@@ -86,7 +86,7 @@
       "requiredBefore": ["beforeSalesOrder"],
       "reason": "Sales-order, delivery, finance, and production sequencing must be machine-checkable.",
       "guard": "check:phase-gate validates required/deferred gate items and blocks attempted sales-order implementation naming variants while beforeSalesOrder is incomplete.",
-      "evidence": "tools/phase-gate-checker.js and tests/governance-sales-order-handoff-gate.test.js naming-variant coverage",
+      "evidence": "tools/phase-gate-checker.js and tests/governance-sales-order-handoff-gate.test.js naming-variant plus SQL/Vue/API/menu/permission runtime-content coverage",
       "futureAction": "Mark beforeSalesOrder ready only after required items are completed."
     },
     {

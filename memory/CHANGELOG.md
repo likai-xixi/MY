@@ -433,3 +433,13 @@
 - [not-run] Plain `mvn` is unavailable on PATH; configured Maven path passed.
 - No customer runtime behavior, sales-order runtime, production safety config, package scripts, tools, old three-account fund model, deduction/refund/adjustment/reversal runtime, production config, or database business table structure was changed.
 - Feature: `customer`.
+
+## 2026-06-27 - rule-change
+- Change: `ai/changes/CR-20260627T101649Z-r-09a-business-rule-object-governance-core`.
+- R-09A added the business rule-object governance kernel: contract, schema, registry, checker, preflight report, tests, and package script wiring.
+- Registered `customer-fund-deposit-entry`, `customer-sample-rebate-generation`, `public-customer-invariant`, and `before-sales-order-phase-gate`.
+- Strengthened existing `check:phase-gate` detection for sales-order runtime naming variants plus SQL/Vue/API/menu/permission content. No parallel `check:sales-order-gate` was created.
+- [local] Verification passed: `npm run resume`, `npm run rule:preflight`, `npm run scan:all`, `npm run check:rule-objects`, focused Node tests 6/6 and 17/17, `npm test` with 204 tests, `npm run check` with 204 tests, and `git diff --check`.
+- [local] Existing `check:config-safety` development/default warnings remained warning-only.
+- No customer runtime code, sales-order runtime artifact, database business table structure, product/field/formula/tech/material registry family, or parallel sales-order gate was created.
+- Feature: `platform`.
