@@ -343,9 +343,31 @@
         "/monitor/server"
       ],
       "screens": [],
-      "dbTables": [],
+      "dbTables": [
+        "gen_table",
+        "gen_table_column",
+        "sys_config",
+        "sys_dept",
+        "sys_dict_data",
+        "sys_dict_type",
+        "sys_job",
+        "sys_job_log",
+        "sys_logininfor",
+        "sys_menu",
+        "sys_notice",
+        "sys_notice_read",
+        "sys_oper_log",
+        "sys_post",
+        "sys_role",
+        "sys_role_dept",
+        "sys_role_menu",
+        "sys_user",
+        "sys_user_post",
+        "sys_user_role"
+      ],
       "permissions": [
         "monitor:cache:list",
+        "monitor:druid:list",
         "monitor:job:add",
         "monitor:job:edit",
         "monitor:job:export",
@@ -354,14 +376,20 @@
         "monitor:job:remove",
         "monitor:logininfor:export",
         "monitor:logininfor:list",
+        "monitor:logininfor:query",
         "monitor:logininfor:remove",
         "monitor:logininfor:unlock",
         "monitor:online:list",
+        "monitor:online:query",
         "monitor:operlog:export",
         "monitor:operlog:list",
         "monitor:operlog:query",
         "monitor:operlog:remove",
-        "monitor:server:list"
+        "monitor:server:list",
+        "system:dict:list",
+        "system:role:edit",
+        "system:user:edit",
+        "tool:gen:edit"
       ],
       "components": [
         "@/components/Crontab",
@@ -444,9 +472,13 @@
         "ruoyi-ui/src/api/monitor/operlog.js",
         "ruoyi-ui/src/api/monitor/server.js"
       ],
-      "sqlFiles": [],
+      "sqlFiles": [
+        "sql/ry_20260417.sql"
+      ],
       "mapperXmlFiles": [],
-      "menuSqlFiles": [],
+      "menuSqlFiles": [
+        "sql/ry_20260417.sql"
+      ],
       "permissionFiles": [
         "ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor/CacheController.java",
         "ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor/ServerController.java",
@@ -455,10 +487,12 @@
         "ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor/SysUserOnlineController.java",
         "ruoyi-quartz/src/main/java/com/ruoyi/quartz/controller/SysJobController.java",
         "ruoyi-quartz/src/main/java/com/ruoyi/quartz/controller/SysJobLogController.java",
+        "ruoyi-ui/src/router/index.js",
         "ruoyi-ui/src/views/monitor/job/index.vue",
         "ruoyi-ui/src/views/monitor/job/log.vue",
         "ruoyi-ui/src/views/monitor/logininfor/index.vue",
-        "ruoyi-ui/src/views/monitor/operlog/index.vue"
+        "ruoyi-ui/src/views/monitor/operlog/index.vue",
+        "sql/ry_20260417.sql"
       ],
       "ownershipNote": "RuoYi built-in monitoring module ownership baseline.",
       "ownership": {
@@ -496,9 +530,32 @@
           "/monitor/server"
         ],
         "ui": [],
-        "database": [],
+        "database": [
+          "gen_table",
+          "gen_table_column",
+          "sql/ry_20260417.sql",
+          "sys_config",
+          "sys_dept",
+          "sys_dict_data",
+          "sys_dict_type",
+          "sys_job",
+          "sys_job_log",
+          "sys_logininfor",
+          "sys_menu",
+          "sys_notice",
+          "sys_notice_read",
+          "sys_oper_log",
+          "sys_post",
+          "sys_role",
+          "sys_role_dept",
+          "sys_role_menu",
+          "sys_user",
+          "sys_user_post",
+          "sys_user_role"
+        ],
         "permissions": [
           "monitor:cache:list",
+          "monitor:druid:list",
           "monitor:job:add",
           "monitor:job:edit",
           "monitor:job:export",
@@ -507,9 +564,11 @@
           "monitor:job:remove",
           "monitor:logininfor:export",
           "monitor:logininfor:list",
+          "monitor:logininfor:query",
           "monitor:logininfor:remove",
           "monitor:logininfor:unlock",
           "monitor:online:list",
+          "monitor:online:query",
           "monitor:operlog:export",
           "monitor:operlog:list",
           "monitor:operlog:query",
@@ -522,12 +581,20 @@
           "ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor/SysUserOnlineController.java",
           "ruoyi-quartz/src/main/java/com/ruoyi/quartz/controller/SysJobController.java",
           "ruoyi-quartz/src/main/java/com/ruoyi/quartz/controller/SysJobLogController.java",
+          "ruoyi-ui/src/router/index.js",
           "ruoyi-ui/src/views/monitor/job/index.vue",
           "ruoyi-ui/src/views/monitor/job/log.vue",
           "ruoyi-ui/src/views/monitor/logininfor/index.vue",
-          "ruoyi-ui/src/views/monitor/operlog/index.vue"
+          "ruoyi-ui/src/views/monitor/operlog/index.vue",
+          "sql/ry_20260417.sql",
+          "system:dict:list",
+          "system:role:edit",
+          "system:user:edit",
+          "tool:gen:edit"
         ],
-        "menus": [],
+        "menus": [
+          "sql/ry_20260417.sql"
+        ],
         "components": [
           "@/components/Crontab",
           "@/components/iFrame"
@@ -1438,13 +1505,15 @@
       "screens": [],
       "dbTables": [],
       "permissions": [
+        "tool:build:list",
         "tool:gen:code",
         "tool:gen:edit",
         "tool:gen:import",
         "tool:gen:list",
         "tool:gen:preview",
         "tool:gen:query",
-        "tool:gen:remove"
+        "tool:gen:remove",
+        "tool:swagger:list"
       ],
       "components": [
         "@/components/iFrame",
@@ -1519,10 +1588,14 @@
       ],
       "sqlFiles": [],
       "mapperXmlFiles": [],
-      "menuSqlFiles": [],
+      "menuSqlFiles": [
+        "sql/ry_20260417.sql"
+      ],
       "permissionFiles": [
         "ruoyi-generator/src/main/java/com/ruoyi/generator/controller/GenController.java",
-        "ruoyi-ui/src/views/tool/gen/index.vue"
+        "ruoyi-ui/src/router/index.js",
+        "ruoyi-ui/src/views/tool/gen/index.vue",
+        "sql/ry_20260417.sql"
       ],
       "ownershipNote": "RuoYi built-in tooling and generator module ownership baseline.",
       "ownership": {
@@ -1547,16 +1620,22 @@
         "database": [],
         "permissions": [
           "ruoyi-generator/src/main/java/com/ruoyi/generator/controller/GenController.java",
+          "ruoyi-ui/src/router/index.js",
           "ruoyi-ui/src/views/tool/gen/index.vue",
+          "sql/ry_20260417.sql",
+          "tool:build:list",
           "tool:gen:code",
           "tool:gen:edit",
           "tool:gen:import",
           "tool:gen:list",
           "tool:gen:preview",
           "tool:gen:query",
-          "tool:gen:remove"
+          "tool:gen:remove",
+          "tool:swagger:list"
         ],
-        "menus": [],
+        "menus": [
+          "sql/ry_20260417.sql"
+        ],
         "components": [
           "@/components/iFrame",
           "ruoyi-ui/src/components/Crontab/index.vue",

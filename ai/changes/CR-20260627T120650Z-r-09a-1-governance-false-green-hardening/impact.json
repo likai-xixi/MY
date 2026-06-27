@@ -1,0 +1,158 @@
+{
+  "schemaVersion": 1,
+  "mode": "rule-change",
+  "changeType": "governance/rule-change",
+  "title": "R-09A.1 governance false-green hardening",
+  "feature": {
+    "id": "platform",
+    "name": "Platform governance"
+  },
+  "noCustomerRuntime": true,
+  "noSalesOrderImplementation": true,
+  "scope": {
+    "goals": [
+      "Harden governance gates that can currently pass false-green evidence.",
+      "Make forbidden edit roots fail before allowed roots can mask them.",
+      "Keep beforeSalesOrder blocked and expand sales-order runtime bypass detection.",
+      "Close RuoYi permission scan, feature ownership, preflight, and rule-object validation gaps."
+    ],
+    "nonGoals": [
+      "Do not implement sales-order.",
+      "Do not modify customer fund business logic.",
+      "Do not create sales-order controller, service, mapper, domain, Vue, API client, SQL, table, route, menu, or permission artifacts."
+    ]
+  },
+  "affected": {
+    "tools": [
+      "tools/diff-checker.js",
+      "tools/phase-gate-checker.js",
+      "tools/scan-permissions.js",
+      "tools/ownership-checker.js",
+      "tools/rule-object-checker.js"
+    ],
+    "scripts": [
+      "scripts/rule-change-preflight.js"
+    ],
+    "tests": [
+      "tests/diff-checker.test.js",
+      "tests/governance-sales-order-handoff-gate.test.js",
+      "tests/permission-scan.test.js",
+      "tests/rule-object-governance.test.js",
+      "tests/ownership-checker.test.js"
+    ],
+    "generatedScans": [
+      "ai/generated/backend-routes.json",
+      "ai/generated/frontend-routes.json",
+      "ai/generated/api-clients.json",
+      "ai/generated/db-schema.json",
+      "ai/generated/permissions.json",
+      "ai/generated/component-usage.json"
+    ],
+    "docs": [
+      "ai/context/current-context.md",
+      "ai/context/current-context.json",
+      "memory/HANDOVER.md",
+      "memory/PROJECT_STATE.md",
+      "memory/CHANGELOG.md",
+      "memory/TASKS.json"
+    ],
+    "registries": [
+      "ai/registry/features.json",
+      "ai/registry/rule-objects.json"
+    ],
+    "roadmap": [
+      "ai/roadmap/phase-gates.json"
+    ],
+    "changeRecord": [
+      "ai/changes/CR-20260627T120650Z-r-09a-1-governance-false-green-hardening",
+      "ai/changes/CURRENT_CHANGE.json"
+    ]
+  },
+  "allowedEditRoots": [
+    "tools/diff-checker.js",
+    "tools/phase-gate-checker.js",
+    "tools/scan-permissions.js",
+    "tools/ownership-checker.js",
+    "tools/rule-object-checker.js",
+    "scripts/rule-change-preflight.js",
+    "tests/diff-checker.test.js",
+    "tests/governance-sales-order-handoff-gate.test.js",
+    "tests/permission-scan.test.js",
+    "tests/rule-object-governance.test.js",
+    "tests/ownership-checker.test.js",
+    "ai/roadmap/phase-gates.json",
+    "ai/registry/features.json",
+    "ai/registry/rule-objects.json",
+    "ai/generated/backend-routes.json",
+    "ai/generated/frontend-routes.json",
+    "ai/generated/api-clients.json",
+    "ai/generated/db-schema.json",
+    "ai/generated/permissions.json",
+    "ai/generated/component-usage.json",
+    "ai/context/current-context.md",
+    "ai/context/current-context.json",
+    "memory/HANDOVER.md",
+    "memory/PROJECT_STATE.md",
+    "memory/CHANGELOG.md",
+    "memory/TASKS.json",
+    "ai/changes/CR-20260627T120650Z-r-09a-1-governance-false-green-hardening",
+    "ai/changes/CURRENT_CHANGE.json"
+  ],
+  "forbiddenEditRoots": [
+    "ruoyi-business/src/main/java/com/ruoyi/business/customer",
+    "ruoyi-business/src/main/resources/mapper/customer",
+    "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer",
+    "ruoyi-ui/src/views/customer",
+    "ruoyi-ui/src/api/customer.js",
+    "sql/migrations",
+    "sql/validation",
+    "ruoyi-business/src/main/java/com/ruoyi/business/sales-order",
+    "ruoyi-business/src/main/java/com/ruoyi/business/salesorder",
+    "ruoyi-business/src/main/java/com/ruoyi/business/sales_order",
+    "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/sales-order",
+    "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/salesorder",
+    "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/sales_order",
+    "ruoyi-business/src/main/resources/mapper/sales-order",
+    "ruoyi-business/src/main/resources/mapper/salesorder",
+    "ruoyi-business/src/main/resources/mapper/sales_order",
+    "ruoyi-admin/src/main/resources/mapper/sales-order",
+    "ruoyi-admin/src/main/resources/mapper/salesorder",
+    "ruoyi-admin/src/main/resources/mapper/sales_order",
+    "ruoyi-system/src/main/java",
+    "ruoyi-system/src/main/resources",
+    "ruoyi-generator/src/main/java",
+    "ruoyi-generator/src/main/resources",
+    "ruoyi-quartz/src/main/java",
+    "ruoyi-quartz/src/main/resources",
+    "ruoyi-admin/sql",
+    "ruoyi-admin/src/main/resources/sql",
+    "ruoyi-ui/src/router",
+    "ruoyi-ui/src/permission.js",
+    "ruoyi-ui/src/store",
+    "ruoyi-ui/src/views/sales-order",
+    "ruoyi-ui/src/views/salesorder",
+    "ruoyi-ui/src/views/sales_order",
+    "ruoyi-ui/src/api/sales-order.js",
+    "ruoyi-ui/src/api/salesOrder.js",
+    "ruoyi-ui/src/api/sales_order.js",
+    "sales-order runtime, SQL, Vue, API, permission, menu, or route",
+    "sales_order table",
+    "sales_order_item table"
+  ],
+  "blockers": [
+    "beforeSalesOrder remains blocked; this change may strengthen gates only.",
+    "Customer fund runtime/business logic is out of scope.",
+    "Rule-change preflight without explicit rule object ids is read-only audit evidence only and cannot close this change."
+  ],
+  "requiredCommands": [
+    "npm run resume",
+    "npm run rule:preflight -- before-sales-order-phase-gate customer-fund-deposit-entry customer-sample-rebate-generation public-customer-invariant",
+    "npm run scan:all",
+    "npm run check:diff",
+    "npm run check:phase-gate",
+    "npm run check:rule-objects",
+    "npm test",
+    "npm run check",
+    "git diff --check"
+  ]
+}

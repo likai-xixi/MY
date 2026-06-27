@@ -50,7 +50,7 @@
           "reason": "CI is deferred to avoid fake echo-success automation before local gates are stable."
         }
       ],
-      "evidence": "This governance change creates the gate and its checkers; business implementation remains blocked until required contract items are completed. The phase-gate checker covers canonical sales-order roots, common sales-order, salesOrder, sales_order, and sales/order naming variants, SQL create table sales_order / sales_order_item, and Vue/API/menu/permission sales-order runtime content under implementation roots."
+      "evidence": "This governance change creates the gate and its checkers; business implementation remains blocked until required contract items are completed. The phase-gate checker covers canonical sales-order roots, common sales-order, salesOrder, sales_order, and sales/order naming variants, SQL create table sales_order / sales_order_item, Vue/API/menu/permission sales-order runtime content, and bypass-capable RuoYi runtime roots including ruoyi-system, ruoyi-generator, ruoyi-quartz, ruoyi-admin SQL, ruoyi-ui router, permission.js, and store."
     },
     "beforeDelivery": {
       "title": "Before delivery implementation",

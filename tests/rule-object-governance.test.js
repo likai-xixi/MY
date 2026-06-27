@@ -20,7 +20,11 @@ function validRegistry(overrides = {}) {
   };
 }
 
-function fakeReader({ registry = validRegistry(), features = { schemaVersion: 1, features: [{ id: 'customer', status: 'active' }, { id: 'platform', status: 'active' }] } } = {}) {
+function fakeReader({
+  registry = validRegistry(),
+  features = readJson('ai/registry/features.json'),
+  impact = { schemaVersion: 1, mode: 'rule-change', changeType: 'governance/rule-change' }
+} = {}) {
   return (file) => {
     if (file === 'ai/registry/rule-objects.json') {
       return registry;
@@ -30,6 +34,9 @@ function fakeReader({ registry = validRegistry(), features = { schemaVersion: 1,
     }
     if (file === 'ai/changes/CURRENT_CHANGE.json') {
       return { schemaVersion: 1, current: 'CR-TEST' };
+    }
+    if (file === 'ai/changes/CR-TEST/impact.json') {
+      return impact;
     }
     if (file === 'ai/roadmap/phase-gates.json') {
       return readJson(file);
@@ -118,6 +125,56 @@ test('rule object checker blocks unknown and one-way supersede relationships', (
   assert.ok(oneWayErrors.some((error) => error.includes('supersede relationship must be bidirectional')));
 });
 
+test('rule object checker requires created and updated change records to exist', () => {
+  const registry = validRegistry();
+  registry.objects[0].createdByChange = 'CR-MISSING-CREATED';
+  registry.objects[0].updatedByChange = 'CR-MISSING-UPDATED';
+
+  const errors = validateRuleObjects({
+    readJsonFile: fakeReader({ registry }),
+    exists: (file) => ![
+      'ai/changes/CR-MISSING-CREATED',
+      'ai/changes/CR-MISSING-UPDATED'
+    ].includes(file)
+  });
+
+  assert.ok(errors.some((error) => error.includes('createdByChange references missing change record ai/changes/CR-MISSING-CREATED')));
+  assert.ok(errors.some((error) => error.includes('updatedByChange references missing change record ai/changes/CR-MISSING-UPDATED')));
+});
+
+test('rule object checker requires owned files to be owner-owned unless explicitly excepted', () => {
+  const registry = validRegistry();
+  registry.objects = [
+    {
+      ...registry.objects[0],
+      ownerFeature: 'customer',
+      ownedFiles: ['tools/unowned-governance-rule.js'],
+      tests: ['tests/rule-object-governance.test.js'],
+      sourceContracts: ['features/customer.md'],
+      createdByChange: 'CR-TEST',
+      updatedByChange: 'CR-TEST'
+    }
+  ];
+
+  const errors = validateRuleObjects({
+    readJsonFile: fakeReader({ registry }),
+    exists: () => true
+  });
+  assert.ok(errors.some((error) => error.includes('ownedFiles item tools/unowned-governance-rule.js is not in ownerFeature customer ownership')));
+
+  registry.objects[0].ownershipExceptions = [
+    {
+      file: 'tools/unowned-governance-rule.js',
+      reason: 'Governance checker is intentionally platform-owned outside customer runtime roots.'
+    }
+  ];
+  const exceptedErrors = validateRuleObjects({
+    readJsonFile: fakeReader({ registry }),
+    exists: () => true
+  });
+  assert.deepEqual(exceptedErrors.filter((error) => error.includes('tools/unowned-governance-rule.js is not in ownerFeature customer ownership')), []);
+});
+
 test('rule preflight renders lifecycle, references, tests, snapshot policy, and gate state', () => {
   const { text, errors, warnings } = buildRulePreflight({
     ids: ['before-sales-order-phase-gate'],
@@ -136,4 +193,17 @@ test('rule preflight renders lifecycle, references, tests, snapshot policy, and 
   assert.ok(text.includes('Tests:'));
   assert.ok(text.includes('Snapshot policy'));
   assert.ok(text.includes('beforeSalesOrder: `blocked`'));
+});
+
+test('rule preflight without explicit object ids is audit-only and fails rule-change closeout evidence', () => {
+  const { text, errors, warnings } = buildRulePreflight({
+    ids: [],
+    readJsonFile: fakeReader(),
+    exists: () => true,
+    validate: () => []
+  });
+
+  assert.ok(errors.some((error) => error.includes('rule-change preflight must receive explicit rule object ids')));
+  assert.ok(warnings.some((warning) => warning.includes('read-only audit mode')));
+  assert.ok(text.includes('Status: `audit-only`'));
 });

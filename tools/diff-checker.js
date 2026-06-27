@@ -143,6 +143,47 @@ export function isAllowedByRoot(file, root) {
   return normalizedFile === normalizedRoot || normalizedFile.startsWith(`${normalizedRoot}/`);
 }
 
+function rootsOverlap(left, right) {
+  const normalizedLeft = normalizeRoot(left);
+  const normalizedRight = normalizeRoot(right);
+  if (!normalizedLeft || !normalizedRight) {
+    return false;
+  }
+  return isAllowedByRoot(normalizedLeft, normalizedRight) || isAllowedByRoot(normalizedRight, normalizedLeft);
+}
+
+export function checkForbiddenEditRoots({ changedFiles = collectChangedFiles(), impact = currentImpact() } = {}) {
+  if (changedFiles.length === 0 || !impact) {
+    return [];
+  }
+  const forbiddenRoots = Array.isArray(impact.forbiddenEditRoots) ? impact.forbiddenEditRoots : [];
+  const errors = [];
+  for (const file of changedFiles) {
+    const root = forbiddenRoots.find((candidate) => isAllowedByRoot(file, candidate));
+    if (root) {
+      errors.push(`${file} is inside impact.forbiddenEditRoots entry ${normalizeRoot(root)}.`);
+    }
+  }
+  return errors;
+}
+
+export function checkEditRootIntersections({ impact = currentImpact() } = {}) {
+  if (!impact) {
+    return [];
+  }
+  const allowedRoots = Array.isArray(impact.allowedEditRoots) ? impact.allowedEditRoots : [];
+  const forbiddenRoots = Array.isArray(impact.forbiddenEditRoots) ? impact.forbiddenEditRoots : [];
+  const errors = [];
+  for (const allowedRoot of allowedRoots) {
+    for (const forbiddenRoot of forbiddenRoots) {
+      if (rootsOverlap(allowedRoot, forbiddenRoot)) {
+        errors.push(`impact.allowedEditRoots entry ${normalizeRoot(allowedRoot)} overlaps impact.forbiddenEditRoots entry ${normalizeRoot(forbiddenRoot)}.`);
+      }
+    }
+  }
+  return unique(errors);
+}
+
 export function checkAllowedEditRoots({ changedFiles = collectChangedFiles(), impact = currentImpact() } = {}) {
   const errors = [];
   if (changedFiles.length === 0) {
@@ -161,6 +202,18 @@ export function checkAllowedEditRoots({ changedFiles = collectChangedFiles(), im
     }
   }
   return errors;
+}
+
+export function checkEditRootPolicy({ changedFiles = collectChangedFiles(), impact = currentImpact() } = {}) {
+  const intersectionErrors = checkEditRootIntersections({ impact });
+  if (intersectionErrors.length > 0) {
+    return intersectionErrors;
+  }
+  const forbiddenErrors = checkForbiddenEditRoots({ changedFiles, impact });
+  if (forbiddenErrors.length > 0) {
+    return forbiddenErrors;
+  }
+  return checkAllowedEditRoots({ changedFiles, impact });
 }
 
 export function checkTextHygiene() {
@@ -194,7 +247,7 @@ export function checkDiff() {
   return [
     ...checkTextHygiene(),
     ...checkGitRequired(),
-    ...checkAllowedEditRoots()
+    ...checkEditRootPolicy()
   ];
 }
 

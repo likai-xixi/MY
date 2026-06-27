@@ -178,6 +178,24 @@
         "ai/roadmap/enhancement-backlog.json",
         "ai/roadmap/refactor-debt.json"
       ],
+      "ownershipExceptions": [
+        {
+          "file": "tools/phase-gate-checker.js",
+          "reason": "Platform governance checker file is intentionally outside runtime feature ownership roots."
+        },
+        {
+          "file": "ai/roadmap/phase-gates.json",
+          "reason": "Platform roadmap gate registry is governance-owned outside runtime feature ownership roots."
+        },
+        {
+          "file": "ai/roadmap/enhancement-backlog.json",
+          "reason": "Platform backlog gate evidence is governance-owned outside runtime feature ownership roots."
+        },
+        {
+          "file": "ai/roadmap/refactor-debt.json",
+          "reason": "Platform refactor debt gate evidence is governance-owned outside runtime feature ownership roots."
+        }
+      ],
       "tests": [
         "tests/governance-sales-order-handoff-gate.test.js",
         "tests/rule-object-governance.test.js"

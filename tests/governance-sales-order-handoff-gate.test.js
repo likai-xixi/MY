@@ -387,3 +387,58 @@ test('beforeSalesOrder gate blocks sales-order runtime content in SQL and Vue AP
     assert.ok(errors.some((error) => error.includes('sales-order implementation is blocked')), `${sample.file} should be blocked`);
   }
 });
+
+test('beforeSalesOrder gate blocks sales-order bypasses in shared RuoYi runtime roots', () => {
+  const readJsonFile = (file) => {
+    if (file === 'ai/roadmap/phase-gates.json') {
+      return readJson(file);
+    }
+    if (file === 'ai/roadmap/enhancement-backlog.json') {
+      return readJson(file);
+    }
+    if (file === 'ai/changes/CURRENT_CHANGE.json') {
+      return { current: 'CR-TEST' };
+    }
+    if (file === 'ai/changes/CR-TEST/impact.json') {
+      return { schemaVersion: 1, mode: 'rule-change', noSalesOrderImplementation: true };
+    }
+    throw new Error(`unexpected read ${file}`);
+  };
+
+  const namedRuntimeFiles = [
+    'ruoyi-system/src/main/java/com/ruoyi/system/service/SalesOrderMenuService.java',
+    'ruoyi-generator/src/main/java/com/ruoyi/generator/service/SalesOrderTemplateService.java',
+    'ruoyi-quartz/src/main/java/com/ruoyi/quartz/task/SalesOrderTask.java',
+    'ruoyi-admin/sql/sales_order_menu.sql',
+    'ruoyi-ui/src/store/modules/salesOrder.js'
+  ];
+
+  for (const file of namedRuntimeFiles) {
+    const errors = validatePhaseGates({ readJsonFile, changedFiles: [file] });
+    assert.ok(errors.some((error) => error.includes('sales-order implementation is blocked')), `${file} should be blocked`);
+  }
+
+  const contentRuntimeFiles = [
+    {
+      file: 'ruoyi-ui/src/router/index.js',
+      text: "const route = { path: '/sales/order', component: () => import('@/views/salesOrder/index') };"
+    },
+    {
+      file: 'ruoyi-ui/src/permission.js',
+      text: "if (hasPermi('business:sales-order:list')) next();"
+    },
+    {
+      file: 'ruoyi-system/src/main/resources/mapper/system/SysMenuMapper.xml',
+      text: "insert into sys_menu(menu_name, perms) values ('Sales Order', 'business:salesorder:list');"
+    }
+  ];
+
+  for (const sample of contentRuntimeFiles) {
+    const errors = validatePhaseGates({
+      readJsonFile,
+      readTextFile: (file) => file === sample.file ? sample.text : '',
+      changedFiles: [sample.file]
+    });
+    assert.ok(errors.some((error) => error.includes('sales-order implementation is blocked')), `${sample.file} should be blocked`);
+  }
+});

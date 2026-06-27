@@ -8,7 +8,7 @@
       "status": "in_progress",
       "owner": "Codex",
       "priority": "high",
-      "statusReason": "R-09A governance change CR-20260627T101649Z-r-09a-business-rule-object-governance-core added and locally verified the business rule-object governance kernel, rule-object registry/schema/checker/preflight, and stronger beforeSalesOrder runtime detection without customer runtime or sales-order runtime implementation.",
+      "statusReason": "R-09A.1 governance change CR-20260627T120650Z-r-09a-1-governance-false-green-hardening hardens false-green gates for diff forbidden roots, beforeSalesOrder bypass paths, RuoYi business permission scanning, feature permission scan closure, rule-change preflight ids, and rule-object ownership/change-record references without customer runtime or sales-order runtime implementation.",
       "nextStep": "Continue with R-09B sales-order pre-implementation contract package while keeping beforeSalesOrder blocked.",
       "blockedBy": [],
       "verification": [
@@ -144,7 +144,7 @@
       "latestSession": "memory/sessions/2026-06-25-pre-release-breaking-change-policy.md",
       "handoverRequired": true,
       "updatedAt": "2026-06-27",
-      "latestChange": "CR-20260627T101649Z-r-09a-business-rule-object-governance-core"
+      "latestChange": "CR-20260627T120650Z-r-09a-1-governance-false-green-hardening"
     },
     {
       "id": "TASK-CUSTOMER",

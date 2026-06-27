@@ -2,11 +2,23 @@ import { finish, isCli } from './common.js';
 import { readSafe, writeGenerated } from './scan-utils.js';
 import { configuredPaths, inferFeatureFromPath, listFilesUnderRoots, readFeatureRegistry } from './project-config.js';
 
-const PERMISSION_REGEX = /\b[a-z][a-z0-9-]*:[a-z][a-z0-9-]*(?::[a-z][a-z0-9-]*)+\b/g;
+const PERMISSION_REGEX = /\b[a-z][a-z0-9-]*:[a-z][a-z0-9-]*(?::[a-z][a-z0-9-*]*)+\b/g;
 
-function hasRegisteredPermissionPrefix(code, features) {
-  const prefix = String(code).split(':')[0];
-  return (features || []).some((feature) => feature.status !== 'removed' && feature.id === prefix);
+export function inferFeatureFromPermissionCode(code, features) {
+  const active = new Set((features || [])
+    .filter((feature) => feature.status !== 'removed')
+    .map((feature) => feature.id)
+    .filter(Boolean));
+  const parts = String(code || '').split(':');
+  const prefix = parts[0] || '';
+  const ruoyiBusinessFeature = parts[1] || '';
+  if (prefix === 'business' && active.has(ruoyiBusinessFeature)) {
+    return ruoyiBusinessFeature;
+  }
+  if (active.has(prefix)) {
+    return prefix;
+  }
+  return '';
 }
 
 export function buildPermissionScan() {
@@ -17,10 +29,11 @@ export function buildPermissionScan() {
   for (const file of files) {
     const text = readSafe(file);
     for (const match of text.matchAll(PERMISSION_REGEX)) {
-      if (!hasRegisteredPermissionPrefix(match[0], features)) {
+      const module = inferFeatureFromPermissionCode(match[0], features);
+      if (!module) {
         continue;
       }
-      permissions.push({ code: match[0], module: inferFeatureFromPath(file, features), file });
+      permissions.push({ code: match[0], module: module || inferFeatureFromPath(file, features), file });
     }
   }
 

@@ -39,8 +39,19 @@ const SALES_ORDER_IMPLEMENTATION_ROOTS = [
   'ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/',
   'ruoyi-business/src/main/resources/mapper/',
   'ruoyi-admin/src/main/resources/mapper/',
+  'ruoyi-system/src/main/java/',
+  'ruoyi-system/src/main/resources/',
+  'ruoyi-generator/src/main/java/',
+  'ruoyi-generator/src/main/resources/',
+  'ruoyi-quartz/src/main/java/',
+  'ruoyi-quartz/src/main/resources/',
+  'ruoyi-admin/sql/',
+  'ruoyi-admin/src/main/resources/sql/',
+  'ruoyi-ui/src/router/',
+  'ruoyi-ui/src/store/',
   'ruoyi-ui/src/views/',
   'ruoyi-ui/src/api/',
+  'ruoyi-ui/src/permission.js',
   'sql/'
 ];
 
@@ -49,8 +60,19 @@ const SALES_ORDER_RUNTIME_TEXT_ROOTS = [
   'ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/',
   'ruoyi-business/src/main/resources/mapper/',
   'ruoyi-admin/src/main/resources/mapper/',
+  'ruoyi-system/src/main/java/',
+  'ruoyi-system/src/main/resources/',
+  'ruoyi-generator/src/main/java/',
+  'ruoyi-generator/src/main/resources/',
+  'ruoyi-quartz/src/main/java/',
+  'ruoyi-quartz/src/main/resources/',
+  'ruoyi-admin/sql/',
+  'ruoyi-admin/src/main/resources/sql/',
+  'ruoyi-ui/src/router/',
+  'ruoyi-ui/src/store/',
   'ruoyi-ui/src/views/',
   'ruoyi-ui/src/api/',
+  'ruoyi-ui/src/permission.js',
   'sql/'
 ];
 

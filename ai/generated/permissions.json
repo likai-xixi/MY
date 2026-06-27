@@ -17,6 +17,101 @@
   ],
   "permissions": [
     {
+      "code": "business:customer:list",
+      "module": "customer",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java"
+    },
+    {
+      "code": "business:customer:export",
+      "module": "customer",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java"
+    },
+    {
+      "code": "business:customer:query",
+      "module": "customer",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java"
+    },
+    {
+      "code": "business:customer:query",
+      "module": "customer",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java"
+    },
+    {
+      "code": "business:customer:add",
+      "module": "customer",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java"
+    },
+    {
+      "code": "business:customer:edit",
+      "module": "customer",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java"
+    },
+    {
+      "code": "business:customer:edit",
+      "module": "customer",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java"
+    },
+    {
+      "code": "business:customer:remove",
+      "module": "customer",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java"
+    },
+    {
+      "code": "business:customer:owner:view",
+      "module": "customer",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java"
+    },
+    {
+      "code": "business:customer:owner:transfer",
+      "module": "customer",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java"
+    },
+    {
+      "code": "business:customer:owner:history",
+      "module": "customer",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java"
+    },
+    {
+      "code": "business:customer:fund:view",
+      "module": "customer",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java"
+    },
+    {
+      "code": "business:customer:fund:add",
+      "module": "customer",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java"
+    },
+    {
+      "code": "business:customer:fund:flow",
+      "module": "customer",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java"
+    },
+    {
+      "code": "business:customer:fund:view",
+      "module": "customer",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java"
+    },
+    {
+      "code": "business:customer:sample-policy:view",
+      "module": "customer",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java"
+    },
+    {
+      "code": "business:customer:sample-policy:edit",
+      "module": "customer",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java"
+    },
+    {
+      "code": "business:customer:fund:add",
+      "module": "customer",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java"
+    },
+    {
+      "code": "business:customer:fund:view",
+      "module": "customer",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java"
+    },
+    {
       "code": "monitor:cache:list",
       "module": "monitor",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor/CacheController.java"
@@ -573,27 +668,27 @@
     },
     {
       "code": "system:user:edit",
-      "module": "platform",
+      "module": "system",
       "file": "ruoyi-ui/src/router/index.js"
     },
     {
       "code": "system:role:edit",
-      "module": "platform",
+      "module": "system",
       "file": "ruoyi-ui/src/router/index.js"
     },
     {
       "code": "system:dict:list",
-      "module": "platform",
+      "module": "system",
       "file": "ruoyi-ui/src/router/index.js"
     },
     {
       "code": "monitor:job:list",
-      "module": "platform",
+      "module": "monitor",
       "file": "ruoyi-ui/src/router/index.js"
     },
     {
       "code": "tool:gen:edit",
-      "module": "platform",
+      "module": "tool",
       "file": "ruoyi-ui/src/router/index.js"
     },
     {
@@ -605,6 +700,56 @@
       "code": "system:user:edit",
       "module": "system",
       "file": "ruoyi-ui/src/utils/permission.js"
+    },
+    {
+      "code": "business:customer:add",
+      "module": "customer",
+      "file": "ruoyi-ui/src/views/customer/index.vue"
+    },
+    {
+      "code": "business:customer:edit",
+      "module": "customer",
+      "file": "ruoyi-ui/src/views/customer/index.vue"
+    },
+    {
+      "code": "business:customer:export",
+      "module": "customer",
+      "file": "ruoyi-ui/src/views/customer/index.vue"
+    },
+    {
+      "code": "business:customer:query",
+      "module": "customer",
+      "file": "ruoyi-ui/src/views/customer/index.vue"
+    },
+    {
+      "code": "business:customer:edit",
+      "module": "customer",
+      "file": "ruoyi-ui/src/views/customer/index.vue"
+    },
+    {
+      "code": "business:customer:owner:transfer",
+      "module": "customer",
+      "file": "ruoyi-ui/src/views/customer/index.vue"
+    },
+    {
+      "code": "business:customer:remove",
+      "module": "customer",
+      "file": "ruoyi-ui/src/views/customer/index.vue"
+    },
+    {
+      "code": "business:customer:fund:add",
+      "module": "customer",
+      "file": "ruoyi-ui/src/views/customer/index.vue"
+    },
+    {
+      "code": "business:customer:fund:add",
+      "module": "customer",
+      "file": "ruoyi-ui/src/views/customer/index.vue"
+    },
+    {
+      "code": "business:customer:sample-policy:edit",
+      "module": "customer",
+      "file": "ruoyi-ui/src/views/customer/index.vue"
     },
     {
       "code": "monitor:job:add",
@@ -1067,6 +1212,256 @@
       "file": "ruoyi-ui/src/views/tool/gen/index.vue"
     },
     {
+      "code": "business:customer:list",
+      "module": "customer",
+      "file": "sql/migrations/V20260625_003_customer_menu_permission.sql"
+    },
+    {
+      "code": "business:customer:list",
+      "module": "customer",
+      "file": "sql/migrations/V20260625_003_customer_menu_permission.sql"
+    },
+    {
+      "code": "business:customer:query",
+      "module": "customer",
+      "file": "sql/migrations/V20260625_003_customer_menu_permission.sql"
+    },
+    {
+      "code": "business:customer:list",
+      "module": "customer",
+      "file": "sql/migrations/V20260625_003_customer_menu_permission.sql"
+    },
+    {
+      "code": "business:customer:query",
+      "module": "customer",
+      "file": "sql/migrations/V20260625_003_customer_menu_permission.sql"
+    },
+    {
+      "code": "business:customer:add",
+      "module": "customer",
+      "file": "sql/migrations/V20260625_003_customer_menu_permission.sql"
+    },
+    {
+      "code": "business:customer:list",
+      "module": "customer",
+      "file": "sql/migrations/V20260625_003_customer_menu_permission.sql"
+    },
+    {
+      "code": "business:customer:add",
+      "module": "customer",
+      "file": "sql/migrations/V20260625_003_customer_menu_permission.sql"
+    },
+    {
+      "code": "business:customer:edit",
+      "module": "customer",
+      "file": "sql/migrations/V20260625_003_customer_menu_permission.sql"
+    },
+    {
+      "code": "business:customer:list",
+      "module": "customer",
+      "file": "sql/migrations/V20260625_003_customer_menu_permission.sql"
+    },
+    {
+      "code": "business:customer:edit",
+      "module": "customer",
+      "file": "sql/migrations/V20260625_003_customer_menu_permission.sql"
+    },
+    {
+      "code": "business:customer:remove",
+      "module": "customer",
+      "file": "sql/migrations/V20260625_003_customer_menu_permission.sql"
+    },
+    {
+      "code": "business:customer:list",
+      "module": "customer",
+      "file": "sql/migrations/V20260625_003_customer_menu_permission.sql"
+    },
+    {
+      "code": "business:customer:remove",
+      "module": "customer",
+      "file": "sql/migrations/V20260625_003_customer_menu_permission.sql"
+    },
+    {
+      "code": "business:customer:export",
+      "module": "customer",
+      "file": "sql/migrations/V20260625_003_customer_menu_permission.sql"
+    },
+    {
+      "code": "business:customer:list",
+      "module": "customer",
+      "file": "sql/migrations/V20260625_003_customer_menu_permission.sql"
+    },
+    {
+      "code": "business:customer:export",
+      "module": "customer",
+      "file": "sql/migrations/V20260625_003_customer_menu_permission.sql"
+    },
+    {
+      "code": "business:customer:owner:view",
+      "module": "customer",
+      "file": "sql/migrations/V20260625_003_customer_menu_permission.sql"
+    },
+    {
+      "code": "business:customer:list",
+      "module": "customer",
+      "file": "sql/migrations/V20260625_003_customer_menu_permission.sql"
+    },
+    {
+      "code": "business:customer:owner:view",
+      "module": "customer",
+      "file": "sql/migrations/V20260625_003_customer_menu_permission.sql"
+    },
+    {
+      "code": "business:customer:owner:assign",
+      "module": "customer",
+      "file": "sql/migrations/V20260625_003_customer_menu_permission.sql"
+    },
+    {
+      "code": "business:customer:list",
+      "module": "customer",
+      "file": "sql/migrations/V20260625_003_customer_menu_permission.sql"
+    },
+    {
+      "code": "business:customer:owner:assign",
+      "module": "customer",
+      "file": "sql/migrations/V20260625_003_customer_menu_permission.sql"
+    },
+    {
+      "code": "business:customer:owner:transfer",
+      "module": "customer",
+      "file": "sql/migrations/V20260625_003_customer_menu_permission.sql"
+    },
+    {
+      "code": "business:customer:list",
+      "module": "customer",
+      "file": "sql/migrations/V20260625_003_customer_menu_permission.sql"
+    },
+    {
+      "code": "business:customer:owner:transfer",
+      "module": "customer",
+      "file": "sql/migrations/V20260625_003_customer_menu_permission.sql"
+    },
+    {
+      "code": "business:customer:owner:history",
+      "module": "customer",
+      "file": "sql/migrations/V20260625_003_customer_menu_permission.sql"
+    },
+    {
+      "code": "business:customer:list",
+      "module": "customer",
+      "file": "sql/migrations/V20260625_003_customer_menu_permission.sql"
+    },
+    {
+      "code": "business:customer:owner:history",
+      "module": "customer",
+      "file": "sql/migrations/V20260625_003_customer_menu_permission.sql"
+    },
+    {
+      "code": "business:customer:fund:view",
+      "module": "customer",
+      "file": "sql/migrations/V20260625_003_customer_menu_permission.sql"
+    },
+    {
+      "code": "business:customer:list",
+      "module": "customer",
+      "file": "sql/migrations/V20260625_003_customer_menu_permission.sql"
+    },
+    {
+      "code": "business:customer:fund:view",
+      "module": "customer",
+      "file": "sql/migrations/V20260625_003_customer_menu_permission.sql"
+    },
+    {
+      "code": "business:customer:fund:add",
+      "module": "customer",
+      "file": "sql/migrations/V20260625_003_customer_menu_permission.sql"
+    },
+    {
+      "code": "business:customer:list",
+      "module": "customer",
+      "file": "sql/migrations/V20260625_003_customer_menu_permission.sql"
+    },
+    {
+      "code": "business:customer:fund:add",
+      "module": "customer",
+      "file": "sql/migrations/V20260625_003_customer_menu_permission.sql"
+    },
+    {
+      "code": "business:customer:fund:flow",
+      "module": "customer",
+      "file": "sql/migrations/V20260625_003_customer_menu_permission.sql"
+    },
+    {
+      "code": "business:customer:list",
+      "module": "customer",
+      "file": "sql/migrations/V20260625_003_customer_menu_permission.sql"
+    },
+    {
+      "code": "business:customer:fund:flow",
+      "module": "customer",
+      "file": "sql/migrations/V20260625_003_customer_menu_permission.sql"
+    },
+    {
+      "code": "business:customer:fund:adjust",
+      "module": "customer",
+      "file": "sql/migrations/V20260625_003_customer_menu_permission.sql"
+    },
+    {
+      "code": "business:customer:list",
+      "module": "customer",
+      "file": "sql/migrations/V20260625_003_customer_menu_permission.sql"
+    },
+    {
+      "code": "business:customer:fund:adjust",
+      "module": "customer",
+      "file": "sql/migrations/V20260625_003_customer_menu_permission.sql"
+    },
+    {
+      "code": "business:customer:fund:export",
+      "module": "customer",
+      "file": "sql/migrations/V20260625_003_customer_menu_permission.sql"
+    },
+    {
+      "code": "business:customer:list",
+      "module": "customer",
+      "file": "sql/migrations/V20260625_003_customer_menu_permission.sql"
+    },
+    {
+      "code": "business:customer:fund:export",
+      "module": "customer",
+      "file": "sql/migrations/V20260625_003_customer_menu_permission.sql"
+    },
+    {
+      "code": "business:customer:sample-policy:view",
+      "module": "customer",
+      "file": "sql/migrations/V20260625_003_customer_menu_permission.sql"
+    },
+    {
+      "code": "business:customer:list",
+      "module": "customer",
+      "file": "sql/migrations/V20260625_003_customer_menu_permission.sql"
+    },
+    {
+      "code": "business:customer:sample-policy:view",
+      "module": "customer",
+      "file": "sql/migrations/V20260625_003_customer_menu_permission.sql"
+    },
+    {
+      "code": "business:customer:sample-policy:edit",
+      "module": "customer",
+      "file": "sql/migrations/V20260625_003_customer_menu_permission.sql"
+    },
+    {
+      "code": "business:customer:list",
+      "module": "customer",
+      "file": "sql/migrations/V20260625_003_customer_menu_permission.sql"
+    },
+    {
+      "code": "business:customer:sample-policy:edit",
+      "module": "customer",
+      "file": "sql/migrations/V20260625_003_customer_menu_permission.sql"
+    },
+    {
       "code": "system:user:list",
       "module": "system",
       "file": "sql/ry_20260417.sql"
@@ -1108,57 +1503,57 @@
     },
     {
       "code": "monitor:online:list",
-      "module": "system",
+      "module": "monitor",
       "file": "sql/ry_20260417.sql"
     },
     {
       "code": "monitor:job:list",
-      "module": "system",
+      "module": "monitor",
       "file": "sql/ry_20260417.sql"
     },
     {
       "code": "monitor:druid:list",
-      "module": "system",
+      "module": "monitor",
       "file": "sql/ry_20260417.sql"
     },
     {
       "code": "monitor:server:list",
-      "module": "system",
+      "module": "monitor",
       "file": "sql/ry_20260417.sql"
     },
     {
       "code": "monitor:cache:list",
-      "module": "system",
+      "module": "monitor",
       "file": "sql/ry_20260417.sql"
     },
     {
       "code": "monitor:cache:list",
-      "module": "system",
+      "module": "monitor",
       "file": "sql/ry_20260417.sql"
     },
     {
       "code": "tool:build:list",
-      "module": "system",
+      "module": "tool",
       "file": "sql/ry_20260417.sql"
     },
     {
       "code": "tool:gen:list",
-      "module": "system",
+      "module": "tool",
       "file": "sql/ry_20260417.sql"
     },
     {
       "code": "tool:swagger:list",
-      "module": "system",
+      "module": "tool",
       "file": "sql/ry_20260417.sql"
     },
     {
       "code": "monitor:operlog:list",
-      "module": "system",
+      "module": "monitor",
       "file": "sql/ry_20260417.sql"
     },
     {
       "code": "monitor:logininfor:list",
-      "module": "system",
+      "module": "monitor",
       "file": "sql/ry_20260417.sql"
     },
     {
@@ -1353,97 +1748,97 @@
     },
     {
       "code": "monitor:operlog:query",
-      "module": "system",
+      "module": "monitor",
       "file": "sql/ry_20260417.sql"
     },
     {
       "code": "monitor:operlog:remove",
-      "module": "system",
+      "module": "monitor",
       "file": "sql/ry_20260417.sql"
     },
     {
       "code": "monitor:operlog:export",
-      "module": "system",
+      "module": "monitor",
       "file": "sql/ry_20260417.sql"
     },
     {
       "code": "monitor:logininfor:query",
-      "module": "system",
+      "module": "monitor",
       "file": "sql/ry_20260417.sql"
     },
     {
       "code": "monitor:logininfor:remove",
-      "module": "system",
+      "module": "monitor",
       "file": "sql/ry_20260417.sql"
     },
     {
       "code": "monitor:logininfor:export",
-      "module": "system",
+      "module": "monitor",
       "file": "sql/ry_20260417.sql"
     },
     {
       "code": "monitor:logininfor:unlock",
-      "module": "system",
+      "module": "monitor",
       "file": "sql/ry_20260417.sql"
     },
     {
       "code": "monitor:online:query",
-      "module": "system",
+      "module": "monitor",
       "file": "sql/ry_20260417.sql"
     },
     {
       "code": "monitor:job:query",
-      "module": "system",
+      "module": "monitor",
       "file": "sql/ry_20260417.sql"
     },
     {
       "code": "monitor:job:add",
-      "module": "system",
+      "module": "monitor",
       "file": "sql/ry_20260417.sql"
     },
     {
       "code": "monitor:job:edit",
-      "module": "system",
+      "module": "monitor",
       "file": "sql/ry_20260417.sql"
     },
     {
       "code": "monitor:job:remove",
-      "module": "system",
+      "module": "monitor",
       "file": "sql/ry_20260417.sql"
     },
     {
       "code": "monitor:job:export",
-      "module": "system",
+      "module": "monitor",
       "file": "sql/ry_20260417.sql"
     },
     {
       "code": "tool:gen:query",
-      "module": "system",
+      "module": "tool",
       "file": "sql/ry_20260417.sql"
     },
     {
       "code": "tool:gen:edit",
-      "module": "system",
+      "module": "tool",
       "file": "sql/ry_20260417.sql"
     },
     {
       "code": "tool:gen:remove",
-      "module": "system",
+      "module": "tool",
       "file": "sql/ry_20260417.sql"
     },
     {
       "code": "tool:gen:import",
-      "module": "system",
+      "module": "tool",
       "file": "sql/ry_20260417.sql"
     },
     {
       "code": "tool:gen:preview",
-      "module": "system",
+      "module": "tool",
       "file": "sql/ry_20260417.sql"
     },
     {
       "code": "tool:gen:code",
-      "module": "system",
+      "module": "tool",
       "file": "sql/ry_20260417.sql"
     }
   ]

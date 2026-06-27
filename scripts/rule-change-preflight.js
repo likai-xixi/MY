@@ -19,6 +19,14 @@ function currentChangeId(readJsonFile = readJson) {
   }
 }
 
+function currentImpact(readJsonFile = readJson) {
+  const id = currentChangeId(readJsonFile);
+  if (!id) {
+    return {};
+  }
+  return readJsonSafe(readJsonFile, `ai/changes/${id}/impact.json`, {});
+}
+
 function readJsonSafe(readJsonFile, file, fallback) {
   try {
     return readJsonFile(file);
@@ -66,6 +74,7 @@ export function buildRulePreflight({
   validate = validateRuleObjects
 } = {}) {
   const changeId = currentChangeId(readJsonFile);
+  const impact = currentImpact(readJsonFile);
   const registry = readJsonSafe(readJsonFile, 'ai/registry/rule-objects.json', { objects: [] });
   const selectedIds = new Set(ids.filter(Boolean));
   const objects = asList(registry.objects).filter((object) => selectedIds.size === 0 || selectedIds.has(object.id));
@@ -74,17 +83,24 @@ export function buildRulePreflight({
   const gate = beforeSalesOrderState(readJsonFile);
   const warnings = [];
   if (selectedIds.size === 0) {
-    warnings.push('No rule object ids were supplied; preflight covers all registered rule objects.');
+    warnings.push('No rule object ids were supplied; preflight is read-only audit mode across all registered rule objects.');
+    if (impact.mode === 'rule-change' || impact.changeType === 'governance/rule-change') {
+      checkerErrors.push('rule-change preflight must receive explicit rule object ids; empty id is read-only audit mode and cannot close a change.');
+    }
   }
   for (const id of missingSelected) {
     checkerErrors.push(`Requested rule object ${id} does not exist.`);
   }
 
+  const status = selectedIds.size === 0
+    ? 'audit-only'
+    : (checkerErrors.length ? 'blocking' : 'ok');
+
   const lines = [
     '# Rule Change Preflight',
     '',
     `Current change: \`${changeId || '<none>'}\``,
-    `Status: \`${checkerErrors.length ? 'blocking' : 'ok'}\``,
+    `Status: \`${status}\``,
     '',
     '## Checker',
     '',
@@ -146,8 +162,7 @@ export function buildRulePreflight({
       'Superseded by:',
       ...markdownList(asList(object.supersededBy)),
       '',
-      `Notes: ${object.notes || ''}`,
-      ''
+      `Notes: ${object.notes || ''}`
     );
   }
 

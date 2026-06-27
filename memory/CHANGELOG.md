@@ -443,3 +443,16 @@
 - [local] Existing `check:config-safety` development/default warnings remained warning-only.
 - No customer runtime code, sales-order runtime artifact, database business table structure, product/field/formula/tech/material registry family, or parallel sales-order gate was created.
 - Feature: `platform`.
+
+## 2026-06-27 - rule-change
+
+- Change: `ai/changes/CR-20260627T120650Z-r-09a-1-governance-false-green-hardening`.
+- R-09A.1 hardened false-green governance paths in `check:diff`, `check:phase-gate`, `scan:permissions`, `check:ownership`, `rule:preflight`, and `check:rule-objects`.
+- `check:diff` now fails forbidden roots and allowed/forbidden overlaps before allowed roots can mask the violation.
+- `beforeSalesOrder` remains blocked and now covers sales-order bypasses in RuoYi system/generator/quartz/admin SQL/router/permission/store paths.
+- `business:customer:*` permissions now scan to `customer`; feature permissions must exist in generated permission scan output.
+- Empty rule-change preflight is audit-only; closeout evidence must pass explicit rule object ids.
+- Rule objects now require existing created/updated change records and owned-file ownership or explicit exception reasons.
+- [local] Verification passed: explicit rule preflight passed, `npm run scan:all` passed, `npm run check:diff` passed, `npm run check:phase-gate` passed, `npm run check:rule-objects` passed, focused governance tests passed 35/35, baseline guard tests passed 19/19, standalone `npm test` passed 213/213, final `npm run check` passed with final `npm test` 213/213, and final `git diff --check` passed.
+- No customer runtime code, customer fund business logic, sales-order runtime artifact, sales-order SQL/table/route/menu/permission, or customer business database structure was created or modified.
+- Feature: `platform`.

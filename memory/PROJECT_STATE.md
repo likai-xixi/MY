@@ -73,6 +73,8 @@ Current governance change `CR-20260627T101649Z-r-09a-business-rule-object-govern
 
 R-09A is a `governance/rule-change` batch. It does not modify customer runtime code, does not create sales-order controller/service/mapper/domain/Vue/API client/SQL/route/permission artifacts, does not create a parallel `check:sales-order-gate`, and does not create product/field/formula/tech/material registry families. It strengthens the existing `check:phase-gate` runtime detection for sales-order naming variants and SQL/Vue/API/menu/permission content while keeping `beforeSalesOrder` blocked.
 
+Current governance change `CR-20260627T120650Z-r-09a-1-governance-false-green-hardening` is R-09A.1. It hardens false-green paths in `check:diff`, `check:phase-gate`, `scan:permissions`, `check:ownership`, `rule:preflight`, and `check:rule-objects`. This is a `governance/rule-change` batch only: it does not modify customer runtime code, customer fund business logic, sales-order controller/service/mapper/domain/Vue/API client/SQL/table/route/menu/permission artifacts, or customer business database structure. `beforeSalesOrder` remains blocked.
+
 For future module boundaries, sales-order may select customer, carry default contact/address and owner snapshots, and show `CUSTOMER_DEPOSIT` status during submit, but must not directly deduct customer funds. Delivery / finance contracts must later define `CUSTOMER_DEPOSIT` deduction/refund/adjustment/reversal and `SAMPLE_REBATE` deduction. Every customer-fund mutation must write `customer_fund_flow`.
 
 Current customer fund concurrency change `CR-20260625T042041Z-change`:
@@ -130,7 +132,6 @@ Sales order, shipment, finance settlement, automatic deduction, receipt claiming
 
 ## Next Actions
 
-- Complete R-09A verification and closeout for the rule-object governance kernel.
 - Continue next with R-09B sales-order pre-implementation contract package.
 - Keep `beforeSalesOrder` blocked unless required contracts and review explicitly unlock it later.
 - Before any future runtime claim about PUBLIC data cleanliness, rerun the invariant SQL in `sql/customer.ownership.md` to confirm only `PUB_DIRECT_SALE` and `PUB_SELF_MEDIA` exist as active PUBLIC rows.
@@ -158,6 +159,8 @@ Sales order, shipment, finance settlement, automatic deduction, receipt claiming
 - Old data migration or old fund-account compatibility.
 
 ## Last Verification
+
+For `CR-20260627T120650Z-r-09a-1-governance-false-green-hardening`, [local] `npm run resume`, [local] explicit `npm run rule:preflight -- before-sales-order-phase-gate customer-fund-deposit-entry customer-sample-rebate-generation public-customer-invariant`, [local] `npm run scan:all`, [local] `npm run check:diff`, [local] `npm run check:phase-gate`, [local] `npm run check:rule-objects`, [local] focused governance tests with 35/35 tests, [local] baseline guard tests with 19/19 tests, [local] standalone `npm test` with 213/213 tests, [local] final `npm run check` with final `npm test` 213/213, and [local] final `git diff --check` passed. [local] Existing config-safety development/default warnings remained warning-only. No customer runtime code, customer fund business logic, sales-order runtime artifact, sales-order SQL/table/route/menu/permission, or customer business database structure was created or modified.
 
 For `CR-20260627T101649Z-r-09a-business-rule-object-governance-core`, [local] `npm run resume`, [local] `npm run rule:preflight`, [local] `npm run scan:all`, [local] `npm run check:rule-objects`, [local] `node --test tests/rule-object-governance.test.js` with 6/6 tests, [local] `node --test tests/governance-sales-order-handoff-gate.test.js` with 17/17 tests, [local] `npm test` with 204/204 tests, [local] `npm run check` with 204/204 Node tests, and [local] `git diff --check` passed. [local] An earlier `npm test` attempt timed out at 120 seconds and was rerun successfully after test-process cleanup. [local] An earlier `npm run check` attempt stopped at `check:verification-provenance` until generated command bullets were repaired with `[local]` labels; the rerun passed. Existing `check:config-safety` development/default warnings remained warning-only. No customer runtime code, sales-order runtime artifact, database business table structure, product/field/formula/tech/material registry family, or parallel sales-order gate was created.
 

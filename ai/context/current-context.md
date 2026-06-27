@@ -1,31 +1,39 @@
 # Current Context
 
 Current feature: `customer`
-Current change: `CR-20260627T101649Z-r-09a-business-rule-object-governance-core`
+Current change: `CR-20260627T120650Z-r-09a-1-governance-false-green-hardening`
 Repository: RuoYi + Vue3 + Codex Auto Dev OS
 Profile: adapter `ruoyi`, locked `true`
 
 ## Allowed Edit Roots
 
-- `package.json`
-- `ai/contracts/rule-change-governance.md`
-- `ai/rules/schemas/rule-object.schema.json`
-- `ai/registry/rule-objects.json`
-- `ai/rule-proposals/2026-06-27-r-09a-business-rule-object-governance-core.json`
-- `ai/roadmap/phase-gates.json`
-- `ai/roadmap/enhancement-backlog.json`
-- `tools/rule-object-checker.js`
+- `tools/diff-checker.js`
 - `tools/phase-gate-checker.js`
+- `tools/scan-permissions.js`
+- `tools/ownership-checker.js`
+- `tools/rule-object-checker.js`
 - `scripts/rule-change-preflight.js`
-- `tests/rule-object-governance.test.js`
+- `tests/diff-checker.test.js`
 - `tests/governance-sales-order-handoff-gate.test.js`
+- `tests/permission-scan.test.js`
+- `tests/rule-object-governance.test.js`
+- `tests/ownership-checker.test.js`
+- `ai/roadmap/phase-gates.json`
+- `ai/registry/features.json`
+- `ai/registry/rule-objects.json`
+- `ai/generated/backend-routes.json`
+- `ai/generated/frontend-routes.json`
+- `ai/generated/api-clients.json`
+- `ai/generated/db-schema.json`
+- `ai/generated/permissions.json`
+- `ai/generated/component-usage.json`
 - `ai/context/current-context.md`
 - `ai/context/current-context.json`
 - `memory/HANDOVER.md`
 - `memory/PROJECT_STATE.md`
 - `memory/CHANGELOG.md`
 - `memory/TASKS.json`
-- `ai/changes/CR-20260627T101649Z-r-09a-business-rule-object-governance-core`
+- `ai/changes/CR-20260627T120650Z-r-09a-1-governance-false-green-hardening`
 - `ai/changes/CURRENT_CHANGE.json`
 
 ## Forbidden Edit Roots
@@ -39,13 +47,34 @@ Profile: adapter `ruoyi`, locked `true`
 - `sql/validation`
 - `ruoyi-business/src/main/java/com/ruoyi/business/sales-order`
 - `ruoyi-business/src/main/java/com/ruoyi/business/salesorder`
+- `ruoyi-business/src/main/java/com/ruoyi/business/sales_order`
 - `ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/sales-order`
 - `ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/salesorder`
+- `ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/sales_order`
+- `ruoyi-business/src/main/resources/mapper/sales-order`
+- `ruoyi-business/src/main/resources/mapper/salesorder`
+- `ruoyi-business/src/main/resources/mapper/sales_order`
+- `ruoyi-admin/src/main/resources/mapper/sales-order`
+- `ruoyi-admin/src/main/resources/mapper/salesorder`
+- `ruoyi-admin/src/main/resources/mapper/sales_order`
+- `ruoyi-system/src/main/java`
+- `ruoyi-system/src/main/resources`
+- `ruoyi-generator/src/main/java`
+- `ruoyi-generator/src/main/resources`
+- `ruoyi-quartz/src/main/java`
+- `ruoyi-quartz/src/main/resources`
+- `ruoyi-admin/sql`
+- `ruoyi-admin/src/main/resources/sql`
+- `ruoyi-ui/src/router`
+- `ruoyi-ui/src/permission.js`
+- `ruoyi-ui/src/store`
 - `ruoyi-ui/src/views/sales-order`
 - `ruoyi-ui/src/views/salesorder`
+- `ruoyi-ui/src/views/sales_order`
 - `ruoyi-ui/src/api/sales-order.js`
 - `ruoyi-ui/src/api/salesOrder.js`
-- `sales-order runtime, SQL, Vue, API, permission, or route`
+- `ruoyi-ui/src/api/sales_order.js`
+- `sales-order runtime, SQL, Vue, API, permission, menu, or route`
 - `sales_order table`
 - `sales_order_item table`
 
@@ -62,9 +91,9 @@ Profile: adapter `ruoyi`, locked `true`
 - `ai/roadmap/phase-gates.json` - beforeSalesOrder gate state.
 - `ai/roadmap/refactor-debt.json` - Known debt affecting sales-order handoff.
 - `ai/roadmap/enhancement-backlog.json` - Governance backlog and required/deferred evidence.
-- `ai/changes/CR-20260627T101649Z-r-09a-business-rule-object-governance-core/impact.json` - Current change allowed and forbidden edit roots.
-- `ai/changes/CR-20260627T101649Z-r-09a-business-rule-object-governance-core/plan.md` - Current change execution plan.
-- `ai/changes/CR-20260627T101649Z-r-09a-business-rule-object-governance-core/verification.md` - Current change verification evidence.
+- `ai/changes/CR-20260627T120650Z-r-09a-1-governance-false-green-hardening/impact.json` - Current change allowed and forbidden edit roots.
+- `ai/changes/CR-20260627T120650Z-r-09a-1-governance-false-green-hardening/plan.md` - Current change execution plan.
+- `ai/changes/CR-20260627T120650Z-r-09a-1-governance-false-green-hardening/verification.md` - Current change verification evidence.
 
 ## Must Not Break
 
@@ -126,7 +155,10 @@ Deferred:
 ## Planned Verification Commands
 
 - `npm run resume`
+- `npm run rule:preflight -- before-sales-order-phase-gate customer-fund-deposit-entry customer-sample-rebate-generation public-customer-invariant`
 - `npm run scan:all`
+- `npm run check:diff`
+- `npm run check:phase-gate`
 - `npm run check:rule-objects`
 - `npm test`
 - `npm run check`

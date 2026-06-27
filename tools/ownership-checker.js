@@ -81,14 +81,50 @@ function ensureArray(object, key, label, errors) {
   return object[key];
 }
 
-export function validateOwnership() {
+function readGeneratedPermissionMap(readJsonFile, errors) {
+  let generated;
+  try {
+    generated = readJsonFile('ai/generated/permissions.json');
+  } catch (error) {
+    errors.push(`ai/generated/permissions.json is missing or invalid: ${error.message}`);
+    return new Map();
+  }
+  if (!Array.isArray(generated.permissions)) {
+    errors.push('ai/generated/permissions.json permissions must be an array.');
+    return new Map();
+  }
+
+  const byCode = new Map();
+  for (const permission of generated.permissions) {
+    if (!permission?.code) {
+      continue;
+    }
+    const modules = byCode.get(permission.code) || new Set();
+    if (permission.module) {
+      modules.add(permission.module);
+    }
+    byCode.set(permission.code, modules);
+  }
+  return byCode;
+}
+
+function validateFeaturePermissionsInGenerated(feature, generatedPermissions, errors) {
+  for (const permission of feature.permissions || []) {
+    if (!generatedPermissions.has(permission)) {
+      errors.push(`feature ${feature.id}.permissions item ${permission} is missing from ai/generated/permissions.json.`);
+    }
+  }
+}
+
+export function validateOwnership({ readJsonFile = readJson, exists = fileExists } = {}) {
   const errors = [];
   let registry;
   try {
-    registry = readJson('ai/registry/features.json');
+    registry = readJsonFile('ai/registry/features.json');
   } catch (error) {
     return [`ai/registry/features.json is missing or invalid: ${error.message}`];
   }
+  const generatedPermissions = readGeneratedPermissionMap(readJsonFile, errors);
 
   for (const feature of registry.features || []) {
     if (feature.status === 'removed') {
@@ -114,8 +150,9 @@ export function validateOwnership() {
 
     const ownedPaths = unique(OWNERSHIP_KEYS.flatMap((key) => ownership[key] || []).filter(isPathLike));
     for (const ownedPath of ownedPaths) {
-      ensure(fileExists(ownedPath), `feature ${feature.id} ownership path does not exist: ${ownedPath}.`, errors);
+      ensure(exists(ownedPath), `feature ${feature.id} ownership path does not exist: ${ownedPath}.`, errors);
     }
+    validateFeaturePermissionsInGenerated(feature, generatedPermissions, errors);
   }
   return unique(errors);
 }

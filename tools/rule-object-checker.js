@@ -53,6 +53,24 @@ const ARRAY_FIELDS = [
   'supersededBy'
 ];
 
+const FEATURE_OWNERSHIP_KEYS = [
+  'backend',
+  'frontend',
+  'api',
+  'ui',
+  'database',
+  'permissions',
+  'menus',
+  'components',
+  'tests',
+  'docs',
+  'apiClients',
+  'controllers',
+  'services',
+  'mappers',
+  'domainObjects'
+];
+
 function isBlank(value) {
   if (value === undefined || value === null) {
     return true;
@@ -82,16 +100,16 @@ function readRegistry(readJsonFile, file, errors) {
   }
 }
 
-function activeFeatureIds(readJsonFile, errors) {
+function activeFeaturesById(readJsonFile, errors) {
   const data = readRegistry(readJsonFile, 'ai/registry/features.json', errors);
   if (!data || !Array.isArray(data.features)) {
     errors.push('ai/registry/features.json features must be an array.');
-    return new Set();
+    return new Map();
   }
-  return new Set(data.features
+  return new Map(data.features
     .filter((feature) => feature.status !== 'removed')
-    .map((feature) => feature.id)
-    .filter(Boolean));
+    .filter((feature) => feature.id)
+    .map((feature) => [feature.id, feature]));
 }
 
 function requireArray(object, field, label, errors) {
@@ -109,6 +127,73 @@ function validateExistingFiles({ object, field, exists, file, errors }) {
       `${file} object ${object.id || '<missing>'} ${field} references missing file ${referencedFile}.`,
       errors
     );
+  }
+}
+
+function normalizePath(value = '') {
+  return String(value || '').replace(/\\/g, '/').replace(/^\.\//, '').replace(/\/+$/g, '');
+}
+
+function ownedPathMatches(file, ownedPath) {
+  const normalizedFile = normalizePath(file);
+  const normalizedOwnedPath = normalizePath(ownedPath);
+  if (!normalizedFile || !normalizedOwnedPath) {
+    return false;
+  }
+  return normalizedFile === normalizedOwnedPath || normalizedFile.startsWith(`${normalizedOwnedPath}/`);
+}
+
+function featureOwnershipValues(feature) {
+  const ownership = feature?.ownership || {};
+  return FEATURE_OWNERSHIP_KEYS.flatMap((key) => Array.isArray(ownership[key]) ? ownership[key] : []);
+}
+
+function ownershipExceptionMap(object, label, errors) {
+  if (!hasOwn(object, 'ownershipExceptions')) {
+    return new Map();
+  }
+  if (!Array.isArray(object.ownershipExceptions)) {
+    errors.push(`${label}.ownershipExceptions must be an array when present.`);
+    return new Map();
+  }
+
+  const exceptions = new Map();
+  for (const [index, exception] of object.ownershipExceptions.entries()) {
+    const exceptionLabel = `${label}.ownershipExceptions[${index}]`;
+    if (!exception || typeof exception !== 'object' || Array.isArray(exception)) {
+      errors.push(`${exceptionLabel} must be an object with file and reason.`);
+      continue;
+    }
+    ensure(!isBlank(exception.file), `${exceptionLabel}.file must not be empty.`, errors);
+    ensure(!isBlank(exception.reason), `${exceptionLabel}.reason must not be empty.`, errors);
+    if (exception.file && exception.reason) {
+      exceptions.set(normalizePath(exception.file), exception.reason);
+    }
+  }
+  return exceptions;
+}
+
+function validateChangeRecordReference({ object, field, file, exists, errors }) {
+  const id = object[field];
+  if (!id) {
+    return;
+  }
+  const changePath = `ai/changes/${id}`;
+  ensure(exists(changePath), `${file} object ${object.id || '<missing>'} ${field} references missing change record ${changePath}.`, errors);
+}
+
+function validateOwnedFilesBelongToOwner({ object, ownerFeature, label, file, errors }) {
+  const ownershipValues = featureOwnershipValues(ownerFeature);
+  const exceptions = ownershipExceptionMap(object, label, errors);
+  for (const ownedFile of object.ownedFiles || []) {
+    const normalized = normalizePath(ownedFile);
+    if (ownershipValues.some((ownedPath) => ownedPathMatches(normalized, ownedPath))) {
+      continue;
+    }
+    if (exceptions.has(normalized)) {
+      continue;
+    }
+    errors.push(`${file} object ${object.id || label} ownedFiles item ${ownedFile} is not in ownerFeature ${object.ownerFeature || '<missing>'} ownership and has no explicit ownershipExceptions entry.`);
   }
 }
 
@@ -156,7 +241,7 @@ export function validateRuleObjects({
     return errors;
   }
 
-  const features = activeFeatureIds(readJsonFile, errors);
+  const features = activeFeaturesById(readJsonFile, errors);
   const ids = new Set();
   const objectsById = new Map();
 
@@ -177,7 +262,8 @@ export function validateRuleObjects({
       ensure(Array.isArray(object[field]) && object[field].length > 0, `${label}.${field} must not be empty.`, errors);
     }
 
-    ensure(features.has(object.ownerFeature), `${file} object ${object.id || label} ownerFeature ${object.ownerFeature || '<missing>'} does not exist in ai/registry/features.json.`, errors);
+    const ownerFeature = features.get(object.ownerFeature);
+    ensure(Boolean(ownerFeature), `${file} object ${object.id || label} ownerFeature ${object.ownerFeature || '<missing>'} does not exist in ai/registry/features.json.`, errors);
     ensure(LIFECYCLE_STATUSES.has(object.lifecycleStatus), `${file} object ${object.id || label} has invalid lifecycleStatus ${object.lifecycleStatus || '<missing>'}.`, errors);
     ensure(BLOCKING_MODES.has(object.blockingMode), `${file} object ${object.id || label} has invalid blockingMode ${object.blockingMode || '<missing>'}.`, errors);
     if (object.lifecycleStatus === 'published') {
@@ -188,6 +274,11 @@ export function validateRuleObjects({
     validateExistingFiles({ object, field: 'sourceContracts', exists, file, errors });
     validateExistingFiles({ object, field: 'ownedFiles', exists, file, errors });
     validateExistingFiles({ object, field: 'tests', exists, file, errors });
+    validateChangeRecordReference({ object, field: 'createdByChange', file, exists, errors });
+    validateChangeRecordReference({ object, field: 'updatedByChange', file, exists, errors });
+    if (ownerFeature) {
+      validateOwnedFilesBelongToOwner({ object, ownerFeature, label, file, errors });
+    }
   }
 
   for (const object of data.objects) {

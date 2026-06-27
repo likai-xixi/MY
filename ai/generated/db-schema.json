@@ -153,205 +153,205 @@
     },
     {
       "name": "sys_dept",
-      "module": "system",
+      "module": "monitor",
       "file": "sql/ry_20260417.sql",
       "source": "create-table"
     },
     {
       "name": "sys_user",
-      "module": "system",
+      "module": "monitor",
       "file": "sql/ry_20260417.sql",
       "source": "create-table"
     },
     {
       "name": "sys_post",
-      "module": "system",
+      "module": "monitor",
       "file": "sql/ry_20260417.sql",
       "source": "create-table"
     },
     {
       "name": "sys_role",
-      "module": "system",
+      "module": "monitor",
       "file": "sql/ry_20260417.sql",
       "source": "create-table"
     },
     {
       "name": "sys_menu",
-      "module": "system",
+      "module": "monitor",
       "file": "sql/ry_20260417.sql",
       "source": "create-table"
     },
     {
       "name": "sys_user_role",
-      "module": "system",
+      "module": "monitor",
       "file": "sql/ry_20260417.sql",
       "source": "create-table"
     },
     {
       "name": "sys_role_menu",
-      "module": "system",
+      "module": "monitor",
       "file": "sql/ry_20260417.sql",
       "source": "create-table"
     },
     {
       "name": "sys_role_dept",
-      "module": "system",
+      "module": "monitor",
       "file": "sql/ry_20260417.sql",
       "source": "create-table"
     },
     {
       "name": "sys_user_post",
-      "module": "system",
+      "module": "monitor",
       "file": "sql/ry_20260417.sql",
       "source": "create-table"
     },
     {
       "name": "sys_oper_log",
-      "module": "system",
+      "module": "monitor",
       "file": "sql/ry_20260417.sql",
       "source": "create-table"
     },
     {
       "name": "sys_dict_type",
-      "module": "system",
+      "module": "monitor",
       "file": "sql/ry_20260417.sql",
       "source": "create-table"
     },
     {
       "name": "sys_dict_data",
-      "module": "system",
+      "module": "monitor",
       "file": "sql/ry_20260417.sql",
       "source": "create-table"
     },
     {
       "name": "sys_config",
-      "module": "system",
+      "module": "monitor",
       "file": "sql/ry_20260417.sql",
       "source": "create-table"
     },
     {
       "name": "sys_logininfor",
-      "module": "system",
+      "module": "monitor",
       "file": "sql/ry_20260417.sql",
       "source": "create-table"
     },
     {
       "name": "sys_job",
-      "module": "system",
+      "module": "monitor",
       "file": "sql/ry_20260417.sql",
       "source": "create-table"
     },
     {
       "name": "sys_job_log",
-      "module": "system",
+      "module": "monitor",
       "file": "sql/ry_20260417.sql",
       "source": "create-table"
     },
     {
       "name": "sys_notice",
-      "module": "system",
+      "module": "monitor",
       "file": "sql/ry_20260417.sql",
       "source": "create-table"
     },
     {
       "name": "sys_notice_read",
-      "module": "system",
+      "module": "monitor",
       "file": "sql/ry_20260417.sql",
       "source": "create-table"
     },
     {
       "name": "gen_table",
-      "module": "system",
+      "module": "monitor",
       "file": "sql/ry_20260417.sql",
       "source": "create-table"
     },
     {
       "name": "gen_table_column",
-      "module": "system",
+      "module": "monitor",
       "file": "sql/ry_20260417.sql",
       "source": "create-table"
     },
     {
       "name": "sys_dept",
-      "module": "system",
+      "module": "monitor",
       "file": "sql/ry_20260417.sql",
       "source": "sql-reference"
     },
     {
       "name": "sys_user",
-      "module": "system",
+      "module": "monitor",
       "file": "sql/ry_20260417.sql",
       "source": "sql-reference"
     },
     {
       "name": "sys_post",
-      "module": "system",
+      "module": "monitor",
       "file": "sql/ry_20260417.sql",
       "source": "sql-reference"
     },
     {
       "name": "sys_role",
-      "module": "system",
+      "module": "monitor",
       "file": "sql/ry_20260417.sql",
       "source": "sql-reference"
     },
     {
       "name": "sys_menu",
-      "module": "system",
+      "module": "monitor",
       "file": "sql/ry_20260417.sql",
       "source": "sql-reference"
     },
     {
       "name": "sys_user_role",
-      "module": "system",
+      "module": "monitor",
       "file": "sql/ry_20260417.sql",
       "source": "sql-reference"
     },
     {
       "name": "sys_role_menu",
-      "module": "system",
+      "module": "monitor",
       "file": "sql/ry_20260417.sql",
       "source": "sql-reference"
     },
     {
       "name": "sys_role_dept",
-      "module": "system",
+      "module": "monitor",
       "file": "sql/ry_20260417.sql",
       "source": "sql-reference"
     },
     {
       "name": "sys_user_post",
-      "module": "system",
+      "module": "monitor",
       "file": "sql/ry_20260417.sql",
       "source": "sql-reference"
     },
     {
       "name": "sys_dict_type",
-      "module": "system",
+      "module": "monitor",
       "file": "sql/ry_20260417.sql",
       "source": "sql-reference"
     },
     {
       "name": "sys_dict_data",
-      "module": "system",
+      "module": "monitor",
       "file": "sql/ry_20260417.sql",
       "source": "sql-reference"
     },
     {
       "name": "sys_config",
-      "module": "system",
+      "module": "monitor",
       "file": "sql/ry_20260417.sql",
       "source": "sql-reference"
     },
     {
       "name": "sys_job",
-      "module": "system",
+      "module": "monitor",
       "file": "sql/ry_20260417.sql",
       "source": "sql-reference"
     },
     {
       "name": "sys_notice",
-      "module": "system",
+      "module": "monitor",
       "file": "sql/ry_20260417.sql",
       "source": "sql-reference"
     },
