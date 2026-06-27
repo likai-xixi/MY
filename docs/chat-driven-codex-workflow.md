@@ -73,3 +73,14 @@ When a feature iteration changes a contract, Codex should:
 5. Add compatibility only after explicit user approval, and document the sunset or removal path.
 
 This does not bypass deletion safety. Removing a full feature still starts with `删除功能预分析：<功能名>` and requires `确认删除：<功能名>` before applying deletion.
+
+## Four-light verification evidence
+
+Every change record verification and handover must state these four lights explicitly:
+
+1. `npm run check`: `passed`, `failed`, or `not-run`.
+2. `GitHub Actions`: `passed`, `failed`, or `not-run`.
+3. `verify:release`: `passed`, `failed`, or `not-run`.
+4. `runtime acceptance`: `passed`, `failed`, or `not-run`.
+
+If a light was not run, write `not-run`; do not infer it from another light. `npm run check passed` does not mean release ready. `CI passed` does not mean release ready. `verify:release` does not mean browser or runtime acceptance passed. Runtime acceptance evidence must name the API, browser, DB, or manual evidence used.

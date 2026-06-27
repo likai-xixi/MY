@@ -475,3 +475,13 @@
 - [not-run] Backend runtime API calls, browser validation, Maven compile, frontend production build, database migration execution, and CI were not run for this governance graph/validation cleanup.
 - No `CustomerFundServiceImpl`, `CustomerServiceImpl`, customer fund business behavior, production config, CI workflow, or sales-order runtime artifact was modified.
 - Feature: `platform`.
+
+## 2026-06-27 - governance/anti-false-green
+
+- Change: `ai/changes/CR-20260627T154818Z-r-09a-4-anti-false-green-minimum-closure`.
+- R-09A.4 adds the anti-false-green regression matrix, matrix checker, package script anti-theater tests, and four-light evidence rule.
+- [local] Verification passed: `npm run check:false-green-matrix`, `node --test tests/false-green-matrix-checker.test.js` with 8 tests, `node --test tests/package-scripts.test.js` with 11 tests, `npm run resume`, `npm run scan:all`, `npm run context:build -- customer`, `npm run finalize:change`, `npm run check:components`, component focused tests 13/13, `npm run check:boundaries`, boundary focused tests 9/9, full `npm run check` with 233/233 Node tests, and `git diff --check`.
+- [local] Current-CR component and boundary exceptions preserve the R-09A.3 exact-path handling for inherited RuoYi system/tool/generator findings without changing checker implementations.
+- [not-run] GitHub Actions, `verify:release`, backend runtime API calls, browser acceptance, DB migration execution, Maven compile, and frontend production build were not run for this governance-only batch.
+- No sales-order runtime, customer runtime business logic, `CustomerFundServiceImpl`, `CustomerServiceImpl`, `.github/workflows`, or production config was modified.
+- Feature: `platform`.

@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "mode": "rule-change",
+  "feature": "",
+  "affected": {
+    "docs": [
+      "docs/chat-driven-codex-workflow.md",
+      "ai/governance/false-green-regression-matrix.json"
+    ],
+    "tests": [
+      "tests/false-green-matrix-checker.test.js",
+      "tests/package-scripts.test.js"
+    ]
+  },
+  "allowedEditRoots": [
+    "ai/changes/CR-20260627T154818Z-r-09a-4-anti-false-green-minimum-closure",
+    "ai/changes/CURRENT_CHANGE.json",
+    "ai/context/current-context.json",
+    "ai/context/current-context.md",
+    "ai/governance/false-green-regression-matrix.json",
+    "docs/chat-driven-codex-workflow.md",
+    "memory/CHANGELOG.md",
+    "memory/HANDOVER.md",
+    "memory/TASKS.json",
+    "package.json",
+    "tests/false-green-matrix-checker.test.js",
+    "tests/package-scripts.test.js",
+    "tools/false-green-matrix-checker.js"
+  ],
+  "forbiddenEditRoots": [
+    "ruoyi-business/src/main/java/com/ruoyi/business/customer/service/impl/CustomerFundServiceImpl.java",
+    "ruoyi-business/src/main/java/com/ruoyi/business/customer/service/impl/CustomerServiceImpl.java",
+    "ruoyi-business/src/main/java/com/ruoyi/business/sales-order",
+    "ruoyi-business/src/main/java/com/ruoyi/business/salesorder",
+    "ruoyi-business/src/main/java/com/ruoyi/business/sales_order",
+    "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/sales-order",
+    "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/salesorder",
+    "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/sales_order",
+    "ruoyi-business/src/main/resources/mapper/sales-order",
+    "ruoyi-business/src/main/resources/mapper/salesorder",
+    "ruoyi-business/src/main/resources/mapper/sales_order",
+    "ruoyi-admin/src/main/resources/mapper/sales-order",
+    "ruoyi-admin/src/main/resources/mapper/salesorder",
+    "ruoyi-admin/src/main/resources/mapper/sales_order",
+    "ruoyi-ui/src/views/sales-order",
+    "ruoyi-ui/src/views/salesorder",
+    "ruoyi-ui/src/views/sales_order",
+    "ruoyi-ui/src/api/sales-order.js",
+    "ruoyi-ui/src/api/salesOrder.js",
+    "ruoyi-ui/src/api/sales_order.js",
+    ".github/workflows",
+    "ruoyi-admin/src/main/resources/application-prod.yml"
+  ],
+  "requiredCommands": [
+    "npm run resume",
+    "npm run check:false-green-matrix",
+    "node --test tests/false-green-matrix-checker.test.js",
+    "node --test tests/package-scripts.test.js",
+    "npm run scan:all",
+    "npm run context:build -- customer",
+    "npm run finalize:change",
+    "npm run check",
+    "git diff --check"
+  ],
+  "blockers": []
+}

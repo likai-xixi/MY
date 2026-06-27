@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "files": [
+    "ai/changes/CR-20260627T154818Z-r-09a-4-anti-false-green-minimum-closure/changed-files.json",
+    "ai/changes/CR-20260627T154818Z-r-09a-4-anti-false-green-minimum-closure/boundary-exception.md",
+    "ai/changes/CR-20260627T154818Z-r-09a-4-anti-false-green-minimum-closure/component-exception.md",
+    "ai/changes/CR-20260627T154818Z-r-09a-4-anti-false-green-minimum-closure/handover.md",
+    "ai/changes/CR-20260627T154818Z-r-09a-4-anti-false-green-minimum-closure/impact.json",
+    "ai/changes/CR-20260627T154818Z-r-09a-4-anti-false-green-minimum-closure/plan.md",
+    "ai/changes/CR-20260627T154818Z-r-09a-4-anti-false-green-minimum-closure/request.md",
+    "ai/changes/CR-20260627T154818Z-r-09a-4-anti-false-green-minimum-closure/verification.md",
+    "ai/changes/CURRENT_CHANGE.json",
+    "ai/context/current-context.json",
+    "ai/context/current-context.md",
+    "ai/governance/false-green-regression-matrix.json",
+    "docs/chat-driven-codex-workflow.md",
+    "memory/CHANGELOG.md",
+    "memory/HANDOVER.md",
+    "memory/TASKS.json",
+    "package.json",
+    "tests/false-green-matrix-checker.test.js",
+    "tests/package-scripts.test.js",
+    "tools/false-green-matrix-checker.js"
+  ]
+}

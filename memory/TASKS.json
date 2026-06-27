@@ -149,7 +149,7 @@
       "latestSession": "memory/sessions/2026-06-25-pre-release-breaking-change-policy.md",
       "handoverRequired": true,
       "updatedAt": "2026-06-27",
-      "latestChange": "CR-20260627-r-09a-3-governance-graph-validation-cleanup"
+      "latestChange": "CR-20260627T154818Z-r-09a-4-anti-false-green-minimum-closure"
     },
     {
       "id": "TASK-CUSTOMER",
@@ -383,7 +383,7 @@
         "git diff --check passed for CR-20260626T145150Z-customer-runtime-tests"
       ],
       "latestSession": "memory/sessions/2026-06-25-customer-fund-concurrency.md",
-      "latestChange": "CR-20260627T133559Z-r-09a-2-customer-high-risk-permission-granularit",
+      "latestChange": "CR-20260626T145150Z-customer-runtime-tests",
       "handoverRequired": true,
       "updatedAt": "2026-06-27"
     }

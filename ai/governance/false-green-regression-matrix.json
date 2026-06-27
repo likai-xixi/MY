@@ -1,0 +1,289 @@
+{
+  "schemaVersion": 1,
+  "changeId": "CR-20260627T154818Z-r-09a-4-anti-false-green-minimum-closure",
+  "items": [
+    {
+      "id": "package-script-anti-theater",
+      "title": "Package scripts cannot fake green gates",
+      "gate": "test",
+      "risk": [
+        "A package gate can print success without reading files or running a validator."
+      ],
+      "mustFailWhen": [
+        "A check, scan check, verify, test, or build check script is empty or only runs echo success, echo ok, exit 0, or true."
+      ],
+      "coveredByTests": [
+        "tests/package-scripts.test.js"
+      ],
+      "sourceFiles": [
+        "package.json",
+        "tests/package-scripts.test.js"
+      ],
+      "status": "covered",
+      "owner": "governance",
+      "lastVerifiedByChange": "CR-20260627T154818Z-r-09a-4-anti-false-green-minimum-closure"
+    },
+    {
+      "id": "false-green-matrix-covered-requires-test",
+      "title": "Covered matrix entries require real tests",
+      "gate": "check:false-green-matrix",
+      "risk": [
+        "A risk item can be marked covered without a test file or source evidence."
+      ],
+      "mustFailWhen": [
+        "A covered matrix item has no coveredByTests entry, points at a missing test file, lacks sourceFiles, or references a missing source file."
+      ],
+      "coveredByTests": [
+        "tests/false-green-matrix-checker.test.js"
+      ],
+      "sourceFiles": [
+        "ai/governance/false-green-regression-matrix.json",
+        "tools/false-green-matrix-checker.js",
+        "tests/false-green-matrix-checker.test.js"
+      ],
+      "status": "covered",
+      "owner": "governance",
+      "lastVerifiedByChange": "CR-20260627T154818Z-r-09a-4-anti-false-green-minimum-closure"
+    },
+    {
+      "id": "ci-green-not-release-green",
+      "title": "CI green is not release ready",
+      "gate": "check:ci-coverage-declaration",
+      "risk": [
+        "A GitHub Actions pass can be reported as release readiness without separate release and runtime evidence."
+      ],
+      "mustFailWhen": [
+        "Handover or verification evidence implies CI passed means release ready, or omits the separate GitHub Actions and verify:release light states."
+      ],
+      "coveredByTests": [
+        "tests/false-green-matrix-checker.test.js",
+        "tests/package-scripts.test.js"
+      ],
+      "sourceFiles": [
+        "docs/chat-driven-codex-workflow.md",
+        "tools/ci-coverage-declaration-checker.js",
+        "tools/verification-provenance-checker.js",
+        "ai/governance/false-green-regression-matrix.json"
+      ],
+      "status": "covered",
+      "owner": "governance",
+      "lastVerifiedByChange": "CR-20260627T154818Z-r-09a-4-anti-false-green-minimum-closure"
+    },
+    {
+      "id": "runtime-acceptance-not-local-green",
+      "title": "Runtime acceptance is separate from local green",
+      "gate": "check:verification-provenance",
+      "risk": [
+        "Local governance checks can be mistaken for API, browser, database, or manual acceptance evidence."
+      ],
+      "mustFailWhen": [
+        "Verification or handover omits runtime acceptance state, infers acceptance from npm run check, or fails to name API, browser, DB, or manual evidence."
+      ],
+      "coveredByTests": [
+        "tests/false-green-matrix-checker.test.js",
+        "tests/package-scripts.test.js"
+      ],
+      "sourceFiles": [
+        "docs/chat-driven-codex-workflow.md",
+        "tools/verification-provenance-checker.js",
+        "ai/governance/false-green-regression-matrix.json"
+      ],
+      "status": "covered",
+      "owner": "governance",
+      "lastVerifiedByChange": "CR-20260627T154818Z-r-09a-4-anti-false-green-minimum-closure"
+    },
+    {
+      "id": "before-sales-order-runtime-bypass",
+      "title": "beforeSalesOrder blocks runtime bypass",
+      "gate": "check:phase-gate",
+      "risk": [
+        "Sales-order runtime files, routes, SQL, menus, permissions, or bypass-capable RuoYi roots can be created before the gate opens."
+      ],
+      "mustFailWhen": [
+        "A change creates sales-order runtime artifacts while beforeSalesOrder is blocked."
+      ],
+      "coveredByTests": [
+        "tests/customer-risk-gate.test.js",
+        "tests/false-green-matrix-checker.test.js"
+      ],
+      "sourceFiles": [
+        "ai/roadmap/phase-gates.json",
+        "tools/phase-gate-checker.js",
+        "tests/customer-risk-gate.test.js",
+        "ai/governance/false-green-regression-matrix.json"
+      ],
+      "status": "covered",
+      "owner": "governance",
+      "lastVerifiedByChange": "CR-20260627T154818Z-r-09a-4-anti-false-green-minimum-closure"
+    },
+    {
+      "id": "high-risk-permission-source-closure",
+      "title": "High-risk permissions must close to real sources",
+      "gate": "check:high-risk-governance",
+      "risk": [
+        "High-risk permission coverage can drift from real API, permission, or registry sources."
+      ],
+      "mustFailWhen": [
+        "A required high-risk customer fund API is missing required coverage, permission metadata, or source closure."
+      ],
+      "coveredByTests": [
+        "tests/high-risk-governance.test.js",
+        "tests/false-green-matrix-checker.test.js"
+      ],
+      "sourceFiles": [
+        "tools/high-risk-governance-checker.js",
+        "ai/registry/high-risk-permission-coverage.json",
+        "graph/api-graph.json",
+        "tests/high-risk-governance.test.js",
+        "ai/governance/false-green-regression-matrix.json"
+      ],
+      "status": "covered",
+      "owner": "governance",
+      "lastVerifiedByChange": "CR-20260627T154818Z-r-09a-4-anti-false-green-minimum-closure"
+    },
+    {
+      "id": "validation-sql-real-table-dependency",
+      "title": "Validation SQL must depend on real owned tables",
+      "gate": "scan:db:check",
+      "risk": [
+        "Validation SQL can include stale table checks or customer checks for platform-owned tables."
+      ],
+      "mustFailWhen": [
+        "Customer validation SQL reintroduces idempotent_request or references a table that is not generated in the database scan."
+      ],
+      "coveredByTests": [
+        "tests/high-risk-governance.test.js",
+        "tests/false-green-matrix-checker.test.js"
+      ],
+      "sourceFiles": [
+        "tools/scan-db-schema.js",
+        "sql/validation/customer_runtime_validation.sql",
+        "ai/generated/db-schema.json",
+        "tests/high-risk-governance.test.js",
+        "ai/governance/false-green-regression-matrix.json"
+      ],
+      "status": "covered",
+      "owner": "governance",
+      "lastVerifiedByChange": "CR-20260627T154818Z-r-09a-4-anti-false-green-minimum-closure"
+    },
+    {
+      "id": "ui-graph-real-source-only",
+      "title": "UI graph screens must come from real source files",
+      "gate": "check:graph",
+      "risk": [
+        "The UI graph can become green with fake screens or empty file paths."
+      ],
+      "mustFailWhen": [
+        "graph/ui-graph.json contains a screen with an empty file path or a source file that does not exist."
+      ],
+      "coveredByTests": [
+        "tests/graph.test.js",
+        "tests/false-green-matrix-checker.test.js"
+      ],
+      "sourceFiles": [
+        "tools/dependency-checker.js",
+        "graph/ui-graph.json",
+        "tests/graph.test.js",
+        "ai/governance/false-green-regression-matrix.json"
+      ],
+      "status": "covered",
+      "owner": "governance",
+      "lastVerifiedByChange": "CR-20260627T154818Z-r-09a-4-anti-false-green-minimum-closure"
+    },
+    {
+      "id": "api-graph-permission-source",
+      "title": "API graph must carry permission source",
+      "gate": "check:graph",
+      "risk": [
+        "API graph entries can be treated as covered without permission metadata from real source."
+      ],
+      "mustFailWhen": [
+        "An API graph entry that requires permission governance lacks a permission field or points at missing source."
+      ],
+      "coveredByTests": [
+        "tests/graph.test.js",
+        "tests/false-green-matrix-checker.test.js"
+      ],
+      "sourceFiles": [
+        "tools/dependency-checker.js",
+        "graph/api-graph.json",
+        "tests/graph.test.js",
+        "ai/governance/false-green-regression-matrix.json"
+      ],
+      "status": "covered",
+      "owner": "governance",
+      "lastVerifiedByChange": "CR-20260627T154818Z-r-09a-4-anti-false-green-minimum-closure"
+    },
+    {
+      "id": "forbidden-edit-roots-override-allowed",
+      "title": "Forbidden edit roots override allowed edit roots",
+      "gate": "check:boundaries",
+      "risk": [
+        "A forbidden runtime path can be allowed by a broader allowedEditRoots entry."
+      ],
+      "mustFailWhen": [
+        "Boundary checks permit a changed file under forbiddenEditRoots because the same path is also under allowedEditRoots."
+      ],
+      "coveredByTests": [
+        "tests/boundary-lint.test.js",
+        "tests/false-green-matrix-checker.test.js"
+      ],
+      "sourceFiles": [
+        "tools/boundary-lint.js",
+        "tests/boundary-lint.test.js",
+        "ai/context/current-context.md",
+        "ai/governance/false-green-regression-matrix.json"
+      ],
+      "status": "covered",
+      "owner": "governance",
+      "lastVerifiedByChange": "CR-20260627T154818Z-r-09a-4-anti-false-green-minimum-closure"
+    },
+    {
+      "id": "ruoyi-business-permission-feature-mapping",
+      "title": "RuoYi business permissions map to feature ownership",
+      "gate": "scan:permissions:check",
+      "risk": [
+        "RuoYi business:<feature>:<action> permissions can drift away from feature ownership."
+      ],
+      "mustFailWhen": [
+        "A scanned RuoYi business permission lacks a feature mapping or maps to the wrong feature owner."
+      ],
+      "coveredByTests": [
+        "tests/high-risk-governance.test.js",
+        "tests/false-green-matrix-checker.test.js"
+      ],
+      "sourceFiles": [
+        "tools/scan-permissions.js",
+        "ai/generated/permissions.json",
+        "tests/high-risk-governance.test.js",
+        "ai/governance/false-green-regression-matrix.json"
+      ],
+      "status": "covered",
+      "owner": "governance",
+      "lastVerifiedByChange": "CR-20260627T154818Z-r-09a-4-anti-false-green-minimum-closure"
+    },
+    {
+      "id": "rule-object-explicit-preflight-id",
+      "title": "Rule objects require explicit preflight identity",
+      "gate": "check:rule-objects",
+      "risk": [
+        "A rule object can be added without explicit preflight identity and ownership evidence."
+      ],
+      "mustFailWhen": [
+        "A rule object lacks required identity, source contract, owned file, test, ownership, or change-record references."
+      ],
+      "coveredByTests": [
+        "tests/false-green-matrix-checker.test.js",
+        "tests/package-scripts.test.js"
+      ],
+      "sourceFiles": [
+        "tools/rule-object-checker.js",
+        "ai/registry/rule-objects.json",
+        "ai/governance/false-green-regression-matrix.json"
+      ],
+      "status": "covered",
+      "owner": "governance",
+      "lastVerifiedByChange": "CR-20260627T154818Z-r-09a-4-anti-false-green-minimum-closure"
+    }
+  ]
+}

@@ -8,6 +8,17 @@ import {
 import { fileExists, readJson } from '../tools/common.js';
 import { resolveCommand, runProcess } from '../tools/process-runner.js';
 
+const GATE_SCRIPT_NAME = /^(?:check:.+|scan:.+:check|verify:.+|test|build:.+:check)$/;
+const SUCCESS_THEATER_COMMAND = /^(?:echo\s+(?:success|ok)|exit\s+0|true)$/i;
+const REAL_GATE_COMMAND = /\b(?:node|npm\s+run|npm\s+--prefix|mvn(?:\.cmd)?|pnpm|yarn)\b/i;
+
+function commandParts(command) {
+  return String(command || '')
+    .split(/\s*&&\s*|\s*;\s*/)
+    .map((part) => part.trim())
+    .filter(Boolean);
+}
+
 test('node-backed package scripts point to existing files', () => {
   const pkg = readJson('package.json');
   assert.equal(pkg.scripts['check:handover-integrity'], 'node tools/change-handoff-integrity-checker.js');
@@ -135,4 +146,30 @@ test('finalize:change detects template verification and preserves real evidence 
   assert.equal(shouldReplaceGeneratedText('# Verification\n\nStatus: pending\n'), true);
   assert.equal(shouldReplaceGeneratedText('# Verification\n\nStatus: verified\n\n## Evidence\n\nnpm test passed.\n'), false);
   assert.equal(shouldReplaceGeneratedText('# Verification\n\nStatus: verified\n\n## Evidence\n\nnpm test passed.\n', { force: true }), true);
+});
+
+test('package gate scripts cannot be success theater', () => {
+  const pkg = readJson('package.json');
+  for (const [name, command] of Object.entries(pkg.scripts)) {
+    if (!GATE_SCRIPT_NAME.test(name)) {
+      continue;
+    }
+    assert.notEqual(String(command).trim(), '', `${name} must not be an empty script`);
+    assert.match(command, REAL_GATE_COMMAND, `${name} must run a real validator, test, check, or build command`);
+    for (const part of commandParts(command)) {
+      assert.doesNotMatch(part, SUCCESS_THEATER_COMMAND, `${name} contains fake-green command: ${part}`);
+      assert.doesNotMatch(part, /^echo\s+["']?(?:success|ok)["']?$/i, `${name} must not only print success`);
+    }
+  }
+});
+
+test('main check includes the false-green matrix checker', () => {
+  const pkg = readJson('package.json');
+  assert.ok(pkg.scripts.check.includes('npm run check:false-green-matrix'));
+});
+
+test('false-green matrix check points to a real checker file', () => {
+  const pkg = readJson('package.json');
+  assert.equal(pkg.scripts['check:false-green-matrix'], 'node tools/false-green-matrix-checker.js');
+  assert.equal(fileExists('tools/false-green-matrix-checker.js'), true);
 });
