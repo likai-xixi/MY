@@ -1,10 +1,15 @@
 # Handover
+
 ## Summary
+
 R-09A.2 split customer fund high-risk permissions into dedicated deposit and sample-rebate permissions
-Current change record: `ai/changes/CR-20260627T133559Z-r-09a-2-customer-high-risk-permission-granularit`.
+
 ## Impact
-Current change `CR-20260627T133559Z-r-09a-2-customer-high-risk-permission-granularit` affects 28 recorded path(s). See `ai/changes/CR-20260627T133559Z-r-09a-2-customer-high-risk-permission-granularit/changed-files.json` for exact coverage.
+
+This change affects 28 recorded path(s). See changed-files.json for the complete coverage list.
+
 ## Changed Files
+
 - `ai/changes/CR-20260627T133559Z-r-09a-2-customer-high-risk-permission-granularit/boundary-exception.md`
 - `ai/changes/CR-20260627T133559Z-r-09a-2-customer-high-risk-permission-granularit/changed-files.json`
 - `ai/changes/CR-20260627T133559Z-r-09a-2-customer-high-risk-permission-granularit/component-exception.md`
@@ -33,7 +38,9 @@ Current change `CR-20260627T133559Z-r-09a-2-customer-high-risk-permission-granul
 - `ruoyi-ui/src/views/customer/index.vue`
 - `sql/migrations/V20260625_003_customer_menu_permission.sql`
 - `tests/customer-risk-gate.test.js`
+
 ## Commands
+
 - [local] `npm run resume`
 - [local] `npm run rule:preflight -- customer-fund-deposit-entry customer-sample-rebate-generation public-customer-invariant`
 - [local] `npm run scan:all`
@@ -43,11 +50,17 @@ Current change `CR-20260627T133559Z-r-09a-2-customer-high-risk-permission-granul
 - [local] `npm test`
 - [local] `npm run check`
 - [local] `git diff --check`
+
 ## Verification
-[local] Use `npm run check` as the full governance gate. The current change record records local resume, rule preflight, scan, ownership, high-risk governance, customer risk gate, and full Node test evidence for this permission-only change.
+
+[local] `npm run check` remains the final gate. The current verification evidence records local resume, rule preflight, scan, ownership, high-risk governance, customer risk gate, and full Node test results for this permission-only change.
+
 ## Risks
+
 - [not-run] Backend runtime API call, browser validation, Maven compile, frontend production build, database migration execution, and CI were not performed in this pass because the change only splits permissions and updates SQL seed/registry/test coverage.
 - [local] Scoped boundary/component exception files in this CR carry forward pre-existing RuoYi system/tool baseline exceptions so `npm test` and `npm run check` evaluate the current CR without broadening global rules.
+
 ## Next Actions
+
 - Apply the updated customer menu permission SQL in any target database that needs the new `business:customer:fund:deposit` and `business:customer:sample-rebate:create` menu rows.
 - Continue R-09B sales-order pre-implementation contracts only after this change closes; `beforeSalesOrder` remains blocked.

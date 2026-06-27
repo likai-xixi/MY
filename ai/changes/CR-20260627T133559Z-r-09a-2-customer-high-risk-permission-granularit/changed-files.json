@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "files": [
+    "ai/changes/CR-20260627T133559Z-r-09a-2-customer-high-risk-permission-granularit/boundary-exception.md",
+    "ai/changes/CR-20260627T133559Z-r-09a-2-customer-high-risk-permission-granularit/changed-files.json",
+    "ai/changes/CR-20260627T133559Z-r-09a-2-customer-high-risk-permission-granularit/component-exception.md",
+    "ai/changes/CR-20260627T133559Z-r-09a-2-customer-high-risk-permission-granularit/handover.md",
+    "ai/changes/CR-20260627T133559Z-r-09a-2-customer-high-risk-permission-granularit/impact.json",
+    "ai/changes/CR-20260627T133559Z-r-09a-2-customer-high-risk-permission-granularit/plan.md",
+    "ai/changes/CR-20260627T133559Z-r-09a-2-customer-high-risk-permission-granularit/request.md",
+    "ai/changes/CR-20260627T133559Z-r-09a-2-customer-high-risk-permission-granularit/rule-preflight.md",
+    "ai/changes/CR-20260627T133559Z-r-09a-2-customer-high-risk-permission-granularit/verification.md",
+    "ai/changes/CURRENT_CHANGE.json",
+    "ai/context/current-context.json",
+    "ai/context/current-context.md",
+    "ai/generated/api-clients.json",
+    "ai/generated/backend-routes.json",
+    "ai/generated/component-usage.json",
+    "ai/generated/db-schema.json",
+    "ai/generated/frontend-routes.json",
+    "ai/generated/permissions.json",
+    "ai/registry/features.json",
+    "ai/registry/high-risk-permission-coverage.json",
+    "memory/CHANGELOG.md",
+    "memory/HANDOVER.md",
+    "memory/PROJECT_STATE.md",
+    "memory/TASKS.json",
+    "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
+    "ruoyi-ui/src/views/customer/index.vue",
+    "sql/migrations/V20260625_003_customer_menu_permission.sql",
+    "tests/customer-risk-gate.test.js"
+  ]
+}

@@ -61,8 +61,8 @@
         "business:customer:add",
         "business:customer:edit",
         "business:customer:export",
-        "business:customer:fund:add",
         "business:customer:fund:adjust",
+        "business:customer:fund:deposit",
         "business:customer:fund:export",
         "business:customer:fund:flow",
         "business:customer:fund:view",
@@ -74,7 +74,8 @@
         "business:customer:query",
         "business:customer:remove",
         "business:customer:sample-policy:edit",
-        "business:customer:sample-policy:view"
+        "business:customer:sample-policy:view",
+        "business:customer:sample-rebate:create"
       ],
       "components": [],
       "routes": [
@@ -223,8 +224,8 @@
           "business:customer:add",
           "business:customer:edit",
           "business:customer:export",
-          "business:customer:fund:add",
           "business:customer:fund:adjust",
+          "business:customer:fund:deposit",
           "business:customer:fund:export",
           "business:customer:fund:flow",
           "business:customer:fund:view",
@@ -237,6 +238,7 @@
           "business:customer:remove",
           "business:customer:sample-policy:edit",
           "business:customer:sample-policy:view",
+          "business:customer:sample-rebate:create",
           "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
           "ruoyi-ui/src/views/customer/index.vue",
           "sql/customer.ownership.md",

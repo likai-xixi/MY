@@ -1,23 +1,38 @@
 {
   "schemaVersion": 1,
-  "description": "Registry for high-risk permission coverage. Required entries block when dedicated permissions are missing; framework-warning entries document existing boundaries without changing runtime code.",
+  "description": "Registry for high-risk permission coverage. Required entries block when dedicated permissions are missing; non-required entries document existing boundaries without changing runtime code.",
   "entries": [
     {
       "featureId": "customer",
       "api": "/business/customer/{customerId}/fund/deposit",
       "riskDomain": "customer-fund",
-      "backendPermission": "business:customer:fund:add",
-      "frontendPermission": "business:customer:fund:add",
-      "menuPermission": "business:customer:list",
-      "registryPermission": "business:customer:fund:add",
+      "backendPermission": "business:customer:fund:deposit",
+      "frontendPermission": "business:customer:fund:deposit",
+      "menuPermission": "business:customer:fund:deposit",
+      "registryPermission": "business:customer:fund:deposit",
+      "hasFrontendAction": true,
       "tests": [
         "tests/customer-risk-gate.test.js"
       ],
-      "status": "framework-warning",
-      "deferredReason": "CR-3 records current customer-fund permission coverage as a framework boundary. It does not require a machine evidence manifest before customer-fund freshness becomes blocking.",
-      "phase": "CR-3",
-      "owner": "governance",
-      "trigger": "Convert to required when a machine evidence manifest and future fund-boundary contract are attached."
+      "status": "required",
+      "phase": "R-09A.2",
+      "owner": "governance"
+    },
+    {
+      "featureId": "customer",
+      "api": "/business/customer/{customerId}/sample-rebate",
+      "riskDomain": "customer-fund",
+      "backendPermission": "business:customer:sample-rebate:create",
+      "frontendPermission": "business:customer:sample-rebate:create",
+      "menuPermission": "business:customer:sample-rebate:create",
+      "registryPermission": "business:customer:sample-rebate:create",
+      "hasFrontendAction": true,
+      "tests": [
+        "tests/customer-risk-gate.test.js"
+      ],
+      "status": "required",
+      "phase": "R-09A.2",
+      "owner": "governance"
     }
   ]
 }

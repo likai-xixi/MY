@@ -1,0 +1,119 @@
+{
+  "schemaVersion": 1,
+  "mode": "governance/customer-permission",
+  "changeType": "customer-permission-granularity",
+  "title": "R-09A.2 customer high-risk permission granularity",
+  "feature": {
+    "id": "customer",
+    "name": "客户管理"
+  },
+  "scope": {
+    "goals": [
+      "Split customer deposit and sample rebate high-risk permissions into dedicated backend, frontend, SQL, registry, and gate-test entries.",
+      "Promote customer fund high-risk permission coverage from framework-warning to required entries.",
+      "Keep customer fund and sample rebate runtime behavior unchanged."
+    ],
+    "nonGoals": [
+      "Do not modify CustomerFundServiceImpl fund calculation, idempotency, fund-flow, or deposit-batch logic.",
+      "Do not modify CustomerServiceImpl sample rebate calculation logic.",
+      "Do not create sales-order runtime, SQL, Vue, API, route, menu, or permission artifacts.",
+      "Do not loosen beforeSalesOrder."
+    ]
+  },
+  "affected": {
+    "backend": [
+      "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java"
+    ],
+    "frontend": [
+      "ruoyi-ui/src/views/customer/index.vue"
+    ],
+    "sql": [
+      "sql/migrations/V20260625_003_customer_menu_permission.sql"
+    ],
+    "registries": [
+      "ai/registry/features.json",
+      "ai/registry/high-risk-permission-coverage.json"
+    ],
+    "tests": [
+      "tests/customer-risk-gate.test.js"
+    ],
+    "generatedScans": [
+      "ai/generated/backend-routes.json",
+      "ai/generated/frontend-routes.json",
+      "ai/generated/api-clients.json",
+      "ai/generated/db-schema.json",
+      "ai/generated/permissions.json",
+      "ai/generated/component-usage.json"
+    ],
+    "docs": [
+      "ai/context/current-context.md",
+      "ai/context/current-context.json",
+      "memory/HANDOVER.md",
+      "memory/PROJECT_STATE.md",
+      "memory/CHANGELOG.md",
+      "memory/TASKS.json"
+    ],
+    "changeRecord": [
+      "ai/changes/CR-20260627T133559Z-r-09a-2-customer-high-risk-permission-granularit",
+      "ai/changes/CURRENT_CHANGE.json"
+    ]
+  },
+  "allowedEditRoots": [
+    "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
+    "ruoyi-ui/src/views/customer/index.vue",
+    "sql/migrations/V20260625_003_customer_menu_permission.sql",
+    "ai/registry/features.json",
+    "ai/registry/high-risk-permission-coverage.json",
+    "tests/customer-risk-gate.test.js",
+    "ai/generated",
+    "ai/context/current-context.md",
+    "ai/context/current-context.json",
+    "memory/HANDOVER.md",
+    "memory/PROJECT_STATE.md",
+    "memory/CHANGELOG.md",
+    "memory/TASKS.json",
+    "ai/changes/CR-20260627T133559Z-r-09a-2-customer-high-risk-permission-granularit",
+    "ai/changes/CURRENT_CHANGE.json"
+  ],
+  "forbiddenEditRoots": [
+    "ruoyi-business/src/main/java/com/ruoyi/business/customer/service/impl/CustomerFundServiceImpl.java",
+    "ruoyi-business/src/main/java/com/ruoyi/business/customer/service/impl/CustomerServiceImpl.java",
+    "ruoyi-business/src/main/java/com/ruoyi/business/sales-order",
+    "ruoyi-business/src/main/java/com/ruoyi/business/salesorder",
+    "ruoyi-business/src/main/java/com/ruoyi/business/sales_order",
+    "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/sales-order",
+    "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/salesorder",
+    "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/sales_order",
+    "ruoyi-business/src/main/resources/mapper/sales-order",
+    "ruoyi-business/src/main/resources/mapper/salesorder",
+    "ruoyi-business/src/main/resources/mapper/sales_order",
+    "ruoyi-admin/src/main/resources/mapper/sales-order",
+    "ruoyi-admin/src/main/resources/mapper/salesorder",
+    "ruoyi-admin/src/main/resources/mapper/sales_order",
+    "ruoyi-ui/src/views/sales-order",
+    "ruoyi-ui/src/views/salesorder",
+    "ruoyi-ui/src/views/sales_order",
+    "ruoyi-ui/src/api/sales-order.js",
+    "ruoyi-ui/src/api/salesOrder.js",
+    "ruoyi-ui/src/api/sales_order.js",
+    "sales-order runtime, SQL, Vue, API, permission, menu, or route",
+    "sales_order table",
+    "sales_order_item table"
+  ],
+  "blockers": [
+    "beforeSalesOrder remains blocked; this change may not create sales-order runtime.",
+    "Customer fund and sample rebate business logic is out of scope.",
+    "The full npm run impact -- customer scan timed out on nested repository text scanning; this impact file records the user-approved narrow scope for R-09A.2."
+  ],
+  "requiredCommands": [
+    "npm run resume",
+    "npm run rule:preflight -- customer-fund-deposit-entry customer-sample-rebate-generation public-customer-invariant",
+    "npm run scan:all",
+    "npm run check:ownership",
+    "npm run check:high-risk-governance",
+    "node --test tests/customer-risk-gate.test.js",
+    "npm test",
+    "npm run check",
+    "git diff --check"
+  ]
+}

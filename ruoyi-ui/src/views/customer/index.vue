@@ -436,8 +436,8 @@
             </el-col>
           </el-row>
           <div class="detail-actions">
-            <el-button type="primary" plain icon="Money" @click="handleFundEntry" v-hasPermi="['business:customer:fund:add']">录入定金</el-button>
-            <el-button type="success" plain icon="Plus" @click="handleSampleRebate" v-hasPermi="['business:customer:fund:add']">生成样品返现</el-button>
+            <el-button type="primary" plain icon="Money" @click="handleFundEntry" v-hasPermi="['business:customer:fund:deposit']">录入定金</el-button>
+            <el-button type="success" plain icon="Plus" @click="handleSampleRebate" v-hasPermi="['business:customer:sample-rebate:create']">生成样品返现</el-button>
           </div>
           <el-divider content-position="left">样品支持政策</el-divider>
           <el-form :model="samplePolicy" label-width="126px" class="policy-form">

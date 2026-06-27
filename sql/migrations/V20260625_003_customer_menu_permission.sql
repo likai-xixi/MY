@@ -161,42 +161,49 @@ where customer_menu.perms = 'business:customer:list'
 limit 1;
 
 insert into sys_menu(menu_name, parent_id, order_num, path, component, query, route_name, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, remark)
-select convert(unhex('E5AEA2E688B7E5AE9AE98791E5BD95E585A5') using utf8mb4), customer_menu.menu_id, 11, '', '', '', '', 1, 0, 'F', '0', '0', 'business:customer:fund:add', '#', 'admin', sysdate(), ''
+select convert(unhex('E5AEA2E688B7E5AE9AE98791E5BD95E585A5') using utf8mb4), customer_menu.menu_id, 11, '', '', '', '', 1, 0, 'F', '0', '0', 'business:customer:fund:deposit', '#', 'admin', sysdate(), ''
 from sys_menu customer_menu
 where customer_menu.perms = 'business:customer:list'
-  and not exists (select 1 from sys_menu where perms = 'business:customer:fund:add')
+  and not exists (select 1 from sys_menu where perms = 'business:customer:fund:deposit')
 limit 1;
 
 insert into sys_menu(menu_name, parent_id, order_num, path, component, query, route_name, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, remark)
-select convert(unhex('E5AEA2E688B7E8B584E98791E6B581E6B0B4') using utf8mb4), customer_menu.menu_id, 12, '', '', '', '', 1, 0, 'F', '0', '0', 'business:customer:fund:flow', '#', 'admin', sysdate(), ''
+select convert(unhex('E6A0B7E59381E8BF94E78EB0E7949FE68890') using utf8mb4), customer_menu.menu_id, 12, '', '', '', '', 1, 0, 'F', '0', '0', 'business:customer:sample-rebate:create', '#', 'admin', sysdate(), ''
+from sys_menu customer_menu
+where customer_menu.perms = 'business:customer:list'
+  and not exists (select 1 from sys_menu where perms = 'business:customer:sample-rebate:create')
+limit 1;
+
+insert into sys_menu(menu_name, parent_id, order_num, path, component, query, route_name, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, remark)
+select convert(unhex('E5AEA2E688B7E8B584E98791E6B581E6B0B4') using utf8mb4), customer_menu.menu_id, 13, '', '', '', '', 1, 0, 'F', '0', '0', 'business:customer:fund:flow', '#', 'admin', sysdate(), ''
 from sys_menu customer_menu
 where customer_menu.perms = 'business:customer:list'
   and not exists (select 1 from sys_menu where perms = 'business:customer:fund:flow')
 limit 1;
 
 insert into sys_menu(menu_name, parent_id, order_num, path, component, query, route_name, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, remark)
-select convert(unhex('E5AEA2E688B7E8B584E98791E8B083E695B4') using utf8mb4), customer_menu.menu_id, 13, '', '', '', '', 1, 0, 'F', '0', '0', 'business:customer:fund:adjust', '#', 'admin', sysdate(), ''
+select convert(unhex('E5AEA2E688B7E8B584E98791E8B083E695B4') using utf8mb4), customer_menu.menu_id, 14, '', '', '', '', 1, 0, 'F', '0', '0', 'business:customer:fund:adjust', '#', 'admin', sysdate(), ''
 from sys_menu customer_menu
 where customer_menu.perms = 'business:customer:list'
   and not exists (select 1 from sys_menu where perms = 'business:customer:fund:adjust')
 limit 1;
 
 insert into sys_menu(menu_name, parent_id, order_num, path, component, query, route_name, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, remark)
-select convert(unhex('E5AEA2E688B7E8B584E98791E5AFBCE587BA') using utf8mb4), customer_menu.menu_id, 14, '', '', '', '', 1, 0, 'F', '0', '0', 'business:customer:fund:export', '#', 'admin', sysdate(), ''
+select convert(unhex('E5AEA2E688B7E8B584E98791E5AFBCE587BA') using utf8mb4), customer_menu.menu_id, 15, '', '', '', '', 1, 0, 'F', '0', '0', 'business:customer:fund:export', '#', 'admin', sysdate(), ''
 from sys_menu customer_menu
 where customer_menu.perms = 'business:customer:list'
   and not exists (select 1 from sys_menu where perms = 'business:customer:fund:export')
 limit 1;
 
 insert into sys_menu(menu_name, parent_id, order_num, path, component, query, route_name, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, remark)
-select convert(unhex('E5AEA2E688B7E6A0B7E59381E694BFE7AD96E69FA5E79C8B') using utf8mb4), customer_menu.menu_id, 15, '', '', '', '', 1, 0, 'F', '0', '0', 'business:customer:sample-policy:view', '#', 'admin', sysdate(), ''
+select convert(unhex('E5AEA2E688B7E6A0B7E59381E694BFE7AD96E69FA5E79C8B') using utf8mb4), customer_menu.menu_id, 16, '', '', '', '', 1, 0, 'F', '0', '0', 'business:customer:sample-policy:view', '#', 'admin', sysdate(), ''
 from sys_menu customer_menu
 where customer_menu.perms = 'business:customer:list'
   and not exists (select 1 from sys_menu where perms = 'business:customer:sample-policy:view')
 limit 1;
 
 insert into sys_menu(menu_name, parent_id, order_num, path, component, query, route_name, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, remark)
-select convert(unhex('E5AEA2E688B7E6A0B7E59381E694BFE7AD96E7BC96E8BE91') using utf8mb4), customer_menu.menu_id, 16, '', '', '', '', 1, 0, 'F', '0', '0', 'business:customer:sample-policy:edit', '#', 'admin', sysdate(), ''
+select convert(unhex('E5AEA2E688B7E6A0B7E59381E694BFE7AD96E7BC96E8BE91') using utf8mb4), customer_menu.menu_id, 17, '', '', '', '', 1, 0, 'F', '0', '0', 'business:customer:sample-policy:edit', '#', 'admin', sysdate(), ''
 from sys_menu customer_menu
 where customer_menu.perms = 'business:customer:list'
   and not exists (select 1 from sys_menu where perms = 'business:customer:sample-policy:edit')

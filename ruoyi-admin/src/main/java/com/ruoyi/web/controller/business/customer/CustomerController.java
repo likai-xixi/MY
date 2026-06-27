@@ -134,7 +134,7 @@ public class CustomerController extends BaseController
         return success(customerService.selectFundAccounts(customerId));
     }
 
-    @PreAuthorize("@ss.hasPermi('business:customer:fund:add')")
+    @PreAuthorize("@ss.hasPermi('business:customer:fund:deposit')")
     @Log(title = "客户资金录入", businessType = BusinessType.INSERT)
     @PostMapping("/{customerId}/fund/deposit")
     public AjaxResult fundDeposit(@PathVariable Long customerId, @RequestBody CustomerFundEntry entry)
@@ -176,7 +176,7 @@ public class CustomerController extends BaseController
         return toAjax(customerService.saveSamplePolicy(policy));
     }
 
-    @PreAuthorize("@ss.hasPermi('business:customer:fund:add')")
+    @PreAuthorize("@ss.hasPermi('business:customer:sample-rebate:create')")
     @Log(title = "样品返现记录", businessType = BusinessType.INSERT)
     @PostMapping("/{customerId}/sample-rebate")
     public AjaxResult createSampleRebate(@PathVariable Long customerId, @RequestBody SampleRebateRecord record)

@@ -18,6 +18,9 @@ const CUSTOMER_UI_CONTRACT = 'ai/contracts/customer.ui.md';
 const CUSTOMER_FEATURE = 'features/customer.md';
 const CUSTOMER_VIEW = 'ruoyi-ui/src/views/customer/index.vue';
 const CUSTOMER_SQL = 'sql/customer.ownership.md';
+const CUSTOMER_MENU_PERMISSION_SQL = 'sql/migrations/V20260625_003_customer_menu_permission.sql';
+const FEATURES_REGISTRY = 'ai/registry/features.json';
+const HIGH_RISK_PERMISSION_COVERAGE = 'ai/registry/high-risk-permission-coverage.json';
 const IDEMPOTENCY_SERVICE = 'ruoyi-business/src/main/java/com/ruoyi/business/common/idempotency/service/impl/IdempotencyServiceImpl.java';
 const IDEMPOTENCY_HASH = 'ruoyi-business/src/main/java/com/ruoyi/business/common/idempotency/support/IdempotencyRequestHash.java';
 const IDEMPOTENCY_MAPPER_XML = 'ruoyi-business/src/main/resources/mapper/common/IdempotentRequestMapper.xml';
@@ -66,6 +69,14 @@ function methodBody(source, signature) {
     }
   }
   assert.fail(`${signature} body must be balanced`);
+}
+
+function methodAnnotations(source, signature) {
+  const signatureIndex = source.indexOf(signature);
+  assert.notEqual(signatureIndex, -1, `${signature} must exist`);
+  const startIndex = source.lastIndexOf('\n    @PreAuthorize', signatureIndex);
+  assert.notEqual(startIndex, -1, `${signature} must have a permission annotation`);
+  return source.slice(startIndex, signatureIndex);
 }
 
 test('main check reaches the customer risk gate through npm test', () => {
@@ -263,6 +274,72 @@ test('customer fund idempotency payload migration and registries are required', 
   assert.equal(migrationEntry.file, IDEMPOTENT_MIGRATION);
   assert.equal(migrationEntry.blocking, true);
   assert.ok(migrationEntry.appliesToTables.includes('idempotent_request'));
+});
+
+test('customer high-risk fund APIs use dedicated permissions end to end', () => {
+  const controller = readText(CUSTOMER_CONTROLLER);
+  const view = readText(CUSTOMER_VIEW);
+  const menuSql = readText(CUSTOMER_MENU_PERMISSION_SQL);
+  const features = readJson(FEATURES_REGISTRY);
+  const coverage = readJson(HIGH_RISK_PERMISSION_COVERAGE);
+  const depositAnnotations = methodAnnotations(controller, 'public AjaxResult fundDeposit');
+  const rebateAnnotations = methodAnnotations(controller, 'public AjaxResult createSampleRebate');
+  const customerFeature = features.features.find((feature) => feature.id === 'customer');
+  const featurePermissions = new Set(customerFeature.permissions);
+  const ownershipPermissions = new Set(customerFeature.ownership.permissions.filter((permission) => permission.startsWith('business:')));
+  const entriesByApi = new Map(coverage.entries.map((entry) => [entry.api, entry]));
+  const highRiskApis = [
+    {
+      api: '/business/customer/{customerId}/fund/deposit',
+      permission: 'business:customer:fund:deposit',
+      annotations: depositAnnotations,
+      button: /@click="handleFundEntry"\s+v-hasPermi="\['business:customer:fund:deposit'\]"/
+    },
+    {
+      api: '/business/customer/{customerId}/sample-rebate',
+      permission: 'business:customer:sample-rebate:create',
+      annotations: rebateAnnotations,
+      button: /@click="handleSampleRebate"\s+v-hasPermi="\['business:customer:sample-rebate:create'\]"/
+    }
+  ];
+
+  for (const item of highRiskApis) {
+    assert.match(item.annotations, new RegExp(item.permission.replaceAll(':', ':')));
+    assert.doesNotMatch(item.annotations, /business:customer:fund:add/, `${item.api} must not use the legacy shared fund:add permission`);
+    assert.match(view, item.button, `${item.api} frontend action must use its dedicated permission`);
+    assert.match(menuSql, new RegExp(item.permission.replaceAll(':', ':')), `${item.permission} must be seeded in customer menu SQL`);
+    assert.ok(featurePermissions.has(item.permission), `${item.permission} must be registered on customer feature`);
+    assert.ok(ownershipPermissions.has(item.permission), `${item.permission} must be registered in customer ownership permissions`);
+
+    const entry = entriesByApi.get(item.api);
+    assert.ok(entry, `${item.api} must have high-risk permission coverage`);
+    assert.equal(entry.status, 'required');
+    assert.equal(entry.backendPermission, item.permission);
+    assert.equal(entry.frontendPermission, item.permission);
+    assert.equal(entry.menuPermission, item.permission);
+    assert.equal(entry.registryPermission, item.permission);
+    assert.ok(entry.tests.includes('tests/customer-risk-gate.test.js'));
+  }
+
+  assert.notEqual(highRiskApis[0].permission, highRiskApis[1].permission, 'deposit and sample rebate must not share one high-risk permission');
+  assert.doesNotMatch(menuSql, /business:customer:fund:add/, 'customer menu SQL must not seed fund:add as the high-risk fund entrypoint');
+  assert.equal(featurePermissions.has('business:customer:fund:add'), false);
+  assert.equal(ownershipPermissions.has('business:customer:fund:add'), false);
+  assert.equal(
+    coverage.entries.some((entry) => [
+      entry.backendPermission,
+      entry.frontendPermission,
+      entry.menuPermission,
+      entry.registryPermission
+    ].includes('business:customer:fund:add')),
+    false,
+    'high-risk coverage must not keep fund:add as a required or warning entry'
+  );
+  assert.equal(
+    coverage.entries.some((entry) => entry.api?.startsWith('/business/customer/{customerId}/') && entry.status === 'framework-warning'),
+    false,
+    'customer fund high-risk coverage must be required, not framework-warning'
+  );
 });
 
 test('customer runtime idempotency Java tests are registered as idempotency evidence', () => {

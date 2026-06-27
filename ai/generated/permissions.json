@@ -77,7 +77,7 @@
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java"
     },
     {
-      "code": "business:customer:fund:add",
+      "code": "business:customer:fund:deposit",
       "module": "customer",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java"
     },
@@ -102,7 +102,7 @@
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java"
     },
     {
-      "code": "business:customer:fund:add",
+      "code": "business:customer:sample-rebate:create",
       "module": "customer",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java"
     },
@@ -737,12 +737,12 @@
       "file": "ruoyi-ui/src/views/customer/index.vue"
     },
     {
-      "code": "business:customer:fund:add",
+      "code": "business:customer:fund:deposit",
       "module": "customer",
       "file": "ruoyi-ui/src/views/customer/index.vue"
     },
     {
-      "code": "business:customer:fund:add",
+      "code": "business:customer:sample-rebate:create",
       "module": "customer",
       "file": "ruoyi-ui/src/views/customer/index.vue"
     },
@@ -1372,7 +1372,7 @@
       "file": "sql/migrations/V20260625_003_customer_menu_permission.sql"
     },
     {
-      "code": "business:customer:fund:add",
+      "code": "business:customer:fund:deposit",
       "module": "customer",
       "file": "sql/migrations/V20260625_003_customer_menu_permission.sql"
     },
@@ -1382,7 +1382,22 @@
       "file": "sql/migrations/V20260625_003_customer_menu_permission.sql"
     },
     {
-      "code": "business:customer:fund:add",
+      "code": "business:customer:fund:deposit",
+      "module": "customer",
+      "file": "sql/migrations/V20260625_003_customer_menu_permission.sql"
+    },
+    {
+      "code": "business:customer:sample-rebate:create",
+      "module": "customer",
+      "file": "sql/migrations/V20260625_003_customer_menu_permission.sql"
+    },
+    {
+      "code": "business:customer:list",
+      "module": "customer",
+      "file": "sql/migrations/V20260625_003_customer_menu_permission.sql"
+    },
+    {
+      "code": "business:customer:sample-rebate:create",
       "module": "customer",
       "file": "sql/migrations/V20260625_003_customer_menu_permission.sql"
     },

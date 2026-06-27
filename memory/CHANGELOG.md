@@ -455,4 +455,7 @@
 - Rule objects now require existing created/updated change records and owned-file ownership or explicit exception reasons.
 - [local] Verification passed: explicit rule preflight passed, `npm run scan:all` passed, `npm run check:diff` passed, `npm run check:phase-gate` passed, `npm run check:rule-objects` passed, focused governance tests passed 35/35, baseline guard tests passed 19/19, standalone `npm test` passed 213/213, final `npm run check` passed with final `npm test` 213/213, and final `git diff --check` passed.
 - No customer runtime code, customer fund business logic, sales-order runtime artifact, sales-order SQL/table/route/menu/permission, or customer business database structure was created or modified.
-- Feature: `platform`.
+- Feature: `platform`.## 2026-06-27 — governance/customer-permission
+- Change: `ai/changes/CR-20260627T133559Z-r-09a-2-customer-high-risk-permission-granularit`.
+- R-09A.2 split customer fund high-risk permissions into dedicated deposit and sample-rebate permissions
+- Feature: `customer`.
