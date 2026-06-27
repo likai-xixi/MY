@@ -81,7 +81,7 @@
     },
     {
       "name": "idempotent_request",
-      "module": "customer",
+      "module": "platform",
       "file": "sql/migrations/V20260625_004_idempotent_request.sql",
       "source": "create-table"
     },
@@ -381,8 +381,8 @@
     },
     {
       "name": "idempotent_request",
-      "module": "customer",
-      "file": "sql/validation/customer_runtime_validation.sql",
+      "module": "platform",
+      "file": "sql/validation/idempotency_runtime_validation.sql",
       "source": "sql-reference"
     },
     {

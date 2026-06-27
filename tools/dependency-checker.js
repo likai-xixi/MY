@@ -76,6 +76,18 @@ function methodMatches(routeMethod = '', endpointMethod = '') {
   return route === endpoint || route === 'ANY';
 }
 
+function endpointRouteKey(method = '', path = '', module = '') {
+  return `${String(method).toUpperCase()} ${normalizedPath(path)} ${module || ''}`;
+}
+
+function findMatchingBackendRoute(endpoint, backendRoutes = { routes: [] }) {
+  return (backendRoutes.routes || []).find((route) => (
+    methodMatches(route.method, endpoint.method) &&
+    normalizedPath(route.path) === normalizedPath(endpoint.path) &&
+    (!endpoint.module || route.module === endpoint.module)
+  ));
+}
+
 function isRealScannedBackendRoute(route, sources) {
   return Boolean(route.file) && sources.has(route.source);
 }
@@ -109,6 +121,69 @@ export function validateApiRouteScanConsistency({ endpoints = [], catalog = new 
       `api endpoint ${endpoint.id} declares ${endpoint.method} ${endpoint.path} in graph/API catalog but ai/generated/backend-routes.json has no real scanned backend route source. Add route code and run npm run scan:backend-routes, or keep this only while ai/project-profile.json templateSetup=true.`,
       errors
     );
+  }
+
+  return errors;
+}
+
+export function validateApiPermissionConsistency({ endpoints = [], backendRoutes = { routes: [] }, features = readFeatureRegistry(), highRiskCoverage = { entries: [] } } = {}) {
+  const errors = [];
+  const featuresById = new Map((features || []).filter((feature) => feature.status !== 'removed').map((feature) => [feature.id, feature]));
+  const highRiskByApi = new Map((highRiskCoverage.entries || []).map((entry) => [
+    entry.method ? endpointRouteKey(entry.method, entry.api) : normalizedPath(entry.api),
+    entry
+  ]));
+
+  for (const endpoint of endpoints) {
+    const route = findMatchingBackendRoute(endpoint, backendRoutes);
+    const routePermission = route?.permission || '';
+    if (routePermission) {
+      ensure(endpoint.permission === routePermission, `api endpoint ${endpoint.id} permission must match backend route permission ${routePermission}.`, errors);
+      const feature = featuresById.get(endpoint.module);
+      if (feature) {
+        ensure((feature.permissions || []).includes(routePermission), `api endpoint ${endpoint.id} permission ${routePermission} is missing from feature ${feature.id}.permissions.`, errors);
+      }
+    }
+
+    const highRisk = highRiskByApi.get(endpointRouteKey(endpoint.method, endpoint.path)) || highRiskByApi.get(normalizedPath(endpoint.path));
+    if (highRisk && String(highRisk.status || '') === 'required') {
+      ensure(endpoint.permission === highRisk.backendPermission, `high-risk api endpoint ${endpoint.id} permission must match ${highRisk.backendPermission}.`, errors);
+      ensure(endpoint.riskDomain === highRisk.riskDomain, `high-risk api endpoint ${endpoint.id} riskDomain must be ${highRisk.riskDomain}.`, errors);
+    }
+    if (endpoint.riskDomain) {
+      ensure(Boolean(highRisk), `api endpoint ${endpoint.id} declares riskDomain ${endpoint.riskDomain} but is missing from ai/registry/high-risk-permission-coverage.json.`, errors);
+    }
+  }
+
+  for (const entry of highRiskCoverage.entries || []) {
+    if (entry.status !== 'required') {
+      continue;
+    }
+    const endpoint = endpoints.find((candidate) => (
+      normalizedPath(candidate.path) === normalizedPath(entry.api) &&
+      (!entry.method || String(candidate.method).toUpperCase() === String(entry.method).toUpperCase())
+    ));
+    ensure(Boolean(endpoint), `high-risk permission coverage ${entry.api} is missing from graph/api-graph.json.`, errors);
+  }
+
+  const seenMethodPaths = new Set();
+  for (const route of backendRoutes.routes || []) {
+    if (!route.permission) {
+      continue;
+    }
+    const key = endpointRouteKey(route.method, route.path, route.module);
+    if (seenMethodPaths.has(key)) {
+      continue;
+    }
+    seenMethodPaths.add(key);
+    const endpoint = endpoints.find((candidate) => (
+      methodMatches(route.method, candidate.method) &&
+      normalizedPath(route.path) === normalizedPath(candidate.path) &&
+      (!candidate.module || route.module === candidate.module)
+    ));
+    if (endpoint && !endpoint.permission) {
+      errors.push(`api endpoint ${endpoint.id} has backend permission ${route.permission} but graph/api-graph.json is missing permission.`);
+    }
   }
 
   return errors;
@@ -253,6 +328,10 @@ export function validateGraphs() {
   }
   if (backendRoutes) {
     errors.push(...validateApiRouteScanConsistency({ endpoints, catalog, backendRoutes }));
+    const highRiskCoverage = safeReadJson('ai/registry/high-risk-permission-coverage.json', errors);
+    if (highRiskCoverage) {
+      errors.push(...validateApiPermissionConsistency({ endpoints, backendRoutes, features, highRiskCoverage }));
+    }
   }
 
   ensure(uiGraph.schemaVersion === 1, 'ui graph schemaVersion must be 1.', errors);
@@ -272,6 +351,19 @@ export function validateGraphs() {
     ensure(Boolean(screen.route), `ui screen ${screen.id} is missing route.`, errors);
     ensure(Boolean(screen.owner), `ui screen ${screen.id} is missing owner.`, errors);
     ensure(Boolean(screen.module), `ui screen ${screen.id} is missing module.`, errors);
+    if (screen.virtual === true) {
+      ensure(Boolean(screen.reason), `virtual ui screen ${screen.id} must include reason.`, errors);
+    } else {
+      ensure(Boolean(screen.file), `ui screen ${screen.id} must have a real file or declare virtual: true with reason.`, errors);
+      if (screen.file) {
+        ensure(fileExists(screen.file), `ui screen ${screen.id} file does not exist: ${screen.file}.`, errors);
+        ensure(
+          /^ruoyi-ui\/src\/views\/.+\.(vue|tsx|jsx|ts|js)$/.test(screen.file) || /^frontend\/src\/modules\/.+\.(vue|tsx|jsx|ts|js)$/.test(screen.file),
+          `ui screen ${screen.id} file must be a frontend view/module file, not ${screen.file}.`,
+          errors
+        );
+      }
+    }
     if (screen.module) {
       ensure(nodeIds.has(`frontend:${screen.module}`), `ui screen ${screen.id} references missing frontend module ${screen.module}.`, errors);
     }

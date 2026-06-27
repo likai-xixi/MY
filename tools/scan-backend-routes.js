@@ -22,6 +22,13 @@ function extractFirstString(args = '') {
   return args.match(/["']([^"']+)["']/)?.[1] || '';
 }
 
+function extractNearestPermission(text, annotationIndex) {
+  const prefix = text.slice(Math.max(0, annotationIndex - 700), annotationIndex);
+  const sinceLastMethod = prefix.slice(Math.max(prefix.lastIndexOf('\n    public '), prefix.lastIndexOf('\n    private '), prefix.lastIndexOf('\n    protected ')));
+  const matches = [...sinceLastMethod.matchAll(/@PreAuthorize\s*\(\s*["']@ss\.hasPermi\(\s*['"]([^'"]+)['"]\s*\)["']\s*\)/g)];
+  return matches.at(-1)?.[1] || '';
+}
+
 function scanJavaRoutes(file, text, features) {
   const routes = [];
   const module = inferFeatureFromPath(file, features);
@@ -47,7 +54,8 @@ function scanJavaRoutes(file, text, features) {
       method,
       path: normalizeRoutePath(`${normalizeRoutePath(classPrefix)}${normalizeRoutePath(rawPath)}`.replace(/\/+/g, '/')),
       file,
-      source: 'java-annotation'
+      source: 'java-annotation',
+      permission: extractNearestPermission(text, match.index)
     });
   }
   return routes;

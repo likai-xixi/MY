@@ -53,7 +53,6 @@
         "customer_fund_flow",
         "customer_salesman_bind_log",
         "customer_sample_policy",
-        "idempotent_request",
         "sample_rebate_record",
         "sys_menu"
       ],
@@ -150,7 +149,6 @@
         "sql/migrations/V20260625_001_customer_schema.sql",
         "sql/migrations/V20260625_002_customer_seed_public_customer.sql",
         "sql/migrations/V20260625_003_customer_menu_permission.sql",
-        "sql/migrations/V20260625_004_idempotent_request.sql",
         "sql/validation/customer_runtime_validation.sql"
       ],
       "mapperXmlFiles": [
@@ -210,13 +208,11 @@
           "customer_fund_flow",
           "customer_salesman_bind_log",
           "customer_sample_policy",
-          "idempotent_request",
           "sample_rebate_record",
           "sql/customer.ownership.md",
           "sql/migrations/V20260625_001_customer_schema.sql",
           "sql/migrations/V20260625_002_customer_seed_public_customer.sql",
           "sql/migrations/V20260625_003_customer_menu_permission.sql",
-          "sql/migrations/V20260625_004_idempotent_request.sql",
           "sql/validation/customer_runtime_validation.sql",
           "sys_menu"
         ],
@@ -344,7 +340,19 @@
         "/monitor/operlog/list",
         "/monitor/server"
       ],
-      "screens": [],
+      "screens": [
+        "monitor:monitor-cache-list:5",
+        "monitor:monitor-cache:4",
+        "monitor:monitor-druid:6",
+        "monitor:monitor-job-detail:7",
+        "monitor:monitor-job-log:9",
+        "monitor:monitor-job:8",
+        "monitor:monitor-logininfor:10",
+        "monitor:monitor-online:11",
+        "monitor:monitor-operlog-detail:12",
+        "monitor:monitor-operlog:13",
+        "monitor:monitor-server:14"
+      ],
       "dbTables": [
         "gen_table",
         "gen_table_column",
@@ -371,6 +379,7 @@
         "monitor:cache:list",
         "monitor:druid:list",
         "monitor:job:add",
+        "monitor:job:changeStatus",
         "monitor:job:edit",
         "monitor:job:export",
         "monitor:job:list",
@@ -381,6 +390,8 @@
         "monitor:logininfor:query",
         "monitor:logininfor:remove",
         "monitor:logininfor:unlock",
+        "monitor:online:batchLogout",
+        "monitor:online:forceLogout",
         "monitor:online:list",
         "monitor:online:query",
         "monitor:operlog:export",
@@ -493,6 +504,7 @@
         "ruoyi-ui/src/views/monitor/job/index.vue",
         "ruoyi-ui/src/views/monitor/job/log.vue",
         "ruoyi-ui/src/views/monitor/logininfor/index.vue",
+        "ruoyi-ui/src/views/monitor/online/index.vue",
         "ruoyi-ui/src/views/monitor/operlog/index.vue",
         "sql/ry_20260417.sql"
       ],
@@ -531,7 +543,19 @@
           "/monitor/operlog/list",
           "/monitor/server"
         ],
-        "ui": [],
+        "ui": [
+          "monitor:monitor-cache-list:5",
+          "monitor:monitor-cache:4",
+          "monitor:monitor-druid:6",
+          "monitor:monitor-job-detail:7",
+          "monitor:monitor-job-log:9",
+          "monitor:monitor-job:8",
+          "monitor:monitor-logininfor:10",
+          "monitor:monitor-online:11",
+          "monitor:monitor-operlog-detail:12",
+          "monitor:monitor-operlog:13",
+          "monitor:monitor-server:14"
+        ],
         "database": [
           "gen_table",
           "gen_table_column",
@@ -559,6 +583,7 @@
           "monitor:cache:list",
           "monitor:druid:list",
           "monitor:job:add",
+          "monitor:job:changeStatus",
           "monitor:job:edit",
           "monitor:job:export",
           "monitor:job:list",
@@ -569,6 +594,8 @@
           "monitor:logininfor:query",
           "monitor:logininfor:remove",
           "monitor:logininfor:unlock",
+          "monitor:online:batchLogout",
+          "monitor:online:forceLogout",
           "monitor:online:list",
           "monitor:online:query",
           "monitor:operlog:export",
@@ -587,6 +614,7 @@
           "ruoyi-ui/src/views/monitor/job/index.vue",
           "ruoyi-ui/src/views/monitor/job/log.vue",
           "ruoyi-ui/src/views/monitor/logininfor/index.vue",
+          "ruoyi-ui/src/views/monitor/online/index.vue",
           "ruoyi-ui/src/views/monitor/operlog/index.vue",
           "sql/ry_20260417.sql",
           "system:dict:list",
@@ -655,19 +683,15 @@
       "apis": [],
       "screens": [
         "platform:error-401:0",
-        "platform:error-401:95",
         "platform:error-404:1",
-        "platform:error-404:96",
         "platform:lock:2",
-        "platform:lock:97",
         "platform:login:3",
-        "platform:login:98",
         "platform:redirect:15",
-        "platform:redirect:99",
-        "platform:register:100",
         "platform:register:16"
       ],
-      "dbTables": [],
+      "dbTables": [
+        "idempotent_request"
+      ],
       "permissions": [
         "monitor:job:list",
         "system:dict:list",
@@ -700,7 +724,10 @@
       "mappers": [],
       "domainObjects": [],
       "apiClients": [],
-      "sqlFiles": [],
+      "sqlFiles": [
+        "sql/migrations/V20260625_004_idempotent_request.sql",
+        "sql/validation/idempotency_runtime_validation.sql"
+      ],
       "mapperXmlFiles": [],
       "menuSqlFiles": [],
       "permissionFiles": [
@@ -716,25 +743,17 @@
         "api": [],
         "ui": [
           "platform:error-401:0",
-          "platform:error-401:82",
-          "platform:error-401:95",
           "platform:error-404:1",
-          "platform:error-404:83",
-          "platform:error-404:96",
           "platform:lock:2",
-          "platform:lock:84",
-          "platform:lock:97",
           "platform:login:3",
-          "platform:login:85",
-          "platform:login:98",
           "platform:redirect:15",
-          "platform:redirect:86",
-          "platform:redirect:99",
-          "platform:register:100",
-          "platform:register:16",
-          "platform:register:87"
+          "platform:register:16"
         ],
-        "database": [],
+        "database": [
+          "idempotent_request",
+          "sql/migrations/V20260625_004_idempotent_request.sql",
+          "sql/validation/idempotency_runtime_validation.sql"
+        ],
         "permissions": [
           "monitor:job:list",
           "ruoyi-ui/src/router/index.js",
@@ -829,7 +848,27 @@
         "/system/user/profile/updatePwd",
         "/system/user/resetPwd"
       ],
-      "screens": [],
+      "screens": [
+        "system:system-config:18",
+        "system:system-dept:19",
+        "system:system-dict-data:20",
+        "system:system-dict-detail:21",
+        "system:system-dict:22",
+        "system:system-menu:23",
+        "system:system-notice-readusers:24",
+        "system:system-notice:25",
+        "system:system-post:26",
+        "system:system-role-authuser:27",
+        "system:system-role-selectuser:29",
+        "system:system-role:28",
+        "system:system-user-authrole:30",
+        "system:system-user-profile-resetpwd:33",
+        "system:system-user-profile-useravatar:34",
+        "system:system-user-profile-userinfo:35",
+        "system:system-user-profile:32",
+        "system:system-user-view:36",
+        "system:system-user:31"
+      ],
       "dbTables": [
         "gen_table",
         "gen_table_column",
@@ -919,6 +958,7 @@
         "system:user:list",
         "system:user:query",
         "system:user:remove",
+        "system:user:resetPwd",
         "tool:build:list",
         "tool:gen:code",
         "tool:gen:edit",
@@ -1229,7 +1269,27 @@
           "/system/user/profile/updatePwd",
           "/system/user/resetPwd"
         ],
-        "ui": [],
+        "ui": [
+          "system:system-config:18",
+          "system:system-dept:19",
+          "system:system-dict-data:20",
+          "system:system-dict-detail:21",
+          "system:system-dict:22",
+          "system:system-menu:23",
+          "system:system-notice-readusers:24",
+          "system:system-notice:25",
+          "system:system-post:26",
+          "system:system-role-authuser:27",
+          "system:system-role-selectuser:29",
+          "system:system-role:28",
+          "system:system-user-authrole:30",
+          "system:system-user-profile-resetpwd:33",
+          "system:system-user-profile-useravatar:34",
+          "system:system-user-profile-userinfo:35",
+          "system:system-user-profile:32",
+          "system:system-user-view:36",
+          "system:system-user:31"
+        ],
         "database": [
           "gen_table",
           "gen_table_column",
@@ -1343,6 +1403,7 @@
           "system:user:list",
           "system:user:query",
           "system:user:remove",
+          "system:user:resetPwd",
           "tool:build:list",
           "tool:gen:code",
           "tool:gen:edit",
@@ -1504,7 +1565,21 @@
         "/tool/gen/preview",
         "/tool/gen/synchDb"
       ],
-      "screens": [],
+      "screens": [
+        "tool:tool-build-codetypedialog:37",
+        "tool:tool-build-draggableitem:38",
+        "tool:tool-build-iconsdialog:39",
+        "tool:tool-build-rightpanel:40",
+        "tool:tool-build-treenodedialog:41",
+        "tool:tool-build:42",
+        "tool:tool-gen-basicinfoform:43",
+        "tool:tool-gen-createtable:44",
+        "tool:tool-gen-edittable:45",
+        "tool:tool-gen-geninfoform:46",
+        "tool:tool-gen-importtable:47",
+        "tool:tool-gen:48",
+        "tool:tool-swagger:49"
+      ],
       "dbTables": [],
       "permissions": [
         "tool:build:list",
@@ -1618,7 +1693,21 @@
           "/tool/gen/preview",
           "/tool/gen/synchDb"
         ],
-        "ui": [],
+        "ui": [
+          "tool:tool-build-codetypedialog:37",
+          "tool:tool-build-draggableitem:38",
+          "tool:tool-build-iconsdialog:39",
+          "tool:tool-build-rightpanel:40",
+          "tool:tool-build-treenodedialog:41",
+          "tool:tool-build:42",
+          "tool:tool-gen-basicinfoform:43",
+          "tool:tool-gen-createtable:44",
+          "tool:tool-gen-edittable:45",
+          "tool:tool-gen-geninfoform:46",
+          "tool:tool-gen-importtable:47",
+          "tool:tool-gen:48",
+          "tool:tool-swagger:49"
+        ],
         "database": [],
         "permissions": [
           "ruoyi-generator/src/main/java/com/ruoyi/generator/controller/GenController.java",

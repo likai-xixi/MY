@@ -610,6 +610,35 @@ function isMarkdownFile(file) {
   return /\.md$/i.test(String(file || ''));
 }
 
+function isValidationMigration(entry) {
+  return /validation/i.test(String(entry?.type || '')) || /validation/i.test(String(entry?.migrationId || ''));
+}
+
+function dependencyIds(entry) {
+  return Array.isArray(entry?.dependsOn) ? entry.dependsOn : [];
+}
+
+function dependencyTableSet(entry, byMigrationId, visited = new Set()) {
+  const tables = new Set();
+  for (const id of dependencyIds(entry)) {
+    if (visited.has(id)) {
+      continue;
+    }
+    visited.add(id);
+    const dependency = byMigrationId.get(id);
+    if (!dependency) {
+      continue;
+    }
+    for (const table of dependency.appliesToTables || []) {
+      tables.add(table);
+    }
+    for (const table of dependencyTableSet(dependency, byMigrationId, visited)) {
+      tables.add(table);
+    }
+  }
+  return tables;
+}
+
 export function validateMigrationGate({ root = process.cwd() } = {}) {
   const result = emptyResult();
   const file = 'ai/registry/migration-registry.json';
@@ -625,12 +654,46 @@ export function validateMigrationGate({ root = process.cwd() } = {}) {
     return result;
   }
 
+  const byMigrationId = new Map();
+  for (const [index, entry] of data.entries.entries()) {
+    const label = `entries[${index}]`;
+    if (!entry?.migrationId) {
+      continue;
+    }
+    if (byMigrationId.has(entry.migrationId)) {
+      addFailure(result, file, 'duplicate-migration-id', `${label} duplicates migrationId ${entry.migrationId}`);
+      continue;
+    }
+    byMigrationId.set(entry.migrationId, entry);
+  }
+
   for (const [index, entry] of data.entries.entries()) {
     const label = `entries[${index}]`;
     requirePresentFields(result, file, label, entry, MIGRATION_FIELDS);
     requireNonBlankFields(result, file, label, entry, ['migrationId', 'featureId', 'file', 'type', 'status', 'phase', 'rollbackPlan', 'owner']);
-    requireArrayField(result, file, label, entry, 'appliesToTables');
+    const appliesToTables = requireArrayField(result, file, label, entry, 'appliesToTables');
     requireArrayField(result, file, label, entry, 'verification');
+    if (entry.dependsOn !== undefined && !Array.isArray(entry.dependsOn)) {
+      addFailure(result, file, 'depends-on-array-required', `${entry.migrationId || label}.dependsOn must be an array`);
+    }
+    for (const dependsOn of dependencyIds(entry)) {
+      if (!byMigrationId.has(dependsOn)) {
+        addFailure(result, file, 'depends-on-missing', `${entry.migrationId || label} dependsOn unknown migrationId ${dependsOn}`);
+      }
+    }
+    if (isValidationMigration(entry)) {
+      if (!Array.isArray(entry.dependsOn) || entry.dependsOn.length === 0) {
+        addFailure(result, file, 'validation-depends-on-missing', `${entry.migrationId || label} runtime validation must declare dependsOn`);
+      }
+      if (!entry.domainNote) {
+        const dependencyTables = dependencyTableSet(entry, byMigrationId);
+        for (const table of appliesToTables) {
+          if (!dependencyTables.has(table)) {
+            addFailure(result, file, 'validation-table-dependency-missing', `${entry.migrationId || label} validates ${table} but no dependsOn chain provides that table`);
+          }
+        }
+      }
+    }
     if (isBlockingMigration(entry)) {
       if (!pathExists(root, entry.file)) {
         addFailure(result, file, 'required-migration-missing', `${entry.migrationId || label} required migration file is missing: ${entry.file || ''}`);

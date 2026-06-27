@@ -3229,5 +3229,737 @@
       "module": "tool",
       "source": "@/components/iFrame"
     }
+  ],
+  "globalComponentUsages": [
+    {
+      "file": "ruoyi-ui/src/components/Crontab/index.vue",
+      "module": "",
+      "tag": "crontab-day",
+      "componentId": "ruoyi-crontab-day",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/components/Crontab/index.vue",
+      "module": "",
+      "tag": "crontab-hour",
+      "componentId": "ruoyi-crontab-hour",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/components/Crontab/index.vue",
+      "module": "",
+      "tag": "crontab-min",
+      "componentId": "ruoyi-crontab-min",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/components/Crontab/index.vue",
+      "module": "",
+      "tag": "crontab-month",
+      "componentId": "ruoyi-crontab-month",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/components/Crontab/index.vue",
+      "module": "",
+      "tag": "crontab-result",
+      "componentId": "ruoyi-crontab-result",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/components/Crontab/index.vue",
+      "module": "",
+      "tag": "crontab-second",
+      "componentId": "ruoyi-crontab-second",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/components/Crontab/index.vue",
+      "module": "",
+      "tag": "crontab-week",
+      "componentId": "ruoyi-crontab-week",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/components/Crontab/index.vue",
+      "module": "",
+      "tag": "crontab-year",
+      "componentId": "ruoyi-crontab-year",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/components/Editor/index.vue",
+      "module": "",
+      "tag": "quill-editor",
+      "componentId": "",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/components/ExcelImportDialog/index.vue",
+      "module": "",
+      "tag": "upload-filled",
+      "componentId": "",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/components/HeaderSearch/index.vue",
+      "module": "",
+      "tag": "svg-icon",
+      "componentId": "@/components/SvgIcon",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/components/ImagePreview/index.vue",
+      "module": "",
+      "tag": "picture-filled",
+      "componentId": "",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/components/RuoYi/Doc/index.vue",
+      "module": "",
+      "tag": "svg-icon",
+      "componentId": "@/components/SvgIcon",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/components/RuoYi/Git/index.vue",
+      "module": "",
+      "tag": "svg-icon",
+      "componentId": "@/components/SvgIcon",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/components/Screenfull/index.vue",
+      "module": "",
+      "tag": "svg-icon",
+      "componentId": "@/components/SvgIcon",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/components/SizeSelect/index.vue",
+      "module": "",
+      "tag": "svg-icon",
+      "componentId": "@/components/SvgIcon",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/components/TreePanel/index.vue",
+      "module": "",
+      "tag": "arrow-down",
+      "componentId": "",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/components/TreePanel/index.vue",
+      "module": "",
+      "tag": "arrow-up",
+      "componentId": "",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/components/TreePanel/index.vue",
+      "module": "",
+      "tag": "darrow-left",
+      "componentId": "",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/components/TreePanel/index.vue",
+      "module": "",
+      "tag": "darrow-right",
+      "componentId": "",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/components/TreePanel/index.vue",
+      "module": "",
+      "tag": "refresh",
+      "componentId": "",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/components/TreePanel/index.vue",
+      "module": "",
+      "tag": "search",
+      "componentId": "",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/layout/components/AppMain.vue",
+      "module": "",
+      "tag": "iframe-toggle",
+      "componentId": "",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/layout/components/HeaderNotice/DetailView.vue",
+      "module": "",
+      "tag": "bell",
+      "componentId": "",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/layout/components/HeaderNotice/DetailView.vue",
+      "module": "",
+      "tag": "clock",
+      "componentId": "",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/layout/components/HeaderNotice/DetailView.vue",
+      "module": "",
+      "tag": "document",
+      "componentId": "",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/layout/components/HeaderNotice/DetailView.vue",
+      "module": "",
+      "tag": "message",
+      "componentId": "",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/layout/components/HeaderNotice/DetailView.vue",
+      "module": "",
+      "tag": "user",
+      "componentId": "",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/layout/components/HeaderNotice/index.vue",
+      "module": "",
+      "tag": "loading",
+      "componentId": "",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/layout/components/HeaderNotice/index.vue",
+      "module": "",
+      "tag": "postcard",
+      "componentId": "",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/layout/components/HeaderNotice/index.vue",
+      "module": "",
+      "tag": "svg-icon",
+      "componentId": "@/components/SvgIcon",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/layout/components/IframeToggle/index.vue",
+      "module": "",
+      "tag": "inner-link",
+      "componentId": "",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/layout/components/Navbar.vue",
+      "module": "",
+      "tag": "top-bar",
+      "componentId": "",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/layout/components/Navbar.vue",
+      "module": "",
+      "tag": "top-nav",
+      "componentId": "",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/layout/components/Sidebar/SidebarItem.vue",
+      "module": "",
+      "tag": "app-link",
+      "componentId": "",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/layout/components/Sidebar/SidebarItem.vue",
+      "module": "",
+      "tag": "svg-icon",
+      "componentId": "@/components/SvgIcon",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/layout/components/Sidebar/index.vue",
+      "module": "",
+      "tag": "sidebar-item",
+      "componentId": "",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/layout/components/TagsView/index.vue",
+      "module": "",
+      "tag": "arrow-down",
+      "componentId": "",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/layout/components/TagsView/index.vue",
+      "module": "",
+      "tag": "arrow-left",
+      "componentId": "",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/layout/components/TagsView/index.vue",
+      "module": "",
+      "tag": "arrow-right",
+      "componentId": "",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/layout/components/TagsView/index.vue",
+      "module": "",
+      "tag": "circle-close",
+      "componentId": "",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/layout/components/TagsView/index.vue",
+      "module": "",
+      "tag": "full-screen",
+      "componentId": "",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/layout/components/TagsView/index.vue",
+      "module": "",
+      "tag": "scroll-pane",
+      "componentId": "",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/layout/components/TagsView/index.vue",
+      "module": "",
+      "tag": "svg-icon",
+      "componentId": "@/components/SvgIcon",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/layout/components/TopBar/index.vue",
+      "module": "",
+      "tag": "sidebar-item",
+      "componentId": "",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/layout/components/TopNav/index.vue",
+      "module": "",
+      "tag": "svg-icon",
+      "componentId": "@/components/SvgIcon",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/layout/index.vue",
+      "module": "",
+      "tag": "app-main",
+      "componentId": "",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/layout/index.vue",
+      "module": "",
+      "tag": "tags-view",
+      "componentId": "",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/views/customer/index.vue",
+      "module": "customer",
+      "tag": "right-toolbar",
+      "componentId": "ruoyi-right-toolbar-index",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/views/login.vue",
+      "module": "platform",
+      "tag": "svg-icon",
+      "componentId": "@/components/SvgIcon",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/views/monitor/cache/index.vue",
+      "module": "monitor",
+      "tag": "monitor",
+      "componentId": "",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/views/monitor/cache/list.vue",
+      "module": "monitor",
+      "tag": "collection",
+      "componentId": "",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/views/monitor/druid/index.vue",
+      "module": "monitor",
+      "tag": "i-frame",
+      "componentId": "@/components/iFrame",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/views/monitor/job/detail.vue",
+      "module": "monitor",
+      "tag": "clock",
+      "componentId": "",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/views/monitor/job/detail.vue",
+      "module": "monitor",
+      "tag": "dict-tag",
+      "componentId": "ruoyi-dict-tag-index",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/views/monitor/job/detail.vue",
+      "module": "monitor",
+      "tag": "info-filled",
+      "componentId": "",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/views/monitor/job/detail.vue",
+      "module": "monitor",
+      "tag": "operation",
+      "componentId": "",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/views/monitor/job/detail.vue",
+      "module": "monitor",
+      "tag": "warning",
+      "componentId": "",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/views/monitor/job/index.vue",
+      "module": "monitor",
+      "tag": "right-toolbar",
+      "componentId": "ruoyi-right-toolbar-index",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/views/monitor/job/log.vue",
+      "module": "monitor",
+      "tag": "dict-tag",
+      "componentId": "ruoyi-dict-tag-index",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/views/monitor/job/log.vue",
+      "module": "monitor",
+      "tag": "right-toolbar",
+      "componentId": "ruoyi-right-toolbar-index",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/views/monitor/logininfor/index.vue",
+      "module": "monitor",
+      "tag": "dict-tag",
+      "componentId": "ruoyi-dict-tag-index",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/views/monitor/logininfor/index.vue",
+      "module": "monitor",
+      "tag": "right-toolbar",
+      "componentId": "ruoyi-right-toolbar-index",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/views/monitor/operlog/detail.vue",
+      "module": "monitor",
+      "tag": "download",
+      "componentId": "",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/views/monitor/operlog/detail.vue",
+      "module": "monitor",
+      "tag": "info-filled",
+      "componentId": "",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/views/monitor/operlog/detail.vue",
+      "module": "monitor",
+      "tag": "sort",
+      "componentId": "",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/views/monitor/operlog/detail.vue",
+      "module": "monitor",
+      "tag": "upload",
+      "componentId": "",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/views/monitor/operlog/detail.vue",
+      "module": "monitor",
+      "tag": "user",
+      "componentId": "",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/views/monitor/operlog/detail.vue",
+      "module": "monitor",
+      "tag": "warning",
+      "componentId": "",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/views/monitor/operlog/index.vue",
+      "module": "monitor",
+      "tag": "dict-tag",
+      "componentId": "ruoyi-dict-tag-index",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/views/monitor/operlog/index.vue",
+      "module": "monitor",
+      "tag": "right-toolbar",
+      "componentId": "ruoyi-right-toolbar-index",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/views/monitor/server/index.vue",
+      "module": "monitor",
+      "tag": "cpu",
+      "componentId": "",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/views/register.vue",
+      "module": "register.vue",
+      "tag": "svg-icon",
+      "componentId": "@/components/SvgIcon",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/views/system/config/index.vue",
+      "module": "system",
+      "tag": "dict-tag",
+      "componentId": "ruoyi-dict-tag-index",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/views/system/config/index.vue",
+      "module": "system",
+      "tag": "right-toolbar",
+      "componentId": "ruoyi-right-toolbar-index",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/views/system/dept/index.vue",
+      "module": "system",
+      "tag": "right-toolbar",
+      "componentId": "ruoyi-right-toolbar-index",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/views/system/dict/data.vue",
+      "module": "system",
+      "tag": "right-toolbar",
+      "componentId": "ruoyi-right-toolbar-index",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/views/system/dict/detail.vue",
+      "module": "system",
+      "tag": "list",
+      "componentId": "",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/views/system/dict/index.vue",
+      "module": "system",
+      "tag": "right-toolbar",
+      "componentId": "ruoyi-right-toolbar-index",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/views/system/menu/index.vue",
+      "module": "system",
+      "tag": "right-toolbar",
+      "componentId": "ruoyi-right-toolbar-index",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/views/system/menu/index.vue",
+      "module": "system",
+      "tag": "svg-icon",
+      "componentId": "@/components/SvgIcon",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/views/system/notice/index.vue",
+      "module": "system",
+      "tag": "right-toolbar",
+      "componentId": "ruoyi-right-toolbar-index",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/views/system/post/index.vue",
+      "module": "system",
+      "tag": "dict-tag",
+      "componentId": "ruoyi-dict-tag-index",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/views/system/post/index.vue",
+      "module": "system",
+      "tag": "right-toolbar",
+      "componentId": "ruoyi-right-toolbar-index",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/views/system/role/authUser.vue",
+      "module": "system",
+      "tag": "dict-tag",
+      "componentId": "ruoyi-dict-tag-index",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/views/system/role/authUser.vue",
+      "module": "system",
+      "tag": "right-toolbar",
+      "componentId": "ruoyi-right-toolbar-index",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/views/system/role/index.vue",
+      "module": "system",
+      "tag": "right-toolbar",
+      "componentId": "ruoyi-right-toolbar-index",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/views/system/role/selectUser.vue",
+      "module": "system",
+      "tag": "dict-tag",
+      "componentId": "ruoyi-dict-tag-index",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/views/system/user/index.vue",
+      "module": "system",
+      "tag": "right-toolbar",
+      "componentId": "ruoyi-right-toolbar-index",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/views/system/user/index.vue",
+      "module": "system",
+      "tag": "tree-panel",
+      "componentId": "@/components/TreePanel",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/views/system/user/profile/userAvatar.vue",
+      "module": "system",
+      "tag": "upload",
+      "componentId": "",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/views/system/user/profile/userAvatar.vue",
+      "module": "system",
+      "tag": "vue-cropper",
+      "componentId": "",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/views/tool/build/DraggableItem.vue",
+      "module": "tool",
+      "tag": "draggable-item",
+      "componentId": "",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/views/tool/build/RightPanel.vue",
+      "module": "tool",
+      "tag": "svg-icon",
+      "componentId": "@/components/SvgIcon",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/views/tool/build/index.vue",
+      "module": "tool",
+      "tag": "svg-icon",
+      "componentId": "@/components/SvgIcon",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/views/tool/gen/editTable.vue",
+      "module": "tool",
+      "tag": "basic-info-form",
+      "componentId": "ruoyi-ui/src/views/tool/gen/basicInfoForm.vue",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/views/tool/gen/importTable.vue",
+      "module": "tool",
+      "tag": "pagination",
+      "componentId": "ruoyi-pagination-index",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/views/tool/gen/index.vue",
+      "module": "tool",
+      "tag": "right-toolbar",
+      "componentId": "ruoyi-right-toolbar-index",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/views/tool/swagger/index.vue",
+      "module": "tool",
+      "tag": "i-frame",
+      "componentId": "@/components/iFrame",
+      "source": "vue-template-global"
+    }
+  ],
+  "globalComponentWarnings": [
+    {
+      "tag": "arrow-down",
+      "count": 2,
+      "warning": "global component tag is used frequently but is not registered in the component registry/catalog"
+    },
+    {
+      "tag": "clock",
+      "count": 2,
+      "warning": "global component tag is used frequently but is not registered in the component registry/catalog"
+    },
+    {
+      "tag": "user",
+      "count": 2,
+      "warning": "global component tag is used frequently but is not registered in the component registry/catalog"
+    },
+    {
+      "tag": "sidebar-item",
+      "count": 2,
+      "warning": "global component tag is used frequently but is not registered in the component registry/catalog"
+    },
+    {
+      "tag": "info-filled",
+      "count": 2,
+      "warning": "global component tag is used frequently but is not registered in the component registry/catalog"
+    },
+    {
+      "tag": "warning",
+      "count": 2,
+      "warning": "global component tag is used frequently but is not registered in the component registry/catalog"
+    },
+    {
+      "tag": "upload",
+      "count": 2,
+      "warning": "global component tag is used frequently but is not registered in the component registry/catalog"
+    }
   ]
 }

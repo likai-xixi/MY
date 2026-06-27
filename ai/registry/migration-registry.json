@@ -26,6 +26,7 @@
         "node --test tests/high-risk-governance.test.js",
         "mysql < sql/migrations/V20260625_001_customer_schema.sql when a disposable MySQL test database is available"
       ],
+      "dependsOn": [],
       "owner": "customer",
       "blocking": true
     },
@@ -46,6 +47,9 @@
         "mysql < sql/migrations/V20260625_002_customer_seed_public_customer.sql when a disposable MySQL test database is available",
         "mysql < sql/validation/customer_runtime_validation.sql when a disposable MySQL test database is available"
       ],
+      "dependsOn": [
+        "customer-schema-baseline"
+      ],
       "owner": "customer",
       "blocking": true
     },
@@ -65,6 +69,7 @@
         "node --test tests/high-risk-governance.test.js",
         "mysql < sql/migrations/V20260625_003_customer_menu_permission.sql when a disposable MySQL test database is available"
       ],
+      "dependsOn": [],
       "owner": "customer",
       "blocking": true
     },
@@ -75,9 +80,13 @@
       "type": "runtime-validation-sql",
       "appliesToTables": [
         "customer",
+        "customer_contact",
+        "customer_address",
         "customer_fund_account",
         "customer_fund_flow",
-        "customer_deposit_batch"
+        "customer_deposit_batch",
+        "customer_sample_policy",
+        "sample_rebate_record"
       ],
       "status": "required",
       "phase": "R-06-executable-customer-migration-baseline",
@@ -86,6 +95,10 @@
         "npm run check:high-risk-governance",
         "node --test tests/high-risk-governance.test.js",
         "mysql < sql/validation/customer_runtime_validation.sql when a disposable MySQL test database is available"
+      ],
+      "dependsOn": [
+        "customer-schema-baseline",
+        "customer-public-seed-baseline"
       ],
       "owner": "customer",
       "blocking": true
@@ -108,6 +121,29 @@
         "C:\\Users\\11131\\.cache\\codex-tools\\apache-maven-3.9.9\\bin\\mvn.cmd -pl ruoyi-business -am test",
         "C:\\Users\\11131\\.cache\\codex-tools\\apache-maven-3.9.9\\bin\\mvn.cmd -pl ruoyi-business -am -Pintegration-test verify when Docker/MySQL Testcontainers are available",
         "mysql < sql/migrations/V20260625_004_idempotent_request.sql when a disposable MySQL test database is available"
+      ],
+      "dependsOn": [],
+      "owner": "platform",
+      "blocking": true
+    },
+    {
+      "migrationId": "idempotency-runtime-validation",
+      "featureId": "platform",
+      "file": "sql/validation/idempotency_runtime_validation.sql",
+      "type": "runtime-validation-sql",
+      "appliesToTables": [
+        "idempotent_request"
+      ],
+      "status": "required",
+      "phase": "R-09A.3-governance-graph-validation-cleanup",
+      "rollbackPlan": "Validation SQL is read-only and has no data rollback. If validation finds rows, use a separate approved platform cleanup or migration change before claiming runtime acceptance.",
+      "verification": [
+        "npm run check:high-risk-governance",
+        "node --test tests/high-risk-governance.test.js",
+        "mysql < sql/validation/idempotency_runtime_validation.sql when a disposable MySQL test database is available"
+      ],
+      "dependsOn": [
+        "platform-idempotent-request-baseline"
       ],
       "owner": "platform",
       "blocking": true

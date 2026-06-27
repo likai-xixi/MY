@@ -16,6 +16,9 @@
       "payloadHashRequired": true,
       "lockStrategy": "unique-biz-type-key-and-row-lock",
       "resultReplay": "same-response",
+      "platformCapability": "platform-idempotent-request-baseline",
+      "table": "idempotent_request",
+      "tableOwnerFeature": "platform",
       "tests": [
         "tests/customer-risk-gate.test.js",
         "ruoyi-business/src/test/java/com/ruoyi/business/common/idempotency/IdempotencyServiceTest.java",
@@ -38,6 +41,9 @@
       "payloadHashRequired": true,
       "lockStrategy": "unique-biz-type-key-and-row-lock",
       "resultReplay": "same-response",
+      "platformCapability": "platform-idempotent-request-baseline",
+      "table": "idempotent_request",
+      "tableOwnerFeature": "platform",
       "tests": [
         "tests/customer-risk-gate.test.js",
         "ruoyi-business/src/test/java/com/ruoyi/business/common/idempotency/IdempotencyServiceTest.java",

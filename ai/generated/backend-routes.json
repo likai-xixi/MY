@@ -23,1155 +23,1320 @@
       "method": "GET",
       "path": "/business/customer/list",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "business:customer:list"
     },
     {
       "module": "customer",
       "method": "POST",
       "path": "/business/customer/export",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "business:customer:export"
     },
     {
       "module": "customer",
       "method": "GET",
       "path": "/business/customer/{customerId}",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "business:customer:query"
     },
     {
       "module": "customer",
       "method": "GET",
       "path": "/business/customer/duplicate-warning",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "business:customer:query"
     },
     {
       "module": "customer",
       "method": "POST",
       "path": "/business/customer",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "business:customer:add"
     },
     {
       "module": "customer",
       "method": "PUT",
       "path": "/business/customer",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "business:customer:edit"
     },
     {
       "module": "customer",
       "method": "PUT",
       "path": "/business/customer/changeStatus",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "business:customer:edit"
     },
     {
       "module": "customer",
       "method": "DELETE",
       "path": "/business/customer/{customerIds}",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "business:customer:remove"
     },
     {
       "module": "customer",
       "method": "GET",
       "path": "/business/customer/salesmen",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "business:customer:owner:view"
     },
     {
       "module": "customer",
       "method": "PUT",
       "path": "/business/customer/transferOwner",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "business:customer:owner:transfer"
     },
     {
       "module": "customer",
       "method": "GET",
       "path": "/business/customer/{customerId}/owner-log",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "business:customer:owner:history"
     },
     {
       "module": "customer",
       "method": "GET",
       "path": "/business/customer/{customerId}/fund/accounts",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "business:customer:fund:view"
     },
     {
       "module": "customer",
       "method": "POST",
       "path": "/business/customer/{customerId}/fund/deposit",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "business:customer:fund:deposit"
     },
     {
       "module": "customer",
       "method": "GET",
       "path": "/business/customer/{customerId}/fund/flows",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "business:customer:fund:flow"
     },
     {
       "module": "customer",
       "method": "GET",
       "path": "/business/customer/{customerId}/fund/deposit-batches",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "business:customer:fund:view"
     },
     {
       "module": "customer",
       "method": "GET",
       "path": "/business/customer/{customerId}/sample-policy",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "business:customer:sample-policy:view"
     },
     {
       "module": "customer",
       "method": "PUT",
       "path": "/business/customer/{customerId}/sample-policy",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "business:customer:sample-policy:edit"
     },
     {
       "module": "customer",
       "method": "POST",
       "path": "/business/customer/{customerId}/sample-rebate",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "business:customer:sample-rebate:create"
     },
     {
       "module": "customer",
       "method": "GET",
       "path": "/business/customer/{customerId}/sample-rebate",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "business:customer:fund:view"
     },
     {
       "module": "",
       "method": "GET",
       "path": "/captchaImage",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/common/CaptchaController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": ""
     },
     {
       "module": "",
       "method": "GET",
       "path": "/common/download",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/common/CommonController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": ""
     },
     {
       "module": "",
       "method": "POST",
       "path": "/common/upload",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/common/CommonController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": ""
     },
     {
       "module": "",
       "method": "POST",
       "path": "/common/uploads",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/common/CommonController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": ""
     },
     {
       "module": "",
       "method": "GET",
       "path": "/common/download/resource",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/common/CommonController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": ""
     },
     {
       "module": "monitor",
       "method": "GET",
       "path": "/monitor/cache",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor/CacheController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": ""
     },
     {
       "module": "monitor",
       "method": "GET",
       "path": "/monitor/cache/getNames",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor/CacheController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": ""
     },
     {
       "module": "monitor",
       "method": "GET",
       "path": "/monitor/cache/getKeys/{cacheName}",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor/CacheController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "monitor:cache:list"
     },
     {
       "module": "monitor",
       "method": "GET",
       "path": "/monitor/cache/getValue/{cacheName}/{cacheKey}",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor/CacheController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "monitor:cache:list"
     },
     {
       "module": "monitor",
       "method": "DELETE",
       "path": "/monitor/cache/clearCacheName/{cacheName}",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor/CacheController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "monitor:cache:list"
     },
     {
       "module": "monitor",
       "method": "DELETE",
       "path": "/monitor/cache/clearCacheKey/{cacheKey}",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor/CacheController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "monitor:cache:list"
     },
     {
       "module": "monitor",
       "method": "DELETE",
       "path": "/monitor/cache/clearCacheAll",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor/CacheController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "monitor:cache:list"
     },
     {
       "module": "monitor",
       "method": "GET",
       "path": "/monitor/server",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor/ServerController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": ""
     },
     {
       "module": "monitor",
       "method": "GET",
       "path": "/monitor/logininfor/list",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor/SysLogininforController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "monitor:logininfor:list"
     },
     {
       "module": "monitor",
       "method": "POST",
       "path": "/monitor/logininfor/export",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor/SysLogininforController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "monitor:logininfor:export"
     },
     {
       "module": "monitor",
       "method": "DELETE",
       "path": "/monitor/logininfor/{infoIds}",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor/SysLogininforController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "monitor:logininfor:remove"
     },
     {
       "module": "monitor",
       "method": "DELETE",
       "path": "/monitor/logininfor/clean",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor/SysLogininforController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "monitor:logininfor:remove"
     },
     {
       "module": "monitor",
       "method": "GET",
       "path": "/monitor/logininfor/unlock/{userName}",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor/SysLogininforController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "monitor:logininfor:unlock"
     },
     {
       "module": "monitor",
       "method": "GET",
       "path": "/monitor/operlog/list",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor/SysOperlogController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "monitor:operlog:list"
     },
     {
       "module": "monitor",
       "method": "POST",
       "path": "/monitor/operlog/export",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor/SysOperlogController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "monitor:operlog:export"
     },
     {
       "module": "monitor",
       "method": "DELETE",
       "path": "/monitor/operlog/{operIds}",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor/SysOperlogController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "monitor:operlog:remove"
     },
     {
       "module": "monitor",
       "method": "DELETE",
       "path": "/monitor/operlog/clean",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor/SysOperlogController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "monitor:operlog:remove"
     },
     {
       "module": "monitor",
       "method": "GET",
       "path": "/monitor/online/list",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor/SysUserOnlineController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "monitor:online:list"
     },
     {
       "module": "monitor",
       "method": "DELETE",
       "path": "/monitor/online/{tokenId}",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor/SysUserOnlineController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": ""
     },
     {
       "module": "system",
       "method": "GET",
       "path": "/system/config/list",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysConfigController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "system:config:list"
     },
     {
       "module": "system",
       "method": "POST",
       "path": "/system/config/export",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysConfigController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "system:config:export"
     },
     {
       "module": "system",
       "method": "GET",
       "path": "/system/config/{configId}",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysConfigController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "system:config:query"
     },
     {
       "module": "system",
       "method": "GET",
       "path": "/system/config/configKey/{configKey}",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysConfigController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": ""
     },
     {
       "module": "system",
       "method": "POST",
       "path": "/system/config",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysConfigController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "system:config:add"
     },
     {
       "module": "system",
       "method": "PUT",
       "path": "/system/config",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysConfigController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "system:config:edit"
     },
     {
       "module": "system",
       "method": "DELETE",
       "path": "/system/config/{configIds}",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysConfigController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "system:config:remove"
     },
     {
       "module": "system",
       "method": "DELETE",
       "path": "/system/config/refreshCache",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysConfigController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "system:config:remove"
     },
     {
       "module": "system",
       "method": "GET",
       "path": "/system/dept/list",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysDeptController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "system:dept:list"
     },
     {
       "module": "system",
       "method": "GET",
       "path": "/system/dept/list/exclude/{deptId}",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysDeptController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "system:dept:list"
     },
     {
       "module": "system",
       "method": "GET",
       "path": "/system/dept/{deptId}",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysDeptController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "system:dept:query"
     },
     {
       "module": "system",
       "method": "POST",
       "path": "/system/dept",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysDeptController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "system:dept:add"
     },
     {
       "module": "system",
       "method": "PUT",
       "path": "/system/dept",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysDeptController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "system:dept:edit"
     },
     {
       "module": "system",
       "method": "PUT",
       "path": "/system/dept/updateSort",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysDeptController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": ""
     },
     {
       "module": "system",
       "method": "DELETE",
       "path": "/system/dept/{deptId}",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysDeptController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "system:dept:remove"
     },
     {
       "module": "system",
       "method": "GET",
       "path": "/system/dict/data/list",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysDictDataController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "system:dict:list"
     },
     {
       "module": "system",
       "method": "POST",
       "path": "/system/dict/data/export",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysDictDataController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "system:dict:export"
     },
     {
       "module": "system",
       "method": "GET",
       "path": "/system/dict/data/{dictCode}",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysDictDataController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "system:dict:query"
     },
     {
       "module": "system",
       "method": "GET",
       "path": "/system/dict/data/type/{dictType}",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysDictDataController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": ""
     },
     {
       "module": "system",
       "method": "POST",
       "path": "/system/dict/data",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysDictDataController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "system:dict:add"
     },
     {
       "module": "system",
       "method": "PUT",
       "path": "/system/dict/data",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysDictDataController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "system:dict:edit"
     },
     {
       "module": "system",
       "method": "DELETE",
       "path": "/system/dict/data/{dictCodes}",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysDictDataController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "system:dict:remove"
     },
     {
       "module": "system",
       "method": "GET",
       "path": "/system/dict/type/list",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysDictTypeController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "system:dict:list"
     },
     {
       "module": "system",
       "method": "POST",
       "path": "/system/dict/type/export",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysDictTypeController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "system:dict:export"
     },
     {
       "module": "system",
       "method": "GET",
       "path": "/system/dict/type/{dictId}",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysDictTypeController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "system:dict:query"
     },
     {
       "module": "system",
       "method": "POST",
       "path": "/system/dict/type",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysDictTypeController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "system:dict:add"
     },
     {
       "module": "system",
       "method": "PUT",
       "path": "/system/dict/type",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysDictTypeController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "system:dict:edit"
     },
     {
       "module": "system",
       "method": "DELETE",
       "path": "/system/dict/type/{dictIds}",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysDictTypeController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "system:dict:remove"
     },
     {
       "module": "system",
       "method": "DELETE",
       "path": "/system/dict/type/refreshCache",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysDictTypeController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "system:dict:remove"
     },
     {
       "module": "system",
       "method": "GET",
       "path": "/system/dict/type/optionselect",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysDictTypeController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": ""
     },
     {
       "module": "system",
       "method": "POST",
       "path": "/unlockscreen",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysIndexController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": ""
     },
     {
       "module": "system",
       "method": "POST",
       "path": "/login",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysLoginController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": ""
     },
     {
       "module": "system",
       "method": "GET",
       "path": "/getInfo",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysLoginController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": ""
     },
     {
       "module": "system",
       "method": "GET",
       "path": "/getRouters",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysLoginController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": ""
     },
     {
       "module": "system",
       "method": "GET",
       "path": "/system/menu/list",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysMenuController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "system:menu:list"
     },
     {
       "module": "system",
       "method": "GET",
       "path": "/system/menu/{menuId}",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysMenuController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "system:menu:query"
     },
     {
       "module": "system",
       "method": "GET",
       "path": "/system/menu/treeselect",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysMenuController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": ""
     },
     {
       "module": "system",
       "method": "GET",
       "path": "/system/menu/roleMenuTreeselect/{roleId}",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysMenuController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": ""
     },
     {
       "module": "system",
       "method": "POST",
       "path": "/system/menu",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysMenuController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "system:menu:add"
     },
     {
       "module": "system",
       "method": "PUT",
       "path": "/system/menu",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysMenuController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": ""
     },
     {
       "module": "system",
       "method": "PUT",
       "path": "/system/menu/updateSort",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysMenuController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": ""
     },
     {
       "module": "system",
       "method": "DELETE",
       "path": "/system/menu/{menuId}",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysMenuController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "system:menu:remove"
     },
     {
       "module": "system",
       "method": "GET",
       "path": "/system/notice/list",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysNoticeController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "system:notice:list"
     },
     {
       "module": "system",
       "method": "GET",
       "path": "/system/notice/{noticeId}",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysNoticeController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": ""
     },
     {
       "module": "system",
       "method": "POST",
       "path": "/system/notice",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysNoticeController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "system:notice:add"
     },
     {
       "module": "system",
       "method": "PUT",
       "path": "/system/notice",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysNoticeController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "system:notice:edit"
     },
     {
       "module": "system",
       "method": "GET",
       "path": "/system/notice/listTop",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysNoticeController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": ""
     },
     {
       "module": "system",
       "method": "POST",
       "path": "/system/notice/markRead",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysNoticeController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": ""
     },
     {
       "module": "system",
       "method": "POST",
       "path": "/system/notice/markReadAll",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysNoticeController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": ""
     },
     {
       "module": "system",
       "method": "GET",
       "path": "/system/notice/readUsers/list",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysNoticeController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "system:notice:list"
     },
     {
       "module": "system",
       "method": "DELETE",
       "path": "/system/notice/{noticeIds}",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysNoticeController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "system:notice:remove"
     },
     {
       "module": "system",
       "method": "GET",
       "path": "/system/post/list",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysPostController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "system:post:list"
     },
     {
       "module": "system",
       "method": "POST",
       "path": "/system/post/export",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysPostController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "system:post:export"
     },
     {
       "module": "system",
       "method": "GET",
       "path": "/system/post/{postId}",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysPostController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "system:post:query"
     },
     {
       "module": "system",
       "method": "POST",
       "path": "/system/post",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysPostController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "system:post:add"
     },
     {
       "module": "system",
       "method": "PUT",
       "path": "/system/post",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysPostController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "system:post:edit"
     },
     {
       "module": "system",
       "method": "DELETE",
       "path": "/system/post/{postIds}",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysPostController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "system:post:remove"
     },
     {
       "module": "system",
       "method": "GET",
       "path": "/system/post/optionselect",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysPostController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": ""
     },
     {
       "module": "system",
       "method": "GET",
       "path": "/system/user/profile",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysProfileController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": ""
     },
     {
       "module": "system",
       "method": "PUT",
       "path": "/system/user/profile",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysProfileController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": ""
     },
     {
       "module": "system",
       "method": "PUT",
       "path": "/system/user/profile/updatePwd",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysProfileController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": ""
     },
     {
       "module": "system",
       "method": "POST",
       "path": "/system/user/profile/avatar",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysProfileController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": ""
     },
     {
       "module": "system",
       "method": "POST",
       "path": "/register",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysRegisterController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": ""
     },
     {
       "module": "system",
       "method": "GET",
       "path": "/system/role/list",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysRoleController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "system:role:list"
     },
     {
       "module": "system",
       "method": "POST",
       "path": "/system/role/export",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysRoleController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "system:role:export"
     },
     {
       "module": "system",
       "method": "GET",
       "path": "/system/role/{roleId}",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysRoleController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "system:role:query"
     },
     {
       "module": "system",
       "method": "POST",
       "path": "/system/role",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysRoleController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "system:role:add"
     },
     {
       "module": "system",
       "method": "PUT",
       "path": "/system/role",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysRoleController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "system:role:edit"
     },
     {
       "module": "system",
       "method": "PUT",
       "path": "/system/role/dataScope",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysRoleController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": ""
     },
     {
       "module": "system",
       "method": "PUT",
       "path": "/system/role/changeStatus",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysRoleController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "system:role:edit"
     },
     {
       "module": "system",
       "method": "DELETE",
       "path": "/system/role/{roleIds}",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysRoleController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "system:role:remove"
     },
     {
       "module": "system",
       "method": "GET",
       "path": "/system/role/optionselect",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysRoleController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "system:role:query"
     },
     {
       "module": "system",
       "method": "GET",
       "path": "/system/role/authUser/allocatedList",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysRoleController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "system:role:list"
     },
     {
       "module": "system",
       "method": "GET",
       "path": "/system/role/authUser/unallocatedList",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysRoleController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "system:role:list"
     },
     {
       "module": "system",
       "method": "PUT",
       "path": "/system/role/authUser/cancel",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysRoleController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "system:role:edit"
     },
     {
       "module": "system",
       "method": "PUT",
       "path": "/system/role/authUser/cancelAll",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysRoleController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "system:role:edit"
     },
     {
       "module": "system",
       "method": "PUT",
       "path": "/system/role/authUser/selectAll",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysRoleController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "system:role:edit"
     },
     {
       "module": "system",
       "method": "GET",
       "path": "/system/role/deptTree/{roleId}",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysRoleController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "system:role:query"
     },
     {
       "module": "system",
       "method": "GET",
       "path": "/system/user/list",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysUserController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "system:user:list"
     },
     {
       "module": "system",
       "method": "POST",
       "path": "/system/user/export",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysUserController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "system:user:export"
     },
     {
       "module": "system",
       "method": "POST",
       "path": "/system/user/importData",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysUserController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "system:user:import"
     },
     {
       "module": "system",
       "method": "POST",
       "path": "/system/user/importTemplate",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysUserController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": ""
     },
     {
       "module": "system",
       "method": "GET",
       "path": "/system/user/",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysUserController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "system:user:query"
     },
     {
       "module": "system",
       "method": "POST",
       "path": "/system/user",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysUserController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": ""
     },
     {
       "module": "system",
       "method": "PUT",
       "path": "/system/user",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysUserController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": ""
     },
     {
       "module": "system",
       "method": "DELETE",
       "path": "/system/user/{userIds}",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysUserController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": ""
     },
     {
       "module": "system",
       "method": "PUT",
       "path": "/system/user/resetPwd",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysUserController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "system:user:resetPwd"
     },
     {
       "module": "system",
       "method": "PUT",
       "path": "/system/user/changeStatus",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysUserController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "system:user:edit"
     },
     {
       "module": "system",
       "method": "GET",
       "path": "/system/user/authRole/{userId}",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysUserController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "system:user:query"
     },
     {
       "module": "system",
       "method": "PUT",
       "path": "/system/user/authRole",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysUserController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "system:user:edit"
     },
     {
       "module": "system",
       "method": "GET",
       "path": "/system/user/deptTree",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysUserController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "system:user:list"
     },
     {
       "module": "tool",
       "method": "GET",
       "path": "/test/user/list",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/tool/TestController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": ""
     },
     {
       "module": "tool",
       "method": "GET",
       "path": "/test/user/{userId}",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/tool/TestController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": ""
     },
     {
       "module": "tool",
       "method": "POST",
       "path": "/test/user/save",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/tool/TestController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": ""
     },
     {
       "module": "tool",
       "method": "PUT",
       "path": "/test/user/update",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/tool/TestController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": ""
     },
     {
       "module": "tool",
       "method": "DELETE",
       "path": "/test/user/{userId}",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/tool/TestController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": ""
     },
     {
       "module": "tool",
       "method": "GET",
       "path": "/tool/gen/list",
       "file": "ruoyi-generator/src/main/java/com/ruoyi/generator/controller/GenController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "tool:gen:list"
     },
     {
       "module": "tool",
       "method": "GET",
       "path": "/tool/gen/{tableId}",
       "file": "ruoyi-generator/src/main/java/com/ruoyi/generator/controller/GenController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "tool:gen:query"
     },
     {
       "module": "tool",
       "method": "GET",
       "path": "/tool/gen/db/list",
       "file": "ruoyi-generator/src/main/java/com/ruoyi/generator/controller/GenController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "tool:gen:list"
     },
     {
       "module": "tool",
       "method": "GET",
       "path": "/tool/gen/column/{tableId}",
       "file": "ruoyi-generator/src/main/java/com/ruoyi/generator/controller/GenController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "tool:gen:list"
     },
     {
       "module": "tool",
       "method": "POST",
       "path": "/tool/gen/importTable",
       "file": "ruoyi-generator/src/main/java/com/ruoyi/generator/controller/GenController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "tool:gen:import"
     },
     {
       "module": "tool",
       "method": "POST",
       "path": "/tool/gen/createTable",
       "file": "ruoyi-generator/src/main/java/com/ruoyi/generator/controller/GenController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": ""
     },
     {
       "module": "tool",
       "method": "PUT",
       "path": "/tool/gen",
       "file": "ruoyi-generator/src/main/java/com/ruoyi/generator/controller/GenController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": ""
     },
     {
       "module": "tool",
       "method": "DELETE",
       "path": "/tool/gen/{tableIds}",
       "file": "ruoyi-generator/src/main/java/com/ruoyi/generator/controller/GenController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "tool:gen:remove"
     },
     {
       "module": "tool",
       "method": "GET",
       "path": "/tool/gen/preview/{tableId}",
       "file": "ruoyi-generator/src/main/java/com/ruoyi/generator/controller/GenController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "tool:gen:preview"
     },
     {
       "module": "tool",
       "method": "GET",
       "path": "/tool/gen/download/{tableName}",
       "file": "ruoyi-generator/src/main/java/com/ruoyi/generator/controller/GenController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "tool:gen:code"
     },
     {
       "module": "tool",
       "method": "GET",
       "path": "/tool/gen/genCode/{tableName}",
       "file": "ruoyi-generator/src/main/java/com/ruoyi/generator/controller/GenController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "tool:gen:code"
     },
     {
       "module": "tool",
       "method": "GET",
       "path": "/tool/gen/synchDb/{tableName}",
       "file": "ruoyi-generator/src/main/java/com/ruoyi/generator/controller/GenController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "tool:gen:edit"
     },
     {
       "module": "tool",
       "method": "GET",
       "path": "/tool/gen/batchGenCode",
       "file": "ruoyi-generator/src/main/java/com/ruoyi/generator/controller/GenController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "tool:gen:code"
     },
     {
       "module": "monitor",
       "method": "GET",
       "path": "/monitor/job/list",
       "file": "ruoyi-quartz/src/main/java/com/ruoyi/quartz/controller/SysJobController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "monitor:job:list"
     },
     {
       "module": "monitor",
       "method": "POST",
       "path": "/monitor/job/export",
       "file": "ruoyi-quartz/src/main/java/com/ruoyi/quartz/controller/SysJobController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "monitor:job:export"
     },
     {
       "module": "monitor",
       "method": "GET",
       "path": "/monitor/job/{jobId}",
       "file": "ruoyi-quartz/src/main/java/com/ruoyi/quartz/controller/SysJobController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "monitor:job:query"
     },
     {
       "module": "monitor",
       "method": "POST",
       "path": "/monitor/job",
       "file": "ruoyi-quartz/src/main/java/com/ruoyi/quartz/controller/SysJobController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "monitor:job:add"
     },
     {
       "module": "monitor",
       "method": "PUT",
       "path": "/monitor/job",
       "file": "ruoyi-quartz/src/main/java/com/ruoyi/quartz/controller/SysJobController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": ""
     },
     {
       "module": "monitor",
       "method": "PUT",
       "path": "/monitor/job/changeStatus",
       "file": "ruoyi-quartz/src/main/java/com/ruoyi/quartz/controller/SysJobController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": ""
     },
     {
       "module": "monitor",
       "method": "PUT",
       "path": "/monitor/job/run",
       "file": "ruoyi-quartz/src/main/java/com/ruoyi/quartz/controller/SysJobController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "monitor:job:changeStatus"
     },
     {
       "module": "monitor",
       "method": "DELETE",
       "path": "/monitor/job/{jobIds}",
       "file": "ruoyi-quartz/src/main/java/com/ruoyi/quartz/controller/SysJobController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "monitor:job:remove"
     },
     {
       "module": "monitor",
       "method": "GET",
       "path": "/monitor/jobLog/list",
       "file": "ruoyi-quartz/src/main/java/com/ruoyi/quartz/controller/SysJobLogController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "monitor:job:list"
     },
     {
       "module": "monitor",
       "method": "POST",
       "path": "/monitor/jobLog/export",
       "file": "ruoyi-quartz/src/main/java/com/ruoyi/quartz/controller/SysJobLogController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "monitor:job:export"
     },
     {
       "module": "monitor",
       "method": "GET",
       "path": "/monitor/jobLog/{jobLogId}",
       "file": "ruoyi-quartz/src/main/java/com/ruoyi/quartz/controller/SysJobLogController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "monitor:job:query"
     },
     {
       "module": "monitor",
       "method": "DELETE",
       "path": "/monitor/jobLog/{jobLogIds}",
       "file": "ruoyi-quartz/src/main/java/com/ruoyi/quartz/controller/SysJobLogController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "monitor:job:remove"
     },
     {
       "module": "monitor",
       "method": "DELETE",
       "path": "/monitor/jobLog/clean",
       "file": "ruoyi-quartz/src/main/java/com/ruoyi/quartz/controller/SysJobLogController.java",
-      "source": "java-annotation"
+      "source": "java-annotation",
+      "permission": "monitor:job:remove"
     }
   ]
 }

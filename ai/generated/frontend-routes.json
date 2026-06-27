@@ -12,10 +12,7 @@
     "monitor",
     "platform",
     "system",
-    "tool",
-    "error",
-    "redirect",
-    "register.vue"
+    "tool"
   ],
   "routes": [
     {
@@ -27,7 +24,7 @@
       "source": "ruoyi-view"
     },
     {
-      "module": "error",
+      "module": "platform",
       "route": "/error/401",
       "api": [],
       "states": [],
@@ -35,7 +32,7 @@
       "source": "ruoyi-view"
     },
     {
-      "module": "error",
+      "module": "platform",
       "route": "/error/404",
       "api": [],
       "states": [],
@@ -147,7 +144,7 @@
       "source": "ruoyi-view"
     },
     {
-      "module": "redirect",
+      "module": "platform",
       "route": "/redirect",
       "api": [],
       "states": [],
@@ -155,7 +152,7 @@
       "source": "ruoyi-view"
     },
     {
-      "module": "register.vue",
+      "module": "platform",
       "route": "/register",
       "api": [],
       "states": [],

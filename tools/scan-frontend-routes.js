@@ -19,11 +19,23 @@ function routeFromRuoyiView(file) {
   return `/${match[1]}`.replace(/\/index$/, '');
 }
 
+function moduleFromRuoyiView(file, route, features) {
+  const activeFeatureIds = new Set((features || []).filter((feature) => feature.status !== 'removed').map((feature) => feature.id));
+  const inferred = inferFeatureFromPath(file, features);
+  if (activeFeatureIds.has(inferred)) {
+    return inferred;
+  }
+  if (/^\/(?:error\/|redirect$|login$|register$|lock$)/.test(route)) {
+    return 'platform';
+  }
+  return inferred;
+}
+
 function scanRuoyiViews(features) {
   return listFilesUnderRoots(['ruoyi-ui/src/views'], (file) => /\.(vue|tsx|jsx|ts|js)$/.test(file)).map((file) => {
     const text = readSafe(file);
-    const module = inferFeatureFromPath(file, features);
     const route = routeFromRuoyiView(file);
+    const module = moduleFromRuoyiView(file, route, features);
     const apiMatches = unique([
       ...[...text.matchAll(/(?:request|axios\.(?:get|post|put|delete|patch)|fetch)\s*\(\s*["']([^"']+)["']/g)].map((match) => match[1]),
       ...extractRequestObjectCalls(text).map((call) => call.path)

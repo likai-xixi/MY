@@ -1,9 +1,9 @@
 import path from 'node:path';
-import { finish, formatJson, isCli, listFiles, readJson, writeOrCheck } from './common.js';
+import { fileExists, finish, formatJson, isCli, listFiles, readJson, writeOrCheck } from './common.js';
 import { readJsonOrDefault, readSafe } from './scan-utils.js';
 import { configuredPaths, inferFeatureFromPath, listFilesUnderRoots, readFeatureRegistry, unique } from './project-config.js';
 
-const PERMISSION_REGEX = /\b[a-z][a-z0-9-]*:[a-z][a-z0-9-]*(?::[a-z][a-z0-9-*]*)+\b/g;
+const PERMISSION_REGEX = /\b[a-z][A-Za-z0-9-]*:[a-z][A-Za-z0-9-]*(?::[A-Za-z0-9-*]+)+\b/g;
 
 const OWNERSHIP_ARRAY_FIELDS = [
   'apis',
@@ -42,6 +42,12 @@ const OWNERSHIP_KEYS = [
   'mappers',
   'domainObjects'
 ];
+
+const PLATFORM_DATABASE_OWNERSHIP = new Set([
+  'idempotent_request',
+  'sql/migrations/V20260625_004_idempotent_request.sql',
+  'sql/validation/idempotency_runtime_validation.sql'
+]);
 
 function normalize(value = '') {
   return String(value).replace(/\\/g, '/').replace(/^\.\//, '').replace(/\/+$/g, '');
@@ -211,7 +217,7 @@ function scanLiveOwnership(features) {
   return bucket;
 }
 
-function scanGeneratedOwnership(bucket, features) {
+function scanGeneratedOwnership(bucket, features, nextUiGraph = { screens: [] }) {
   const backendRoutes = readJsonOrDefault('ai/generated/backend-routes.json', { routes: [] });
   for (const route of backendRoutes.routes || []) {
     if (!route.module) {
@@ -228,6 +234,14 @@ function scanGeneratedOwnership(bucket, features) {
     }
     addValue(bucket, route.module, 'routes', route.route);
     addValues(bucket, route.module, 'apis', route.api || []);
+  }
+
+  for (const screen of nextUiGraph.screens || []) {
+    if (!screen.module) {
+      continue;
+    }
+    addValue(bucket, screen.module, 'screens', screen.id);
+    addValue(bucket, screen.module, 'routes', screen.route);
   }
 
   const apiClients = readJsonOrDefault('ai/generated/api-clients.json', { calls: [], moduleContracts: [] });
@@ -293,10 +307,22 @@ function mergeSorted(existing = [], discovered = []) {
   return unique([...(existing || []), ...(discovered || [])]).sort();
 }
 
+function filterDatabaseOwnership(featureId, values = []) {
+  return (values || []).filter((value) => featureId === 'platform' || !PLATFORM_DATABASE_OWNERSHIP.has(normalize(value)));
+}
+
 function syncTopLevelAndOwnership(feature, discovered) {
   for (const field of OWNERSHIP_ARRAY_FIELDS) {
-    const merged = mergeSorted(feature[field], discovered[field]);
-    feature[field] = field === 'routes' ? merged.filter((route) => !hasRepeatedRoutePath(route)) : merged;
+    const merged = field === 'screens'
+      ? mergeSorted([], discovered[field])
+      : mergeSorted(feature[field], discovered[field]);
+    if (field === 'routes') {
+      feature[field] = merged.filter((route) => !hasRepeatedRoutePath(route));
+    } else if (field === 'dbTables' || field === 'sqlFiles') {
+      feature[field] = filterDatabaseOwnership(feature.id, merged);
+    } else {
+      feature[field] = merged;
+    }
   }
   feature.ownership ||= {};
   for (const key of OWNERSHIP_KEYS) {
@@ -306,8 +332,8 @@ function syncTopLevelAndOwnership(feature, discovered) {
   feature.ownership.backend = mergeSorted(feature.ownership.backend, feature.backendModules || []);
   feature.ownership.frontend = mergeSorted(feature.ownership.frontend, feature.frontendModules || []);
   feature.ownership.api = mergeSorted(feature.ownership.api, feature.apis || []);
-  feature.ownership.ui = mergeSorted(feature.ownership.ui, feature.screens || []);
-  feature.ownership.database = mergeSorted(feature.ownership.database, [...(feature.dbTables || []), ...(feature.sqlFiles || [])]);
+  feature.ownership.ui = mergeSorted([], feature.screens || []);
+  feature.ownership.database = filterDatabaseOwnership(feature.id, mergeSorted(feature.ownership.database, [...(feature.dbTables || []), ...(feature.sqlFiles || [])]));
   feature.ownership.permissions = mergeSorted(feature.ownership.permissions, [...(feature.permissions || []), ...(feature.permissionFiles || [])]);
   feature.ownership.menus = mergeSorted(feature.ownership.menus, feature.menuSqlFiles || []);
   feature.ownership.components = mergeSorted(feature.ownership.components, feature.components || []);
@@ -320,17 +346,102 @@ function syncTopLevelAndOwnership(feature, discovered) {
   feature.ownership.domainObjects = mergeSorted(feature.ownership.domainObjects, feature.domainObjects || []);
 }
 
-function buildNextUiGraph() {
-  const graph = readJsonOrDefault('graph/ui-graph.json', { schemaVersion: 1, screens: [] });
-  graph.screens = (graph.screens || []).filter((screen) => !hasRepeatedRoutePath(screen.route));
+function normalizeRoutePath(value = '') {
+  const trimmed = String(value || '').trim();
+  if (!trimmed) {
+    return '';
+  }
+  return trimmed.startsWith('/') ? trimmed : `/${trimmed}`;
+}
+
+function routeSlug(route = '') {
+  return normalizeRoutePath(route)
+    .replace(/^\/+|\/+$/g, '')
+    .replace(/[^a-zA-Z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .toLowerCase() || 'root';
+}
+
+function screenKey(screen) {
+  return `${normalizeRoutePath(screen.route)}|${normalize(screen.file)}`;
+}
+
+function buildScreensFromFrontendRoutes(existingGraph = readJsonOrDefault('graph/ui-graph.json', { screens: [] })) {
+  const existingByKey = new Map((existingGraph.screens || [])
+    .filter((screen) => screen.file)
+    .map((screen) => [screenKey(screen), screen]));
+  const frontendRoutes = readJsonOrDefault('ai/generated/frontend-routes.json', { routes: [] });
+
+  return (frontendRoutes.routes || [])
+    .filter((route) => route.file && fileExists(route.file))
+    .map((route, index) => {
+      const routePath = normalizeRoutePath(route.route);
+      const existing = existingByKey.get(`${routePath}|${normalize(route.file)}`);
+      const module = route.module || existing?.module || '';
+      return {
+        id: existing && existing.module === module ? existing.id : `${module || 'ui'}:${routeSlug(routePath)}:${index}`,
+        route: routePath,
+        owner: module,
+        module,
+        file: normalize(route.file),
+        usesApi: unique([...(existing?.usesApi || []), ...(route.api || [])]),
+        states: unique([...(existing?.states || []), 'loading', 'empty', 'success', 'error'])
+      };
+    })
+    .filter((screen) => screen.module && screen.route && screen.file && !hasRepeatedRoutePath(screen.route));
+}
+
+function coverageByApi() {
+  const coverage = readJsonOrDefault('ai/registry/high-risk-permission-coverage.json', { entries: [] });
+  return new Map((coverage.entries || []).map((entry) => {
+    const key = entry.method
+      ? `${String(entry.method).toUpperCase()} ${normalizeRoutePath(entry.api)}`
+      : normalizeRoutePath(entry.api);
+    return [key, entry];
+  }));
+}
+
+function matchingBackendRoute(endpoint, backendRoutes) {
+  return (backendRoutes.routes || []).find((route) => (
+    String(route.method || '').toUpperCase() === String(endpoint.method || '').toUpperCase()
+    && normalizeRoutePath(route.path) === normalizeRoutePath(endpoint.path)
+    && (!endpoint.module || route.module === endpoint.module)
+  ));
+}
+
+function buildNextApiGraph() {
+  const graph = readJsonOrDefault('graph/api-graph.json', { schemaVersion: 1, endpoints: [] });
+  const backendRoutes = readJsonOrDefault('ai/generated/backend-routes.json', { routes: [] });
+  const highRiskByApi = coverageByApi();
+
+  graph.endpoints = (graph.endpoints || []).map((endpoint) => {
+    const route = matchingBackendRoute(endpoint, backendRoutes);
+    const highRisk = highRiskByApi.get(`${String(endpoint.method || '').toUpperCase()} ${normalizeRoutePath(endpoint.path)}`)
+      || highRiskByApi.get(normalizeRoutePath(endpoint.path));
+    const next = { ...endpoint };
+    if (route?.permission) {
+      next.permission = route.permission;
+    }
+    if (highRisk?.riskDomain) {
+      next.riskDomain = highRisk.riskDomain;
+    }
+    return next;
+  });
   return graph;
 }
 
-function buildNextRegistry() {
+function buildNextUiGraph() {
+  return {
+    schemaVersion: 1,
+    screens: buildScreensFromFrontendRoutes()
+  };
+}
+
+function buildNextRegistry(nextUiGraph = buildNextUiGraph()) {
   const registry = readJsonOrDefault('ai/registry/features.json', { schemaVersion: 1, features: [] });
   const features = registry.features || [];
   const bucket = scanLiveOwnership(features);
-  scanGeneratedOwnership(bucket, features);
+  scanGeneratedOwnership(bucket, features, nextUiGraph);
 
   for (const feature of features) {
     if (feature.status === 'removed') {
@@ -345,9 +456,12 @@ function buildNextRegistry() {
 
 export function runOwnershipSync({ checkMode = false } = {}) {
   const errors = [];
-  const next = buildNextRegistry();
+  const nextUiGraph = buildNextUiGraph();
+  const nextApiGraph = buildNextApiGraph();
+  const next = buildNextRegistry(nextUiGraph);
   writeOrCheck('ai/registry/features.json', formatJson(next), checkMode, errors);
-  writeOrCheck('graph/ui-graph.json', formatJson(buildNextUiGraph()), checkMode, errors);
+  writeOrCheck('graph/api-graph.json', formatJson(nextApiGraph), checkMode, errors);
+  writeOrCheck('graph/ui-graph.json', formatJson(nextUiGraph), checkMode, errors);
   return errors;
 }
 

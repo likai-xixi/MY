@@ -1,27 +1,41 @@
 # Current Context
 
 Current feature: `customer`
-Current change: `CR-20260627T133559Z-r-09a-2-customer-high-risk-permission-granularit`
+Current change: `CR-20260627-r-09a-3-governance-graph-validation-cleanup`
 Repository: RuoYi + Vue3 + Codex Auto Dev OS
 Profile: adapter `ruoyi`, locked `true`
 
 ## Allowed Edit Roots
 
-- `ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java`
-- `ruoyi-ui/src/views/customer/index.vue`
-- `sql/migrations/V20260625_003_customer_menu_permission.sql`
-- `ai/registry/features.json`
-- `ai/registry/high-risk-permission-coverage.json`
-- `tests/customer-risk-gate.test.js`
-- `ai/generated`
+- `README.md`
+- `ai/changes/CR-20260627-r-09a-3-governance-graph-validation-cleanup`
+- `ai/changes/CURRENT_CHANGE.json`
 - `ai/context/current-context.md`
 - `ai/context/current-context.json`
+- `ai/context/features/customer.md`
+- `ai/generated`
+- `ai/registry/features.json`
+- `ai/registry/high-risk-permission-coverage.json`
+- `ai/registry/idempotency-registry.json`
+- `ai/registry/migration-registry.json`
+- `features/customer.md`
+- `graph/api-graph.json`
+- `graph/ui-graph.json`
+- `memory/CHANGELOG.md`
 - `memory/HANDOVER.md`
 - `memory/PROJECT_STATE.md`
-- `memory/CHANGELOG.md`
 - `memory/TASKS.json`
-- `ai/changes/CR-20260627T133559Z-r-09a-2-customer-high-risk-permission-granularit`
-- `ai/changes/CURRENT_CHANGE.json`
+- `sql/validation/customer_runtime_validation.sql`
+- `sql/validation/idempotency_runtime_validation.sql`
+- `tests`
+- `tools/dependency-checker.js`
+- `tools/high-risk-governance-checker.js`
+- `tools/ownership-syncer.js`
+- `tools/registry-checker.js`
+- `tools/scan-backend-routes.js`
+- `tools/scan-components.js`
+- `tools/scan-frontend-routes.js`
+- `tools/scan-permissions.js`
 
 ## Forbidden Edit Roots
 
@@ -45,9 +59,8 @@ Profile: adapter `ruoyi`, locked `true`
 - `ruoyi-ui/src/api/sales-order.js`
 - `ruoyi-ui/src/api/salesOrder.js`
 - `ruoyi-ui/src/api/sales_order.js`
-- `sales-order runtime, SQL, Vue, API, permission, menu, or route`
-- `sales_order table`
-- `sales_order_item table`
+- `.github/workflows`
+- `ruoyi-admin/src/main/resources/application-prod.yml`
 
 ## Must Read Files
 
@@ -62,9 +75,9 @@ Profile: adapter `ruoyi`, locked `true`
 - `ai/roadmap/phase-gates.json` - beforeSalesOrder gate state.
 - `ai/roadmap/refactor-debt.json` - Known debt affecting sales-order handoff.
 - `ai/roadmap/enhancement-backlog.json` - Governance backlog and required/deferred evidence.
-- `ai/changes/CR-20260627T133559Z-r-09a-2-customer-high-risk-permission-granularit/impact.json` - Current change allowed and forbidden edit roots.
-- `ai/changes/CR-20260627T133559Z-r-09a-2-customer-high-risk-permission-granularit/plan.md` - Current change execution plan.
-- `ai/changes/CR-20260627T133559Z-r-09a-2-customer-high-risk-permission-granularit/verification.md` - Current change verification evidence.
+- `ai/changes/CR-20260627-r-09a-3-governance-graph-validation-cleanup/impact.json` - Current change allowed and forbidden edit roots.
+- `ai/changes/CR-20260627-r-09a-3-governance-graph-validation-cleanup/plan.md` - Current change execution plan.
+- `ai/changes/CR-20260627-r-09a-3-governance-graph-validation-cleanup/verification.md` - Current change verification evidence.
 
 ## Must Not Break
 
@@ -126,10 +139,18 @@ Deferred:
 ## Planned Verification Commands
 
 - `npm run resume`
-- `npm run rule:preflight -- customer-fund-deposit-entry customer-sample-rebate-generation public-customer-invariant`
+- `npm run rule:preflight -- before-sales-order-phase-gate customer-fund-deposit-entry customer-sample-rebate-generation public-customer-invariant`
 - `npm run scan:all`
-- `npm run check:ownership`
+- `npm run context:build -- customer`
+- `npm run build:graph`
+- `npm run check:graph`
 - `npm run check:high-risk-governance`
+- `npm run check:components`
+- `npm run check:component-similarity`
+- `npm run check:ownership`
+- `node --test tests/high-risk-governance.test.js`
+- `node --test tests/component-scan.test.js`
+- `node --test tests/graph.test.js`
 - `node --test tests/customer-risk-gate.test.js`
 - `npm test`
 - `npm run check`

@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { validateModuleRegistry } from '../tools/registry-checker.js';
+import { hasRouteCoverage, routeShape, validateModuleRegistry } from '../tools/registry-checker.js';
 
 const featureRegistry = {
   schemaVersion: 1,
@@ -91,4 +91,18 @@ test('module registry paths field can register backend modules', () => {
     directories: (relativePath) => (relativePath === 'backend/modules' ? ['inventory'] : [])
   });
   assert.deepEqual(errors, []);
+});
+
+test('feature route coverage accepts generated backend route shapes', () => {
+  const coverage = {
+    uiRoutes: new Set(),
+    apiPaths: new Set(['/monitor/job']),
+    backendPaths: new Set(['/monitor/job/{jobIds}']),
+    uiRouteShapes: new Set(),
+    apiPathShapes: new Set(['/monitor/job'].map(routeShape)),
+    backendPathShapes: new Set(['/monitor/job/{jobIds}'].map(routeShape))
+  };
+
+  assert.equal(hasRouteCoverage('/monitor/job/{jobId}', coverage), true);
+  assert.equal(hasRouteCoverage('/monitor/job/export', coverage), false);
 });

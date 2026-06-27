@@ -186,6 +186,7 @@ function migrationEntry(patch = {}) {
     rollbackPlan: 'rollback sql exists',
     verification: ['migrate dry-run'],
     owner: 'governance',
+    dependsOn: [],
     ...patch
   };
 }
@@ -579,6 +580,49 @@ test('migration required executable file exists passes', () => withRoot((root) =
   assert.deepEqual(result.failures, []);
 }));
 
+test('migration dependsOn must reference existing migration ids', () => withRoot((root) => {
+  write(root, 'sql/validation/sales_order_validation.sql', '-- validation\n');
+  writeJson(root, 'ai/registry/migration-registry.json', {
+    schemaVersion: 1,
+    entries: [
+      migrationEntry({
+        migrationId: 'sales-order-runtime-validation',
+        file: 'sql/validation/sales_order_validation.sql',
+        type: 'runtime-validation-sql',
+        appliesToTables: ['sales_order'],
+        dependsOn: ['missing-sales-order-baseline']
+      })
+    ]
+  });
+
+  const result = validateMigrationGate({ root });
+  assert.ok(result.failures.some((failure) => failure.code === 'depends-on-missing'));
+}));
+
+test('validation migration tables must be provided by dependsOn chain', () => withRoot((root) => {
+  write(root, 'sql/migrations/001_sales_order.sql', '-- migration\ncreate table sales_order (id bigint);\n');
+  write(root, 'sql/validation/sales_order_validation.sql', '-- validation\nselect * from sales_order_item;\n');
+  writeJson(root, 'ai/registry/migration-registry.json', {
+    schemaVersion: 1,
+    entries: [
+      migrationEntry({
+        migrationId: 'sales-order-baseline',
+        appliesToTables: ['sales_order']
+      }),
+      migrationEntry({
+        migrationId: 'sales-order-runtime-validation',
+        file: 'sql/validation/sales_order_validation.sql',
+        type: 'runtime-validation-sql',
+        appliesToTables: ['sales_order_item'],
+        dependsOn: ['sales-order-baseline']
+      })
+    ]
+  });
+
+  const result = validateMigrationGate({ root });
+  assert.ok(result.failures.some((failure) => failure.code === 'validation-table-dependency-missing'));
+}));
+
 test('migration missing required file fails', () => withRoot((root) => {
   writeJson(root, 'ai/registry/migration-registry.json', {
     schemaVersion: 1,
@@ -630,13 +674,14 @@ test('repo-level customer migration baseline is executable blocking SQL', () => 
     'customer-schema-baseline',
     'customer-public-seed-baseline',
     'customer-menu-permission-baseline',
-    'customer-runtime-validation'
+    'customer-runtime-validation',
+    'idempotency-runtime-validation'
   ];
 
   for (const migrationId of expected) {
     const entry = entriesById.get(migrationId);
     assert.ok(entry, `${migrationId} should be registered`);
-    assert.equal(entry.featureId, 'customer');
+    assert.equal(entry.featureId, migrationId === 'idempotency-runtime-validation' ? 'platform' : 'customer');
     assert.equal(entry.blocking, true);
     assert.equal(entry.status, 'required');
     assert.equal(path.extname(entry.file), '.sql');
@@ -655,6 +700,24 @@ test('repo-level customer migration baseline is executable blocking SQL', () => 
   const result = validateMigrationGate({ root: process.cwd() });
   assert.deepEqual(result.failures, []);
   assert.deepEqual(result.warnings.filter((warning) => warning.code === 'baseline-migration-document'), []);
+});
+
+test('repo-level customer validation does not include platform idempotent_request checks', () => {
+  const customerValidation = fs.readFileSync('sql/validation/customer_runtime_validation.sql', 'utf8');
+  const idempotencyValidation = fs.readFileSync('sql/validation/idempotency_runtime_validation.sql', 'utf8');
+  const registry = JSON.parse(fs.readFileSync('ai/registry/migration-registry.json', 'utf8'));
+  const entriesById = new Map((registry.entries || []).map((entry) => [entry.migrationId, entry]));
+
+  assert.equal(customerValidation.includes('idempotent_request'), false);
+  assert.match(idempotencyValidation, /from\s+idempotent_request/i);
+  assert.deepEqual(entriesById.get('customer-runtime-validation').dependsOn, [
+    'customer-schema-baseline',
+    'customer-public-seed-baseline'
+  ]);
+  assert.deepEqual(entriesById.get('idempotency-runtime-validation').dependsOn, [
+    'platform-idempotent-request-baseline'
+  ]);
+  assert.equal(entriesById.get('idempotency-runtime-validation').featureId, 'platform');
 });
 
 test('repo-level migration registry points only to existing files', () => {

@@ -455,7 +455,23 @@
 - Rule objects now require existing created/updated change records and owned-file ownership or explicit exception reasons.
 - [local] Verification passed: explicit rule preflight passed, `npm run scan:all` passed, `npm run check:diff` passed, `npm run check:phase-gate` passed, `npm run check:rule-objects` passed, focused governance tests passed 35/35, baseline guard tests passed 19/19, standalone `npm test` passed 213/213, final `npm run check` passed with final `npm test` 213/213, and final `git diff --check` passed.
 - No customer runtime code, customer fund business logic, sales-order runtime artifact, sales-order SQL/table/route/menu/permission, or customer business database structure was created or modified.
-- Feature: `platform`.## 2026-06-27 — governance/customer-permission
+- Feature: `platform`.
+
+## 2026-06-27 - governance/customer-permission
+
 - Change: `ai/changes/CR-20260627T133559Z-r-09a-2-customer-high-risk-permission-granularit`.
 - R-09A.2 split customer fund high-risk permissions into dedicated deposit and sample-rebate permissions
 - Feature: `customer`.
+
+## 2026-06-27 - governance/graph-validation-cleanup
+
+- Change: `ai/changes/CR-20260627-r-09a-3-governance-graph-validation-cleanup`.
+- R-09A.3 split customer runtime validation SQL from platform idempotency runtime validation and added validation migration `dependsOn` chain checks.
+- Moved `idempotent_request` table and SQL validation ownership to the `platform` feature while keeping customer idempotency entries as endpoint usage of the platform capability.
+- Rebuilt UI graph ownership from real frontend route/view files only; fake API-derived UI screens are no longer generated or accepted.
+- Extended component scanning to record Vue template global component tags such as `right-toolbar`, `pagination`, and `svg-icon`.
+- Added backend annotation permission extraction to generated backend routes and API graph permission/risk-domain checks for high-risk customer fund endpoints.
+- [local] Verification passed: rule preflight, scan/build graph, graph/high-risk/component/similarity/ownership checks, focused tests, full `npm test` with 222 tests, final `npm run check`, and final `git diff --check`.
+- [not-run] Backend runtime API calls, browser validation, Maven compile, frontend production build, database migration execution, and CI were not run for this governance graph/validation cleanup.
+- No `CustomerFundServiceImpl`, `CustomerServiceImpl`, customer fund business behavior, production config, CI workflow, or sales-order runtime artifact was modified.
+- Feature: `platform`.

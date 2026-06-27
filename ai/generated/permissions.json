@@ -202,6 +202,11 @@
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor/SysUserOnlineController.java"
     },
     {
+      "code": "monitor:online:forceLogout",
+      "module": "monitor",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor/SysUserOnlineController.java"
+    },
+    {
       "code": "system:config:list",
       "module": "system",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysConfigController.java"
@@ -532,6 +537,11 @@
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysUserController.java"
     },
     {
+      "code": "system:user:resetPwd",
+      "module": "system",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysUserController.java"
+    },
+    {
       "code": "system:user:edit",
       "module": "system",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysUserController.java"
@@ -633,6 +643,16 @@
     },
     {
       "code": "monitor:job:edit",
+      "module": "monitor",
+      "file": "ruoyi-quartz/src/main/java/com/ruoyi/quartz/controller/SysJobController.java"
+    },
+    {
+      "code": "monitor:job:changeStatus",
+      "module": "monitor",
+      "file": "ruoyi-quartz/src/main/java/com/ruoyi/quartz/controller/SysJobController.java"
+    },
+    {
+      "code": "monitor:job:changeStatus",
       "module": "monitor",
       "file": "ruoyi-quartz/src/main/java/com/ruoyi/quartz/controller/SysJobController.java"
     },
@@ -787,6 +807,11 @@
       "file": "ruoyi-ui/src/views/monitor/job/index.vue"
     },
     {
+      "code": "monitor:job:changeStatus",
+      "module": "monitor",
+      "file": "ruoyi-ui/src/views/monitor/job/index.vue"
+    },
+    {
       "code": "monitor:job:query",
       "module": "monitor",
       "file": "ruoyi-ui/src/views/monitor/job/index.vue"
@@ -830,6 +855,11 @@
       "code": "monitor:logininfor:export",
       "module": "monitor",
       "file": "ruoyi-ui/src/views/monitor/logininfor/index.vue"
+    },
+    {
+      "code": "monitor:online:forceLogout",
+      "module": "monitor",
+      "file": "ruoyi-ui/src/views/monitor/online/index.vue"
     },
     {
       "code": "monitor:operlog:remove",
@@ -1158,6 +1188,11 @@
     },
     {
       "code": "system:user:remove",
+      "module": "system",
+      "file": "ruoyi-ui/src/views/system/user/index.vue"
+    },
+    {
+      "code": "system:user:resetPwd",
       "module": "system",
       "file": "ruoyi-ui/src/views/system/user/index.vue"
     },
@@ -1602,6 +1637,11 @@
       "file": "sql/ry_20260417.sql"
     },
     {
+      "code": "system:user:resetPwd",
+      "module": "system",
+      "file": "sql/ry_20260417.sql"
+    },
+    {
       "code": "system:role:query",
       "module": "system",
       "file": "sql/ry_20260417.sql"
@@ -1802,6 +1842,16 @@
       "file": "sql/ry_20260417.sql"
     },
     {
+      "code": "monitor:online:batchLogout",
+      "module": "monitor",
+      "file": "sql/ry_20260417.sql"
+    },
+    {
+      "code": "monitor:online:forceLogout",
+      "module": "monitor",
+      "file": "sql/ry_20260417.sql"
+    },
+    {
       "code": "monitor:job:query",
       "module": "monitor",
       "file": "sql/ry_20260417.sql"
@@ -1818,6 +1868,11 @@
     },
     {
       "code": "monitor:job:remove",
+      "module": "monitor",
+      "file": "sql/ry_20260417.sql"
+    },
+    {
+      "code": "monitor:job:changeStatus",
       "module": "monitor",
       "file": "sql/ry_20260417.sql"
     },

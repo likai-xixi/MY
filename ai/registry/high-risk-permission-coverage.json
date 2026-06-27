@@ -5,6 +5,7 @@
     {
       "featureId": "customer",
       "api": "/business/customer/{customerId}/fund/deposit",
+      "method": "POST",
       "riskDomain": "customer-fund",
       "backendPermission": "business:customer:fund:deposit",
       "frontendPermission": "business:customer:fund:deposit",
@@ -21,6 +22,7 @@
     {
       "featureId": "customer",
       "api": "/business/customer/{customerId}/sample-rebate",
+      "method": "POST",
       "riskDomain": "customer-fund",
       "backendPermission": "business:customer:sample-rebate:create",
       "frontendPermission": "business:customer:sample-rebate:create",

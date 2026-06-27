@@ -2,7 +2,7 @@ import { finish, isCli } from './common.js';
 import { readSafe, writeGenerated } from './scan-utils.js';
 import { configuredPaths, inferFeatureFromPath, listFilesUnderRoots, readFeatureRegistry } from './project-config.js';
 
-const PERMISSION_REGEX = /\b[a-z][a-z0-9-]*:[a-z][a-z0-9-]*(?::[a-z][a-z0-9-*]*)+\b/g;
+const PERMISSION_REGEX = /\b[a-z][A-Za-z0-9-]*:[a-z][A-Za-z0-9-]*(?::[A-Za-z0-9-*]+)+\b/g;
 
 export function inferFeatureFromPermissionCode(code, features) {
   const active = new Set((features || [])

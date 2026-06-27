@@ -17,7 +17,8 @@
       "owner": "monitor",
       "module": "monitor",
       "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor/CacheController.java",
-      "consumers": []
+      "consumers": [],
+      "permission": "monitor:cache:list"
     },
     {
       "id": "/monitor/cache/clearCacheKey",
@@ -26,7 +27,8 @@
       "owner": "monitor",
       "module": "monitor",
       "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor/CacheController.java",
-      "consumers": []
+      "consumers": [],
+      "permission": "monitor:cache:list"
     },
     {
       "id": "/monitor/cache/clearCacheName",
@@ -35,7 +37,8 @@
       "owner": "monitor",
       "module": "monitor",
       "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor/CacheController.java",
-      "consumers": []
+      "consumers": [],
+      "permission": "monitor:cache:list"
     },
     {
       "id": "/monitor/cache/getKeys",
@@ -44,7 +47,8 @@
       "owner": "monitor",
       "module": "monitor",
       "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor/CacheController.java",
-      "consumers": []
+      "consumers": [],
+      "permission": "monitor:cache:list"
     },
     {
       "id": "/monitor/cache/getNames",
@@ -62,7 +66,8 @@
       "owner": "monitor",
       "module": "monitor",
       "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor/CacheController.java",
-      "consumers": []
+      "consumers": [],
+      "permission": "monitor:cache:list"
     },
     {
       "id": "/monitor/job",
@@ -71,7 +76,8 @@
       "owner": "monitor",
       "module": "monitor",
       "source": "ruoyi-quartz/src/main/java/com/ruoyi/quartz/controller/SysJobController.java",
-      "consumers": []
+      "consumers": [],
+      "permission": "monitor:job:add"
     },
     {
       "id": "/monitor/job/changeStatus",
@@ -89,7 +95,8 @@
       "owner": "monitor",
       "module": "monitor",
       "source": "ruoyi-quartz/src/main/java/com/ruoyi/quartz/controller/SysJobController.java",
-      "consumers": []
+      "consumers": [],
+      "permission": "monitor:job:list"
     },
     {
       "id": "/monitor/job/run",
@@ -98,7 +105,8 @@
       "owner": "monitor",
       "module": "monitor",
       "source": "ruoyi-quartz/src/main/java/com/ruoyi/quartz/controller/SysJobController.java",
-      "consumers": []
+      "consumers": [],
+      "permission": "monitor:job:changeStatus"
     },
     {
       "id": "/monitor/jobLog",
@@ -107,7 +115,8 @@
       "owner": "monitor",
       "module": "monitor",
       "source": "ruoyi-quartz/src/main/java/com/ruoyi/quartz/controller/SysJobLogController.java",
-      "consumers": []
+      "consumers": [],
+      "permission": "monitor:job:export"
     },
     {
       "id": "/monitor/jobLog/clean",
@@ -116,7 +125,8 @@
       "owner": "monitor",
       "module": "monitor",
       "source": "ruoyi-quartz/src/main/java/com/ruoyi/quartz/controller/SysJobLogController.java",
-      "consumers": []
+      "consumers": [],
+      "permission": "monitor:job:remove"
     },
     {
       "id": "/monitor/jobLog/list",
@@ -125,7 +135,8 @@
       "owner": "monitor",
       "module": "monitor",
       "source": "ruoyi-quartz/src/main/java/com/ruoyi/quartz/controller/SysJobLogController.java",
-      "consumers": []
+      "consumers": [],
+      "permission": "monitor:job:list"
     },
     {
       "id": "/monitor/logininfor",
@@ -134,7 +145,8 @@
       "owner": "monitor",
       "module": "monitor",
       "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor/SysLogininforController.java",
-      "consumers": []
+      "consumers": [],
+      "permission": "monitor:logininfor:export"
     },
     {
       "id": "/monitor/logininfor/clean",
@@ -143,7 +155,8 @@
       "owner": "monitor",
       "module": "monitor",
       "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor/SysLogininforController.java",
-      "consumers": []
+      "consumers": [],
+      "permission": "monitor:logininfor:remove"
     },
     {
       "id": "/monitor/logininfor/list",
@@ -152,7 +165,8 @@
       "owner": "monitor",
       "module": "monitor",
       "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor/SysLogininforController.java",
-      "consumers": []
+      "consumers": [],
+      "permission": "monitor:logininfor:list"
     },
     {
       "id": "/monitor/logininfor/unlock",
@@ -161,7 +175,8 @@
       "owner": "monitor",
       "module": "monitor",
       "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor/SysLogininforController.java",
-      "consumers": []
+      "consumers": [],
+      "permission": "monitor:logininfor:unlock"
     },
     {
       "id": "/monitor/online",
@@ -179,7 +194,8 @@
       "owner": "monitor",
       "module": "monitor",
       "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor/SysUserOnlineController.java",
-      "consumers": []
+      "consumers": [],
+      "permission": "monitor:online:list"
     },
     {
       "id": "/monitor/operlog",
@@ -188,7 +204,8 @@
       "owner": "monitor",
       "module": "monitor",
       "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor/SysOperlogController.java",
-      "consumers": []
+      "consumers": [],
+      "permission": "monitor:operlog:export"
     },
     {
       "id": "/monitor/operlog/clean",
@@ -197,7 +214,8 @@
       "owner": "monitor",
       "module": "monitor",
       "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor/SysOperlogController.java",
-      "consumers": []
+      "consumers": [],
+      "permission": "monitor:operlog:remove"
     },
     {
       "id": "/monitor/operlog/list",
@@ -206,7 +224,8 @@
       "owner": "monitor",
       "module": "monitor",
       "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor/SysOperlogController.java",
-      "consumers": []
+      "consumers": [],
+      "permission": "monitor:operlog:list"
     },
     {
       "id": "/monitor/server",
@@ -224,7 +243,8 @@
       "owner": "system",
       "module": "system",
       "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysConfigController.java",
-      "consumers": []
+      "consumers": [],
+      "permission": "system:config:add"
     },
     {
       "id": "/system/config/configKey",
@@ -242,7 +262,8 @@
       "owner": "system",
       "module": "system",
       "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysConfigController.java",
-      "consumers": []
+      "consumers": [],
+      "permission": "system:config:list"
     },
     {
       "id": "/system/config/refreshCache",
@@ -251,7 +272,8 @@
       "owner": "system",
       "module": "system",
       "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysConfigController.java",
-      "consumers": []
+      "consumers": [],
+      "permission": "system:config:remove"
     },
     {
       "id": "/system/dept",
@@ -260,7 +282,8 @@
       "owner": "system",
       "module": "system",
       "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysDeptController.java",
-      "consumers": []
+      "consumers": [],
+      "permission": "system:dept:add"
     },
     {
       "id": "/system/dept/list",
@@ -269,7 +292,8 @@
       "owner": "system",
       "module": "system",
       "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysDeptController.java",
-      "consumers": []
+      "consumers": [],
+      "permission": "system:dept:list"
     },
     {
       "id": "/system/dept/list/exclude",
@@ -278,7 +302,8 @@
       "owner": "system",
       "module": "system",
       "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysDeptController.java",
-      "consumers": []
+      "consumers": [],
+      "permission": "system:dept:list"
     },
     {
       "id": "/system/dept/updateSort",
@@ -296,7 +321,8 @@
       "owner": "system",
       "module": "system",
       "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysDictDataController.java",
-      "consumers": []
+      "consumers": [],
+      "permission": "system:dict:add"
     },
     {
       "id": "/system/dict/data/list",
@@ -305,7 +331,8 @@
       "owner": "system",
       "module": "system",
       "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysDictDataController.java",
-      "consumers": []
+      "consumers": [],
+      "permission": "system:dict:list"
     },
     {
       "id": "/system/dict/data/type",
@@ -323,7 +350,8 @@
       "owner": "system",
       "module": "system",
       "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysDictTypeController.java",
-      "consumers": []
+      "consumers": [],
+      "permission": "system:dict:add"
     },
     {
       "id": "/system/dict/type/list",
@@ -332,7 +360,8 @@
       "owner": "system",
       "module": "system",
       "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysDictTypeController.java",
-      "consumers": []
+      "consumers": [],
+      "permission": "system:dict:list"
     },
     {
       "id": "/system/dict/type/optionselect",
@@ -350,7 +379,8 @@
       "owner": "system",
       "module": "system",
       "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysDictTypeController.java",
-      "consumers": []
+      "consumers": [],
+      "permission": "system:dict:remove"
     },
     {
       "id": "/system/menu",
@@ -359,7 +389,8 @@
       "owner": "system",
       "module": "system",
       "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysMenuController.java",
-      "consumers": []
+      "consumers": [],
+      "permission": "system:menu:add"
     },
     {
       "id": "/system/menu/list",
@@ -368,7 +399,8 @@
       "owner": "system",
       "module": "system",
       "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysMenuController.java",
-      "consumers": []
+      "consumers": [],
+      "permission": "system:menu:list"
     },
     {
       "id": "/system/menu/roleMenuTreeselect",
@@ -404,7 +436,8 @@
       "owner": "system",
       "module": "system",
       "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysNoticeController.java",
-      "consumers": []
+      "consumers": [],
+      "permission": "system:notice:add"
     },
     {
       "id": "/system/notice/list",
@@ -413,7 +446,8 @@
       "owner": "system",
       "module": "system",
       "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysNoticeController.java",
-      "consumers": []
+      "consumers": [],
+      "permission": "system:notice:list"
     },
     {
       "id": "/system/notice/listTop",
@@ -449,7 +483,8 @@
       "owner": "system",
       "module": "system",
       "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysNoticeController.java",
-      "consumers": []
+      "consumers": [],
+      "permission": "system:notice:list"
     },
     {
       "id": "/system/post",
@@ -458,7 +493,8 @@
       "owner": "system",
       "module": "system",
       "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysPostController.java",
-      "consumers": []
+      "consumers": [],
+      "permission": "system:post:add"
     },
     {
       "id": "/system/post/list",
@@ -467,7 +503,8 @@
       "owner": "system",
       "module": "system",
       "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysPostController.java",
-      "consumers": []
+      "consumers": [],
+      "permission": "system:post:list"
     },
     {
       "id": "/system/role",
@@ -476,7 +513,8 @@
       "owner": "system",
       "module": "system",
       "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysRoleController.java",
-      "consumers": []
+      "consumers": [],
+      "permission": "system:role:add"
     },
     {
       "id": "/system/role/authUser/allocatedList",
@@ -485,7 +523,8 @@
       "owner": "system",
       "module": "system",
       "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysRoleController.java",
-      "consumers": []
+      "consumers": [],
+      "permission": "system:role:list"
     },
     {
       "id": "/system/role/authUser/cancel",
@@ -494,7 +533,8 @@
       "owner": "system",
       "module": "system",
       "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysRoleController.java",
-      "consumers": []
+      "consumers": [],
+      "permission": "system:role:edit"
     },
     {
       "id": "/system/role/authUser/cancelAll",
@@ -503,7 +543,8 @@
       "owner": "system",
       "module": "system",
       "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysRoleController.java",
-      "consumers": []
+      "consumers": [],
+      "permission": "system:role:edit"
     },
     {
       "id": "/system/role/authUser/selectAll",
@@ -512,7 +553,8 @@
       "owner": "system",
       "module": "system",
       "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysRoleController.java",
-      "consumers": []
+      "consumers": [],
+      "permission": "system:role:edit"
     },
     {
       "id": "/system/role/authUser/unallocatedList",
@@ -521,7 +563,8 @@
       "owner": "system",
       "module": "system",
       "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysRoleController.java",
-      "consumers": []
+      "consumers": [],
+      "permission": "system:role:list"
     },
     {
       "id": "/system/role/changeStatus",
@@ -530,7 +573,8 @@
       "owner": "system",
       "module": "system",
       "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysRoleController.java",
-      "consumers": []
+      "consumers": [],
+      "permission": "system:role:edit"
     },
     {
       "id": "/system/role/dataScope",
@@ -548,7 +592,8 @@
       "owner": "system",
       "module": "system",
       "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysRoleController.java",
-      "consumers": []
+      "consumers": [],
+      "permission": "system:role:query"
     },
     {
       "id": "/system/role/list",
@@ -557,7 +602,8 @@
       "owner": "system",
       "module": "system",
       "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysRoleController.java",
-      "consumers": []
+      "consumers": [],
+      "permission": "system:role:list"
     },
     {
       "id": "/system/user",
@@ -575,7 +621,8 @@
       "owner": "system",
       "module": "system",
       "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysUserController.java",
-      "consumers": []
+      "consumers": [],
+      "permission": "system:user:edit"
     },
     {
       "id": "/system/user/changeStatus",
@@ -584,7 +631,8 @@
       "owner": "system",
       "module": "system",
       "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysUserController.java",
-      "consumers": []
+      "consumers": [],
+      "permission": "system:user:edit"
     },
     {
       "id": "/system/user/deptTree",
@@ -593,7 +641,8 @@
       "owner": "system",
       "module": "system",
       "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysUserController.java",
-      "consumers": []
+      "consumers": [],
+      "permission": "system:user:list"
     },
     {
       "id": "/system/user/list",
@@ -602,7 +651,8 @@
       "owner": "system",
       "module": "system",
       "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysUserController.java",
-      "consumers": []
+      "consumers": [],
+      "permission": "system:user:list"
     },
     {
       "id": "/system/user/profile",
@@ -638,7 +688,8 @@
       "owner": "system",
       "module": "system",
       "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system/SysUserController.java",
-      "consumers": []
+      "consumers": [],
+      "permission": "system:user:resetPwd"
     },
     {
       "id": "/tool/gen",
@@ -665,7 +716,8 @@
       "owner": "tool",
       "module": "tool",
       "source": "ruoyi-generator/src/main/java/com/ruoyi/generator/controller/GenController.java",
-      "consumers": []
+      "consumers": [],
+      "permission": "tool:gen:list"
     },
     {
       "id": "/tool/gen/genCode",
@@ -674,7 +726,8 @@
       "owner": "tool",
       "module": "tool",
       "source": "ruoyi-generator/src/main/java/com/ruoyi/generator/controller/GenController.java",
-      "consumers": []
+      "consumers": [],
+      "permission": "tool:gen:code"
     },
     {
       "id": "/tool/gen/importTable",
@@ -683,7 +736,8 @@
       "owner": "tool",
       "module": "tool",
       "source": "ruoyi-generator/src/main/java/com/ruoyi/generator/controller/GenController.java",
-      "consumers": []
+      "consumers": [],
+      "permission": "tool:gen:import"
     },
     {
       "id": "/tool/gen/list",
@@ -692,7 +746,8 @@
       "owner": "tool",
       "module": "tool",
       "source": "ruoyi-generator/src/main/java/com/ruoyi/generator/controller/GenController.java",
-      "consumers": []
+      "consumers": [],
+      "permission": "tool:gen:list"
     },
     {
       "id": "/tool/gen/preview",
@@ -701,7 +756,8 @@
       "owner": "tool",
       "module": "tool",
       "source": "ruoyi-generator/src/main/java/com/ruoyi/generator/controller/GenController.java",
-      "consumers": []
+      "consumers": [],
+      "permission": "tool:gen:preview"
     },
     {
       "id": "/tool/gen/synchDb",
@@ -710,7 +766,8 @@
       "owner": "tool",
       "module": "tool",
       "source": "ruoyi-generator/src/main/java/com/ruoyi/generator/controller/GenController.java",
-      "consumers": []
+      "consumers": [],
+      "permission": "tool:gen:edit"
     },
     {
       "id": "/business/customer/list",
@@ -719,7 +776,10 @@
       "owner": "customer",
       "module": "customer",
       "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
-      "consumers": ["customer:customer"]
+      "consumers": [
+        "customer:customer"
+      ],
+      "permission": "business:customer:list"
     },
     {
       "id": "/business/customer/export",
@@ -728,7 +788,10 @@
       "owner": "customer",
       "module": "customer",
       "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
-      "consumers": ["customer:customer"]
+      "consumers": [
+        "customer:customer"
+      ],
+      "permission": "business:customer:export"
     },
     {
       "id": "/business/customer/{customerId}",
@@ -737,7 +800,10 @@
       "owner": "customer",
       "module": "customer",
       "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
-      "consumers": ["customer:customer"]
+      "consumers": [
+        "customer:customer"
+      ],
+      "permission": "business:customer:query"
     },
     {
       "id": "/business/customer/duplicate-warning",
@@ -746,7 +812,10 @@
       "owner": "customer",
       "module": "customer",
       "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
-      "consumers": ["customer:customer"]
+      "consumers": [
+        "customer:customer"
+      ],
+      "permission": "business:customer:query"
     },
     {
       "id": "/business/customer",
@@ -755,7 +824,10 @@
       "owner": "customer",
       "module": "customer",
       "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
-      "consumers": ["customer:customer"]
+      "consumers": [
+        "customer:customer"
+      ],
+      "permission": "business:customer:add"
     },
     {
       "id": "/business/customer:update",
@@ -764,7 +836,10 @@
       "owner": "customer",
       "module": "customer",
       "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
-      "consumers": ["customer:customer"]
+      "consumers": [
+        "customer:customer"
+      ],
+      "permission": "business:customer:edit"
     },
     {
       "id": "/business/customer/changeStatus",
@@ -773,7 +848,10 @@
       "owner": "customer",
       "module": "customer",
       "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
-      "consumers": ["customer:customer"]
+      "consumers": [
+        "customer:customer"
+      ],
+      "permission": "business:customer:edit"
     },
     {
       "id": "/business/customer/{customerIds}",
@@ -782,7 +860,10 @@
       "owner": "customer",
       "module": "customer",
       "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
-      "consumers": ["customer:customer"]
+      "consumers": [
+        "customer:customer"
+      ],
+      "permission": "business:customer:remove"
     },
     {
       "id": "/business/customer/salesmen",
@@ -791,7 +872,10 @@
       "owner": "customer",
       "module": "customer",
       "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
-      "consumers": ["customer:customer"]
+      "consumers": [
+        "customer:customer"
+      ],
+      "permission": "business:customer:owner:view"
     },
     {
       "id": "/business/customer/transferOwner",
@@ -800,7 +884,10 @@
       "owner": "customer",
       "module": "customer",
       "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
-      "consumers": ["customer:customer"]
+      "consumers": [
+        "customer:customer"
+      ],
+      "permission": "business:customer:owner:transfer"
     },
     {
       "id": "/business/customer/{customerId}/owner-log",
@@ -809,7 +896,10 @@
       "owner": "customer",
       "module": "customer",
       "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
-      "consumers": ["customer:customer"]
+      "consumers": [
+        "customer:customer"
+      ],
+      "permission": "business:customer:owner:history"
     },
     {
       "id": "/business/customer/{customerId}/fund/accounts",
@@ -818,7 +908,10 @@
       "owner": "customer",
       "module": "customer",
       "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
-      "consumers": ["customer:customer"]
+      "consumers": [
+        "customer:customer"
+      ],
+      "permission": "business:customer:fund:view"
     },
     {
       "id": "/business/customer/{customerId}/fund/deposit",
@@ -827,7 +920,11 @@
       "owner": "customer",
       "module": "customer",
       "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
-      "consumers": ["customer:customer"]
+      "consumers": [
+        "customer:customer"
+      ],
+      "permission": "business:customer:fund:deposit",
+      "riskDomain": "customer-fund"
     },
     {
       "id": "/business/customer/{customerId}/fund/flows",
@@ -836,7 +933,10 @@
       "owner": "customer",
       "module": "customer",
       "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
-      "consumers": ["customer:customer"]
+      "consumers": [
+        "customer:customer"
+      ],
+      "permission": "business:customer:fund:flow"
     },
     {
       "id": "/business/customer/{customerId}/fund/deposit-batches",
@@ -845,7 +945,10 @@
       "owner": "customer",
       "module": "customer",
       "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
-      "consumers": ["customer:customer"]
+      "consumers": [
+        "customer:customer"
+      ],
+      "permission": "business:customer:fund:view"
     },
     {
       "id": "/business/customer/{customerId}/sample-policy",
@@ -854,7 +957,10 @@
       "owner": "customer",
       "module": "customer",
       "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
-      "consumers": ["customer:customer"]
+      "consumers": [
+        "customer:customer"
+      ],
+      "permission": "business:customer:sample-policy:view"
     },
     {
       "id": "/business/customer/{customerId}/sample-policy:update",
@@ -863,7 +969,10 @@
       "owner": "customer",
       "module": "customer",
       "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
-      "consumers": ["customer:customer"]
+      "consumers": [
+        "customer:customer"
+      ],
+      "permission": "business:customer:sample-policy:edit"
     },
     {
       "id": "/business/customer/{customerId}/sample-rebate:create",
@@ -872,7 +981,11 @@
       "owner": "customer",
       "module": "customer",
       "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
-      "consumers": ["customer:customer"]
+      "consumers": [
+        "customer:customer"
+      ],
+      "permission": "business:customer:sample-rebate:create",
+      "riskDomain": "customer-fund"
     },
     {
       "id": "/business/customer/{customerId}/sample-rebate",
@@ -881,7 +994,10 @@
       "owner": "customer",
       "module": "customer",
       "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
-      "consumers": ["customer:customer"]
+      "consumers": [
+        "customer:customer"
+      ],
+      "permission": "business:customer:fund:view"
     }
   ]
 }

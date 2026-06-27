@@ -10,7 +10,7 @@ Codex Auto Dev OS is kept in the repository as the workflow and evidence layer: 
 - Governance layer: Codex Auto Dev OS with locked RuoYi adapter rules.
 - Business domain: MY 门业 ERP.
 - Implemented business module: `customer` / 客户管理.
-- Current closeout focus: R-04 governance/runtime verification boundary clarification documents what local governance, runtime checker, production safety, CI, release verification, and manual runtime acceptance do and do not prove.
+- Current closeout focus: R-09A.3 governance graph validation cleanup aligns generated UI/API graphs, component scans, migration/idempotency ownership, SQL runtime validation, current context, and handover evidence while keeping customer runtime and sales-order runtime untouched.
 - V2 target shape remains a Java Web ERP main system plus Windows workstation client plus mobile H5/mini-program. This repository is currently at the Java Web/RuoYi/customer stage.
 - CI baseline: [ci-planned] GitHub Actions workflow includes Node governance, Maven compile, and ruoyi-ui build; actual CI result is determined after push.
 - Production safety baseline: default/dev configuration is not production-ready; production must use `ruoyi-admin/src/main/resources/application-prod.yml`.
@@ -29,7 +29,7 @@ Codex Auto Dev OS is kept in the repository as the workflow and evidence layer: 
 - Component governance: shared components must be registered in the component catalog; generic reusable controls are blocked inside feature-local component folders.
 - Deletion ownership: delete dry-run lists feature files, registries, graph entries, API/UI ownership, database objects, permissions, SQL, mapper XML, menus, components, docs, orphan checks, and rollback notes.
 - Full gate: `npm run check` runs scans, registries, graphs, memory, handoff, components, boundaries, stale-doc checks, orphan checks, rule lock, diff scope, duplicate scan, and Node structural tests.
-- High-risk semantic governance: CR-3 adds `check:high-risk-governance`, high-risk domain registries, evidence/contract/idempotency/state-machine/migration/permission schemas, and framework checks. It is a framework baseline; it is not proof that every high-risk business domain has executable runtime evidence. `beforeSalesOrder` remains blocked and sales-order contracts remain future scope.
+- High-risk semantic governance: CR-3 adds `check:high-risk-governance`, high-risk domain registries, evidence/contract/idempotency/state-machine/migration/permission schemas, and framework checks. R-09A.3 additionally checks validation migration `dependsOn` chains, API graph endpoint permissions, high-risk permission coverage, real UI screen files, and Vue global component tag usage. It is still governance evidence, not proof that every high-risk business domain has production runtime acceptance. `beforeSalesOrder` remains blocked and sales-order contracts remain future scope.
 
 ## Normal Codex App workflow
 

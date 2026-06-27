@@ -56,8 +56,3 @@ union all
 select 'legacy_deposit_type_in_fund_flow_related_biz' as check_name, flow_id as row_id, customer_id, related_biz_type as legacy_value
 from customer_fund_flow
 where related_biz_type in ('LONG_TERM_DEPOSIT', 'ROLLING_ORDER_DEPOSIT');
-
--- Expected: zero rows. Idempotent requests only use the platform-supported status vocabulary.
-select 'invalid_idempotent_request_status' as check_name, request_id, biz_type, idempotent_key, status
-from idempotent_request
-where status not in ('PROCESSING', 'SUCCESS', 'FAILED');

@@ -8,14 +8,19 @@
       "status": "in_progress",
       "owner": "Codex",
       "priority": "high",
-      "statusReason": "R-09A.1 governance change CR-20260627T120650Z-r-09a-1-governance-false-green-hardening hardens false-green gates for diff forbidden roots, beforeSalesOrder bypass paths, RuoYi business permission scanning, feature permission scan closure, rule-change preflight ids, and rule-object ownership/change-record references without customer runtime or sales-order runtime implementation.",
-      "nextStep": "Continue with R-09B sales-order pre-implementation contract package while keeping beforeSalesOrder blocked.",
+      "statusReason": "R-09A.3 governance cleanup CR-20260627-r-09a-3-governance-graph-validation-cleanup aligns SQL validation ownership, platform idempotent_request ownership, generated UI/API graph validation, Vue global component scanning, high-risk API permission graph checks, current context, and handover evidence without customer runtime or sales-order runtime implementation.",
+      "nextStep": "Continue with R-09B sales-order pre-implementation contract package only after R-09A.3 closeout remains green; keep beforeSalesOrder blocked.",
       "blockedBy": [],
       "verification": [
         "npm run profile:setup",
         "npm run scan:all",
         "npm run finalize:change",
         "npm run check",
+        "R-09A.3 npm run rule:preflight -- before-sales-order-phase-gate customer-fund-deposit-entry customer-sample-rebate-generation public-customer-invariant passed",
+        "R-09A.3 npm run scan:all, npm run build:graph, npm run check:graph, npm run check:high-risk-governance, npm run check:components, npm run check:component-similarity, and npm run check:ownership passed",
+        "R-09A.3 focused tests passed: high-risk-governance 43/43, component-scan 2/2, graph 10/10, customer-risk-gate 17/17, and boundary-lint 9/9",
+        "R-09A.3 npm test passed with 222/222 Node tests after scoped current-CR RuoYi baseline exceptions and registry route-shape coverage",
+        "R-09A.3 final npm run check and git diff --check passed",
         "npm run check with Maven resolved from ai/rules/runtime-policy.json",
         "MySQL sql/ry_20260417.sql and sql/quartz.sql imported into isolated database my_ry_vue_runtime",
         "Redis DB1 ping returned PONG",
@@ -144,7 +149,7 @@
       "latestSession": "memory/sessions/2026-06-25-pre-release-breaking-change-policy.md",
       "handoverRequired": true,
       "updatedAt": "2026-06-27",
-      "latestChange": "CR-20260627T120650Z-r-09a-1-governance-false-green-hardening"
+      "latestChange": "CR-20260627-r-09a-3-governance-graph-validation-cleanup"
     },
     {
       "id": "TASK-CUSTOMER",

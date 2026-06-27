@@ -2,698 +2,23 @@
   "schemaVersion": 1,
   "screens": [
     {
-      "id": "monitor:monitor-cache-clearcacheall:50",
-      "route": "/monitor/cache/clearCacheAll",
-      "owner": "monitor",
-      "module": "monitor",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "monitor:monitor-cache-clearcachekey-cachekey:51",
-      "route": "/monitor/cache/clearCacheKey/{cacheKey}",
-      "owner": "monitor",
-      "module": "monitor",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "monitor:monitor-cache-clearcachename-cachename:52",
-      "route": "/monitor/cache/clearCacheName/{cacheName}",
-      "owner": "monitor",
-      "module": "monitor",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "monitor:monitor-cache-getkeys-cachename:53",
-      "route": "/monitor/cache/getKeys/{cacheName}",
-      "owner": "monitor",
-      "module": "monitor",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "monitor:monitor-cache-getnames:54",
-      "route": "/monitor/cache/getNames",
-      "owner": "monitor",
-      "module": "monitor",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "monitor:monitor-cache-getvalue-cachename-cachekey:55",
-      "route": "/monitor/cache/getValue/{cacheName}/{cacheKey}",
-      "owner": "monitor",
-      "module": "monitor",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "monitor:monitor-cache-list:5",
-      "route": "/monitor/cache/list",
-      "owner": "monitor",
-      "module": "monitor",
-      "file": "ruoyi-ui/src/views/monitor/cache/list.vue",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "monitor:monitor-cache-list:56",
-      "route": "/monitor/cache/list",
-      "owner": "monitor",
-      "module": "monitor",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "monitor:monitor-cache:4",
-      "route": "/monitor/cache",
-      "owner": "monitor",
-      "module": "monitor",
-      "file": "ruoyi-ui/src/views/monitor/cache/index.vue",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "monitor:monitor-cache:49",
-      "route": "/monitor/cache",
-      "owner": "monitor",
-      "module": "monitor",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "monitor:monitor-druid:58",
-      "route": "/monitor/druid",
-      "owner": "monitor",
-      "module": "monitor",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "monitor:monitor-druid:6",
-      "route": "/monitor/druid",
-      "owner": "monitor",
-      "module": "monitor",
-      "file": "ruoyi-ui/src/views/monitor/druid/index.vue",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "monitor:monitor-job-changestatus:60",
-      "route": "/monitor/job/changeStatus",
-      "owner": "monitor",
-      "module": "monitor",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "monitor:monitor-job-detail:61",
-      "route": "/monitor/job/detail",
-      "owner": "monitor",
-      "module": "monitor",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "monitor:monitor-job-detail:7",
-      "route": "/monitor/job/detail",
-      "owner": "monitor",
-      "module": "monitor",
-      "file": "ruoyi-ui/src/views/monitor/job/detail.vue",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "monitor:monitor-job-export:62",
-      "route": "/monitor/job/export",
-      "owner": "monitor",
-      "module": "monitor",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "monitor:monitor-job-jobid:68",
-      "route": "/monitor/job/{jobId}",
-      "owner": "monitor",
-      "module": "monitor",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "monitor:monitor-job-jobids:67",
-      "route": "/monitor/job/{jobIds}",
-      "owner": "monitor",
-      "module": "monitor",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "monitor:monitor-job-list:63",
-      "route": "/monitor/job/list",
-      "owner": "monitor",
-      "module": "monitor",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "monitor:monitor-job-log:64",
-      "route": "/monitor/job/log",
-      "owner": "monitor",
-      "module": "monitor",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "monitor:monitor-job-log:9",
-      "route": "/monitor/job/log",
-      "owner": "monitor",
-      "module": "monitor",
-      "file": "ruoyi-ui/src/views/monitor/job/log.vue",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "monitor:monitor-job-run:66",
-      "route": "/monitor/job/run",
-      "owner": "monitor",
-      "module": "monitor",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "monitor:monitor-job:59",
-      "route": "/monitor/job",
-      "owner": "monitor",
-      "module": "monitor",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "monitor:monitor-job:8",
-      "route": "/monitor/job",
-      "owner": "monitor",
-      "module": "monitor",
-      "file": "ruoyi-ui/src/views/monitor/job/index.vue",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "monitor:monitor-joblog-clean:69",
-      "route": "/monitor/jobLog/clean",
-      "owner": "monitor",
-      "module": "monitor",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "monitor:monitor-joblog-export:70",
-      "route": "/monitor/jobLog/export",
-      "owner": "monitor",
-      "module": "monitor",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "monitor:monitor-joblog-joblogid:74",
-      "route": "/monitor/jobLog/{jobLogId}",
-      "owner": "monitor",
-      "module": "monitor",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "monitor:monitor-joblog-joblogids:73",
-      "route": "/monitor/jobLog/{jobLogIds}",
-      "owner": "monitor",
-      "module": "monitor",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "monitor:monitor-joblog-list:71",
-      "route": "/monitor/jobLog/list",
-      "owner": "monitor",
-      "module": "monitor",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "monitor:monitor-logininfor-clean:76",
-      "route": "/monitor/logininfor/clean",
-      "owner": "monitor",
-      "module": "monitor",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "monitor:monitor-logininfor-export:77",
-      "route": "/monitor/logininfor/export",
-      "owner": "monitor",
-      "module": "monitor",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "monitor:monitor-logininfor-infoids:81",
-      "route": "/monitor/logininfor/{infoIds}",
-      "owner": "monitor",
-      "module": "monitor",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "monitor:monitor-logininfor-list:78",
-      "route": "/monitor/logininfor/list",
-      "owner": "monitor",
-      "module": "monitor",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "monitor:monitor-logininfor-unlock-username:80",
-      "route": "/monitor/logininfor/unlock/{userName}",
-      "owner": "monitor",
-      "module": "monitor",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "monitor:monitor-logininfor:10",
-      "route": "/monitor/logininfor",
-      "owner": "monitor",
-      "module": "monitor",
-      "file": "ruoyi-ui/src/views/monitor/logininfor/index.vue",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "monitor:monitor-logininfor:75",
-      "route": "/monitor/logininfor",
-      "owner": "monitor",
-      "module": "monitor",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "monitor:monitor-online-list:83",
-      "route": "/monitor/online/list",
-      "owner": "monitor",
-      "module": "monitor",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "monitor:monitor-online-tokenid:85",
-      "route": "/monitor/online/{tokenId}",
-      "owner": "monitor",
-      "module": "monitor",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "monitor:monitor-online:11",
-      "route": "/monitor/online",
-      "owner": "monitor",
-      "module": "monitor",
-      "file": "ruoyi-ui/src/views/monitor/online/index.vue",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "monitor:monitor-online:82",
-      "route": "/monitor/online",
-      "owner": "monitor",
-      "module": "monitor",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "monitor:monitor-operlog-clean:87",
-      "route": "/monitor/operlog/clean",
-      "owner": "monitor",
-      "module": "monitor",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "monitor:monitor-operlog-detail:12",
-      "route": "/monitor/operlog/detail",
-      "owner": "monitor",
-      "module": "monitor",
-      "file": "ruoyi-ui/src/views/monitor/operlog/detail.vue",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "monitor:monitor-operlog-detail:88",
-      "route": "/monitor/operlog/detail",
-      "owner": "monitor",
-      "module": "monitor",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "monitor:monitor-operlog-export:89",
-      "route": "/monitor/operlog/export",
-      "owner": "monitor",
-      "module": "monitor",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "monitor:monitor-operlog-list:90",
-      "route": "/monitor/operlog/list",
-      "owner": "monitor",
-      "module": "monitor",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "monitor:monitor-operlog-operids:92",
-      "route": "/monitor/operlog/{operIds}",
-      "owner": "monitor",
-      "module": "monitor",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "monitor:monitor-operlog:13",
-      "route": "/monitor/operlog",
-      "owner": "monitor",
-      "module": "monitor",
-      "file": "ruoyi-ui/src/views/monitor/operlog/index.vue",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "monitor:monitor-operlog:86",
-      "route": "/monitor/operlog",
-      "owner": "monitor",
-      "module": "monitor",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "monitor:monitor-server:14",
-      "route": "/monitor/server",
-      "owner": "monitor",
-      "module": "monitor",
-      "file": "ruoyi-ui/src/views/monitor/server/index.vue",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "monitor:monitor-server:93",
-      "route": "/monitor/server",
-      "owner": "monitor",
-      "module": "monitor",
-      "file": "",
-      "usesApi": [],
+      "id": "customer:customer",
+      "route": "/customer",
+      "owner": "customer",
+      "module": "customer",
+      "file": "ruoyi-ui/src/views/customer/index.vue",
+      "usesApi": [
+        "/business/customer/list",
+        "/business/customer/{customerId}",
+        "/business/customer",
+        "/business/customer:update",
+        "/business/customer/changeStatus",
+        "/business/customer/transferOwner",
+        "/business/customer/{customerId}/fund/deposit",
+        "/business/customer/{customerId}/sample-policy",
+        "/business/customer/{customerId}/sample-policy:update",
+        "/business/customer/{customerId}/sample-rebate:create"
+      ],
       "states": [
         "loading",
         "empty",
@@ -707,20 +32,6 @@
       "owner": "platform",
       "module": "platform",
       "file": "ruoyi-ui/src/views/error/401.vue",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "platform:error-401:95",
-      "route": "/error/401",
-      "owner": "platform",
-      "module": "platform",
-      "file": "",
       "usesApi": [],
       "states": [
         "loading",
@@ -744,39 +55,11 @@
       ]
     },
     {
-      "id": "platform:error-404:96",
-      "route": "/error/404",
-      "owner": "platform",
-      "module": "platform",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
       "id": "platform:lock:2",
       "route": "/lock",
       "owner": "platform",
       "module": "platform",
       "file": "ruoyi-ui/src/views/lock.vue",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "platform:lock:97",
-      "route": "/lock",
-      "owner": "platform",
-      "module": "platform",
-      "file": "",
       "usesApi": [],
       "states": [
         "loading",
@@ -800,11 +83,151 @@
       ]
     },
     {
-      "id": "platform:login:98",
-      "route": "/login",
-      "owner": "platform",
-      "module": "platform",
-      "file": "",
+      "id": "monitor:monitor-cache:4",
+      "route": "/monitor/cache",
+      "owner": "monitor",
+      "module": "monitor",
+      "file": "ruoyi-ui/src/views/monitor/cache/index.vue",
+      "usesApi": [],
+      "states": [
+        "loading",
+        "empty",
+        "success",
+        "error"
+      ]
+    },
+    {
+      "id": "monitor:monitor-cache-list:5",
+      "route": "/monitor/cache/list",
+      "owner": "monitor",
+      "module": "monitor",
+      "file": "ruoyi-ui/src/views/monitor/cache/list.vue",
+      "usesApi": [],
+      "states": [
+        "loading",
+        "empty",
+        "success",
+        "error"
+      ]
+    },
+    {
+      "id": "monitor:monitor-druid:6",
+      "route": "/monitor/druid",
+      "owner": "monitor",
+      "module": "monitor",
+      "file": "ruoyi-ui/src/views/monitor/druid/index.vue",
+      "usesApi": [],
+      "states": [
+        "loading",
+        "empty",
+        "success",
+        "error"
+      ]
+    },
+    {
+      "id": "monitor:monitor-job-detail:7",
+      "route": "/monitor/job/detail",
+      "owner": "monitor",
+      "module": "monitor",
+      "file": "ruoyi-ui/src/views/monitor/job/detail.vue",
+      "usesApi": [],
+      "states": [
+        "loading",
+        "empty",
+        "success",
+        "error"
+      ]
+    },
+    {
+      "id": "monitor:monitor-job:8",
+      "route": "/monitor/job",
+      "owner": "monitor",
+      "module": "monitor",
+      "file": "ruoyi-ui/src/views/monitor/job/index.vue",
+      "usesApi": [],
+      "states": [
+        "loading",
+        "empty",
+        "success",
+        "error"
+      ]
+    },
+    {
+      "id": "monitor:monitor-job-log:9",
+      "route": "/monitor/job/log",
+      "owner": "monitor",
+      "module": "monitor",
+      "file": "ruoyi-ui/src/views/monitor/job/log.vue",
+      "usesApi": [],
+      "states": [
+        "loading",
+        "empty",
+        "success",
+        "error"
+      ]
+    },
+    {
+      "id": "monitor:monitor-logininfor:10",
+      "route": "/monitor/logininfor",
+      "owner": "monitor",
+      "module": "monitor",
+      "file": "ruoyi-ui/src/views/monitor/logininfor/index.vue",
+      "usesApi": [],
+      "states": [
+        "loading",
+        "empty",
+        "success",
+        "error"
+      ]
+    },
+    {
+      "id": "monitor:monitor-online:11",
+      "route": "/monitor/online",
+      "owner": "monitor",
+      "module": "monitor",
+      "file": "ruoyi-ui/src/views/monitor/online/index.vue",
+      "usesApi": [],
+      "states": [
+        "loading",
+        "empty",
+        "success",
+        "error"
+      ]
+    },
+    {
+      "id": "monitor:monitor-operlog-detail:12",
+      "route": "/monitor/operlog/detail",
+      "owner": "monitor",
+      "module": "monitor",
+      "file": "ruoyi-ui/src/views/monitor/operlog/detail.vue",
+      "usesApi": [],
+      "states": [
+        "loading",
+        "empty",
+        "success",
+        "error"
+      ]
+    },
+    {
+      "id": "monitor:monitor-operlog:13",
+      "route": "/monitor/operlog",
+      "owner": "monitor",
+      "module": "monitor",
+      "file": "ruoyi-ui/src/views/monitor/operlog/index.vue",
+      "usesApi": [],
+      "states": [
+        "loading",
+        "empty",
+        "success",
+        "error"
+      ]
+    },
+    {
+      "id": "monitor:monitor-server:14",
+      "route": "/monitor/server",
+      "owner": "monitor",
+      "module": "monitor",
+      "file": "ruoyi-ui/src/views/monitor/server/index.vue",
       "usesApi": [],
       "states": [
         "loading",
@@ -828,34 +251,6 @@
       ]
     },
     {
-      "id": "platform:redirect:99",
-      "route": "/redirect",
-      "owner": "platform",
-      "module": "platform",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "platform:register:100",
-      "route": "/register",
-      "owner": "platform",
-      "module": "platform",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
       "id": "platform:register:16",
       "route": "/register",
       "owner": "platform",
@@ -870,24 +265,10 @@
       ]
     },
     {
-      "id": "platform:system-config:101",
+      "id": "system:system-config:18",
       "route": "/system/config",
-      "owner": "platform",
-      "module": "platform",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "platform:system-config:17",
-      "route": "/system/config",
-      "owner": "platform",
-      "module": "platform",
+      "owner": "system",
+      "module": "system",
       "file": "ruoyi-ui/src/views/system/config/index.vue",
       "usesApi": [],
       "states": [
@@ -898,24 +279,10 @@
       ]
     },
     {
-      "id": "platform:system-dept:102",
+      "id": "system:system-dept:19",
       "route": "/system/dept",
-      "owner": "platform",
-      "module": "platform",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "platform:system-dept:18",
-      "route": "/system/dept",
-      "owner": "platform",
-      "module": "platform",
+      "owner": "system",
+      "module": "system",
       "file": "ruoyi-ui/src/views/system/dept/index.vue",
       "usesApi": [],
       "states": [
@@ -926,24 +293,10 @@
       ]
     },
     {
-      "id": "platform:system-dict-data:104",
+      "id": "system:system-dict-data:20",
       "route": "/system/dict/data",
-      "owner": "platform",
-      "module": "platform",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "platform:system-dict-data:19",
-      "route": "/system/dict/data",
-      "owner": "platform",
-      "module": "platform",
+      "owner": "system",
+      "module": "system",
       "file": "ruoyi-ui/src/views/system/dict/data.vue",
       "usesApi": [],
       "states": [
@@ -954,24 +307,10 @@
       ]
     },
     {
-      "id": "platform:system-dict-detail:105",
+      "id": "system:system-dict-detail:21",
       "route": "/system/dict/detail",
-      "owner": "platform",
-      "module": "platform",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "platform:system-dict-detail:20",
-      "route": "/system/dict/detail",
-      "owner": "platform",
-      "module": "platform",
+      "owner": "system",
+      "module": "system",
       "file": "ruoyi-ui/src/views/system/dict/detail.vue",
       "usesApi": [],
       "states": [
@@ -982,24 +321,10 @@
       ]
     },
     {
-      "id": "platform:system-dict:103",
+      "id": "system:system-dict:22",
       "route": "/system/dict",
-      "owner": "platform",
-      "module": "platform",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "platform:system-dict:21",
-      "route": "/system/dict",
-      "owner": "platform",
-      "module": "platform",
+      "owner": "system",
+      "module": "system",
       "file": "ruoyi-ui/src/views/system/dict/index.vue",
       "usesApi": [],
       "states": [
@@ -1010,24 +335,10 @@
       ]
     },
     {
-      "id": "platform:system-menu:106",
+      "id": "system:system-menu:23",
       "route": "/system/menu",
-      "owner": "platform",
-      "module": "platform",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "platform:system-menu:22",
-      "route": "/system/menu",
-      "owner": "platform",
-      "module": "platform",
+      "owner": "system",
+      "module": "system",
       "file": "ruoyi-ui/src/views/system/menu/index.vue",
       "usesApi": [],
       "states": [
@@ -1038,24 +349,10 @@
       ]
     },
     {
-      "id": "platform:system-notice-readusers:108",
+      "id": "system:system-notice-readusers:24",
       "route": "/system/notice/ReadUsers",
-      "owner": "platform",
-      "module": "platform",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "platform:system-notice-readusers:23",
-      "route": "/system/notice/ReadUsers",
-      "owner": "platform",
-      "module": "platform",
+      "owner": "system",
+      "module": "system",
       "file": "ruoyi-ui/src/views/system/notice/ReadUsers.vue",
       "usesApi": [],
       "states": [
@@ -1066,24 +363,10 @@
       ]
     },
     {
-      "id": "platform:system-notice:107",
+      "id": "system:system-notice:25",
       "route": "/system/notice",
-      "owner": "platform",
-      "module": "platform",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "platform:system-notice:24",
-      "route": "/system/notice",
-      "owner": "platform",
-      "module": "platform",
+      "owner": "system",
+      "module": "system",
       "file": "ruoyi-ui/src/views/system/notice/index.vue",
       "usesApi": [],
       "states": [
@@ -1094,24 +377,10 @@
       ]
     },
     {
-      "id": "platform:system-post:109",
+      "id": "system:system-post:26",
       "route": "/system/post",
-      "owner": "platform",
-      "module": "platform",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "platform:system-post:25",
-      "route": "/system/post",
-      "owner": "platform",
-      "module": "platform",
+      "owner": "system",
+      "module": "system",
       "file": "ruoyi-ui/src/views/system/post/index.vue",
       "usesApi": [],
       "states": [
@@ -1122,24 +391,10 @@
       ]
     },
     {
-      "id": "platform:system-role-authuser:111",
+      "id": "system:system-role-authuser:27",
       "route": "/system/role/authUser",
-      "owner": "platform",
-      "module": "platform",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "platform:system-role-authuser:26",
-      "route": "/system/role/authUser",
-      "owner": "platform",
-      "module": "platform",
+      "owner": "system",
+      "module": "system",
       "file": "ruoyi-ui/src/views/system/role/authUser.vue",
       "usesApi": [],
       "states": [
@@ -1150,52 +405,10 @@
       ]
     },
     {
-      "id": "platform:system-role-selectuser:112",
-      "route": "/system/role/selectUser",
-      "owner": "platform",
-      "module": "platform",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "platform:system-role-selectuser:28",
-      "route": "/system/role/selectUser",
-      "owner": "platform",
-      "module": "platform",
-      "file": "ruoyi-ui/src/views/system/role/selectUser.vue",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "platform:system-role:110",
+      "id": "system:system-role:28",
       "route": "/system/role",
-      "owner": "platform",
-      "module": "platform",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "platform:system-role:27",
-      "route": "/system/role",
-      "owner": "platform",
-      "module": "platform",
+      "owner": "system",
+      "module": "system",
       "file": "ruoyi-ui/src/views/system/role/index.vue",
       "usesApi": [],
       "states": [
@@ -1206,11 +419,11 @@
       ]
     },
     {
-      "id": "platform:system-user-authrole:114",
-      "route": "/system/user/authRole",
-      "owner": "platform",
-      "module": "platform",
-      "file": "",
+      "id": "system:system-role-selectuser:29",
+      "route": "/system/role/selectUser",
+      "owner": "system",
+      "module": "system",
+      "file": "ruoyi-ui/src/views/system/role/selectUser.vue",
       "usesApi": [],
       "states": [
         "loading",
@@ -1220,10 +433,10 @@
       ]
     },
     {
-      "id": "platform:system-user-authrole:29",
+      "id": "system:system-user-authrole:30",
       "route": "/system/user/authRole",
-      "owner": "platform",
-      "module": "platform",
+      "owner": "system",
+      "module": "system",
       "file": "ruoyi-ui/src/views/system/user/authRole.vue",
       "usesApi": [],
       "states": [
@@ -1234,164 +447,10 @@
       ]
     },
     {
-      "id": "platform:system-user-profile-resetpwd:116",
-      "route": "/system/user/profile/resetPwd",
-      "owner": "platform",
-      "module": "platform",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "platform:system-user-profile-resetpwd:32",
-      "route": "/system/user/profile/resetPwd",
-      "owner": "platform",
-      "module": "platform",
-      "file": "ruoyi-ui/src/views/system/user/profile/resetPwd.vue",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "platform:system-user-profile-useravatar:117",
-      "route": "/system/user/profile/userAvatar",
-      "owner": "platform",
-      "module": "platform",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "platform:system-user-profile-useravatar:33",
-      "route": "/system/user/profile/userAvatar",
-      "owner": "platform",
-      "module": "platform",
-      "file": "ruoyi-ui/src/views/system/user/profile/userAvatar.vue",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "platform:system-user-profile-userinfo:118",
-      "route": "/system/user/profile/userInfo",
-      "owner": "platform",
-      "module": "platform",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "platform:system-user-profile-userinfo:34",
-      "route": "/system/user/profile/userInfo",
-      "owner": "platform",
-      "module": "platform",
-      "file": "ruoyi-ui/src/views/system/user/profile/userInfo.vue",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "platform:system-user-profile:115",
-      "route": "/system/user/profile",
-      "owner": "platform",
-      "module": "platform",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "platform:system-user-profile:31",
-      "route": "/system/user/profile",
-      "owner": "platform",
-      "module": "platform",
-      "file": "ruoyi-ui/src/views/system/user/profile/index.vue",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "platform:system-user-view:119",
-      "route": "/system/user/view",
-      "owner": "platform",
-      "module": "platform",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "platform:system-user-view:35",
-      "route": "/system/user/view",
-      "owner": "platform",
-      "module": "platform",
-      "file": "ruoyi-ui/src/views/system/user/view.vue",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "platform:system-user:113",
+      "id": "system:system-user:31",
       "route": "/system/user",
-      "owner": "platform",
-      "module": "platform",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "platform:system-user:30",
-      "route": "/system/user",
-      "owner": "platform",
-      "module": "platform",
+      "owner": "system",
+      "module": "system",
       "file": "ruoyi-ui/src/views/system/user/index.vue",
       "usesApi": [],
       "states": [
@@ -1402,11 +461,11 @@
       ]
     },
     {
-      "id": "platform:tool-build-codetypedialog:121",
-      "route": "/tool/build/CodeTypeDialog",
-      "owner": "platform",
-      "module": "platform",
-      "file": "",
+      "id": "system:system-user-profile:32",
+      "route": "/system/user/profile",
+      "owner": "system",
+      "module": "system",
+      "file": "ruoyi-ui/src/views/system/user/profile/index.vue",
       "usesApi": [],
       "states": [
         "loading",
@@ -1416,10 +475,66 @@
       ]
     },
     {
-      "id": "platform:tool-build-codetypedialog:36",
+      "id": "system:system-user-profile-resetpwd:33",
+      "route": "/system/user/profile/resetPwd",
+      "owner": "system",
+      "module": "system",
+      "file": "ruoyi-ui/src/views/system/user/profile/resetPwd.vue",
+      "usesApi": [],
+      "states": [
+        "loading",
+        "empty",
+        "success",
+        "error"
+      ]
+    },
+    {
+      "id": "system:system-user-profile-useravatar:34",
+      "route": "/system/user/profile/userAvatar",
+      "owner": "system",
+      "module": "system",
+      "file": "ruoyi-ui/src/views/system/user/profile/userAvatar.vue",
+      "usesApi": [],
+      "states": [
+        "loading",
+        "empty",
+        "success",
+        "error"
+      ]
+    },
+    {
+      "id": "system:system-user-profile-userinfo:35",
+      "route": "/system/user/profile/userInfo",
+      "owner": "system",
+      "module": "system",
+      "file": "ruoyi-ui/src/views/system/user/profile/userInfo.vue",
+      "usesApi": [],
+      "states": [
+        "loading",
+        "empty",
+        "success",
+        "error"
+      ]
+    },
+    {
+      "id": "system:system-user-view:36",
+      "route": "/system/user/view",
+      "owner": "system",
+      "module": "system",
+      "file": "ruoyi-ui/src/views/system/user/view.vue",
+      "usesApi": [],
+      "states": [
+        "loading",
+        "empty",
+        "success",
+        "error"
+      ]
+    },
+    {
+      "id": "tool:tool-build-codetypedialog:37",
       "route": "/tool/build/CodeTypeDialog",
-      "owner": "platform",
-      "module": "platform",
+      "owner": "tool",
+      "module": "tool",
       "file": "ruoyi-ui/src/views/tool/build/CodeTypeDialog.vue",
       "usesApi": [],
       "states": [
@@ -1430,24 +545,10 @@
       ]
     },
     {
-      "id": "platform:tool-build-draggableitem:122",
+      "id": "tool:tool-build-draggableitem:38",
       "route": "/tool/build/DraggableItem",
-      "owner": "platform",
-      "module": "platform",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "platform:tool-build-draggableitem:37",
-      "route": "/tool/build/DraggableItem",
-      "owner": "platform",
-      "module": "platform",
+      "owner": "tool",
+      "module": "tool",
       "file": "ruoyi-ui/src/views/tool/build/DraggableItem.vue",
       "usesApi": [],
       "states": [
@@ -1458,24 +559,10 @@
       ]
     },
     {
-      "id": "platform:tool-build-iconsdialog:123",
+      "id": "tool:tool-build-iconsdialog:39",
       "route": "/tool/build/IconsDialog",
-      "owner": "platform",
-      "module": "platform",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "platform:tool-build-iconsdialog:38",
-      "route": "/tool/build/IconsDialog",
-      "owner": "platform",
-      "module": "platform",
+      "owner": "tool",
+      "module": "tool",
       "file": "ruoyi-ui/src/views/tool/build/IconsDialog.vue",
       "usesApi": [],
       "states": [
@@ -1486,24 +573,10 @@
       ]
     },
     {
-      "id": "platform:tool-build-rightpanel:124",
+      "id": "tool:tool-build-rightpanel:40",
       "route": "/tool/build/RightPanel",
-      "owner": "platform",
-      "module": "platform",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "platform:tool-build-rightpanel:39",
-      "route": "/tool/build/RightPanel",
-      "owner": "platform",
-      "module": "platform",
+      "owner": "tool",
+      "module": "tool",
       "file": "ruoyi-ui/src/views/tool/build/RightPanel.vue",
       "usesApi": [],
       "states": [
@@ -1514,24 +587,10 @@
       ]
     },
     {
-      "id": "platform:tool-build-treenodedialog:125",
+      "id": "tool:tool-build-treenodedialog:41",
       "route": "/tool/build/TreeNodeDialog",
-      "owner": "platform",
-      "module": "platform",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "platform:tool-build-treenodedialog:40",
-      "route": "/tool/build/TreeNodeDialog",
-      "owner": "platform",
-      "module": "platform",
+      "owner": "tool",
+      "module": "tool",
       "file": "ruoyi-ui/src/views/tool/build/TreeNodeDialog.vue",
       "usesApi": [],
       "states": [
@@ -1542,24 +601,10 @@
       ]
     },
     {
-      "id": "platform:tool-build:120",
+      "id": "tool:tool-build:42",
       "route": "/tool/build",
-      "owner": "platform",
-      "module": "platform",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "platform:tool-build:41",
-      "route": "/tool/build",
-      "owner": "platform",
-      "module": "platform",
+      "owner": "tool",
+      "module": "tool",
       "file": "ruoyi-ui/src/views/tool/build/index.vue",
       "usesApi": [],
       "states": [
@@ -1570,24 +615,10 @@
       ]
     },
     {
-      "id": "platform:tool-gen-basicinfoform:127",
+      "id": "tool:tool-gen-basicinfoform:43",
       "route": "/tool/gen/basicInfoForm",
-      "owner": "platform",
-      "module": "platform",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "platform:tool-gen-basicinfoform:42",
-      "route": "/tool/gen/basicInfoForm",
-      "owner": "platform",
-      "module": "platform",
+      "owner": "tool",
+      "module": "tool",
       "file": "ruoyi-ui/src/views/tool/gen/basicInfoForm.vue",
       "usesApi": [],
       "states": [
@@ -1598,24 +629,10 @@
       ]
     },
     {
-      "id": "platform:tool-gen-createtable:128",
+      "id": "tool:tool-gen-createtable:44",
       "route": "/tool/gen/createTable",
-      "owner": "platform",
-      "module": "platform",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "platform:tool-gen-createtable:43",
-      "route": "/tool/gen/createTable",
-      "owner": "platform",
-      "module": "platform",
+      "owner": "tool",
+      "module": "tool",
       "file": "ruoyi-ui/src/views/tool/gen/createTable.vue",
       "usesApi": [],
       "states": [
@@ -1626,24 +643,10 @@
       ]
     },
     {
-      "id": "platform:tool-gen-edittable:129",
+      "id": "tool:tool-gen-edittable:45",
       "route": "/tool/gen/editTable",
-      "owner": "platform",
-      "module": "platform",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "platform:tool-gen-edittable:44",
-      "route": "/tool/gen/editTable",
-      "owner": "platform",
-      "module": "platform",
+      "owner": "tool",
+      "module": "tool",
       "file": "ruoyi-ui/src/views/tool/gen/editTable.vue",
       "usesApi": [],
       "states": [
@@ -1654,24 +657,10 @@
       ]
     },
     {
-      "id": "platform:tool-gen-geninfoform:130",
+      "id": "tool:tool-gen-geninfoform:46",
       "route": "/tool/gen/genInfoForm",
-      "owner": "platform",
-      "module": "platform",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "platform:tool-gen-geninfoform:45",
-      "route": "/tool/gen/genInfoForm",
-      "owner": "platform",
-      "module": "platform",
+      "owner": "tool",
+      "module": "tool",
       "file": "ruoyi-ui/src/views/tool/gen/genInfoForm.vue",
       "usesApi": [],
       "states": [
@@ -1682,24 +671,10 @@
       ]
     },
     {
-      "id": "platform:tool-gen-importtable:131",
+      "id": "tool:tool-gen-importtable:47",
       "route": "/tool/gen/importTable",
-      "owner": "platform",
-      "module": "platform",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "platform:tool-gen-importtable:46",
-      "route": "/tool/gen/importTable",
-      "owner": "platform",
-      "module": "platform",
+      "owner": "tool",
+      "module": "tool",
       "file": "ruoyi-ui/src/views/tool/gen/importTable.vue",
       "usesApi": [],
       "states": [
@@ -1710,24 +685,10 @@
       ]
     },
     {
-      "id": "platform:tool-gen:126",
+      "id": "tool:tool-gen:48",
       "route": "/tool/gen",
-      "owner": "platform",
-      "module": "platform",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "platform:tool-gen:47",
-      "route": "/tool/gen",
-      "owner": "platform",
-      "module": "platform",
+      "owner": "tool",
+      "module": "tool",
       "file": "ruoyi-ui/src/views/tool/gen/index.vue",
       "usesApi": [],
       "states": [
@@ -1738,1871 +699,12 @@
       ]
     },
     {
-      "id": "platform:tool-swagger:132",
+      "id": "tool:tool-swagger:49",
       "route": "/tool/swagger",
-      "owner": "platform",
-      "module": "platform",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "platform:tool-swagger:48",
-      "route": "/tool/swagger",
-      "owner": "platform",
-      "module": "platform",
+      "owner": "tool",
+      "module": "tool",
       "file": "ruoyi-ui/src/views/tool/swagger/index.vue",
       "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:getinfo:133",
-      "route": "/getInfo",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:getrouters:134",
-      "route": "/getRouters",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:login:135",
-      "route": "/login",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:register:136",
-      "route": "/register",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-config-configid:144",
-      "route": "/system/config/{configId}",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-config-configids:143",
-      "route": "/system/config/{configIds}",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-config-configkey-configkey:138",
-      "route": "/system/config/configKey/{configKey}",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-config-export:139",
-      "route": "/system/config/export",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-config-list:140",
-      "route": "/system/config/list",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-config-refreshcache:141",
-      "route": "/system/config/refreshCache",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-config:137",
-      "route": "/system/config",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-dept-deptid:150",
-      "route": "/system/dept/{deptId}",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-dept-list-exclude-deptid:147",
-      "route": "/system/dept/list/exclude/{deptId}",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-dept-list:146",
-      "route": "/system/dept/list",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-dept-updatesort:149",
-      "route": "/system/dept/updateSort",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-dept:145",
-      "route": "/system/dept",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-dict-data-dictcode:158",
-      "route": "/system/dict/data/{dictCode}",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-dict-data-dictcodes:157",
-      "route": "/system/dict/data/{dictCodes}",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-dict-data-export:153",
-      "route": "/system/dict/data/export",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-dict-data-list:154",
-      "route": "/system/dict/data/list",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-dict-data-type-dicttype:156",
-      "route": "/system/dict/data/type/{dictType}",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-dict-data:152",
-      "route": "/system/dict/data",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-dict-detail:159",
-      "route": "/system/dict/detail",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-dict-type-dictid:167",
-      "route": "/system/dict/type/{dictId}",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-dict-type-dictids:166",
-      "route": "/system/dict/type/{dictIds}",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-dict-type-export:161",
-      "route": "/system/dict/type/export",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-dict-type-list:162",
-      "route": "/system/dict/type/list",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-dict-type-optionselect:163",
-      "route": "/system/dict/type/optionselect",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-dict-type-refreshcache:164",
-      "route": "/system/dict/type/refreshCache",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-dict-type:160",
-      "route": "/system/dict/type",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-dict:151",
-      "route": "/system/dict",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-menu-list:169",
-      "route": "/system/menu/list",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-menu-menuid:174",
-      "route": "/system/menu/{menuId}",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-menu-rolemenutreeselect-roleid:170",
-      "route": "/system/menu/roleMenuTreeselect/{roleId}",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-menu-treeselect:172",
-      "route": "/system/menu/treeselect",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-menu-updatesort:173",
-      "route": "/system/menu/updateSort",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-menu:168",
-      "route": "/system/menu",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-notice-list:177",
-      "route": "/system/notice/list",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-notice-listtop:178",
-      "route": "/system/notice/listTop",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-notice-markread:179",
-      "route": "/system/notice/markRead",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-notice-markreadall:180",
-      "route": "/system/notice/markReadAll",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-notice-noticeid:184",
-      "route": "/system/notice/{noticeId}",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-notice-noticeids:183",
-      "route": "/system/notice/{noticeIds}",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-notice-readusers-list:181",
-      "route": "/system/notice/readUsers/list",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-notice-readusers:176",
-      "route": "/system/notice/ReadUsers",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-notice:175",
-      "route": "/system/notice",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-post-export:186",
-      "route": "/system/post/export",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-post-list:187",
-      "route": "/system/post/list",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-post-optionselect:188",
-      "route": "/system/post/optionselect",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-post-postid:191",
-      "route": "/system/post/{postId}",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-post-postids:190",
-      "route": "/system/post/{postIds}",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-post:185",
-      "route": "/system/post",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-role-authuser-allocatedlist:194",
-      "route": "/system/role/authUser/allocatedList",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-role-authuser-cancel:195",
-      "route": "/system/role/authUser/cancel",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-role-authuser-cancelall:196",
-      "route": "/system/role/authUser/cancelAll",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-role-authuser-selectall:197",
-      "route": "/system/role/authUser/selectAll",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-role-authuser-unallocatedlist:198",
-      "route": "/system/role/authUser/unallocatedList",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-role-authuser:193",
-      "route": "/system/role/authUser",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-role-changestatus:199",
-      "route": "/system/role/changeStatus",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-role-datascope:200",
-      "route": "/system/role/dataScope",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-role-depttree-roleid:201",
-      "route": "/system/role/deptTree/{roleId}",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-role-export:202",
-      "route": "/system/role/export",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-role-list:203",
-      "route": "/system/role/list",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-role-optionselect:204",
-      "route": "/system/role/optionselect",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-role-roleid:208",
-      "route": "/system/role/{roleId}",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-role-roleids:207",
-      "route": "/system/role/{roleIds}",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-role-selectuser:205",
-      "route": "/system/role/selectUser",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-role:192",
-      "route": "/system/role",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-user-authrole-userid:211",
-      "route": "/system/user/authRole/{userId}",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-user-authrole:210",
-      "route": "/system/user/authRole",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-user-changestatus:212",
-      "route": "/system/user/changeStatus",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-user-depttree:213",
-      "route": "/system/user/deptTree",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-user-export:214",
-      "route": "/system/user/export",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-user-importdata:215",
-      "route": "/system/user/importData",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-user-importtemplate:216",
-      "route": "/system/user/importTemplate",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-user-list:217",
-      "route": "/system/user/list",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-user-profile-avatar:219",
-      "route": "/system/user/profile/avatar",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-user-profile-resetpwd:220",
-      "route": "/system/user/profile/resetPwd",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-user-profile-updatepwd:222",
-      "route": "/system/user/profile/updatePwd",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-user-profile-useravatar:223",
-      "route": "/system/user/profile/userAvatar",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-user-profile-userinfo:224",
-      "route": "/system/user/profile/userInfo",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-user-profile:218",
-      "route": "/system/user/profile",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-user-resetpwd:225",
-      "route": "/system/user/resetPwd",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-user-userids:228",
-      "route": "/system/user/{userIds}",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-user-view:227",
-      "route": "/system/user/view",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:system-user:209",
-      "route": "/system/user",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "system:unlockscreen:229",
-      "route": "/unlockscreen",
-      "owner": "system",
-      "module": "system",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "tool:test-user-list:230",
-      "route": "/test/user/list",
-      "owner": "tool",
-      "module": "tool",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "tool:test-user-save:231",
-      "route": "/test/user/save",
-      "owner": "tool",
-      "module": "tool",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "tool:test-user-update:233",
-      "route": "/test/user/update",
-      "owner": "tool",
-      "module": "tool",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "tool:test-user-userid:234",
-      "route": "/test/user/{userId}",
-      "owner": "tool",
-      "module": "tool",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "tool:tool-build-codetypedialog:236",
-      "route": "/tool/build/CodeTypeDialog",
-      "owner": "tool",
-      "module": "tool",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "tool:tool-build-draggableitem:237",
-      "route": "/tool/build/DraggableItem",
-      "owner": "tool",
-      "module": "tool",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "tool:tool-build-iconsdialog:238",
-      "route": "/tool/build/IconsDialog",
-      "owner": "tool",
-      "module": "tool",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "tool:tool-build-rightpanel:239",
-      "route": "/tool/build/RightPanel",
-      "owner": "tool",
-      "module": "tool",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "tool:tool-build-treenodedialog:240",
-      "route": "/tool/build/TreeNodeDialog",
-      "owner": "tool",
-      "module": "tool",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "tool:tool-build:235",
-      "route": "/tool/build",
-      "owner": "tool",
-      "module": "tool",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "tool:tool-gen-basicinfoform:242",
-      "route": "/tool/gen/basicInfoForm",
-      "owner": "tool",
-      "module": "tool",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "tool:tool-gen-batchgencode:243",
-      "route": "/tool/gen/batchGenCode",
-      "owner": "tool",
-      "module": "tool",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "tool:tool-gen-column-tableid:244",
-      "route": "/tool/gen/column/{tableId}",
-      "owner": "tool",
-      "module": "tool",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "tool:tool-gen-createtable:245",
-      "route": "/tool/gen/createTable",
-      "owner": "tool",
-      "module": "tool",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "tool:tool-gen-db-list:246",
-      "route": "/tool/gen/db/list",
-      "owner": "tool",
-      "module": "tool",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "tool:tool-gen-download-tablename:247",
-      "route": "/tool/gen/download/{tableName}",
-      "owner": "tool",
-      "module": "tool",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "tool:tool-gen-edittable:248",
-      "route": "/tool/gen/editTable",
-      "owner": "tool",
-      "module": "tool",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "tool:tool-gen-gencode-tablename:249",
-      "route": "/tool/gen/genCode/{tableName}",
-      "owner": "tool",
-      "module": "tool",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "tool:tool-gen-geninfoform:250",
-      "route": "/tool/gen/genInfoForm",
-      "owner": "tool",
-      "module": "tool",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "tool:tool-gen-importtable:251",
-      "route": "/tool/gen/importTable",
-      "owner": "tool",
-      "module": "tool",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "tool:tool-gen-list:252",
-      "route": "/tool/gen/list",
-      "owner": "tool",
-      "module": "tool",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "tool:tool-gen-preview-tableid:253",
-      "route": "/tool/gen/preview/{tableId}",
-      "owner": "tool",
-      "module": "tool",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "tool:tool-gen-synchdb-tablename:254",
-      "route": "/tool/gen/synchDb/{tableName}",
-      "owner": "tool",
-      "module": "tool",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "tool:tool-gen-tableid:257",
-      "route": "/tool/gen/{tableId}",
-      "owner": "tool",
-      "module": "tool",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "tool:tool-gen-tableids:256",
-      "route": "/tool/gen/{tableIds}",
-      "owner": "tool",
-      "module": "tool",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "tool:tool-gen:241",
-      "route": "/tool/gen",
-      "owner": "tool",
-      "module": "tool",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "tool:tool-swagger:258",
-      "route": "/tool/swagger",
-      "owner": "tool",
-      "module": "tool",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "customer:business-customer",
-      "route": "/business/customer",
-      "owner": "customer",
-      "module": "customer",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "customer:business-customer-changestatus",
-      "route": "/business/customer/changeStatus",
-      "owner": "customer",
-      "module": "customer",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "customer:business-customer-duplicate-warning",
-      "route": "/business/customer/duplicate-warning",
-      "owner": "customer",
-      "module": "customer",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "customer:business-customer-export",
-      "route": "/business/customer/export",
-      "owner": "customer",
-      "module": "customer",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "customer:business-customer-list",
-      "route": "/business/customer/list",
-      "owner": "customer",
-      "module": "customer",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "customer:business-customer-salesmen",
-      "route": "/business/customer/salesmen",
-      "owner": "customer",
-      "module": "customer",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "customer:business-customer-transferowner",
-      "route": "/business/customer/transferOwner",
-      "owner": "customer",
-      "module": "customer",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "customer:business-customer-customerids",
-      "route": "/business/customer/{customerIds}",
-      "owner": "customer",
-      "module": "customer",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "customer:business-customer-customerid",
-      "route": "/business/customer/{customerId}",
-      "owner": "customer",
-      "module": "customer",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "customer:business-customer-customerid-fund-accounts",
-      "route": "/business/customer/{customerId}/fund/accounts",
-      "owner": "customer",
-      "module": "customer",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "customer:business-customer-customerid-fund-deposit",
-      "route": "/business/customer/{customerId}/fund/deposit",
-      "owner": "customer",
-      "module": "customer",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "customer:business-customer-customerid-fund-deposit-batches",
-      "route": "/business/customer/{customerId}/fund/deposit-batches",
-      "owner": "customer",
-      "module": "customer",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "customer:business-customer-customerid-fund-flows",
-      "route": "/business/customer/{customerId}/fund/flows",
-      "owner": "customer",
-      "module": "customer",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "customer:business-customer-customerid-owner-log",
-      "route": "/business/customer/{customerId}/owner-log",
-      "owner": "customer",
-      "module": "customer",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "customer:business-customer-customerid-sample-policy",
-      "route": "/business/customer/{customerId}/sample-policy",
-      "owner": "customer",
-      "module": "customer",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "customer:business-customer-customerid-sample-rebate",
-      "route": "/business/customer/{customerId}/sample-rebate",
-      "owner": "customer",
-      "module": "customer",
-      "file": "",
-      "usesApi": [],
-      "states": [
-        "loading",
-        "empty",
-        "success",
-        "error"
-      ]
-    },
-    {
-      "id": "customer:customer",
-      "route": "/customer",
-      "owner": "customer",
-      "module": "customer",
-      "file": "ruoyi-ui/src/views/customer/index.vue",
-      "usesApi": [
-        "/business/customer/list",
-        "/business/customer/{customerId}",
-        "/business/customer",
-        "/business/customer:update",
-        "/business/customer/changeStatus",
-        "/business/customer/transferOwner",
-        "/business/customer/{customerId}/fund/deposit",
-        "/business/customer/{customerId}/sample-policy",
-        "/business/customer/{customerId}/sample-policy:update",
-        "/business/customer/{customerId}/sample-rebate:create"
-      ],
       "states": [
         "loading",
         "empty",

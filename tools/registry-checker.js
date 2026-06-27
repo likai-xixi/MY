@@ -61,6 +61,22 @@ function moduleRegistryPaths(module) {
   ].map((item) => item && normalizePath(item)));
 }
 
+export function routeShape(route) {
+  const normalized = String(route || '').replace(/\\/g, '/').replace(/\/+/g, '/').replace(/\/$/g, '') || '/';
+  return normalized.replace(/\{[^/{}]+\}/g, '{}');
+}
+
+export function hasRouteCoverage(route, coverage) {
+  const exact = String(route || '');
+  const shape = routeShape(route);
+  return coverage.uiRoutes.has(exact)
+    || coverage.apiPaths.has(exact)
+    || coverage.backendPaths.has(exact)
+    || coverage.uiRouteShapes.has(shape)
+    || coverage.apiPathShapes.has(shape)
+    || coverage.backendPathShapes.has(shape);
+}
+
 export function validateModuleRegistry({ read = readJson, exists = fileExists, directories = listDirectories } = {}) {
   const errors = [];
   let registry;
@@ -140,6 +156,7 @@ function validateFeatureLedger(errors) {
   const moduleGraph = readJsonSafe('graph/module-graph.json', { nodes: [] }, errors);
   const apiGraph = readJsonSafe('graph/api-graph.json', { endpoints: [] }, errors);
   const uiGraph = readJsonSafe('graph/ui-graph.json', { screens: [] }, errors);
+  const backendRoutes = readJsonSafe('ai/generated/backend-routes.json', { routes: [] }, errors);
   const catalog = parseApiCatalog(readText('memory/API_CATALOG.md'));
   const components = readJsonOrDefault('ai/registry/components.json', { components: [] });
   const sharedCatalog = readJsonOrDefault('frontend/src/components/catalog.json', { components: [] });
@@ -154,8 +171,18 @@ function validateFeatureLedger(errors) {
   const activeFeatures = registry.features.filter((feature) => feature.status !== 'removed');
   const featureIds = new Set(activeFeatures.map((feature) => feature.id));
   const apiIds = new Set((apiGraph.endpoints || []).map((endpoint) => endpoint.id));
+  const apiPaths = new Set((apiGraph.endpoints || []).map((endpoint) => endpoint.path));
   const screenIds = new Set((uiGraph.screens || []).map((screen) => screen.id));
   const routes = new Set((uiGraph.screens || []).map((screen) => screen.route));
+  const backendPaths = new Set((backendRoutes.routes || []).map((route) => route.path));
+  const routeCoverage = {
+    uiRoutes: routes,
+    apiPaths,
+    backendPaths,
+    uiRouteShapes: new Set([...routes].map(routeShape)),
+    apiPathShapes: new Set([...apiPaths].map(routeShape)),
+    backendPathShapes: new Set([...backendPaths].map(routeShape))
+  };
   const nodeIds = new Set((moduleGraph.nodes || []).map((node) => node.id));
   const componentIds = new Set([
     ...(components.components || []).flatMap((component) => [component.id, component.name]),
@@ -198,7 +225,7 @@ function validateFeatureLedger(errors) {
       ensure(screenIds.has(screenId), `feature ${feature.id} references unknown UI screen ${screenId}.`, errors);
     }
     for (const route of feature.routes || []) {
-      ensure(routes.has(route), `feature ${feature.id} route ${route} is missing from graph/ui-graph.json.`, errors);
+      ensure(hasRouteCoverage(route, routeCoverage), `feature ${feature.id} route ${route} is missing from graph/ui-graph.json, graph/api-graph.json, or ai/generated/backend-routes.json.`, errors);
     }
     for (const component of feature.components || []) {
       ensure(componentIds.has(component), `feature ${feature.id} references unknown component ${component}.`, errors);
