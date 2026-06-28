@@ -3,19 +3,18 @@
   "generatedBy": "scripts/context-build.js",
   "generatedAt": "stable",
   "currentFeature": "customer",
-  "currentChange": "CR-20260628-r-10d-masterdata-code-autogeneration",
+  "currentChange": "CR-20260628-r-10f-product-category-tree-table",
   "repositoryProfile": {
     "adapter": "ruoyi",
     "locked": true,
     "stack": "RuoYi + Vue3 + Codex Auto Dev OS"
   },
   "allowedEditRoots": [
-    "ai/changes/CR-20260628-r-10d-masterdata-code-autogeneration",
+    "ai/changes/CR-20260628-r-10f-product-category-tree-table",
     "ai/changes/CURRENT_CHANGE.json",
     "ai/contracts/masterdata.api.md",
     "ai/contracts/masterdata.db.md",
     "ai/contracts/masterdata.ui.md",
-    "ai/contracts/masterdata.permission.md",
     "ai/contracts/masterdata.delete-ownership.md",
     "ai/contracts/masterdata.r10-contract-test-matrix.md",
     "ai/contracts/masterdata.r10-implementation-boundary.md",
@@ -24,9 +23,7 @@
     "ai/context/current-context.json",
     "ai/context/current-context.md",
     "ai/registry/features.json",
-    "ai/registry/migration-registry.json",
     "ai/registry/modules.json",
-    "ai/registry/feature-id-dictionary.json",
     "features/masterdata.md",
     "graph/api-graph.json",
     "graph/module-graph.json",
@@ -39,16 +36,12 @@
     "memory/PROJECT_STATE.md",
     "memory/TASKS.json",
     "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/masterdata",
-    "ruoyi-business/src/main/java/com/ruoyi/business/common/code",
     "ruoyi-business/src/main/java/com/ruoyi/business/masterdata",
     "ruoyi-business/src/main/resources/mapper/masterdata",
     "ruoyi-ui/src/api/masterdata.contract.md",
     "ruoyi-ui/src/api/masterdata.js",
     "ruoyi-ui/src/views/masterdata",
     "sql/masterdata.ownership.md",
-    "sql/migrations/V20260628_005_masterdata_r10_schema.sql",
-    "sql/migrations/V20260628_006_masterdata_r10_menu_permission.sql",
-    "sql/validation/masterdata_runtime_validation.sql",
     "tests/masterdata-runtime.test.js"
   ],
   "forbiddenEditRoots": [
@@ -123,15 +116,15 @@
       "reason": "Governance backlog and required/deferred evidence."
     },
     {
-      "path": "ai/changes/CR-20260628-r-10d-masterdata-code-autogeneration/impact.json",
+      "path": "ai/changes/CR-20260628-r-10f-product-category-tree-table/impact.json",
       "reason": "Current change allowed and forbidden edit roots."
     },
     {
-      "path": "ai/changes/CR-20260628-r-10d-masterdata-code-autogeneration/plan.md",
+      "path": "ai/changes/CR-20260628-r-10f-product-category-tree-table/plan.md",
       "reason": "Current change execution plan."
     },
     {
-      "path": "ai/changes/CR-20260628-r-10d-masterdata-code-autogeneration/verification.md",
+      "path": "ai/changes/CR-20260628-r-10f-product-category-tree-table/verification.md",
       "reason": "Current change verification evidence."
     }
   ],

@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-06-28 - masterdata/r-10f-product-category-tree-table
+
+- Change: `ai/changes/CR-20260628-r-10f-product-category-tree-table`.
+- R-10F changes only product category inside masterdata: the list renders as a tree table, parent column is hidden for product category, and search by code/name/status remains.
+- Product category hierarchy is limited to maximum depth 3. Backend validation rejects level-four hierarchy, self-parenting, descendant-parent cycles, and deleting a parent category that still has child categories.
+- Product category disable remains non-cascading in R-10F; cascade policy is deferred.
+- Product series, product model, material, accessory, and sales option resources are not changed.
+- [local] Verification passed: `npm run scan:all`, `npm run context:build -- masterdata`, `npm run finalize:change`, `node --test tests/masterdata-runtime.test.js` 21/21, final `npm run check` with `npm test` 254/254, `git diff --check`, cached-path Maven compile with `BUILD SUCCESS`, and `npm --prefix ruoyi-ui run build:prod`.
+- No sales-order, field-scheme, formula, technical-decomposition, inventory, BOM, production, scan, drawing, shipment, finance, receipt, customer, idempotency, security config, package, tool, workflow, or GitHub Actions runtime is in scope.
+
 ## 2026-06-28 - masterdata/r-10d-code-autogeneration
 
 - Change: `ai/changes/CR-20260628-r-10d-masterdata-code-autogeneration`.
@@ -539,4 +549,7 @@
 - Feature: `masterdata`.## 2026-06-28 — update-feature
 - Change: `ai/changes/CR-20260628-r-10d-masterdata-code-autogeneration`.
 - Updated change record, registry, graph, generated scans, memory, and handover.
+- Feature: `masterdata`.## 2026-06-28 — update-feature
+- Change: `ai/changes/CR-20260628-r-10f-product-category-tree-table`.
+- R-10F product category tree table and hierarchy constraints
 - Feature: `masterdata`.

@@ -1,18 +1,17 @@
 # Current Context
 
 Current feature: `customer`
-Current change: `CR-20260628-r-10d-masterdata-code-autogeneration`
+Current change: `CR-20260628-r-10f-product-category-tree-table`
 Repository: RuoYi + Vue3 + Codex Auto Dev OS
 Profile: adapter `ruoyi`, locked `true`
 
 ## Allowed Edit Roots
 
-- `ai/changes/CR-20260628-r-10d-masterdata-code-autogeneration`
+- `ai/changes/CR-20260628-r-10f-product-category-tree-table`
 - `ai/changes/CURRENT_CHANGE.json`
 - `ai/contracts/masterdata.api.md`
 - `ai/contracts/masterdata.db.md`
 - `ai/contracts/masterdata.ui.md`
-- `ai/contracts/masterdata.permission.md`
 - `ai/contracts/masterdata.delete-ownership.md`
 - `ai/contracts/masterdata.r10-contract-test-matrix.md`
 - `ai/contracts/masterdata.r10-implementation-boundary.md`
@@ -21,9 +20,7 @@ Profile: adapter `ruoyi`, locked `true`
 - `ai/context/current-context.json`
 - `ai/context/current-context.md`
 - `ai/registry/features.json`
-- `ai/registry/migration-registry.json`
 - `ai/registry/modules.json`
-- `ai/registry/feature-id-dictionary.json`
 - `features/masterdata.md`
 - `graph/api-graph.json`
 - `graph/module-graph.json`
@@ -36,16 +33,12 @@ Profile: adapter `ruoyi`, locked `true`
 - `memory/PROJECT_STATE.md`
 - `memory/TASKS.json`
 - `ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/masterdata`
-- `ruoyi-business/src/main/java/com/ruoyi/business/common/code`
 - `ruoyi-business/src/main/java/com/ruoyi/business/masterdata`
 - `ruoyi-business/src/main/resources/mapper/masterdata`
 - `ruoyi-ui/src/api/masterdata.contract.md`
 - `ruoyi-ui/src/api/masterdata.js`
 - `ruoyi-ui/src/views/masterdata`
 - `sql/masterdata.ownership.md`
-- `sql/migrations/V20260628_005_masterdata_r10_schema.sql`
-- `sql/migrations/V20260628_006_masterdata_r10_menu_permission.sql`
-- `sql/validation/masterdata_runtime_validation.sql`
 - `tests/masterdata-runtime.test.js`
 
 ## Forbidden Edit Roots
@@ -88,9 +81,9 @@ Profile: adapter `ruoyi`, locked `true`
 - `ai/roadmap/phase-gates.json` - beforeSalesOrder gate state.
 - `ai/roadmap/refactor-debt.json` - Known debt affecting sales-order handoff.
 - `ai/roadmap/enhancement-backlog.json` - Governance backlog and required/deferred evidence.
-- `ai/changes/CR-20260628-r-10d-masterdata-code-autogeneration/impact.json` - Current change allowed and forbidden edit roots.
-- `ai/changes/CR-20260628-r-10d-masterdata-code-autogeneration/plan.md` - Current change execution plan.
-- `ai/changes/CR-20260628-r-10d-masterdata-code-autogeneration/verification.md` - Current change verification evidence.
+- `ai/changes/CR-20260628-r-10f-product-category-tree-table/impact.json` - Current change allowed and forbidden edit roots.
+- `ai/changes/CR-20260628-r-10f-product-category-tree-table/plan.md` - Current change execution plan.
+- `ai/changes/CR-20260628-r-10f-product-category-tree-table/verification.md` - Current change verification evidence.
 
 ## Must Not Break
 

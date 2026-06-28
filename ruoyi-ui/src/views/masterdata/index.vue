@@ -49,7 +49,7 @@
       <right-toolbar v-model:showSearch="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="recordList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="tableRows" row-key="id" :default-expand-all="isTreeTable" :tree-props="treeProps" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="50" align="center" />
       <el-table-column label="编码" align="center" prop="itemCode" min-width="140" :show-overflow-tooltip="true" />
       <el-table-column label="名称" align="left" prop="itemName" min-width="180" :show-overflow-tooltip="true">
@@ -63,7 +63,7 @@
       <el-table-column v-if="currentConfig.seriesResource" label="所属系列" align="center" min-width="160" :show-overflow-tooltip="true">
         <template #default="scope">{{ relationName(currentConfig.seriesResource, scope.row.seriesId) }}</template>
       </el-table-column>
-      <el-table-column v-if="currentConfig.parentEnabled" label="上级分类" align="center" min-width="160" :show-overflow-tooltip="true">
+      <el-table-column v-if="currentConfig.parentEnabled && !isTreeTable" label="上级分类" align="center" min-width="160" :show-overflow-tooltip="true">
         <template #default="scope">{{ relationName(currentConfig.value, scope.row.parentId) }}</template>
       </el-table-column>
       <el-table-column v-if="currentConfig.specEnabled" label="规格" align="center" prop="spec" min-width="130" :show-overflow-tooltip="true" />
@@ -90,7 +90,7 @@
       </el-table-column>
     </el-table>
 
-    <pagination v-show="total > 0" :total="total" v-model:page="queryParams.pageNum" v-model:limit="queryParams.pageSize" @pagination="getList" />
+    <pagination v-show="!isTreeTable && total > 0" :total="total" v-model:page="queryParams.pageNum" v-model:limit="queryParams.pageSize" @pagination="getList" />
 
     <el-dialog :title="title" v-model="open" width="680px" append-to-body>
       <el-form ref="recordRef" :model="form" :rules="rules" label-width="96px">
@@ -101,7 +101,7 @@
           <el-input v-model="form.itemName" placeholder="请输入名称" maxlength="120" />
         </el-form-item>
         <el-form-item v-if="currentConfig.parentEnabled" label="上级分类" prop="parentId">
-          <el-select v-model="form.parentId" placeholder="请选择" clearable filterable style="width: 100%">
+          <el-select v-model="form.parentId" placeholder="请选择" clearable filterable style="width: 100%" @change="handleParentChange">
             <el-option v-for="item in parentOptions" :key="item.id" :label="optionLabel(item)" :value="item.id" :disabled="item.id === form.id" />
           </el-select>
         </el-form-item>
@@ -159,7 +159,7 @@ import {
 const { proxy } = getCurrentInstance()
 
 const resourceConfigs = [
-  { value: 'product-category', label: '产品分类', parentEnabled: true },
+  { value: 'product-category', label: '产品分类', parentEnabled: true, treeEnabled: true },
   { value: 'product-series', label: '产品系列', categoryResource: 'product-category' },
   { value: 'product-model', label: '产品型号', categoryResource: 'product-category', seriesResource: 'product-series' },
   { value: 'material-category', label: '物料分类' },
@@ -182,6 +182,8 @@ const multiple = ref(true)
 const open = ref(false)
 const title = ref('')
 const relationOptions = ref({})
+const PRODUCT_CATEGORY_MAX_DEPTH = 3
+const treeProps = { children: 'children' }
 
 const queryParams = ref({
   pageNum: 1,
@@ -196,8 +198,18 @@ const queryParams = ref({
 const form = ref({})
 
 const currentConfig = computed(() => resourceConfigs.find(item => item.value === activeResource.value) || resourceConfigs[0])
+const isTreeTable = computed(() => currentConfig.value.treeEnabled === true)
+const tableRows = computed(() => isTreeTable.value ? buildTreeRows(recordList.value) : recordList.value)
 const categoryOptions = computed(() => relationOptions.value[currentConfig.value.categoryResource] || [])
-const parentOptions = computed(() => (relationOptions.value[currentConfig.value.value] || []).filter(item => item.id !== form.value.id))
+const parentOptions = computed(() => {
+  const options = relationOptions.value[currentConfig.value.value] || []
+  if (!currentConfig.value.treeEnabled) {
+    return options.filter(item => item.id !== form.value.id)
+  }
+  const descendants = productCategoryDescendantIds(form.value.id)
+  const ownHeight = form.value.id ? productCategorySubtreeHeight(form.value.id) : 1
+  return options.filter(item => item.id !== form.value.id && !descendants.has(item.id) && productCategoryDepth(item.id) + ownHeight <= PRODUCT_CATEGORY_MAX_DEPTH)
+})
 const filteredSeriesOptions = computed(() => {
   const options = relationOptions.value[currentConfig.value.seriesResource] || []
   return queryParams.value.categoryId ? options.filter(item => item.categoryId === queryParams.value.categoryId) : options
@@ -226,6 +238,106 @@ function relationName(resource, id) {
   if (!id) return ''
   const item = (relationOptions.value[resource] || []).find(option => option.id === id)
   return item ? item.itemName : String(id)
+}
+
+function normalizeParentId(value) {
+  return value === undefined || value === null || value === 0 ? undefined : value
+}
+
+function buildTreeRows(rows) {
+  const nodeMap = new Map()
+  rows.forEach(row => {
+    nodeMap.set(row.id, { ...row, children: [] })
+  })
+  const roots = []
+  nodeMap.forEach(node => {
+    const parentId = normalizeParentId(node.parentId)
+    const parent = parentId ? nodeMap.get(parentId) : undefined
+    if (parent) {
+      parent.children.push(node)
+    } else {
+      roots.push(node)
+    }
+  })
+  return roots
+}
+
+function productCategoryItems() {
+  return relationOptions.value['product-category'] || []
+}
+
+function productCategoryById() {
+  return new Map(productCategoryItems().map(item => [item.id, item]))
+}
+
+function productCategoryChildrenByParent() {
+  const children = new Map()
+  productCategoryItems().forEach(item => {
+    const parentId = normalizeParentId(item.parentId)
+    if (!parentId) return
+    if (!children.has(parentId)) children.set(parentId, [])
+    children.get(parentId).push(item)
+  })
+  return children
+}
+
+function productCategoryDepth(id) {
+  const byId = productCategoryById()
+  const visited = new Set()
+  let depth = 0
+  let current = byId.get(id)
+  while (current) {
+    if (visited.has(current.id)) return PRODUCT_CATEGORY_MAX_DEPTH + 1
+    visited.add(current.id)
+    depth += 1
+    current = byId.get(normalizeParentId(current.parentId))
+  }
+  return depth
+}
+
+function productCategorySubtreeHeight(id, visited = new Set()) {
+  if (!id || visited.has(id)) return 1
+  visited.add(id)
+  const children = productCategoryChildrenByParent().get(id) || []
+  if (children.length === 0) return 1
+  return 1 + Math.max(...children.map(child => productCategorySubtreeHeight(child.id, visited)))
+}
+
+function productCategoryDescendantIds(id) {
+  const descendants = new Set()
+  if (!id) return descendants
+  const children = productCategoryChildrenByParent()
+  const stack = [...(children.get(id) || [])]
+  while (stack.length > 0) {
+    const current = stack.shift()
+    descendants.add(current.id)
+    stack.push(...(children.get(current.id) || []))
+  }
+  return descendants
+}
+
+function validateProductCategoryParent() {
+  if (!currentConfig.value.treeEnabled || !form.value.parentId) return true
+  if (form.value.id && form.value.parentId === form.value.id) {
+    proxy.$modal.msgError('上级分类不能选择自己')
+    return false
+  }
+  if (productCategoryDescendantIds(form.value.id).has(form.value.parentId)) {
+    proxy.$modal.msgError('上级分类不能选择自己的子级或后代')
+    return false
+  }
+  const ownHeight = form.value.id ? productCategorySubtreeHeight(form.value.id) : 1
+  if (productCategoryDepth(form.value.parentId) + ownHeight > PRODUCT_CATEGORY_MAX_DEPTH) {
+    proxy.$modal.msgError('产品分类最多只允许3级')
+    return false
+  }
+  return true
+}
+
+function handleParentChange() {
+  if (!validateProductCategoryParent()) {
+    form.value.parentId = undefined
+  }
 }
 
 function resetQueryState() {
@@ -281,9 +393,14 @@ function loadRelationOptions() {
 
 function getList() {
   loading.value = true
-  listMasterData(activeResource.value, queryParams.value).then(response => {
+  const params = { ...queryParams.value }
+  if (isTreeTable.value) {
+    delete params.pageNum
+    delete params.pageSize
+  }
+  listMasterData(activeResource.value, params).then(response => {
     recordList.value = response.rows || []
-    total.value = response.total || 0
+    total.value = isTreeTable.value ? recordList.value.length : response.total || 0
   }).finally(() => {
     loading.value = false
   })
@@ -378,6 +495,7 @@ function normalizeFormBeforeSubmit() {
 
 function submitForm() {
   normalizeFormBeforeSubmit()
+  if (!validateProductCategoryParent()) return
   proxy.$refs.recordRef.validate(valid => {
     if (!valid) return
     const action = form.value.id ? updateMasterData(activeResource.value, form.value) : addMasterData(activeResource.value, form.value)

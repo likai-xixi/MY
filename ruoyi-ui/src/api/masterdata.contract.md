@@ -37,6 +37,12 @@ The frontend uses `/business/masterdata/{resource}` where `{resource}` is one of
 - If create payload contains `itemCode`, the backend ignores it and generates `prefix + yyyyMM + 6 digit monthly sequence`.
 - `PUT /business/masterdata/{resource}` keeps the existing code immutable.
 
+## R-10F Product Category Hierarchy
+
+- `product-category` rows use `parentId` to render a tree table in the masterdata page.
+- `product-category` create/edit is limited to maximum depth 3 and rejects self/descendant parent choices.
+- `product-category` delete is rejected while active child categories exist.
+
 ## Boundary
 
 The API client does not call sales-order, field-scheme, formula, technical-decomposition, inventory, BOM, production, scan/report, drawing, shipment, finance, or receipt APIs.

@@ -218,6 +218,71 @@ test('frontend add dialog does not require or show code input', () => {
   assert.match(view, /<el-form-item v-if="form\.id" label="编码" prop="itemCode">/);
 });
 
+test('product category list is configured as a tree table', () => {
+  const view = readText(VIEW);
+
+  assert.match(view, /value: 'product-category', label: '产品分类', parentEnabled: true, treeEnabled: true/);
+  assert.match(view, /:data="tableRows"/);
+  assert.match(view, /row-key="id"/);
+  assert.match(view, /:tree-props="treeProps"/);
+  assert.match(view, /const treeProps = \{ children: 'children' \}/);
+  assert.match(view, /const tableRows = computed\(\(\) => isTreeTable\.value \? buildTreeRows\(recordList\.value\) : recordList\.value\)/);
+  assert.match(view, /<el-table-column v-if="currentConfig\.parentEnabled && !isTreeTable" label="上级分类"/);
+  assert.match(view, /delete params\.pageNum/);
+  assert.match(view, /delete params\.pageSize/);
+});
+
+test('product category maximum depth is three in backend and frontend', () => {
+  const service = readText(SERVICE);
+  const view = readText(VIEW);
+
+  assert.match(service, /private static final int PRODUCT_CATEGORY_MAX_DEPTH = 3/);
+  assert.match(service, /validateProductCategoryHierarchy\(target, record\);/);
+  assert.match(service, /parentDepth \+ subtreeHeight > PRODUCT_CATEGORY_MAX_DEPTH/);
+  assert.match(service, /产品分类最多只允许3级/);
+  assert.match(view, /const PRODUCT_CATEGORY_MAX_DEPTH = 3/);
+  assert.match(view, /productCategoryDepth\(item\.id\) \+ ownHeight <= PRODUCT_CATEGORY_MAX_DEPTH/);
+  assert.match(view, /产品分类最多只允许3级/);
+});
+
+test('backend rejects creating or moving product category to level four', () => {
+  const service = readText(SERVICE);
+
+  assert.match(service, /int parentDepth = parentId == null \? 0 : hierarchyDepth\(parentId, byId\)/);
+  assert.match(service, /int subtreeHeight = id == null \? 1 : subtreeHeight\(id, childrenByParent, new HashSet<>\(\)\)/);
+  assert.match(service, /if \(parentDepth \+ subtreeHeight > PRODUCT_CATEGORY_MAX_DEPTH\)/);
+});
+
+test('editing product category cannot select itself as parent', () => {
+  const service = readText(SERVICE);
+  const view = readText(VIEW);
+
+  assert.match(service, /id != null && id\.equals\(parentId\)/);
+  assert.match(service, /产品分类的上级分类不能选择自己/);
+  assert.match(view, /item\.id !== form\.value\.id/);
+  assert.match(view, /上级分类不能选择自己/);
+});
+
+test('editing product category cannot select a descendant as parent', () => {
+  const service = readText(SERVICE);
+  const view = readText(VIEW);
+
+  assert.match(service, /isDescendant\(parentId, id, childrenByParent\)/);
+  assert.match(service, /产品分类的上级分类不能选择自己的子级或后代/);
+  assert.match(view, /productCategoryDescendantIds\(form\.value\.id\)/);
+  assert.match(view, /!descendants\.has\(item\.id\)/);
+  assert.match(view, /上级分类不能选择自己的子级或后代/);
+});
+
+test('backend rejects deleting product category when child categories exist', () => {
+  const service = readText(SERVICE);
+
+  assert.match(service, /assertNoProductCategoryChildren\(target, ids\)/);
+  assert.match(service, /deletedIds\.contains\(parentId\)/);
+  assert.match(service, /产品分类存在子分类，不能删除父分类/);
+  assert.match(service, /masterDataMapper\.deleteRecordByIds\(target, ids, updateBy\)/);
+});
+
 test('masterdata SQL creates exactly the nine MVP tables and permissions', () => {
   const schemaSql = readText(SCHEMA_SQL);
   const menuSql = readText(MENU_SQL);

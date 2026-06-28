@@ -73,3 +73,9 @@ R-10B must synchronize API/UI/SQL/permission/test ownership in the same runtime 
 `CR-20260628-r-10d-masterdata-code-autogeneration` keeps the same nine-resource runtime slice and adds only one business-common helper root: `ruoyi-business/src/main/java/com/ruoyi/business/common/code`. This helper is a business numbering rule and must not move to `ruoyi-common`.
 
 R-10D must not refactor customer code generation. `CustomerServiceImpl` may be read for reference only.
+
+## R-10F Product Category Tree Boundary
+
+`CR-20260628-r-10f-product-category-tree-table` keeps the same nine-resource runtime slice and changes only product-category hierarchy behavior inside masterdata. It may update the masterdata service, mapper contract if required, the masterdata Vue page/API client if required, focused masterdata tests, masterdata contracts, generated scans, graphs, current context, and memory.
+
+R-10F must not modify product series, product model, material, accessory, sales option runtime behavior except where shared masterdata tests or generated scans reflect unchanged ownership. It must not create R-11, sales-order, field-scheme, formula, technical-decomposition, inventory, BOM, production, scan, drawing, shipment, finance, or receipt runtime.

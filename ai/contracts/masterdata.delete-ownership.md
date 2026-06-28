@@ -6,6 +6,8 @@ Feature ID: `masterdata`
 
 R-10B remove APIs use logical delete by setting `del_flag = '2'`.
 
+R-10F product category remove additionally rejects deleting a category while active child categories exist. Batch deletion does not bypass this rule; a parent with children is still protected.
+
 ## Future Reference Protection
 
 When later orders, technical results, inventory, BOM, production, drawing, shipment, finance, or receipt data reference master data, physical deletion remains forbidden. Those downstream records must preserve code/name snapshots and must not depend only on mutable ids.

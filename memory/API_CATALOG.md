@@ -705,7 +705,7 @@
 - Path: `/business/masterdata/{resource}/list`
 - Owner: `masterdata`
 - Module: `masterdata`
-- Notes: Lists one approved R-10B masterdata resource. `resource` must be one of the nine MVP resources; the endpoint does not create sales-order, formula, field-scheme, or technical-decomposition runtime behavior.
+- Notes: Lists one approved R-10B masterdata resource. `resource` must be one of the nine MVP resources; for `product-category`, rows include `parentId` and the UI renders them as a tree table with no level-four compatibility path. The endpoint does not create sales-order, formula, field-scheme, or technical-decomposition runtime behavior.
 
 ## /business/masterdata/{resource}/options
 
@@ -735,7 +735,7 @@
 - Path: `/business/masterdata/{resource}`
 - Owner: `masterdata`
 - Module: `masterdata`
-- Notes: Creates a row for one approved R-10B masterdata resource. R-10D makes code backend-generated: create does not require `itemCode`, supplied create codes are ignored, and the backend generates `prefix + yyyyMM + 6 digit monthly sequence` using fixed resource prefixes `PC`, `PS`, `PM`, `MC`, `MI`, `AC`, `AI`, `SOC`, and `SOV`. Codes are not generated from Chinese names and remain unique through table unique keys plus bounded duplicate retry.
+- Notes: Creates a row for one approved R-10B masterdata resource. R-10D makes code backend-generated: create does not require `itemCode`, supplied create codes are ignored, and the backend generates `prefix + yyyyMM + 6 digit monthly sequence` using fixed resource prefixes `PC`, `PS`, `PM`, `MC`, `MI`, `AC`, `AI`, `SOC`, and `SOV`. Codes are not generated from Chinese names and remain unique through table unique keys plus bounded duplicate retry. R-10F limits `product-category.parentId` hierarchy to maximum depth 3.
 
 ## /business/masterdata/{resource}:update
 
@@ -743,7 +743,7 @@
 - Path: `/business/masterdata/{resource}`
 - Owner: `masterdata`
 - Module: `masterdata`
-- Notes: Updates an existing row for one approved R-10B masterdata resource. The stable code is immutable; R-10D ignores payload code changes and retains the existing code.
+- Notes: Updates an existing row for one approved R-10B masterdata resource. The stable code is immutable; R-10D ignores payload code changes and retains the existing code. R-10F rejects `product-category` self-parenting, descendant-parent cycles, and moves that would create a fourth level.
 
 ## /business/masterdata/{resource}/changeStatus
 
@@ -759,4 +759,4 @@
 - Path: `/business/masterdata/{resource}/{ids}`
 - Owner: `masterdata`
 - Module: `masterdata`
-- Notes: Performs logical delete with `del_flag = '2'`.
+- Notes: Performs logical delete with `del_flag = '2'`. R-10F rejects deleting a `product-category` parent while active child categories exist.

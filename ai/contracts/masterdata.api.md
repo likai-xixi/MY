@@ -40,6 +40,9 @@ Feature ID: `masterdata`
 - Empty name is rejected.
 - Code remains unique through table unique keys and bounded backend retry on generated collisions.
 - Code is immutable after creation; update payload code changes are ignored and the existing code is retained.
+- Product category accepts `parentId` for hierarchy, with backend validation that maximum depth is 3.
+- Product category create/edit rejects self-parenting, selecting a descendant as parent, and any move that would create a level-four category.
+- Product category delete rejects deleting any category that still has active child categories.
 - Remove is logical delete.
 - Publish permission is reserved; full publish/version flow is deferred.
 

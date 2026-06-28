@@ -27,6 +27,8 @@ Each object exposes backend-generated stable code, display name, status, sort or
 
 R-10D code generation format is `prefix + yyyyMM + 6 digit monthly sequence`. Prefixes are `PC`, `PS`, `PM`, `MC`, `MI`, `AC`, `AI`, `SOC`, and `SOV` for product category, product series, product model, material category, material item, accessory category, accessory item, sales option category, and sales option value respectively.
 
+R-10F presents product category as a tree table and limits the product category hierarchy to three levels. The backend rejects level-four categories, self-parenting, descendant-parent cycles, and deletion of a category that still has child categories.
+
 ## Non-goals
 
 - No sales-order runtime.
@@ -35,6 +37,7 @@ R-10D code generation format is `prefix + yyyyMM + 6 digit monthly sequence`. Pr
 - No technical decomposition templates or part templates.
 - No inventory deduction, BOM, production route, scanning/reporting, drawing task, shipment, finance, or receipt flow.
 - No hard-coded product-family, product-series, opening-mode, color, hardware, glass, surface-treatment, packaging, or material-system branches.
+- Opening mode, color, handle, lock, hinge, glass, surface treatment, and packaging remain sales option data, not product category hierarchy guidance.
 
 ## Acceptance Criteria
 
@@ -43,6 +46,8 @@ R-10D code generation format is `prefix + yyyyMM + 6 digit monthly sequence`. Pr
 - Add does not require or trust caller-entered code; the backend generates the code and retries bounded duplicate-key collisions.
 - Edit keeps the original code immutable even if the payload contains a different code.
 - The Vue page provides search, list, add without code input, edit with read-only code, status change, delete, and export for the nine resources.
+- Product category list displays as a tree table with code, name, sort order, status, remark, create time, and actions; the parent column is hidden because hierarchy is visible in the tree.
+- Product category add/edit parent selection cannot exceed three levels and cannot select the current category or its descendants.
 - API/UI/SQL/permission/test ownership is registered in feature and module registries, graphs, generated scans, memory, and handover.
 - `beforeSalesOrder` remains blocked and no sales-order runtime is created.
 

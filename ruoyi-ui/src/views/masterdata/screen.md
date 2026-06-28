@@ -26,6 +26,8 @@
 - Add dialog: no required code input.
 - Edit dialog: code is displayed read-only.
 - List/search may continue to show and filter by code.
+- Product category list renders as a tree table from `parentId`, hides the parent column, and keeps code/name/status search.
+- Product category parent selection blocks self, descendants, and any selection that would exceed three levels.
 
 ## Boundary
 

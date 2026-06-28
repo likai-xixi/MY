@@ -1,7 +1,13 @@
 package com.ruoyi.business.masterdata.service.impl;
 
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
@@ -25,6 +31,7 @@ public class MasterDataServiceImpl implements IMasterDataService
     private static final String DISABLED = "1";
     private static final String DELETED = "2";
     private static final int CODE_RETRY_LIMIT = 8;
+    private static final int PRODUCT_CATEGORY_MAX_DEPTH = 3;
     private static final Pattern CODE_PATTERN = Pattern.compile("^[A-Z0-9_]+$");
 
     @Autowired
@@ -77,6 +84,7 @@ public class MasterDataServiceImpl implements IMasterDataService
             record.setSortOrder(0);
         }
         validateReferences(target, record);
+        validateProductCategoryHierarchy(target, record);
         return insertRecordWithGeneratedCode(target, record);
     }
 
@@ -93,6 +101,7 @@ public class MasterDataServiceImpl implements IMasterDataService
         record.setItemCode(existing.getItemCode());
         normalizeForSave(target, record, false);
         validateReferences(target, record);
+        validateProductCategoryHierarchy(target, record);
         return masterDataMapper.updateRecord(target, record);
     }
 
@@ -123,6 +132,7 @@ public class MasterDataServiceImpl implements IMasterDataService
         {
             requiredRecord(target, id);
         }
+        assertNoProductCategoryChildren(target, ids);
         return masterDataMapper.deleteRecordByIds(target, ids, updateBy);
     }
 
@@ -169,6 +179,7 @@ public class MasterDataServiceImpl implements IMasterDataService
         record.setItemName(trimToNull(record.getItemName()));
         record.setSpec(resource.isSpecEnabled() ? trimToNull(record.getSpec()) : null);
         record.setUnit(resource.isUnitEnabled() ? trimToNull(record.getUnit()) : null);
+        record.setParentId(resource.isParentScoped() ? normalizeParentId(record.getParentId()) : null);
         record.setStatus(defaultStatus(record.getStatus()));
         record.setDelFlag(create ? NORMAL : record.getDelFlag());
         if (record.getSortOrder() == null)
@@ -256,6 +267,137 @@ public class MasterDataServiceImpl implements IMasterDataService
         }
     }
 
+    private void validateProductCategoryHierarchy(MasterDataResource resource, MasterDataRecord record)
+    {
+        if (resource != MasterDataResource.PRODUCT_CATEGORY)
+        {
+            return;
+        }
+        Long id = record.getId();
+        Long parentId = normalizeParentId(record.getParentId());
+        record.setParentId(parentId);
+        if (id != null && id.equals(parentId))
+        {
+            throw new ServiceException("产品分类的上级分类不能选择自己");
+        }
+
+        List<MasterDataRecord> categories = masterDataMapper.selectRecordList(resource, new MasterDataRecord());
+        Map<Long, MasterDataRecord> byId = recordsById(categories);
+        Map<Long, List<MasterDataRecord>> childrenByParent = childrenByParent(categories);
+        if (id != null && parentId != null && isDescendant(parentId, id, childrenByParent))
+        {
+            throw new ServiceException("产品分类的上级分类不能选择自己的子级或后代");
+        }
+
+        int parentDepth = parentId == null ? 0 : hierarchyDepth(parentId, byId);
+        int subtreeHeight = id == null ? 1 : subtreeHeight(id, childrenByParent, new HashSet<>());
+        if (parentDepth + subtreeHeight > PRODUCT_CATEGORY_MAX_DEPTH)
+        {
+            throw new ServiceException("产品分类最多只允许3级");
+        }
+    }
+
+    private void assertNoProductCategoryChildren(MasterDataResource resource, Long[] ids)
+    {
+        if (resource != MasterDataResource.PRODUCT_CATEGORY)
+        {
+            return;
+        }
+        Set<Long> deletedIds = new HashSet<>();
+        for (Long id : ids)
+        {
+            deletedIds.add(id);
+        }
+        List<MasterDataRecord> categories = masterDataMapper.selectRecordList(resource, new MasterDataRecord());
+        for (MasterDataRecord category : categories)
+        {
+            Long parentId = normalizeParentId(category.getParentId());
+            if (parentId != null && deletedIds.contains(parentId))
+            {
+                throw new ServiceException("产品分类存在子分类，不能删除父分类");
+            }
+        }
+    }
+
+    private Map<Long, MasterDataRecord> recordsById(List<MasterDataRecord> records)
+    {
+        Map<Long, MasterDataRecord> byId = new HashMap<>();
+        for (MasterDataRecord record : records)
+        {
+            byId.put(record.getId(), record);
+        }
+        return byId;
+    }
+
+    private Map<Long, List<MasterDataRecord>> childrenByParent(List<MasterDataRecord> records)
+    {
+        Map<Long, List<MasterDataRecord>> childrenByParent = new HashMap<>();
+        for (MasterDataRecord record : records)
+        {
+            Long parentId = normalizeParentId(record.getParentId());
+            if (parentId != null)
+            {
+                childrenByParent.computeIfAbsent(parentId, key -> new ArrayList<>()).add(record);
+            }
+        }
+        return childrenByParent;
+    }
+
+    private boolean isDescendant(Long candidateId, Long rootId, Map<Long, List<MasterDataRecord>> childrenByParent)
+    {
+        ArrayDeque<Long> stack = new ArrayDeque<>();
+        stack.add(rootId);
+        while (!stack.isEmpty())
+        {
+            Long currentId = stack.removeFirst();
+            for (MasterDataRecord child : childrenByParent.getOrDefault(currentId, List.of()))
+            {
+                if (candidateId.equals(child.getId()))
+                {
+                    return true;
+                }
+                stack.add(child.getId());
+            }
+        }
+        return false;
+    }
+
+    private int hierarchyDepth(Long id, Map<Long, MasterDataRecord> byId)
+    {
+        int depth = 0;
+        Long currentId = id;
+        Set<Long> visited = new HashSet<>();
+        while (currentId != null)
+        {
+            if (!visited.add(currentId))
+            {
+                throw new ServiceException("产品分类层级存在循环");
+            }
+            MasterDataRecord current = byId.get(currentId);
+            if (current == null)
+            {
+                break;
+            }
+            depth++;
+            currentId = normalizeParentId(current.getParentId());
+        }
+        return depth;
+    }
+
+    private int subtreeHeight(Long id, Map<Long, List<MasterDataRecord>> childrenByParent, Set<Long> visited)
+    {
+        if (!visited.add(id))
+        {
+            throw new ServiceException("产品分类层级存在循环");
+        }
+        int height = 1;
+        for (MasterDataRecord child : childrenByParent.getOrDefault(id, List.of()))
+        {
+            height = Math.max(height, 1 + subtreeHeight(child.getId(), childrenByParent, visited));
+        }
+        return height;
+    }
+
     private void assertUniqueCode(MasterDataResource resource, MasterDataRecord record)
     {
         int count = masterDataMapper.countCode(resource, record.getId(), record.getItemCode());
@@ -298,6 +440,11 @@ public class MasterDataServiceImpl implements IMasterDataService
     {
         String trimmed = trimToNull(value);
         return trimmed == null ? null : trimmed.toUpperCase(Locale.ROOT);
+    }
+
+    private Long normalizeParentId(Long value)
+    {
+        return value == null || value <= 0 ? null : value;
     }
 
     private String trimToNull(String value)
