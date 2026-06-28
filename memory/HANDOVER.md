@@ -1,54 +1,57 @@
 # Handover
+
 ## Summary
-R-09A.4 anti-false-green minimum closure is in progress as a governance-only rule-change.
-Current change record: `ai/changes/CR-20260627T154818Z-r-09a-4-anti-false-green-minimum-closure`.
-## Impact
-Current change `CR-20260627T154818Z-r-09a-4-anti-false-green-minimum-closure` affects the anti-false-green matrix, matrix checker, package script anti-theater tests, four-light workflow rule, current-CR component/boundary exceptions, current context, and closeout evidence. See `ai/changes/CR-20260627T154818Z-r-09a-4-anti-false-green-minimum-closure/changed-files.json` for exact coverage.
-## Changed Files
-- `ai/changes/CR-20260627T154818Z-r-09a-4-anti-false-green-minimum-closure/changed-files.json`
-- `ai/changes/CR-20260627T154818Z-r-09a-4-anti-false-green-minimum-closure/boundary-exception.md`
-- `ai/changes/CR-20260627T154818Z-r-09a-4-anti-false-green-minimum-closure/component-exception.md`
-- `ai/changes/CR-20260627T154818Z-r-09a-4-anti-false-green-minimum-closure/handover.md`
-- `ai/changes/CR-20260627T154818Z-r-09a-4-anti-false-green-minimum-closure/impact.json`
-- `ai/changes/CR-20260627T154818Z-r-09a-4-anti-false-green-minimum-closure/plan.md`
-- `ai/changes/CR-20260627T154818Z-r-09a-4-anti-false-green-minimum-closure/request.md`
-- `ai/changes/CR-20260627T154818Z-r-09a-4-anti-false-green-minimum-closure/verification.md`
-- `ai/changes/CURRENT_CHANGE.json`
-- `ai/context/current-context.json`
-- `ai/context/current-context.md`
-- `ai/governance/false-green-regression-matrix.json`
-- `docs/chat-driven-codex-workflow.md`
-- `memory/CHANGELOG.md`
-- `memory/HANDOVER.md`
-- `memory/TASKS.json`
-- `package.json`
-- `tests/false-green-matrix-checker.test.js`
-- `tests/package-scripts.test.js`
-- `tools/false-green-matrix-checker.js`
-## Commands
-- [local] `npm run resume` - passed.
-- [local] `npm run check:false-green-matrix` - passed.
-- [local] `node --test tests/false-green-matrix-checker.test.js` - passed 8/8 tests.
-- [local] `node --test tests/package-scripts.test.js` - passed 11/11 tests.
-- [local] `npm run scan:all` - passed.
-- [local] `npm run context:build -- customer` - passed before and after finalize.
-- [local] `npm run finalize:change` - passed.
-- [local] `npm run check:components` - passed.
-- [local] `node --test tests/component-scan.test.js tests/component-checker.test.js tests/component-similarity-checker.test.js` - passed 13/13 tests.
-- [local] `npm run check:boundaries` - passed.
-- [local] `node --test tests/boundary-lint.test.js` - passed 9/9 tests.
-- [local] `npm run check` - passed with final `npm test` 233/233.
-- [local] `git diff --check` - passed after final evidence update.
+
+R-09 configurable modeling contract package is the current change.
+
+Current change record: `ai/changes/CR-20260628-r-09-configurable-modeling-contract-package`.
+
+## Purpose
+
+R-09 records the user's configurable ERP direction before sales-order or technical runtime work. Product categories, product series, product models, sales options, sales configuration processes, field library entries, option schemas, formula variables, formula groups, calculation rules, glass rules, offset rules, technical decomposition templates, part templates, and calculation snapshots must be configuration/version/snapshot driven.
+
+## Key Boundary
+
+- `门`, `门匾`, `栅栏`, `护栏`, `钣金件`, `异形件`, `工程定制`, `单开`, `对开`, `子母`, `连体子母`, `玻璃拼接`, `整拼`, `铝卡`, `型材`, `拉手`, `锁具`, and `铰链` are configurable data examples, not hard-coded runtime models.
+- R-09 created contracts only.
+- No sales-order runtime was created.
+- No process/material/formula/drawing runtime was created.
+- No SQL migration was created.
+- No customer runtime was changed.
+- No idempotency runtime was changed.
+- No security config was changed.
+- No `package.json` or `tools/` files were changed.
+
+## Contract Files
+
+- `ai/contracts/masterdata.product.md`
+- `ai/contracts/masterdata.material.md`
+- `ai/contracts/masterdata.sales-option.md`
+- `ai/contracts/masterdata.process.md`
+- `ai/contracts/masterdata.field-library.md`
+- `ai/contracts/masterdata.option-schema.md`
+- `ai/contracts/rule.formula-variable.md`
+- `ai/contracts/rule.formula-group.md`
+- `ai/contracts/rule.process-calculation.md`
+- `ai/contracts/rule.glass-rule.md`
+- `ai/contracts/rule.offset-rule.md`
+- `ai/contracts/tech.decomposition-template.md`
+- `ai/contracts/tech.part-template.md`
+- `ai/contracts/tech.calculation-snapshot.md`
+- `ai/contracts/tech-review.boundary.md`
+- `ai/contracts/masterdata.snapshot-versioning.md`
+- `ai/contracts/masterdata.permission.md`
+- `ai/contracts/masterdata.migration-plan.md`
+- `ai/contracts/masterdata.contract-test-matrix.md`
+
 ## Verification
-- [local] Matrix checker and focused tests passed for the new anti-false-green matrix and package script anti-theater coverage.
-- [local] Four-light evidence rule is documented in `docs/chat-driven-codex-workflow.md`.
-- [local] Current-CR component exception preserves R-09A.3 exact-path handling for inherited RuoYi system/tool/generator component candidates.
-- [local] Current-CR boundary exception preserves R-09A.3 exact-path handling for inherited RuoYi router/tool-generator cross-feature imports.
-- [local] `beforeSalesOrder` remains `blocked`.
-- [local] Four-light status: `npm run check` passed.
-- [not-run] Four-light status: GitHub Actions not-run, `verify:release` not-run, runtime acceptance not-run.
-## Risks
-- [not-run] GitHub Actions, `verify:release`, runtime API/browser/DB/manual acceptance, Maven compile, and frontend production build were not run for this governance-only batch.
-- [local] No sales-order runtime, customer runtime business logic, `CustomerFundServiceImpl`, `CustomerServiceImpl`, `.github/workflows`, or production config was changed.
+
+- [github-connector] Contract files and change-record files were created on `master`.
+- [not-run] `npm run check`: not run in this environment.
+- [not-run] GitHub Actions: not checked in this evidence pass.
+- [not-run] `verify:release`: not run.
+- [not-run] runtime acceptance: not run.
+
 ## Next Actions
-- [local] If R-09A.4 full gates pass, continue to R-09B sales-order pre-implementation contract package instead of adding more open-ended governance scope.
+
+Run a local Codex closeout pass: `npm run resume`, inspect R-09 files, run `npm run check`, and run `git diff --check`. After R-09 is accepted, continue to R-10 product/material/sales-option master data MVP. Do not start sales-order runtime before its later contract package is approved.
