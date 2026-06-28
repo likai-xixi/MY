@@ -1,19 +1,22 @@
 # Current Context
 
 Current feature: `customer`
-Current change: `CR-20260628-r-10g-product-category-tree-live-acceptance`
+Current change: `CR-20260628-r-10h-product-category-tree-visual-enhancement`
 Repository: RuoYi + Vue3 + Codex Auto Dev OS
 Profile: adapter `ruoyi`, locked `true`
 
 ## Allowed Edit Roots
 
-- `ai/changes/CR-20260628-r-10g-product-category-tree-live-acceptance`
+- `ai/changes/CR-20260628-r-10h-product-category-tree-visual-enhancement`
 - `ai/changes/CURRENT_CHANGE.json`
 - `ai/context/current-context.json`
 - `ai/context/current-context.md`
+- `features/masterdata.md`
 - `memory/CHANGELOG.md`
 - `memory/HANDOVER.md`
 - `memory/TASKS.json`
+- `ruoyi-ui/src/views/masterdata/index.vue`
+- `tests/masterdata-runtime.test.js`
 
 ## Forbidden Edit Roots
 
@@ -28,7 +31,6 @@ Profile: adapter `ruoyi`, locked `true`
 - `ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/sales-order`
 - `ruoyi-business/src/main/resources/mapper/masterdata`
 - `ruoyi-ui/src/views/customer`
-- `ruoyi-ui/src/views/masterdata`
 - `ruoyi-ui/src/views/sales-order`
 - `ruoyi-ui/src/views/salesorder`
 - `ruoyi-ui/src/api/customer.js`
@@ -59,9 +61,9 @@ Profile: adapter `ruoyi`, locked `true`
 - `ai/roadmap/phase-gates.json` - beforeSalesOrder gate state.
 - `ai/roadmap/refactor-debt.json` - Known debt affecting sales-order handoff.
 - `ai/roadmap/enhancement-backlog.json` - Governance backlog and required/deferred evidence.
-- `ai/changes/CR-20260628-r-10g-product-category-tree-live-acceptance/impact.json` - Current change allowed and forbidden edit roots.
-- `ai/changes/CR-20260628-r-10g-product-category-tree-live-acceptance/plan.md` - Current change execution plan.
-- `ai/changes/CR-20260628-r-10g-product-category-tree-live-acceptance/verification.md` - Current change verification evidence.
+- `ai/changes/CR-20260628-r-10h-product-category-tree-visual-enhancement/impact.json` - Current change allowed and forbidden edit roots.
+- `ai/changes/CR-20260628-r-10h-product-category-tree-visual-enhancement/plan.md` - Current change execution plan.
+- `ai/changes/CR-20260628-r-10h-product-category-tree-visual-enhancement/verification.md` - Current change verification evidence.
 
 ## Must Not Break
 
@@ -126,8 +128,10 @@ Deferred:
 - `git status --short --branch`
 - `git -c http.proxy= -c https.proxy= fetch origin master`
 - `git rev-parse HEAD origin/master FETCH_HEAD`
+- `npm run impact -- masterdata --mode update --json`
 - `npm run check`
 - `git diff --check`
+- `npm --prefix ruoyi-ui run build:prod`
 
 ## Next Steps
 

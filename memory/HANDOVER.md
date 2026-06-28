@@ -2,24 +2,27 @@
 
 ## Summary
 
-R-10G live acceptance for the R-10F product category tree table and hierarchy constraints.
+R-10H product-category tree visual enhancement.
 
-Current change record: `ai/changes/CR-20260628-r-10g-product-category-tree-live-acceptance`.
+Current change record: `ai/changes/CR-20260628-r-10h-product-category-tree-visual-enhancement`.
 
 ## Impact
 
-Current change `CR-20260628-r-10g-product-category-tree-live-acceptance` is acceptance-only. It records live API/browser/database evidence for the already-committed R-10F product category tree table and maximum 3-level hierarchy constraints. No Java runtime, Vue runtime, API client, SQL migration, package, tool, workflow, customer, idempotency, security, sales-order, field-scheme, formula, or technical-decomposition runtime is changed.
+Current change `CR-20260628-r-10h-product-category-tree-visual-enhancement` is a small masterdata UI-only iteration. It improves only the product-category tree table name-column readability and expansion state with smaller L1/L2/L3 tags, stronger indentation, branch guide styling, level-based text emphasis, path tooltip context, default-collapsed initial/reset search state, add-child parent-path expansion, and edit/delete expansion preservation. It does not change backend business rules, API clients, SQL migrations, product series/model/material/accessory/sales-option table rendering, customer runtime, idempotency runtime, package/tool/workflow files, or sales-order/field-scheme/formula/technical-decomposition runtime.
 
 ## Changed Files
 
-- `ai/changes/CR-20260628-r-10g-product-category-tree-live-acceptance/*`
+- `ai/changes/CR-20260628-r-10h-product-category-tree-visual-enhancement/*`
 - `ai/changes/CURRENT_CHANGE.json`
 - `ai/context/current-context.md`
 - `ai/context/current-context.json`
+- `features/masterdata.md`
 - `memory/CHANGELOG.md`
 - `memory/HANDOVER.md`
 - `memory/TASKS.json`
-- See `ai/changes/CR-20260628-r-10g-product-category-tree-live-acceptance/changed-files.json` for exact evidence scope.
+- `ruoyi-ui/src/views/masterdata/index.vue`
+- `tests/masterdata-runtime.test.js`
+- See `ai/changes/CR-20260628-r-10h-product-category-tree-visual-enhancement/changed-files.json` for exact evidence scope.
 
 ## Commands
 
@@ -27,34 +30,29 @@ Current change `CR-20260628-r-10g-product-category-tree-live-acceptance` is acce
 - [local] `git status --short --branch`
 - [local] `git -c http.proxy= -c https.proxy= fetch origin master`
 - [local] `git rev-parse HEAD origin/master FETCH_HEAD`
-- [local] Docker/MySQL/Redis/frontend/backend health checks
-- [local] Cached Maven package after stopping the stale locked backend jar
-- [local] Backend restart on `http://localhost:18080`
-- [local] Product-category API live acceptance on database `my_ry_vue_runtime`
-- [local] Browser acceptance on `http://127.0.0.1:5173/business/masterdata`
+- [local] `npm run impact -- masterdata --mode update --json`
+- [local] `node --test tests/masterdata-runtime.test.js` with 23/23 passing
 - [local] `npm run context:build -- customer`
-- [local] `npm run check` with `npm test` 254/254
+- [local] `npm run check` with `npm test` 256/256
 - [local] `git diff --check`
+- [local] `npm --prefix ruoyi-ui run build:prod`
 
 ## Verification
 
-[local] Runtime acceptance passed with marker `R10G20260628085626`. Backend `http://localhost:18080`, frontend `http://127.0.0.1:5173`, MySQL database `my_ry_vue_runtime`, and Redis DB1 were used.
+[local] Product-category tree name column now has product-category-only visual hierarchy: smaller and lighter L1/L2/L3 tags, stronger indentation, branch guide styling, level-based text emphasis, and a tooltip with parent/path context. The tree no longer uses `default-expand-all`; initial load and reset search keep children collapsed, add-child refresh expands only the parent path, search can expand matched parent paths, and edit/delete refresh preserves or prunes current expansion state. The parent column remains hidden because hierarchy is represented in the tree. Product series, product model, material, accessory, and sales option tables keep their existing plain name-cell rendering.
 
-[local] Product category browser acceptance showed a tree table without the `上级分类` column and with rows for level 1 `门-R10G20260628085626`, level 2 `庭院门-R10G20260628085626`, and level 3 `玻璃拼接门-R10G20260628085626`.
+[local] API scan and permission scan completed with no contract changes. UI route scan completed without route changes; the Vue diff is display-only inside the existing masterdata screen.
 
-[local] API acceptance verified generated PC codes `PC202606000004`, `PC202606000005`, and `PC202606000006`; backend rejection of fourth-level create, self-parent edit, descendant-parent edit, and deleting a parent with children; and non-cascading disable of the root category.
+[local] Focused masterdata runtime test passed 23/23 and still covers product-category tree table configuration, controlled expansion without expanding all rows, smaller hierarchy tags, maximum depth 3, level-four rejection, self-parent rejection, descendant-parent rejection, child-protected delete, R-10D code generation, and forbidden sales-order/field-scheme/formula/technical-decomposition runtime absence.
 
-[local] Product series, product model, material item, accessory item, and sales option value tabs opened normally. Forbidden runtime audit confirmed no sales-order, field-scheme, formula, or technical-decomposition runtime roots exist.
-
-[local] Final checks passed for R-10G evidence: `npm run check` completed with `npm test` 254/254 and `git diff --check` passed.
+[local] Final checks passed for R-10H evidence: `npm run check` completed with `npm test` 256/256, `git diff --check` passed, and `npm --prefix ruoyi-ui run build:prod` passed. The production build left no `dist` or other build output in the git diff.
 
 ## Risks
 
-- [local] The first live API attempt hit a stale backend jar on port `18080`; failed marker rows were deleted and the backend was rebuilt/restarted from current HEAD before the passing acceptance run.
-- [local] R-10G leaves three accepted product-category sample rows in local development database `my_ry_vue_runtime` as live acceptance evidence.
+- [local] This is a visual enhancement only; no live browser screenshot was captured in this pass unless a later acceptance request asks for it.
 - [local] Product category disable remains intentionally non-cascading; a child cascade policy can be designed in a later explicit change.
 
 ## Next Actions
 
-- Commit and push R-10G evidence.
-- Keep `beforeSalesOrder` blocked. R-11A may start only as a separate contract pre-review; do not create sales-order runtime until the gate is explicitly unblocked.
+- Review and approve commit/push if the R-10H scope is acceptable.
+- Keep `beforeSalesOrder` blocked. Do not enter R-11 or create sales-order runtime until the gate is explicitly unblocked.

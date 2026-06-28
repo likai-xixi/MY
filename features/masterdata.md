@@ -29,6 +29,8 @@ R-10D code generation format is `prefix + yyyyMM + 6 digit monthly sequence`. Pr
 
 R-10F presents product category as a tree table and limits the product category hierarchy to three levels. The backend rejects level-four categories, self-parenting, descendant-parent cycles, and deletion of a category that still has child categories.
 
+R-10H keeps the same product-category business rules and improves only tree-table readability in the name column with clearer indentation, branch guidance, smaller L1/L2/L3 level tags, path tooltip hints, and controlled expansion state.
+
 ## Non-goals
 
 - No sales-order runtime.
@@ -47,6 +49,8 @@ R-10F presents product category as a tree table and limits the product category 
 - Edit keeps the original code immutable even if the payload contains a different code.
 - The Vue page provides search, list, add without code input, edit with read-only code, status change, delete, and export for the nine resources.
 - Product category list displays as a tree table with code, name, sort order, status, remark, create time, and actions; the parent column is hidden because hierarchy is visible in the tree.
+- Product category tree names show clearer hierarchy with smaller level hints, stronger indentation, branch guidance, path tooltip context, and controlled expand/collapse state.
+- Product category initial load and reset search keep child rows collapsed; adding a child expands only the selected parent path; edit/delete refresh preserves current expansion state.
 - Product category add/edit parent selection cannot exceed three levels and cannot select the current category or its descendants.
 - API/UI/SQL/permission/test ownership is registered in feature and module registries, graphs, generated scans, memory, and handover.
 - `beforeSalesOrder` remains blocked and no sales-order runtime is created.

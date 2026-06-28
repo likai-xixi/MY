@@ -224,12 +224,52 @@ test('product category list is configured as a tree table', () => {
   assert.match(view, /value: 'product-category', label: '产品分类', parentEnabled: true, treeEnabled: true/);
   assert.match(view, /:data="tableRows"/);
   assert.match(view, /row-key="id"/);
+  assert.match(view, /:expand-row-keys="expandedTreeRowKeys"/);
   assert.match(view, /:tree-props="treeProps"/);
+  assert.match(view, /@expand-change="handleTreeExpandChange"/);
+  assert.doesNotMatch(view, /default-expand-all/);
   assert.match(view, /const treeProps = \{ children: 'children' \}/);
   assert.match(view, /const tableRows = computed\(\(\) => isTreeTable\.value \? buildTreeRows\(recordList\.value\) : recordList\.value\)/);
   assert.match(view, /<el-table-column v-if="currentConfig\.parentEnabled && !isTreeTable" label="上级分类"/);
   assert.match(view, /delete params\.pageNum/);
   assert.match(view, /delete params\.pageSize/);
+});
+
+test('product category tree expansion is controlled without expanding all rows', () => {
+  const view = readText(VIEW);
+
+  assert.match(view, /const expandedTreeRowKeys = ref\(\[\]\)/);
+  assert.match(view, /function syncProductCategoryExpandedKeys\(options = \{\}\)/);
+  assert.match(view, /options\.resetExpanded/);
+  assert.match(view, /options\.expandParentId/);
+  assert.match(view, /options\.expandSearchMatches/);
+  assert.match(view, /function pruneExpandedTreeRowKeys\(\)/);
+  assert.match(view, /function handleTreeExpandChange\(row, expanded\)/);
+  assert.match(view, /getList\(\{ resetExpanded: true \}\)/);
+  assert.match(view, /getList\(\{ expandSearchMatches: isTreeSearchActive\(\) \}\)/);
+  assert.match(view, /getList\(\{ expandParentId: parentIdToExpand \}\)/);
+  assert.doesNotMatch(view, /expandedTreeRowKeys\.value\s*=\s*recordList\.value\.map/);
+  assert.doesNotMatch(view, /expandedTreeRowKeys\.value\s*=\s*tableRows\.value\.map/);
+});
+
+test('product category tree name column has visual hierarchy hints', () => {
+  const view = readText(VIEW);
+
+  assert.match(view, /:row-class-name="tableRowClassName"/);
+  assert.match(view, /:show-overflow-tooltip="!isTreeTable"/);
+  assert.match(view, /productCategoryTreeTooltip\(scope\.row\)/);
+  assert.match(view, /product-category-tree-node/);
+  assert.match(view, /product-category-branch/);
+  assert.match(view, /product-category-level-tag/);
+  assert.match(view, /font-size: 10px/);
+  assert.match(view, /height: 16px/);
+  assert.match(view, /padding: 0 4px/);
+  assert.match(view, /min-width: 22px/);
+  assert.match(view, /productCategoryLevelLabel\(scope\.row\)/);
+  assert.match(view, /productCategoryNodeStyle\(scope\.row\)/);
+  assert.match(view, /--category-depth-offset/);
+  assert.match(view, /product-category-row-level-/);
+  assert.match(view, /productCategoryPath\(row\)/);
 });
 
 test('product category maximum depth is three in backend and frontend', () => {

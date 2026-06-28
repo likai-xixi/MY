@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "mode": "update-feature",
+  "feature": {
+    "id": "masterdata",
+    "name": "masterdata",
+    "status": "active"
+  },
+  "summary": "R-10H improves only the product-category tree table visual hierarchy in the existing masterdata Vue page.",
+  "allowedEditRoots": [
+    "ai/changes/CR-20260628-r-10h-product-category-tree-visual-enhancement",
+    "ai/changes/CURRENT_CHANGE.json",
+    "ai/context/current-context.json",
+    "ai/context/current-context.md",
+    "features/masterdata.md",
+    "memory/CHANGELOG.md",
+    "memory/HANDOVER.md",
+    "memory/TASKS.json",
+    "ruoyi-ui/src/views/masterdata/index.vue",
+    "tests/masterdata-runtime.test.js"
+  ],
+  "forbiddenEditRoots": [
+    "ruoyi-business/src/main/java/com/ruoyi/business/customer",
+    "ruoyi-business/src/main/java/com/ruoyi/business/idempotency",
+    "ruoyi-business/src/main/java/com/ruoyi/business/masterdata",
+    "ruoyi-business/src/main/java/com/ruoyi/business/salesorder",
+    "ruoyi-business/src/main/java/com/ruoyi/business/sales-order",
+    "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer",
+    "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/masterdata",
+    "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/salesorder",
+    "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/sales-order",
+    "ruoyi-business/src/main/resources/mapper/masterdata",
+    "ruoyi-ui/src/views/customer",
+    "ruoyi-ui/src/views/sales-order",
+    "ruoyi-ui/src/views/salesorder",
+    "ruoyi-ui/src/api/customer.js",
+    "ruoyi-ui/src/api/masterdata.js",
+    "ruoyi-ui/src/api/sales-order.js",
+    "ruoyi-ui/src/api/salesorder.js",
+    "sql",
+    "package.json",
+    "tools",
+    "scripts",
+    ".github/workflows",
+    "ruoyi-admin/src/main/resources/application.yml",
+    "ruoyi-admin/src/main/resources/application-druid.yml",
+    "ruoyi-admin/src/main/resources/application-prod.yml",
+    "ruoyi-framework",
+    "ruoyi-common"
+  ],
+  "requiredCommands": [
+    "npm run resume",
+    "git status --short --branch",
+    "git -c http.proxy= -c https.proxy= fetch origin master",
+    "git rev-parse HEAD origin/master FETCH_HEAD",
+    "npm run impact -- masterdata --mode update --json",
+    "npm run check",
+    "git diff --check",
+    "npm --prefix ruoyi-ui run build:prod"
+  ],
+  "requiredEvidence": [
+    "Local HEAD and origin/master align before edits",
+    "beforeSalesOrder remains blocked",
+    "Product-category tree name column has stronger hierarchy readability",
+    "Indentation and tree guidance are enhanced",
+    "Level tag or path hint is present",
+    "Parent column stays hidden",
+    "Existing 3-level rule and backend validations are unchanged",
+    "Other masterdata resource table styles are not changed",
+    "No sales-order, field-scheme, formula, or technical-decomposition runtime is created"
+  ],
+  "blockers": []
+}

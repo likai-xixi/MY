@@ -8,10 +8,14 @@
       "status": "in_progress",
       "owner": "Codex",
       "priority": "high",
-      "statusReason": "R-10G masterdata product category tree live acceptance passed on local backend, frontend, MySQL, and Redis. Product category renders as a tree table, maximum hierarchy depth is 3, backend rejects level-four/self/descendant parent changes and child-parent deletion, and beforeSalesOrder remains blocked.",
-      "nextStep": "Run final R-10G governance commands, then commit/push evidence for CR-20260628-r-10g-product-category-tree-live-acceptance if they pass. R-11A may start only as a separate contract pre-review; do not create sales-order runtime until beforeSalesOrder is explicitly unblocked.",
+      "statusReason": "R-10H masterdata product category tree visual enhancement is implemented as a UI-only change. The product category name column now has smaller L1/L2/L3 hierarchy tags, indentation, branch guidance, path tooltip context, and controlled expand/collapse state while existing 3-level rules and backend validations remain unchanged.",
+      "nextStep": "Run final R-10H verification for CR-20260628-r-10h-product-category-tree-visual-enhancement, then review/approve commit and push if the scope is acceptable. Do not enter R-11/R-11A runtime work and do not start sales-order runtime until beforeSalesOrder is explicitly unblocked.",
       "blockedBy": [],
       "verification": [
+        "CR-20260628-r-10h-product-category-tree-visual-enhancement focused verification passed: node --test tests/masterdata-runtime.test.js 23/23",
+        "CR-20260628-r-10h-product-category-tree-visual-enhancement replaced product category default-expand-all with controlled expand-row-keys, keeps initial/reset search collapsed, expands only the parent path after add-child, and preserves/prunes expansion on edit/delete refresh",
+        "CR-20260628-r-10h-product-category-tree-visual-enhancement is UI-only and keeps product category 3-level rule, backend validation, PC auto code, self/descendant parent rejection, child-protected delete, and other masterdata resource table rendering unchanged",
+        "CR-20260628-r-10h-product-category-tree-visual-enhancement final local verification passed: npm run check with npm test 256/256, git diff --check, and npm --prefix ruoyi-ui run build:prod",
         "CR-20260628-r-10g-product-category-tree-live-acceptance live acceptance passed on backend http://localhost:18080, frontend http://127.0.0.1:5173, database my_ry_vue_runtime, and Redis DB1 with marker R10G20260628085626",
         "CR-20260628-r-10g-product-category-tree-live-acceptance verified product category tree table rendering, 1/2/3-level creation, PC auto codes, backend rejection of fourth-level/self-parent/descendant-parent/delete-parent-with-child cases, and non-cascading disable",
         "CR-20260628-r-10g-product-category-tree-live-acceptance sampled product series, product model, material item, accessory item, and sales option value tabs successfully and confirmed sales-order, field-scheme, formula, and technical-decomposition runtime absence",
@@ -402,7 +406,7 @@
         "git diff --check passed for CR-20260626T145150Z-customer-runtime-tests"
       ],
       "latestSession": "memory/sessions/2026-06-25-customer-fund-concurrency.md",
-      "latestChange": "CR-20260628-r-10g-product-category-tree-live-acceptance",
+      "latestChange": "CR-20260628-r-10h-product-category-tree-visual-enhancement",
       "handoverRequired": true,
       "updatedAt": "2026-06-28"
     }

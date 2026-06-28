@@ -3,20 +3,23 @@
   "generatedBy": "scripts/context-build.js",
   "generatedAt": "stable",
   "currentFeature": "customer",
-  "currentChange": "CR-20260628-r-10g-product-category-tree-live-acceptance",
+  "currentChange": "CR-20260628-r-10h-product-category-tree-visual-enhancement",
   "repositoryProfile": {
     "adapter": "ruoyi",
     "locked": true,
     "stack": "RuoYi + Vue3 + Codex Auto Dev OS"
   },
   "allowedEditRoots": [
-    "ai/changes/CR-20260628-r-10g-product-category-tree-live-acceptance",
+    "ai/changes/CR-20260628-r-10h-product-category-tree-visual-enhancement",
     "ai/changes/CURRENT_CHANGE.json",
     "ai/context/current-context.json",
     "ai/context/current-context.md",
+    "features/masterdata.md",
     "memory/CHANGELOG.md",
     "memory/HANDOVER.md",
-    "memory/TASKS.json"
+    "memory/TASKS.json",
+    "ruoyi-ui/src/views/masterdata/index.vue",
+    "tests/masterdata-runtime.test.js"
   ],
   "forbiddenEditRoots": [
     "ruoyi-business/src/main/java/com/ruoyi/business/customer",
@@ -30,7 +33,6 @@
     "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/sales-order",
     "ruoyi-business/src/main/resources/mapper/masterdata",
     "ruoyi-ui/src/views/customer",
-    "ruoyi-ui/src/views/masterdata",
     "ruoyi-ui/src/views/sales-order",
     "ruoyi-ui/src/views/salesorder",
     "ruoyi-ui/src/api/customer.js",
@@ -94,15 +96,15 @@
       "reason": "Governance backlog and required/deferred evidence."
     },
     {
-      "path": "ai/changes/CR-20260628-r-10g-product-category-tree-live-acceptance/impact.json",
+      "path": "ai/changes/CR-20260628-r-10h-product-category-tree-visual-enhancement/impact.json",
       "reason": "Current change allowed and forbidden edit roots."
     },
     {
-      "path": "ai/changes/CR-20260628-r-10g-product-category-tree-live-acceptance/plan.md",
+      "path": "ai/changes/CR-20260628-r-10h-product-category-tree-visual-enhancement/plan.md",
       "reason": "Current change execution plan."
     },
     {
-      "path": "ai/changes/CR-20260628-r-10g-product-category-tree-live-acceptance/verification.md",
+      "path": "ai/changes/CR-20260628-r-10h-product-category-tree-visual-enhancement/verification.md",
       "reason": "Current change verification evidence."
     }
   ],
@@ -311,8 +313,10 @@
     "git status --short --branch",
     "git -c http.proxy= -c https.proxy= fetch origin master",
     "git rev-parse HEAD origin/master FETCH_HEAD",
+    "npm run impact -- masterdata --mode update --json",
     "npm run check",
-    "git diff --check"
+    "git diff --check",
+    "npm --prefix ruoyi-ui run build:prod"
   ],
   "nextSteps": [
     "Keep this change governance-only.",

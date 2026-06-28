@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "files": [
+    "ai/changes/CR-20260628-r-10h-product-category-tree-visual-enhancement/boundary-exception.md",
+    "ai/changes/CR-20260628-r-10h-product-category-tree-visual-enhancement/changed-files.json",
+    "ai/changes/CR-20260628-r-10h-product-category-tree-visual-enhancement/component-exception.md",
+    "ai/changes/CR-20260628-r-10h-product-category-tree-visual-enhancement/handover.md",
+    "ai/changes/CR-20260628-r-10h-product-category-tree-visual-enhancement/impact.json",
+    "ai/changes/CR-20260628-r-10h-product-category-tree-visual-enhancement/plan.md",
+    "ai/changes/CR-20260628-r-10h-product-category-tree-visual-enhancement/request.md",
+    "ai/changes/CR-20260628-r-10h-product-category-tree-visual-enhancement/verification.md",
+    "ai/changes/CURRENT_CHANGE.json",
+    "ai/context/current-context.json",
+    "ai/context/current-context.md",
+    "features/masterdata.md",
+    "memory/CHANGELOG.md",
+    "memory/HANDOVER.md",
+    "memory/TASKS.json",
+    "ruoyi-ui/src/views/masterdata/index.vue",
+    "tests/masterdata-runtime.test.js"
+  ]
+}

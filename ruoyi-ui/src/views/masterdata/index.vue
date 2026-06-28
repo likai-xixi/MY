@@ -49,12 +49,19 @@
       <right-toolbar v-model:showSearch="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="tableRows" row-key="id" :default-expand-all="isTreeTable" :tree-props="treeProps" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="tableRows" row-key="id" :expand-row-keys="expandedTreeRowKeys" :tree-props="treeProps" :row-class-name="tableRowClassName" @expand-change="handleTreeExpandChange" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="50" align="center" />
       <el-table-column label="编码" align="center" prop="itemCode" min-width="140" :show-overflow-tooltip="true" />
-      <el-table-column label="名称" align="left" prop="itemName" min-width="180" :show-overflow-tooltip="true">
+      <el-table-column label="名称" align="left" prop="itemName" min-width="260" :show-overflow-tooltip="!isTreeTable">
         <template #default="scope">
-          <el-button link type="primary" @click="handleUpdate(scope.row)">{{ scope.row.itemName }}</el-button>
+          <el-tooltip v-if="isTreeTable" :content="productCategoryTreeTooltip(scope.row)" placement="top-start">
+            <div class="product-category-tree-node" :class="productCategoryNodeClass(scope.row)" :style="productCategoryNodeStyle(scope.row)">
+              <span class="product-category-branch" aria-hidden="true"></span>
+              <el-tag class="product-category-level-tag" :type="productCategoryLevelTagType(scope.row)" size="small" effect="plain">{{ productCategoryLevelLabel(scope.row) }}</el-tag>
+              <el-button class="product-category-name-button" link type="primary" @click="handleUpdate(scope.row)">{{ scope.row.itemName }}</el-button>
+            </div>
+          </el-tooltip>
+          <el-button v-else link type="primary" @click="handleUpdate(scope.row)">{{ scope.row.itemName }}</el-button>
         </template>
       </el-table-column>
       <el-table-column v-if="currentConfig.categoryResource" label="所属分类" align="center" min-width="160" :show-overflow-tooltip="true">
@@ -175,6 +182,7 @@ const loading = ref(false)
 const showSearch = ref(true)
 const total = ref(0)
 const recordList = ref([])
+const expandedTreeRowKeys = ref([])
 const selectedRows = ref([])
 const ids = ref([])
 const single = ref(true)
@@ -183,6 +191,7 @@ const open = ref(false)
 const title = ref('')
 const relationOptions = ref({})
 const PRODUCT_CATEGORY_MAX_DEPTH = 3
+const PRODUCT_CATEGORY_LEVEL_LABELS = ['L1', 'L2', 'L3']
 const treeProps = { children: 'children' }
 
 const queryParams = ref({
@@ -295,6 +304,152 @@ function productCategoryDepth(id) {
   return depth
 }
 
+function productCategoryRowDepth(row) {
+  const depth = productCategoryDepth(row?.id)
+  if (!depth) return 1
+  return Math.min(depth, PRODUCT_CATEGORY_MAX_DEPTH)
+}
+
+function productCategoryLevelLabel(row) {
+  return PRODUCT_CATEGORY_LEVEL_LABELS[productCategoryRowDepth(row) - 1] || `L${productCategoryRowDepth(row)}`
+}
+
+function productCategoryLevelTagType(row) {
+  const depth = productCategoryRowDepth(row)
+  if (depth === 1) return 'primary'
+  if (depth === 2) return 'info'
+  return 'warning'
+}
+
+function productCategoryNodeClass(row) {
+  const depth = productCategoryRowDepth(row)
+  return [`is-level-${depth}`, { 'is-leaf': !(row.children || []).length }]
+}
+
+function productCategoryNodeStyle(row) {
+  return {
+    '--category-depth-offset': `${Math.max(productCategoryRowDepth(row) - 1, 0) * 18}px`
+  }
+}
+
+function productCategoryPath(row) {
+  const byId = productCategoryById()
+  const path = []
+  const visited = new Set()
+  let current = row
+  while (current && !visited.has(current.id)) {
+    visited.add(current.id)
+    path.unshift(current.itemName)
+    current = byId.get(normalizeParentId(current.parentId))
+  }
+  return path.join(' / ')
+}
+
+function productCategoryTreeTooltip(row) {
+  const parentName = relationName('product-category', row.parentId) || '-'
+  return `${productCategoryLevelLabel(row)} | Parent: ${parentName} | Path: ${productCategoryPath(row)}`
+}
+
+function tableRowClassName({ row }) {
+  if (!isTreeTable.value) return ''
+  return `product-category-row product-category-row-level-${productCategoryRowDepth(row)}`
+}
+
+function normalizeExpandKey(id) {
+  return id === undefined || id === null ? undefined : String(id)
+}
+
+function currentTreeRowKeys() {
+  return new Set(recordList.value.map(item => normalizeExpandKey(item.id)).filter(Boolean))
+}
+
+function pruneExpandedTreeRowKeys() {
+  const availableKeys = currentTreeRowKeys()
+  expandedTreeRowKeys.value = expandedTreeRowKeys.value.filter(key => availableKeys.has(key))
+}
+
+function mergeExpandedTreeRowKeys(keys) {
+  const availableKeys = currentTreeRowKeys()
+  const merged = new Set(expandedTreeRowKeys.value.filter(key => availableKeys.has(key)))
+  keys.filter(Boolean).forEach(key => {
+    if (availableKeys.has(key)) merged.add(key)
+  })
+  expandedTreeRowKeys.value = Array.from(merged)
+}
+
+function removeExpandedTreeRowKey(key) {
+  expandedTreeRowKeys.value = expandedTreeRowKeys.value.filter(item => item !== key)
+}
+
+function productCategoryAncestorKeys(parentId) {
+  const byId = productCategoryById()
+  const keys = []
+  const visited = new Set()
+  let current = byId.get(normalizeParentId(parentId))
+  while (current && !visited.has(current.id)) {
+    visited.add(current.id)
+    keys.unshift(normalizeExpandKey(current.id))
+    current = byId.get(normalizeParentId(current.parentId))
+  }
+  return keys.filter(Boolean)
+}
+
+function isTreeSearchActive() {
+  if (!isTreeTable.value) return false
+  return Boolean((queryParams.value.itemCode || '').trim() || (queryParams.value.itemName || '').trim() || queryParams.value.status)
+}
+
+function productCategorySearchParentKeys(rows) {
+  const keys = []
+  rows.forEach(row => {
+    keys.push(...productCategoryAncestorKeys(row.parentId))
+  })
+  return keys
+}
+
+function syncProductCategoryExpandedKeys(options = {}) {
+  if (!isTreeTable.value) {
+    expandedTreeRowKeys.value = []
+    return
+  }
+  if (options.resetExpanded) {
+    expandedTreeRowKeys.value = []
+    return
+  }
+  const keys = []
+  if (options.expandParentId) {
+    keys.push(...productCategoryAncestorKeys(options.expandParentId))
+  }
+  if (options.expandSearchMatches) {
+    keys.push(...productCategorySearchParentKeys(recordList.value))
+  }
+  if (keys.length > 0) {
+    mergeExpandedTreeRowKeys(keys)
+  } else {
+    pruneExpandedTreeRowKeys()
+  }
+}
+
+function handleTreeExpandChange(row, expanded) {
+  if (!isTreeTable.value) return
+  const key = normalizeExpandKey(row?.id)
+  if (!key) return
+  if (Array.isArray(expanded)) {
+    const isExpanded = expanded.some(item => normalizeExpandKey(item.id) === key)
+    if (isExpanded) {
+      mergeExpandedTreeRowKeys([key])
+    } else {
+      removeExpandedTreeRowKey(key)
+    }
+    return
+  }
+  if (expanded === true) {
+    mergeExpandedTreeRowKeys([key])
+  } else {
+    removeExpandedTreeRowKey(key)
+  }
+}
+
 function productCategorySubtreeHeight(id, visited = new Set()) {
   if (!id || visited.has(id)) return 1
   visited.add(id)
@@ -354,6 +509,7 @@ function resetQueryState() {
   ids.value = []
   single.value = true
   multiple.value = true
+  expandedTreeRowKeys.value = []
 }
 
 function resetFormState() {
@@ -391,16 +547,17 @@ function loadRelationOptions() {
   return Promise.all(tasks)
 }
 
-function getList() {
+function getList(options = {}) {
   loading.value = true
   const params = { ...queryParams.value }
   if (isTreeTable.value) {
     delete params.pageNum
     delete params.pageSize
   }
-  listMasterData(activeResource.value, params).then(response => {
+  return listMasterData(activeResource.value, params).then(response => {
     recordList.value = response.rows || []
     total.value = isTreeTable.value ? recordList.value.length : response.total || 0
+    syncProductCategoryExpandedKeys(options)
   }).finally(() => {
     loading.value = false
   })
@@ -408,13 +565,13 @@ function getList() {
 
 function handleQuery() {
   queryParams.value.pageNum = 1
-  getList()
+  getList({ expandSearchMatches: isTreeSearchActive() })
 }
 
 function resetQuery() {
   proxy.resetForm('queryRef')
   resetQueryState()
-  getList()
+  getList({ resetExpanded: true })
 }
 
 function handleResourceChange() {
@@ -471,8 +628,8 @@ function handleDelete(row) {
   proxy.$modal.confirm(`是否确认删除${currentConfig.value.label}编号为"${deleteIds}"的数据项？`).then(() => {
     return delMasterData(activeResource.value, deleteIds)
   }).then(() => {
-    getList()
-    loadRelationOptions()
+    return loadRelationOptions().then(() => getList())
+  }).then(() => {
     proxy.$modal.msgSuccess('删除成功')
   }).catch(() => {})
 }
@@ -498,12 +655,13 @@ function submitForm() {
   if (!validateProductCategoryParent()) return
   proxy.$refs.recordRef.validate(valid => {
     if (!valid) return
+    const isEdit = Boolean(form.value.id)
+    const parentIdToExpand = !isEdit ? normalizeParentId(form.value.parentId) : undefined
     const action = form.value.id ? updateMasterData(activeResource.value, form.value) : addMasterData(activeResource.value, form.value)
     action.then(() => {
       proxy.$modal.msgSuccess(form.value.id ? '修改成功' : '新增成功')
       open.value = false
-      getList()
-      loadRelationOptions()
+      return loadRelationOptions().then(() => getList({ expandParentId: parentIdToExpand }))
     })
   })
 }
@@ -524,5 +682,84 @@ onMounted(() => {
 }
 .masterdata-page :deep(.el-table .cell) {
   line-height: 22px;
+}
+.masterdata-page :deep(.product-category-row .el-table__expand-icon) {
+  color: #409eff;
+  margin-right: 4px;
+}
+.masterdata-page :deep(.product-category-row-level-1) {
+  --category-row-bg: #f7fbff;
+}
+.masterdata-page :deep(.product-category-row-level-2) {
+  --category-row-bg: #ffffff;
+}
+.masterdata-page :deep(.product-category-row-level-3) {
+  --category-row-bg: #fcfcfd;
+}
+.masterdata-page :deep(.product-category-row:hover > td) {
+  background-color: var(--category-row-bg);
+}
+.product-category-tree-node {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  max-width: 100%;
+  min-height: 28px;
+  gap: 6px;
+  padding-left: calc(var(--category-depth-offset) + 18px);
+  vertical-align: middle;
+}
+.product-category-tree-node.is-level-1 {
+  padding-left: 0;
+}
+.product-category-tree-node.is-level-1 .product-category-branch {
+  display: none;
+}
+.product-category-branch {
+  position: absolute;
+  left: var(--category-depth-offset);
+  top: 50%;
+  width: 14px;
+  border-top: 1px solid #c9d4df;
+}
+.product-category-branch::before {
+  position: absolute;
+  left: 0;
+  top: -13px;
+  height: 26px;
+  border-left: 1px solid #d5dde5;
+  content: '';
+}
+.product-category-level-tag {
+  flex: 0 0 auto;
+  min-width: 22px;
+  height: 16px;
+  padding: 0 4px;
+  justify-content: center;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 14px;
+  opacity: 0.78;
+}
+.product-category-name-button {
+  min-width: 0;
+  max-width: 360px;
+  overflow: hidden;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.product-category-tree-node.is-level-1 .product-category-name-button {
+  color: #1f2d3d;
+  font-weight: 600;
+}
+.product-category-tree-node.is-level-2 .product-category-name-button {
+  color: #606266;
+  font-weight: 500;
+}
+.product-category-tree-node.is-level-3 .product-category-name-button {
+  color: #909399;
+  font-weight: 400;
 }
 </style>

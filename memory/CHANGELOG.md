@@ -1,5 +1,17 @@
 # Changelog
 
+## 2026-06-28 - masterdata/r-10h-product-category-tree-visual-enhancement
+
+- Change: `ai/changes/CR-20260628-r-10h-product-category-tree-visual-enhancement`.
+- R-10H changes only the product-category tree table name-column presentation and expansion state in `ruoyi-ui/src/views/masterdata/index.vue`.
+- Added product-category-only smaller L1/L2/L3 tags, stronger indentation, branch guide styling, level-based text emphasis, and a tooltip with parent/path context.
+- Replaced `default-expand-all` with controlled `expand-row-keys`: initial load and reset search stay collapsed, add-child refresh expands only the parent path, search can expand matched parent paths, and edit/delete refresh preserves or prunes the current expansion state.
+- Existing tree-table logic, hidden parent column, maximum depth 3, backend validation, PC automatic code generation, self/descendant parent rejection, child-protected delete, and non-cascading status behavior are unchanged.
+- Product series, product model, material, accessory, and sales option tables keep their existing name-cell rendering.
+- [local] Focused verification passed: `node --test tests/masterdata-runtime.test.js` 23/23.
+- No Java runtime, API client, SQL migration, customer runtime, idempotency runtime, package/tool/workflow file, or sales-order/field-scheme/formula/technical-decomposition runtime was changed or created.
+- [local] Final local verification passed: `npm run check` with `npm test` 256/256, `git diff --check`, and `npm --prefix ruoyi-ui run build:prod`.
+
 ## 2026-06-28 - masterdata/r-10g-product-category-tree-live-acceptance
 
 - Change: `ai/changes/CR-20260628-r-10g-product-category-tree-live-acceptance`.
