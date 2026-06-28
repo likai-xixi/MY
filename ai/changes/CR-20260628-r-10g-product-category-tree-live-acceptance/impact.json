@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "mode": "acceptance",
+  "feature": {
+    "id": "masterdata",
+    "name": "主数据配置"
+  },
+  "summary": "R-10G records live API/browser/database acceptance evidence for the R-10F product-category tree table and hierarchy constraints without changing runtime code.",
+  "allowedEditRoots": [
+    "ai/changes/CR-20260628-r-10g-product-category-tree-live-acceptance",
+    "ai/changes/CURRENT_CHANGE.json",
+    "ai/context/current-context.json",
+    "ai/context/current-context.md",
+    "memory/CHANGELOG.md",
+    "memory/HANDOVER.md",
+    "memory/TASKS.json"
+  ],
+  "forbiddenEditRoots": [
+    "ruoyi-business/src/main/java/com/ruoyi/business/customer",
+    "ruoyi-business/src/main/java/com/ruoyi/business/idempotency",
+    "ruoyi-business/src/main/java/com/ruoyi/business/masterdata",
+    "ruoyi-business/src/main/java/com/ruoyi/business/salesorder",
+    "ruoyi-business/src/main/java/com/ruoyi/business/sales-order",
+    "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer",
+    "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/masterdata",
+    "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/salesorder",
+    "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/sales-order",
+    "ruoyi-business/src/main/resources/mapper/masterdata",
+    "ruoyi-ui/src/views/customer",
+    "ruoyi-ui/src/views/masterdata",
+    "ruoyi-ui/src/views/sales-order",
+    "ruoyi-ui/src/views/salesorder",
+    "ruoyi-ui/src/api/customer.js",
+    "ruoyi-ui/src/api/masterdata.js",
+    "ruoyi-ui/src/api/sales-order.js",
+    "ruoyi-ui/src/api/salesorder.js",
+    "sql",
+    "package.json",
+    "tools",
+    "scripts",
+    ".github/workflows",
+    "ruoyi-admin/src/main/resources/application.yml",
+    "ruoyi-admin/src/main/resources/application-druid.yml",
+    "ruoyi-admin/src/main/resources/application-prod.yml",
+    "ruoyi-framework",
+    "ruoyi-common"
+  ],
+  "requiredCommands": [
+    "npm run resume",
+    "git status --short --branch",
+    "git -c http.proxy= -c https.proxy= fetch origin master",
+    "git rev-parse HEAD origin/master FETCH_HEAD",
+    "npm run check",
+    "git diff --check"
+  ],
+  "requiredEvidence": [
+    "R-10F baseline commit is 770784f07335c2ff90c2c8c89f99456e8d76c22f",
+    "Local HEAD and origin/master align before acceptance",
+    "Backend URL, frontend URL, database name, and Redis DB are recorded",
+    "Product category tree table passes live acceptance",
+    "1/2/3-level create passes",
+    "Level-four category creation is rejected by backend",
+    "Self/descendant parent updates are rejected",
+    "Deleting a parent with children is rejected",
+    "PC auto code generation remains active",
+    "Disable remains non-cascading",
+    "Other masterdata pages open",
+    "No sales-order, field-scheme, formula, or technical-decomposition runtime exists",
+    "beforeSalesOrder remains blocked"
+  ],
+  "blockers": []
+}

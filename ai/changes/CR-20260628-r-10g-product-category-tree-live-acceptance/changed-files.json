@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "files": [
+    "ai/changes/CR-20260628-r-10g-product-category-tree-live-acceptance/changed-files.json",
+    "ai/changes/CR-20260628-r-10g-product-category-tree-live-acceptance/boundary-exception.md",
+    "ai/changes/CR-20260628-r-10g-product-category-tree-live-acceptance/component-exception.md",
+    "ai/changes/CR-20260628-r-10g-product-category-tree-live-acceptance/handover.md",
+    "ai/changes/CR-20260628-r-10g-product-category-tree-live-acceptance/impact.json",
+    "ai/changes/CR-20260628-r-10g-product-category-tree-live-acceptance/plan.md",
+    "ai/changes/CR-20260628-r-10g-product-category-tree-live-acceptance/request.md",
+    "ai/changes/CR-20260628-r-10g-product-category-tree-live-acceptance/verification.md",
+    "ai/changes/CURRENT_CHANGE.json",
+    "ai/context/current-context.json",
+    "ai/context/current-context.md",
+    "memory/CHANGELOG.md",
+    "memory/HANDOVER.md",
+    "memory/TASKS.json"
+  ]
+}

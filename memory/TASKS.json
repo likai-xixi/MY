@@ -8,10 +8,14 @@
       "status": "in_progress",
       "owner": "Codex",
       "priority": "high",
-      "statusReason": "R-10F masterdata product category tree table and hierarchy constraints passed local closeout verification. Product category renders as a tree table, maximum hierarchy depth is 3, backend rejects level-four/self/descendant parent changes and child-parent deletion; beforeSalesOrder remains blocked and R-11 has not started.",
-      "nextStep": "Review and approve commit/push for CR-20260628-r-10f-product-category-tree-table. Do not enter R-11/R-11A and do not start sales-order runtime until beforeSalesOrder is explicitly unblocked.",
+      "statusReason": "R-10G masterdata product category tree live acceptance passed on local backend, frontend, MySQL, and Redis. Product category renders as a tree table, maximum hierarchy depth is 3, backend rejects level-four/self/descendant parent changes and child-parent deletion, and beforeSalesOrder remains blocked.",
+      "nextStep": "Run final R-10G governance commands, then commit/push evidence for CR-20260628-r-10g-product-category-tree-live-acceptance if they pass. R-11A may start only as a separate contract pre-review; do not create sales-order runtime until beforeSalesOrder is explicitly unblocked.",
       "blockedBy": [],
       "verification": [
+        "CR-20260628-r-10g-product-category-tree-live-acceptance live acceptance passed on backend http://localhost:18080, frontend http://127.0.0.1:5173, database my_ry_vue_runtime, and Redis DB1 with marker R10G20260628085626",
+        "CR-20260628-r-10g-product-category-tree-live-acceptance verified product category tree table rendering, 1/2/3-level creation, PC auto codes, backend rejection of fourth-level/self-parent/descendant-parent/delete-parent-with-child cases, and non-cascading disable",
+        "CR-20260628-r-10g-product-category-tree-live-acceptance sampled product series, product model, material item, accessory item, and sales option value tabs successfully and confirmed sales-order, field-scheme, formula, and technical-decomposition runtime absence",
+        "CR-20260628-r-10g-product-category-tree-live-acceptance final local verification passed: npm run context:build -- customer, npm run check with npm test 254/254, and git diff --check",
         "CR-20260628-r-10f-product-category-tree-table final local verification passed: npm run scan:all, npm run context:build -- masterdata, npm run finalize:change, node --test tests/masterdata-runtime.test.js 21/21, final npm run check with npm test 254/254, git diff --check, cached-path Maven compile with BUILD SUCCESS, and npm --prefix ruoyi-ui run build:prod",
         "CR-20260628-r-10f-product-category-tree-table keeps product series, product model, material, accessory, and sales option resources unchanged while updating only product category tree/depth/delete behavior",
         "CR-20260628-r-10f-product-category-tree-table kept beforeSalesOrder blocked and did not create sales-order, field-scheme, formula, technical-decomposition, inventory, BOM, production, scan, drawing, shipment, finance, or receipt runtime",
@@ -398,7 +402,7 @@
         "git diff --check passed for CR-20260626T145150Z-customer-runtime-tests"
       ],
       "latestSession": "memory/sessions/2026-06-25-customer-fund-concurrency.md",
-      "latestChange": "CR-20260628-r-10f-product-category-tree-table",
+      "latestChange": "CR-20260628-r-10g-product-category-tree-live-acceptance",
       "handoverRequired": true,
       "updatedAt": "2026-06-28"
     }

@@ -1,5 +1,17 @@
 # Changelog
 
+## 2026-06-28 - masterdata/r-10g-product-category-tree-live-acceptance
+
+- Change: `ai/changes/CR-20260628-r-10g-product-category-tree-live-acceptance`.
+- R-10G is acceptance-only for the already-committed R-10F product category tree table and 3-level hierarchy constraints.
+- Live runtime used backend `http://localhost:18080`, frontend `http://127.0.0.1:5173`, MySQL database `my_ry_vue_runtime`, and Redis DB1.
+- The first live attempt found a stale backend jar on port `18080`; failed marker rows were deleted, the backend was rebuilt/restarted from current HEAD, and the passing marker was `R10G20260628085626`.
+- Runtime API acceptance created level 1/2/3 product categories with generated PC codes and verified backend rejection of fourth-level create, self-parent edit, descendant-parent edit, and deleting a parent with children.
+- Browser acceptance confirmed product category renders as a tree table without the parent column, and product series, product model, material item, accessory item, and sales option value tabs opened normally.
+- Product category disable remains non-cascading by design; later cascade policy remains a separate change.
+- No Java runtime, Vue runtime, API client, SQL migration, package, tool, workflow, customer, idempotency, security, sales-order, field-scheme, formula, or technical-decomposition runtime was changed or created.
+- [local] Final local verification passed: `npm run context:build -- customer`, `npm run check` with `npm test` 254/254, and `git diff --check`.
+
 ## 2026-06-28 - masterdata/r-10f-product-category-tree-table
 
 - Change: `ai/changes/CR-20260628-r-10f-product-category-tree-table`.

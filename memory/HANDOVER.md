@@ -2,39 +2,24 @@
 
 ## Summary
 
-R-10F product category tree table and hierarchy constraints.
+R-10G live acceptance for the R-10F product category tree table and hierarchy constraints.
 
-Current change record: `ai/changes/CR-20260628-r-10f-product-category-tree-table`.
+Current change record: `ai/changes/CR-20260628-r-10g-product-category-tree-live-acceptance`.
 
 ## Impact
 
-Current change `CR-20260628-r-10f-product-category-tree-table` stays inside the masterdata R-10 runtime slice. It updates product category tree-table UI behavior, backend hierarchy validation, child-protected delete, masterdata contracts, focused tests, current context, and generated closeout files. Other masterdata resources keep their existing runtime behavior.
+Current change `CR-20260628-r-10g-product-category-tree-live-acceptance` is acceptance-only. It records live API/browser/database evidence for the already-committed R-10F product category tree table and maximum 3-level hierarchy constraints. No Java runtime, Vue runtime, API client, SQL migration, package, tool, workflow, customer, idempotency, security, sales-order, field-scheme, formula, or technical-decomposition runtime is changed.
 
 ## Changed Files
 
-- `ai/changes/CR-20260628-r-10f-product-category-tree-table/*`
+- `ai/changes/CR-20260628-r-10g-product-category-tree-live-acceptance/*`
 - `ai/changes/CURRENT_CHANGE.json`
 - `ai/context/current-context.md`
 - `ai/context/current-context.json`
-- `ai/context/features/masterdata.md`
-- `ai/contracts/masterdata.api.md`
-- `ai/contracts/masterdata.db.md`
-- `ai/contracts/masterdata.delete-ownership.md`
-- `ai/contracts/masterdata.r10-contract-test-matrix.md`
-- `ai/contracts/masterdata.r10-implementation-boundary.md`
-- `ai/contracts/masterdata.ui.md`
-- `features/masterdata.md`
-- `memory/API_CATALOG.md`
 - `memory/CHANGELOG.md`
 - `memory/HANDOVER.md`
 - `memory/TASKS.json`
-- `ruoyi-business/src/main/java/com/ruoyi/business/masterdata/service/impl/MasterDataServiceImpl.java`
-- `ruoyi-ui/src/api/masterdata.contract.md`
-- `ruoyi-ui/src/views/masterdata/README.md`
-- `ruoyi-ui/src/views/masterdata/index.vue`
-- `ruoyi-ui/src/views/masterdata/screen.md`
-- `tests/masterdata-runtime.test.js`
-- See `ai/changes/CR-20260628-r-10f-product-category-tree-table/changed-files.json` for exact generated coverage.
+- See `ai/changes/CR-20260628-r-10g-product-category-tree-live-acceptance/changed-files.json` for exact evidence scope.
 
 ## Commands
 
@@ -42,31 +27,34 @@ Current change `CR-20260628-r-10f-product-category-tree-table` stays inside the 
 - [local] `git status --short --branch`
 - [local] `git -c http.proxy= -c https.proxy= fetch origin master`
 - [local] `git rev-parse HEAD origin/master FETCH_HEAD`
-- [local] `npm run check:phase-gate`
-- [local] `npm run impact -- masterdata --mode update --json`
-- [local] `npm run scan:all`
-- [local] `npm run context:build -- masterdata`
-- [local] `npm run finalize:change -- --summary "R-10F product category tree table and hierarchy constraints" --command ...`
-- [local] `node --test tests/masterdata-runtime.test.js`
-- [inconclusive] First `npm run check` stopped at `check:memory-quality`; handover text was fixed.
-- [inconclusive] Second `npm run check` stopped at inherited RuoYi component findings; current-CR scoped exceptions were added.
-- [inconclusive] Third `npm run check` reached final `npm test` and stopped only on current-context idempotence; `npm run context:build -- customer` was run to restore default context generation.
-- [local] Final `npm run check` passed with final `npm test` 254/254; existing config-safety output remained development/default warnings only.
-- [local] `git diff --check` passed.
-- [inconclusive] Plain `mvn -pl ruoyi-admin -am -DskipTests compile` could not run because `mvn` is not on PATH.
-- [local] Cached Maven `C:\Users\11131\.cache\codex-tools\apache-maven-3.9.9\bin\mvn.cmd -pl ruoyi-admin -am -DskipTests compile` passed with reactor `BUILD SUCCESS`.
-- [local] `npm --prefix ruoyi-ui run build:prod` passed.
+- [local] Docker/MySQL/Redis/frontend/backend health checks
+- [local] Cached Maven package after stopping the stale locked backend jar
+- [local] Backend restart on `http://localhost:18080`
+- [local] Product-category API live acceptance on database `my_ry_vue_runtime`
+- [local] Browser acceptance on `http://127.0.0.1:5173/business/masterdata`
+- [local] `npm run context:build -- customer`
+- [local] `npm run check` with `npm test` 254/254
+- [local] `git diff --check`
 
 ## Verification
 
-[local] Focused masterdata runtime checks passed: `node --test tests/masterdata-runtime.test.js` completed 21/21. The checks verify product category tree-table structure, maximum depth 3, level-four rejection, self-parent rejection, descendant-parent rejection, child-protected delete, R-10D auto-code behavior, and forbidden sales-order/field-scheme/formula/technical-decomposition runtime absence. Final `npm run check`, `git diff --check`, cached Maven backend compile, and frontend production build all passed.
+[local] Runtime acceptance passed with marker `R10G20260628085626`. Backend `http://localhost:18080`, frontend `http://127.0.0.1:5173`, MySQL database `my_ry_vue_runtime`, and Redis DB1 were used.
+
+[local] Product category browser acceptance showed a tree table without the `上级分类` column and with rows for level 1 `门-R10G20260628085626`, level 2 `庭院门-R10G20260628085626`, and level 3 `玻璃拼接门-R10G20260628085626`.
+
+[local] API acceptance verified generated PC codes `PC202606000004`, `PC202606000005`, and `PC202606000006`; backend rejection of fourth-level create, self-parent edit, descendant-parent edit, and deleting a parent with children; and non-cascading disable of the root category.
+
+[local] Product series, product model, material item, accessory item, and sales option value tabs opened normally. Forbidden runtime audit confirmed no sales-order, field-scheme, formula, or technical-decomposition runtime roots exist.
+
+[local] Final checks passed for R-10G evidence: `npm run check` completed with `npm test` 254/254 and `git diff --check` passed.
 
 ## Risks
 
-- [local] Product category disable does not cascade to children in R-10F; later work can define a cascade strategy separately.
-- [local] Live API/browser acceptance was not rerun for R-10F; verification is local static/governance/unit/compile/build evidence.
+- [local] The first live API attempt hit a stale backend jar on port `18080`; failed marker rows were deleted and the backend was rebuilt/restarted from current HEAD before the passing acceptance run.
+- [local] R-10G leaves three accepted product-category sample rows in local development database `my_ry_vue_runtime` as live acceptance evidence.
+- [local] Product category disable remains intentionally non-cascading; a child cascade policy can be designed in a later explicit change.
 
 ## Next Actions
 
-- Review the R-10F diff and approve commit/push if the scope is acceptable.
-- Keep `beforeSalesOrder` blocked and do not enter R-11.
+- Commit and push R-10G evidence.
+- Keep `beforeSalesOrder` blocked. R-11A may start only as a separate contract pre-review; do not create sales-order runtime until the gate is explicitly unblocked.
