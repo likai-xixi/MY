@@ -1,51 +1,38 @@
 {
   "schemaVersion": 1,
-  "generatedBy": "scripts/context-build.js",
+  "generatedBy": "github-connector-r09-contract-update",
   "generatedAt": "stable",
-  "currentFeature": "customer",
-  "currentChange": "CR-20260627T154818Z-r-09a-4-anti-false-green-minimum-closure",
+  "currentFeature": "platform",
+  "currentChange": "CR-20260628-r-09-configurable-modeling-contract-package",
   "repositoryProfile": {
     "adapter": "ruoyi",
     "locked": true,
     "stack": "RuoYi + Vue3 + Codex Auto Dev OS"
   },
+  "summary": "R-09 creates configurable modeling contracts only. Product, material, sales option, field, formula, rule, and technical decomposition concepts must be configuration/version/snapshot driven before sales-order runtime starts.",
   "allowedEditRoots": [
-    "ai/changes/CR-20260627T154818Z-r-09a-4-anti-false-green-minimum-closure",
+    "ai/contracts/masterdata.*.md",
+    "ai/contracts/rule.*.md",
+    "ai/contracts/tech*.md",
+    "ai/changes/CR-20260628-r-09-configurable-modeling-contract-package",
     "ai/changes/CURRENT_CHANGE.json",
-    "ai/context/current-context.json",
     "ai/context/current-context.md",
-    "ai/governance/false-green-regression-matrix.json",
-    "docs/chat-driven-codex-workflow.md",
-    "memory/CHANGELOG.md",
-    "memory/HANDOVER.md",
-    "memory/TASKS.json",
-    "package.json",
-    "tests/false-green-matrix-checker.test.js",
-    "tests/package-scripts.test.js",
-    "tools/false-green-matrix-checker.js"
+    "ai/context/current-context.json",
+    "memory/HANDOVER.md"
   ],
   "forbiddenEditRoots": [
-    "ruoyi-business/src/main/java/com/ruoyi/business/customer/service/impl/CustomerFundServiceImpl.java",
-    "ruoyi-business/src/main/java/com/ruoyi/business/customer/service/impl/CustomerServiceImpl.java",
-    "ruoyi-business/src/main/java/com/ruoyi/business/sales-order",
-    "ruoyi-business/src/main/java/com/ruoyi/business/salesorder",
-    "ruoyi-business/src/main/java/com/ruoyi/business/sales_order",
-    "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/sales-order",
-    "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/salesorder",
-    "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/sales_order",
-    "ruoyi-business/src/main/resources/mapper/sales-order",
-    "ruoyi-business/src/main/resources/mapper/salesorder",
-    "ruoyi-business/src/main/resources/mapper/sales_order",
-    "ruoyi-admin/src/main/resources/mapper/sales-order",
-    "ruoyi-admin/src/main/resources/mapper/salesorder",
-    "ruoyi-admin/src/main/resources/mapper/sales_order",
-    "ruoyi-ui/src/views/sales-order",
-    "ruoyi-ui/src/views/salesorder",
-    "ruoyi-ui/src/views/sales_order",
-    "ruoyi-ui/src/api/sales-order.js",
-    "ruoyi-ui/src/api/salesOrder.js",
-    "ruoyi-ui/src/api/sales_order.js",
+    "ruoyi-business/src/main/java",
+    "ruoyi-admin/src/main/java",
+    "ruoyi-business/src/main/resources/mapper",
+    "ruoyi-ui/src/views",
+    "ruoyi-ui/src/api",
+    "sql/migrations",
+    "sql/validation",
+    "package.json",
+    "tools",
     ".github/workflows",
+    "ruoyi-admin/src/main/resources/application.yml",
+    "ruoyi-admin/src/main/resources/application-druid.yml",
     "ruoyi-admin/src/main/resources/application-prod.yml"
   ],
   "mustReadFiles": [
@@ -54,272 +41,28 @@
       "reason": "Top-level workflow and boundary contract."
     },
     {
-      "path": "ai/context/current-context.md",
-      "reason": "Compact current handoff for new Codex windows."
-    },
-    {
       "path": "memory/HANDOVER.md",
-      "reason": "Latest project handoff and verification boundary."
+      "reason": "Latest R-09 handoff."
     },
     {
-      "path": "ai/project-profile.json",
-      "reason": "Locked adapter and profile-rule state."
+      "path": "ai/changes/CR-20260628-r-09-configurable-modeling-contract-package/impact.json",
+      "reason": "Allowed and forbidden scope for R-09."
     },
     {
-      "path": "package.json",
-      "reason": "Available workflow and check scripts."
+      "path": "ai/contracts/masterdata.snapshot-versioning.md",
+      "reason": "Central version and snapshot rule."
     },
     {
-      "path": "ai/registry/features.json",
-      "reason": "Feature ownership and active customer context."
-    },
-    {
-      "path": "ai/registry/modules.json",
-      "reason": "Module ownership roots."
-    },
-    {
-      "path": "ai/context/features/customer.md",
-      "reason": "Focused context for customer."
-    },
-    {
-      "path": "ai/roadmap/phase-gates.json",
-      "reason": "beforeSalesOrder gate state."
-    },
-    {
-      "path": "ai/roadmap/refactor-debt.json",
-      "reason": "Known debt affecting sales-order handoff."
-    },
-    {
-      "path": "ai/roadmap/enhancement-backlog.json",
-      "reason": "Governance backlog and required/deferred evidence."
-    },
-    {
-      "path": "ai/changes/CR-20260627T154818Z-r-09a-4-anti-false-green-minimum-closure/impact.json",
-      "reason": "Current change allowed and forbidden edit roots."
-    },
-    {
-      "path": "ai/changes/CR-20260627T154818Z-r-09a-4-anti-false-green-minimum-closure/plan.md",
-      "reason": "Current change execution plan."
-    },
-    {
-      "path": "ai/changes/CR-20260627T154818Z-r-09a-4-anti-false-green-minimum-closure/verification.md",
-      "reason": "Current change verification evidence."
+      "path": "ai/contracts/masterdata.contract-test-matrix.md",
+      "reason": "Future test mapping for R-10 through R-16."
     }
   ],
   "mustNotBreak": [
-    "Do not implement sales-order in this governance change.",
-    "Do not modify customer-management business code in governance/rule-change work.",
-    "Do not change database business table structure in this governance change.",
-    "Do not loosen existing governance gates or profile lock."
+    "Do not implement sales-order in R-09.",
+    "Do not implement process/material/formula/drawing runtime in R-09.",
+    "Do not create SQL migrations in R-09.",
+    "Do not modify customer runtime or idempotency runtime in R-09.",
+    "Do not modify security config, package.json, or tools in R-09."
   ],
-  "roadmapBlockers": [
-    {
-      "id": "multi-role-review",
-      "status": "in-progress",
-      "reason": "Complex feature work needs product, architecture, backend, frontend, and QA review before implementation.",
-      "futureAction": "Run review:feature for the sales-order proposal and record the decision before implementation."
-    },
-    {
-      "id": "current-context",
-      "status": "in-progress",
-      "reason": "New Codex windows need a compact, deterministic handoff instead of reading all history.",
-      "futureAction": "Run npm run context:build -- customer before sales-order planning."
-    },
-    {
-      "id": "context-pack",
-      "status": "in-progress",
-      "reason": "The generated current context must stay bounded, structured, and reasoned.",
-      "futureAction": "Keep current-context deterministic and below the line/read-budget thresholds."
-    },
-    {
-      "id": "doc-size",
-      "status": "in-progress",
-      "reason": "AGENTS, README, project state, handover, context, and review summaries must not grow without control.",
-      "futureAction": "Split or summarize oversized governance docs instead of appending indefinitely."
-    },
-    {
-      "id": "read-budget",
-      "status": "in-progress",
-      "reason": "New sessions should read the smallest useful context set.",
-      "futureAction": "Add extra must-read files only with a written reason."
-    },
-    {
-      "id": "file-weight",
-      "status": "in-progress",
-      "reason": "Large Vue, Java service, and mapper files need split plans or exceptions when touched.",
-      "futureAction": "Before touching heavy files, add a split plan or weight exception to the change record."
-    },
-    {
-      "id": "roadmap-check",
-      "status": "in-progress",
-      "reason": "The enhancement backlog must stay complete enough to drive gate decisions.",
-      "futureAction": "Keep backlog item evidence and futureAction fields non-empty."
-    },
-    {
-      "id": "phase-gate-check",
-      "status": "in-progress",
-      "reason": "Sales-order, delivery, finance, and production sequencing must be machine-checkable.",
-      "futureAction": "Mark beforeSalesOrder ready only after required items are completed."
-    },
-    {
-      "id": "refactor-debt-check",
-      "status": "in-progress",
-      "reason": "Known customer debt must be visible before order-dependent modules are started.",
-      "futureAction": "Resolve or explicitly accept debt before dependent sales-order behavior is implemented."
-    },
-    {
-      "id": "snapshot-contract",
-      "status": "required",
-      "reason": "Sales order must preserve customer/contact/address state even if customer master data changes later.",
-      "futureAction": "Draft snapshot contract in the sales-order pre-review batch."
-    },
-    {
-      "id": "state-machine-contract",
-      "status": "required",
-      "reason": "Order state transitions must be stable before delivery, finance, and production depend on them.",
-      "futureAction": "Draft state-machine contract in the sales-order pre-review batch."
-    },
-    {
-      "id": "fund-boundary-contract",
-      "status": "required",
-      "reason": "Customer deposit, order deposit, receipt, deduction, refund, and adjustment responsibilities must not blur.",
-      "futureAction": "Draft fund-boundary contract before order fund behavior."
-    }
-  ],
-  "phaseGates": {
-    "beforeSalesOrder": {
-      "title": "Before sales-order implementation",
-      "status": "blocked",
-      "allowsGovernanceRuleChange": true,
-      "blocksImplementationOf": [
-        "sales-order"
-      ],
-      "required": [
-        "multi-role-review",
-        "current-context",
-        "doc-size",
-        "read-budget",
-        "context-pack",
-        "file-weight",
-        "roadmap-check",
-        "phase-gate-check",
-        "refactor-debt-check",
-        "snapshot-contract",
-        "state-machine-contract",
-        "fund-boundary-contract"
-      ],
-      "deferred": [
-        {
-          "id": "code-index",
-          "reason": "Can wait until the current-context package and sales-order contract scope are stable."
-        },
-        {
-          "id": "context-select",
-          "reason": "Dependency-closure selection should be added after the first compact context workflow is proven."
-        },
-        {
-          "id": "feature-coverage",
-          "reason": "Deep feature coverage checks need approved sales-order contract files first."
-        },
-        {
-          "id": "module-dependencies",
-          "reason": "Dependency matrix visualization is deferred until sales-order/delivery/finance boundaries exist."
-        },
-        {
-          "id": "api-integration-test",
-          "reason": "Requires approved API contracts and runtime fixtures."
-        },
-        {
-          "id": "ui-smoke-test",
-          "reason": "Requires approved UI screens and browser acceptance path."
-        },
-        {
-          "id": "github-actions",
-          "reason": "CI is deferred to avoid fake echo-success automation before local gates are stable."
-        }
-      ],
-      "evidence": "This governance change creates the gate and its checkers; business implementation remains blocked until required contract items are completed. The phase-gate checker covers canonical sales-order roots, common sales-order, salesOrder, sales_order, and sales/order naming variants, SQL create table sales_order / sales_order_item, Vue/API/menu/permission sales-order runtime content, and bypass-capable RuoYi runtime roots including ruoyi-system, ruoyi-generator, ruoyi-quartz, ruoyi-admin SQL, ruoyi-ui router, permission.js, and store."
-    },
-    "beforeDelivery": {
-      "title": "Before delivery implementation",
-      "status": "not-ready",
-      "required": [
-        "beforeSalesOrder",
-        "sales-order-state-machine",
-        "delivery-boundary-contract"
-      ],
-      "deferred": [],
-      "evidence": "Delivery is deferred until sales-order state and shipment boundaries exist."
-    },
-    "beforeFinance": {
-      "title": "Before finance implementation",
-      "status": "not-ready",
-      "required": [
-        "beforeSalesOrder",
-        "fund-boundary-contract",
-        "receipt-reconciliation-contract"
-      ],
-      "deferred": [],
-      "evidence": "Finance is deferred until fund and receipt responsibilities are explicit."
-    },
-    "beforeProduction": {
-      "title": "Before production implementation",
-      "status": "not-ready",
-      "required": [
-        "beforeSalesOrder",
-        "production-release-policy",
-        "payment-state-contract"
-      ],
-      "deferred": [],
-      "evidence": "Production is deferred until payment and release policy are explicit."
-    }
-  },
-  "refactorDebt": [
-    {
-      "id": "customer-contact-address-reinsert",
-      "title": "Customer contacts and addresses are soft-deleted and reinserted",
-      "status": "open",
-      "guard": "beforeSalesOrder remains blocked until the snapshot contract defines required customer/contact/address snapshot fields."
-    },
-    {
-      "id": "customer-put-full-update",
-      "title": "PUT /business/customer is a full-update API",
-      "status": "open",
-      "guard": "Current-context and sales-order review must call out the full-update boundary."
-    },
-    {
-      "id": "database-direction-mysql",
-      "title": "Database direction is MySQL",
-      "status": "open",
-      "guard": "Roadmap and context files must keep MySQL as the default database assumption."
-    },
-    {
-      "id": "change-salesman-mode-residue",
-      "title": "CHANGE_SALESMAN owner-change mode is incomplete",
-      "status": "open",
-      "guard": "Sales-order review must not depend on unclear owner-change semantics."
-    },
-    {
-      "id": "reserved-fund-adjust-permission",
-      "title": "business:customer:fund:adjust is reserved",
-      "status": "open",
-      "guard": "Fund-boundary contract must distinguish deposit entry, deduction, refund, adjustment, and reversal responsibilities."
-    }
-  ],
-  "verificationCommands": [
-    "npm run resume",
-    "npm run check:false-green-matrix",
-    "node --test tests/false-green-matrix-checker.test.js",
-    "node --test tests/package-scripts.test.js",
-    "npm run scan:all",
-    "npm run context:build -- customer",
-    "npm run finalize:change",
-    "npm run check",
-    "git diff --check"
-  ],
-  "nextSteps": [
-    "Keep this change governance-only.",
-    "Before sales-order implementation, run review:feature and require decision.md to explicitly contain Allow Implementation.",
-    "Complete snapshot, state-machine, and fund-boundary contracts before creating sales-order code or tables."
-  ]
+  "nextStep": "After R-09 acceptance and local verification, continue to R-10 product/material/sales-option master data MVP."
 }
