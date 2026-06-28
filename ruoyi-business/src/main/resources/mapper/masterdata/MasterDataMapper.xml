@@ -94,6 +94,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         limit 1
     </select>
 
+    <select id="selectMaxCodeByMonth" resultType="String">
+        select ${resource.codeColumn}
+        from ${resource.tableName}
+        where ${resource.codeColumn} like concat(#{monthPrefix}, '%')
+          and ${resource.codeColumn} regexp concat('^', #{monthPrefix}, '[0-9]{6}$')
+        order by ${resource.codeColumn} desc
+        limit 1
+    </select>
+
     <select id="countCode" resultType="int">
         select count(1)
         from ${resource.tableName}

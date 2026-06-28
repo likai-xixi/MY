@@ -9,7 +9,9 @@ Status: contract/pre-review only. This matrix defines future R-10B evidence and 
 | Product data | Product category, series, and model are configurable rows | API/UI/DB tests and seed-data audit |
 | Material data | Material and accessory categories/records are configurable rows | API/UI/DB tests and DB validation |
 | Sales options | Option categories/values are configurable rows, not enums | API/UI tests rejecting hard-coded arrays |
-| Common fields | Every MVP object has stable code, display name, status, sort order, and remark | DB/schema/API contract tests |
+| Common fields | Every MVP object has backend-generated stable code, display name, status, sort order, and remark | DB/schema/API contract tests |
+| Code generation | Create does not require caller code; backend generates `prefix + yyyyMM + 6 digit sequence`, ignores supplied create code, and does not derive code from Chinese names | R-10D masterdata runtime test |
+| Code immutability | Edit keeps existing code even if payload includes a different code | R-10D masterdata runtime test |
 | Delete safety | Referenced master data cannot be physically deleted | Service/API tests for reference-protected remove |
 | Snapshot readiness | Future orders and technical results can snapshot code/name | Contract tests for API response fields and DB columns |
 | Migration | SQL is executable MySQL in R-10B, with validation evidence | MySQL migration/validation run or equivalent verified gate |
@@ -27,4 +29,4 @@ R-10B must run the active scaffold gates plus runtime-specific evidence created 
 
 ## R-10B Runtime Evidence Hook
 
-`tests/masterdata-runtime.test.js` now guards the R-10B object list, SQL ownership, API/client surface, permission boundary, and explicit exclusions for sales-order, field-scheme, formula, and technical-decomposition runtime.
+`tests/masterdata-runtime.test.js` now guards the R-10B object list, SQL ownership, API/client surface, permission boundary, R-10D backend code generation, frontend add/edit code behavior, bounded retry, and explicit exclusions for sales-order, field-scheme, formula, and technical-decomposition runtime.

@@ -94,8 +94,8 @@
 
     <el-dialog :title="title" v-model="open" width="680px" append-to-body>
       <el-form ref="recordRef" :model="form" :rules="rules" label-width="96px">
-        <el-form-item label="编码" prop="itemCode">
-          <el-input v-model="form.itemCode" placeholder="请输入编码" maxlength="64" :disabled="Boolean(form.id)" />
+        <el-form-item v-if="form.id" label="编码" prop="itemCode">
+          <el-input v-model="form.itemCode" maxlength="64" disabled />
         </el-form-item>
         <el-form-item label="名称" prop="itemName">
           <el-input v-model="form.itemName" placeholder="请输入名称" maxlength="120" />
@@ -208,10 +208,6 @@ const formSeriesOptions = computed(() => {
 })
 
 const rules = computed(() => ({
-  itemCode: [
-    { required: true, message: '编码不能为空', trigger: 'blur' },
-    { pattern: /^[A-Z0-9_]+$/, message: '编码只能使用大写英文、数字和下划线', trigger: 'blur' }
-  ],
   itemName: [{ required: true, message: '名称不能为空', trigger: 'blur' }],
   categoryId: currentConfig.value.categoryResource ? [{ required: true, message: '所属分类不能为空', trigger: 'change' }] : [],
   seriesId: currentConfig.value.seriesResource ? [{ required: true, message: '所属系列不能为空', trigger: 'change' }] : []
@@ -371,7 +367,7 @@ function handleExport() {
 }
 
 function normalizeFormBeforeSubmit() {
-  form.value.itemCode = (form.value.itemCode || '').trim().toUpperCase()
+  form.value.itemCode = form.value.id ? (form.value.itemCode || '').trim().toUpperCase() : undefined
   form.value.itemName = (form.value.itemName || '').trim()
   if (!currentConfig.value.parentEnabled) form.value.parentId = undefined
   if (!currentConfig.value.categoryResource) form.value.categoryId = undefined

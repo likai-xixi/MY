@@ -1,13 +1,13 @@
 # Current Context
 
 Current feature: `customer`
-Current change: `CR-20260628-r-10b-masterdata-mvp-runtime`
+Current change: `CR-20260628-r-10d-masterdata-code-autogeneration`
 Repository: RuoYi + Vue3 + Codex Auto Dev OS
 Profile: adapter `ruoyi`, locked `true`
 
 ## Allowed Edit Roots
 
-- `ai/changes/CR-20260628-r-10b-masterdata-mvp-runtime`
+- `ai/changes/CR-20260628-r-10d-masterdata-code-autogeneration`
 - `ai/changes/CURRENT_CHANGE.json`
 - `ai/contracts/masterdata.api.md`
 - `ai/contracts/masterdata.db.md`
@@ -17,6 +17,7 @@ Profile: adapter `ruoyi`, locked `true`
 - `ai/contracts/masterdata.r10-contract-test-matrix.md`
 - `ai/contracts/masterdata.r10-implementation-boundary.md`
 - `ai/generated`
+- `ai/context/features/masterdata.md`
 - `ai/context/current-context.json`
 - `ai/context/current-context.md`
 - `ai/registry/features.json`
@@ -35,6 +36,7 @@ Profile: adapter `ruoyi`, locked `true`
 - `memory/PROJECT_STATE.md`
 - `memory/TASKS.json`
 - `ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/masterdata`
+- `ruoyi-business/src/main/java/com/ruoyi/business/common/code`
 - `ruoyi-business/src/main/java/com/ruoyi/business/masterdata`
 - `ruoyi-business/src/main/resources/mapper/masterdata`
 - `ruoyi-ui/src/api/masterdata.contract.md`
@@ -48,20 +50,30 @@ Profile: adapter `ruoyi`, locked `true`
 
 ## Forbidden Edit Roots
 
+- `ruoyi-business/src/main/java/com/ruoyi/business/customer`
+- `ruoyi-business/src/main/java/com/ruoyi/business/idempotency`
 - `ruoyi-business/src/main/java/com/ruoyi/business/salesorder`
 - `ruoyi-business/src/main/java/com/ruoyi/business/sales-order`
+- `ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer`
 - `ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/salesorder`
 - `ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/sales-order`
+- `ruoyi-ui/src/views/customer`
 - `ruoyi-ui/src/views/sales-order`
 - `ruoyi-ui/src/views/salesorder`
+- `ruoyi-ui/src/api/customer.js`
 - `ruoyi-ui/src/api/sales-order.js`
 - `ruoyi-ui/src/api/salesorder.js`
+- `sql/customer.ownership.md`
+- `sql/sales-order.ownership.md`
 - `package.json`
 - `tools`
+- `scripts`
 - `.github/workflows`
 - `ruoyi-admin/src/main/resources/application.yml`
 - `ruoyi-admin/src/main/resources/application-druid.yml`
 - `ruoyi-admin/src/main/resources/application-prod.yml`
+- `ruoyi-framework`
+- `ruoyi-common`
 
 ## Must Read Files
 
@@ -76,9 +88,9 @@ Profile: adapter `ruoyi`, locked `true`
 - `ai/roadmap/phase-gates.json` - beforeSalesOrder gate state.
 - `ai/roadmap/refactor-debt.json` - Known debt affecting sales-order handoff.
 - `ai/roadmap/enhancement-backlog.json` - Governance backlog and required/deferred evidence.
-- `ai/changes/CR-20260628-r-10b-masterdata-mvp-runtime/impact.json` - Current change allowed and forbidden edit roots.
-- `ai/changes/CR-20260628-r-10b-masterdata-mvp-runtime/plan.md` - Current change execution plan.
-- `ai/changes/CR-20260628-r-10b-masterdata-mvp-runtime/verification.md` - Current change verification evidence.
+- `ai/changes/CR-20260628-r-10d-masterdata-code-autogeneration/impact.json` - Current change allowed and forbidden edit roots.
+- `ai/changes/CR-20260628-r-10d-masterdata-code-autogeneration/plan.md` - Current change execution plan.
+- `ai/changes/CR-20260628-r-10d-masterdata-code-autogeneration/verification.md` - Current change verification evidence.
 
 ## Must Not Break
 
@@ -141,6 +153,7 @@ Deferred:
 
 - `npm run scan:all`
 - `npm run finalize:change`
+- `node --test tests/masterdata-runtime.test.js`
 - `npm run check`
 - `git diff --check`
 - `mvn -pl ruoyi-admin -am -DskipTests compile`

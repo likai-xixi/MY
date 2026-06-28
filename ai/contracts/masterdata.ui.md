@@ -25,8 +25,8 @@ The screen provides tabbed maintenance for the nine R-10B resources only:
 
 - search by code/name/status and relevant parent/category/series
 - list
-- add
-- edit
+- add without a required code input; backend generates the code
+- edit with code displayed read-only
 - status change
 - logical delete
 - export

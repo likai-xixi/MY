@@ -67,3 +67,9 @@ R-10B must synchronize API/UI/SQL/permission/test ownership in the same runtime 
 ## R-10B Runtime Ownership
 
 `CR-20260628-r-10b-masterdata-mvp-runtime` implements runtime only under the `masterdata` feature roots, with executable SQL migrations, controller/service/mapper/domain code, a Vue page, an API client, feature/module registry entries, generated scans, graphs, memory, and `tests/masterdata-runtime.test.js`.
+
+## R-10D Code Generation Boundary
+
+`CR-20260628-r-10d-masterdata-code-autogeneration` keeps the same nine-resource runtime slice and adds only one business-common helper root: `ruoyi-business/src/main/java/com/ruoyi/business/common/code`. This helper is a business numbering rule and must not move to `ruoyi-common`.
+
+R-10D must not refactor customer code generation. `CustomerServiceImpl` may be read for reference only.

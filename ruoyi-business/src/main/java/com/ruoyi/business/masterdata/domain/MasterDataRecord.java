@@ -63,7 +63,6 @@ public class MasterDataRecord extends BaseEntity
         this.resource = resource;
     }
 
-    @NotBlank(message = "编码不能为空")
     public String getItemCode()
     {
         return itemCode;

@@ -387,6 +387,7 @@
         "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/masterdata/MasterDataController.java"
       ],
       "services": [
+        "ruoyi-business/src/main/java/com/ruoyi/business/common/code/BusinessMonthlyCodeGenerator.java",
         "ruoyi-business/src/main/java/com/ruoyi/business/masterdata/service/IMasterDataService.java",
         "ruoyi-business/src/main/java/com/ruoyi/business/masterdata/service/impl/MasterDataServiceImpl.java"
       ],
@@ -515,6 +516,7 @@
           "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/masterdata/MasterDataController.java"
         ],
         "services": [
+          "ruoyi-business/src/main/java/com/ruoyi/business/common/code/BusinessMonthlyCodeGenerator.java",
           "ruoyi-business/src/main/java/com/ruoyi/business/masterdata/service/IMasterDataService.java",
           "ruoyi-business/src/main/java/com/ruoyi/business/masterdata/service/impl/MasterDataServiceImpl.java"
         ],
@@ -527,7 +529,7 @@
           "ruoyi-business/src/main/java/com/ruoyi/business/masterdata/domain/MasterDataResource.java"
         ]
       },
-      "lastChangedBy": "CR-20260628-r-10b-masterdata-mvp-runtime",
+      "lastChangedBy": "CR-20260628-r-10d-masterdata-code-autogeneration",
       "updatedAt": "2026-06-28"
     },
     {

@@ -118,11 +118,11 @@ Sales order, shipment, finance settlement, automatic deduction, receipt claiming
 
 ## Active Features
 
-- `customer` - Customer management under the locked RuoYi adapter.
+- `customer` - Customer management under the locked RuoYi adapter; `masterdata` - R-10B/R-10D runtime for nine product/material/accessory/sales-option resources.
 
 ## Active Task
 
-`TASK-0002` is the active platform/governance tracking task for `CR-20260627-r-09a-3-governance-graph-validation-cleanup`. `TASK-CUSTOMER` remains the active customer history/task ledger for the implemented customer module, but this R-09A.3 pass does not modify customer runtime behavior. `beforeSalesOrder` remains blocked and R-09A.3 must not be treated as sales-order readiness.
+`TASK-0002` is tracking R-10D masterdata code autogeneration under `CR-20260628-r-10d-masterdata-code-autogeneration`. The change is masterdata-only and locally verified: backend-generated codes use `prefix + yyyyMM + 6 digit monthly sequence`, frontend add no longer requires code, and frontend edit displays code read-only. `TASK-CUSTOMER` remains the customer history/task ledger, but R-10D does not modify customer runtime. `beforeSalesOrder` remains blocked and R-10D must not be treated as sales-order readiness.
 
 ## Latest Session
 
@@ -130,7 +130,7 @@ Sales order, shipment, finance settlement, automatic deduction, receipt claiming
 
 ## Next Actions
 
-- Continue next with R-09B sales-order pre-implementation contract package.
+- Review/approve commit and push for R-10D before considering any later roadmap work.
 - Keep `beforeSalesOrder` blocked unless required contracts and review explicitly unlock it later.
 - Before any future runtime claim about PUBLIC data cleanliness, rerun the invariant SQL in `sql/customer.ownership.md` to confirm only `PUB_DIRECT_SALE` and `PUB_SELF_MEDIA` exist as active PUBLIC rows.
 

@@ -4,8 +4,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.ruoyi.business.common.code.BusinessMonthlyCodeGenerator;
 import com.ruoyi.business.masterdata.domain.MasterDataRecord;
 import com.ruoyi.business.masterdata.domain.MasterDataResource;
 import com.ruoyi.business.masterdata.mapper.MasterDataMapper;
@@ -22,10 +24,14 @@ public class MasterDataServiceImpl implements IMasterDataService
     private static final String NORMAL = "0";
     private static final String DISABLED = "1";
     private static final String DELETED = "2";
+    private static final int CODE_RETRY_LIMIT = 8;
     private static final Pattern CODE_PATTERN = Pattern.compile("^[A-Z0-9_]+$");
 
     @Autowired
     private MasterDataMapper masterDataMapper;
+
+    @Autowired
+    private BusinessMonthlyCodeGenerator codeGenerator;
 
     @Override
     public List<MasterDataRecord> selectRecordList(String resource, MasterDataRecord record)
@@ -70,9 +76,8 @@ public class MasterDataServiceImpl implements IMasterDataService
         {
             record.setSortOrder(0);
         }
-        assertUniqueCode(target, record);
         validateReferences(target, record);
-        return masterDataMapper.insertRecord(target, record);
+        return insertRecordWithGeneratedCode(target, record);
     }
 
     @Override
@@ -85,11 +90,8 @@ public class MasterDataServiceImpl implements IMasterDataService
             throw new ServiceException("主数据ID不能为空");
         }
         MasterDataRecord existing = requiredRecord(target, record.getId());
+        record.setItemCode(existing.getItemCode());
         normalizeForSave(target, record, false);
-        if (!existing.getItemCode().equals(record.getItemCode()))
-        {
-            throw new ServiceException("主数据编码为稳定引用，创建后不允许修改");
-        }
         validateReferences(target, record);
         return masterDataMapper.updateRecord(target, record);
     }
@@ -163,7 +165,7 @@ public class MasterDataServiceImpl implements IMasterDataService
         {
             throw new ServiceException("主数据不能为空");
         }
-        record.setItemCode(upperCode(record.getItemCode()));
+        record.setItemCode(create ? null : upperCode(record.getItemCode()));
         record.setItemName(trimToNull(record.getItemName()));
         record.setSpec(resource.isSpecEnabled() ? trimToNull(record.getSpec()) : null);
         record.setUnit(resource.isUnitEnabled() ? trimToNull(record.getUnit()) : null);
@@ -173,13 +175,59 @@ public class MasterDataServiceImpl implements IMasterDataService
         {
             record.setSortOrder(0);
         }
-        assertRequired(record.getItemCode(), "编码不能为空");
         assertRequired(record.getItemName(), "名称不能为空");
-        if (!CODE_PATTERN.matcher(record.getItemCode()).matches())
+        if (!create)
         {
-            throw new ServiceException("编码只能使用大写英文、数字和下划线");
+            assertRequired(record.getItemCode(), "编码不能为空");
+            if (!CODE_PATTERN.matcher(record.getItemCode()).matches())
+            {
+                throw new ServiceException("编码只能使用大写英文、数字和下划线");
+            }
         }
         assertStatus(record.getStatus());
+    }
+
+    private int insertRecordWithGeneratedCode(MasterDataResource resource, MasterDataRecord record)
+    {
+        for (int attempt = 0; attempt < CODE_RETRY_LIMIT; attempt++)
+        {
+            record.setItemCode(nextRecordCode(resource));
+            try
+            {
+                return masterDataMapper.insertRecord(resource, record);
+            }
+            catch (DuplicateKeyException e)
+            {
+                if (attempt == CODE_RETRY_LIMIT - 1)
+                {
+                    throw new ServiceException(resource.getDisplayName() + "编码生成冲突，请重试");
+                }
+            }
+        }
+        throw new ServiceException(resource.getDisplayName() + "编码生成失败，请重试");
+    }
+
+    private String nextRecordCode(MasterDataResource resource)
+    {
+        String monthPrefix = codeGenerator.currentMonthPrefix(codePrefix(resource));
+        String maxCode = masterDataMapper.selectMaxCodeByMonth(resource, monthPrefix);
+        return codeGenerator.nextCode(monthPrefix, maxCode);
+    }
+
+    private String codePrefix(MasterDataResource resource)
+    {
+        return switch (resource)
+        {
+            case PRODUCT_CATEGORY -> "PC";
+            case PRODUCT_SERIES -> "PS";
+            case PRODUCT_MODEL -> "PM";
+            case MATERIAL_CATEGORY -> "MC";
+            case MATERIAL_ITEM -> "MI";
+            case ACCESSORY_CATEGORY -> "AC";
+            case ACCESSORY_ITEM -> "AI";
+            case SALES_OPTION_CATEGORY -> "SOC";
+            case SALES_OPTION_VALUE -> "SOV";
+        };
     }
 
     private void validateReferences(MasterDataResource resource, MasterDataRecord record)

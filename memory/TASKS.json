@@ -8,10 +8,13 @@
       "status": "in_progress",
       "owner": "Codex",
       "priority": "high",
-      "statusReason": "R-10C live acceptance executed the R-10B masterdata MySQL migrations, validation SQL, nine-resource API acceptance, and browser acceptance on the local stack while keeping beforeSalesOrder blocked. /business/masterdata is the accepted canonical RuoYi route; direct /masterdata returned RuoYi 404 and is recorded as non-canonical.",
-      "nextStep": "R-10C evidence closeout only: commit and push the live acceptance evidence after npm run check and git diff --check pass. Do not enter R-11/R-11A in this pass and do not start sales-order runtime until beforeSalesOrder is explicitly unblocked.",
+      "statusReason": "R-10D masterdata code autogeneration is locally verified. Masterdata create uses backend-generated monthly resource codes, edit retains existing code, frontend add hides code, frontend edit shows code read-only; beforeSalesOrder remains blocked and R-11 has not started.",
+      "nextStep": "Review and approve commit/push for CR-20260628-r-10d-masterdata-code-autogeneration. Do not enter R-11/R-11A and do not start sales-order runtime until beforeSalesOrder is explicitly unblocked.",
       "blockedBy": [],
       "verification": [
+        "CR-20260628-r-10d-masterdata-code-autogeneration final local verification passed: npm run scan:all, npm run finalize:change, node --test tests/masterdata-runtime.test.js 15/15, npm run check with npm test 248/248, git diff --check, cached-path Maven compile with BUILD SUCCESS, and npm --prefix ruoyi-ui run build:prod",
+        "CR-20260628-r-10d-masterdata-code-autogeneration kept beforeSalesOrder blocked and did not create sales-order, field-scheme, formula, technical-decomposition, inventory, BOM, production, scan, drawing, shipment, finance, or receipt runtime",
+        "CR-20260628-r-10d-masterdata-code-autogeneration opened R-10D for masterdata backend-generated codes only; no customer runtime, idempotency runtime, security config, package/tool/workflow, or sales-order/field-scheme/formula/technical-decomposition runtime is in scope",
         "CR-20260628-r-10a-masterdata-mvp-contract-package created the R-10A contract/pre-review package only, ran npm run context:build -- customer, final npm run resume, final npm run check with npm test 233/233, and final git diff --check; no runtime files were created",
         "npm run profile:setup",
         "npm run scan:all",
@@ -158,7 +161,7 @@
       "latestSession": "memory/sessions/2026-06-25-pre-release-breaking-change-policy.md",
       "handoverRequired": true,
       "updatedAt": "2026-06-28",
-      "latestChange": "CR-20260628-r-10b-masterdata-mvp-runtime"
+      "latestChange": "CR-20260628-r-10d-masterdata-code-autogeneration"
     },
     {
       "id": "TASK-CUSTOMER",

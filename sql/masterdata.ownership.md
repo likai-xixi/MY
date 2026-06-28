@@ -36,6 +36,10 @@ Feature name: 主数据配置
 
 R-10B uses logical delete through `del_flag = '2'`. Later order, technical, inventory, BOM, production, drawing, shipment, finance, or receipt references must preserve code/name snapshots and must not require physical deletion of master-data rows.
 
+## R-10D Code Generation Rule
+
+R-10D does not add tables or change the SQL schema. Existing unique code keys remain the uniqueness guard while backend service code generates `prefix + yyyyMM + 6 digit monthly sequence` values per resource/month.
+
 ## Explicit Non-ownership
 
 This file does not own sales-order tables, field-scheme tables, formula tables, technical decomposition tables, inventory tables, BOM tables, production route tables, scan/report tables, drawing-task tables, shipment tables, finance tables, or receipt tables.

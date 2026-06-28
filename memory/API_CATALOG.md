@@ -735,7 +735,7 @@
 - Path: `/business/masterdata/{resource}`
 - Owner: `masterdata`
 - Module: `masterdata`
-- Notes: Creates a row for one approved R-10B masterdata resource. Codes are normalized to uppercase and must remain stable after creation.
+- Notes: Creates a row for one approved R-10B masterdata resource. R-10D makes code backend-generated: create does not require `itemCode`, supplied create codes are ignored, and the backend generates `prefix + yyyyMM + 6 digit monthly sequence` using fixed resource prefixes `PC`, `PS`, `PM`, `MC`, `MI`, `AC`, `AI`, `SOC`, and `SOV`. Codes are not generated from Chinese names and remain unique through table unique keys plus bounded duplicate retry.
 
 ## /business/masterdata/{resource}:update
 
@@ -743,7 +743,7 @@
 - Path: `/business/masterdata/{resource}`
 - Owner: `masterdata`
 - Module: `masterdata`
-- Notes: Updates an existing row for one approved R-10B masterdata resource. The stable code is immutable.
+- Notes: Updates an existing row for one approved R-10B masterdata resource. The stable code is immutable; R-10D ignores payload code changes and retains the existing code.
 
 ## /business/masterdata/{resource}/changeStatus
 

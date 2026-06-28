@@ -16,6 +16,8 @@ public interface MasterDataMapper
 
     public MasterDataRecord selectRecordByCode(@Param("resource") MasterDataResource resource, @Param("code") String code);
 
+    public String selectMaxCodeByMonth(@Param("resource") MasterDataResource resource, @Param("monthPrefix") String monthPrefix);
+
     public int countCode(@Param("resource") MasterDataResource resource, @Param("id") Long id, @Param("code") String code);
 
     public int insertRecord(@Param("resource") MasterDataResource resource, @Param("record") MasterDataRecord record);

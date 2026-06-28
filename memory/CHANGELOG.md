@@ -1,5 +1,16 @@
 # Changelog
 
+## 2026-06-28 - masterdata/r-10d-code-autogeneration
+
+- Change: `ai/changes/CR-20260628-r-10d-masterdata-code-autogeneration`.
+- R-10D changes masterdata add from caller-entered code to backend-generated code for all nine approved resources.
+- Added business code generator `ruoyi-business/src/main/java/com/ruoyi/business/common/code/BusinessMonthlyCodeGenerator.java` under `ruoyi-business`, not `ruoyi-common`.
+- Code format is `prefix + yyyyMM + 6 digit monthly sequence`; prefixes are `PC`, `PS`, `PM`, `MC`, `MI`, `AC`, `AI`, `SOC`, and `SOV`.
+- Add ignores caller-supplied `itemCode`; edit retains existing code even if the payload includes a different code.
+- Frontend add no longer shows a required code input; frontend edit displays code read-only.
+- [local] Verification passed: `npm run scan:all`, `npm run finalize:change`, `node --test tests/masterdata-runtime.test.js` 15/15, `npm run check` with `npm test` 248/248, `git diff --check`, cached-path Maven compile with `BUILD SUCCESS`, and `npm --prefix ruoyi-ui run build:prod`.
+- No customer runtime, idempotency runtime, security configuration, package/tool/workflow file, or sales-order/field-scheme/formula/technical-decomposition runtime is in scope.
+
 ## 2026-06-28 - governance/r-10a-masterdata-contract-package
 
 - Change: `ai/changes/CR-20260628-r-10a-masterdata-mvp-contract-package`.
@@ -522,4 +533,10 @@
 - Browser acceptance passed on the accepted canonical RuoYi dynamic menu route `/business/masterdata`: nine tabs visible, each tab displayed a list/table surface, product category add/edit/disable/delete worked, and no forbidden future-runtime entry text appeared.
 - Direct `/masterdata` returned RuoYi 404 and is recorded as non-canonical; no R-10D is opened for this route behavior.
 - No sales-order, field-scheme, formula, technical-decomposition, inventory, BOM, production, scan, drawing, shipment, finance, or receipt runtime was created.
+- Feature: `masterdata`.## 2026-06-28 — update-feature
+- Change: `ai/changes/CR-20260628-r-10d-masterdata-code-autogeneration`.
+- R-10D masterdata code autogeneration
+- Feature: `masterdata`.## 2026-06-28 — update-feature
+- Change: `ai/changes/CR-20260628-r-10d-masterdata-code-autogeneration`.
+- Updated change record, registry, graph, generated scans, memory, and handover.
 - Feature: `masterdata`.

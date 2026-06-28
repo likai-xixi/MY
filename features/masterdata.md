@@ -23,7 +23,9 @@ R-10B implements only these nine maintenance objects:
 - sales option category
 - sales option value
 
-Each object exposes stable code, display name, status, sort order, and remark. Material and accessory items also expose specification and unit. Relationship fields stay data-driven through category/series ids.
+Each object exposes backend-generated stable code, display name, status, sort order, and remark. Material and accessory items also expose specification and unit. Relationship fields stay data-driven through category/series ids.
+
+R-10D code generation format is `prefix + yyyyMM + 6 digit monthly sequence`. Prefixes are `PC`, `PS`, `PM`, `MC`, `MI`, `AC`, `AI`, `SOC`, and `SOV` for product category, product series, product model, material category, material item, accessory category, accessory item, sales option category, and sales option value respectively.
 
 ## Non-goals
 
@@ -38,7 +40,9 @@ Each object exposes stable code, display name, status, sort order, and remark. M
 
 - MySQL migrations create the nine masterdata tables and RuoYi menu/permission rows.
 - Backend APIs support list, options, detail, add, edit, status change, logical delete, and export under `/business/masterdata/{resource}`.
-- The Vue page provides search, list, add, edit, status change, delete, and export for the nine resources.
+- Add does not require or trust caller-entered code; the backend generates the code and retries bounded duplicate-key collisions.
+- Edit keeps the original code immutable even if the payload contains a different code.
+- The Vue page provides search, list, add without code input, edit with read-only code, status change, delete, and export for the nine resources.
 - API/UI/SQL/permission/test ownership is registered in feature and module registries, graphs, generated scans, memory, and handover.
 - `beforeSalesOrder` remains blocked and no sales-order runtime is created.
 
