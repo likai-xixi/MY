@@ -512,3 +512,14 @@
 - Change: `ai/changes/CR-20260628-r-10b-masterdata-mvp-runtime`.
 - Updated change record, registry, graph, generated scans, memory, and handover.
 - Feature: `masterdata`.
+
+## 2026-06-28 - runtime-acceptance
+
+- Change: `ai/changes/CR-20260628-r-10b-masterdata-mvp-runtime`.
+- R-10C executed masterdata SQL migrations and validation SQL on local database `my_ry_vue_runtime`.
+- Backend acceptance ran on `http://localhost:18080` with Redis DB `1`; frontend acceptance ran on `http://127.0.0.1:5173`.
+- API acceptance passed for all nine masterdata resources: list, add, detail, edit, changeStatus, options, logical delete, deleted-list/detail behavior, required code/name, trim, uniqueness, and dependency validation.
+- Browser acceptance passed on the accepted canonical RuoYi dynamic menu route `/business/masterdata`: nine tabs visible, each tab displayed a list/table surface, product category add/edit/disable/delete worked, and no forbidden future-runtime entry text appeared.
+- Direct `/masterdata` returned RuoYi 404 and is recorded as non-canonical; no R-10D is opened for this route behavior.
+- No sales-order, field-scheme, formula, technical-decomposition, inventory, BOM, production, scan, drawing, shipment, finance, or receipt runtime was created.
+- Feature: `masterdata`.

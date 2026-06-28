@@ -8,8 +8,8 @@
       "status": "in_progress",
       "owner": "Codex",
       "priority": "high",
-      "statusReason": "R-10B masterdata MVP runtime implemented the nine approved product/material/accessory/sales-option masterdata resources with generic backend API, Vue page, executable SQL migrations, registry/graph/memory ownership, and focused runtime guard evidence while keeping beforeSalesOrder blocked.",
-      "nextStep": "Review R-10B runtime evidence, then decide whether to run live MySQL migration/API/browser acceptance before moving to any later sales-order prerequisite work. Do not start sales-order runtime until beforeSalesOrder is explicitly unblocked.",
+      "statusReason": "R-10C live acceptance executed the R-10B masterdata MySQL migrations, validation SQL, nine-resource API acceptance, and browser acceptance on the local stack while keeping beforeSalesOrder blocked. /business/masterdata is the accepted canonical RuoYi route; direct /masterdata returned RuoYi 404 and is recorded as non-canonical.",
+      "nextStep": "R-10C evidence closeout only: commit and push the live acceptance evidence after npm run check and git diff --check pass. Do not enter R-11/R-11A in this pass and do not start sales-order runtime until beforeSalesOrder is explicitly unblocked.",
       "blockedBy": [],
       "verification": [
         "CR-20260628-r-10a-masterdata-mvp-contract-package created the R-10A contract/pre-review package only, ran npm run context:build -- customer, final npm run resume, final npm run check with npm test 233/233, and final git diff --check; no runtime files were created",
@@ -149,7 +149,11 @@
         "CR-20260628-r-10b-masterdata-mvp-runtime node --test tests/masterdata-runtime.test.js passed 7/7",
         "CR-20260628-r-10b-masterdata-mvp-runtime cached Maven ruoyi-admin compile passed",
         "CR-20260628-r-10b-masterdata-mvp-runtime npm --prefix ruoyi-ui run build:prod passed",
-        "CR-20260628-r-10b-masterdata-mvp-runtime npm run check is the final governance gate for closeout"
+        "CR-20260628-r-10b-masterdata-mvp-runtime npm run check is the final governance gate for closeout",
+        "R-10C MySQL migration and validation SQL passed on database my_ry_vue_runtime",
+        "R-10C backend API acceptance passed on http://localhost:18080 with Redis DB1 for all nine masterdata resources",
+        "R-10C frontend browser acceptance passed on canonical http://127.0.0.1:5173/business/masterdata with nine tabs and product-category add/edit/disable/delete",
+        "R-10C direct http://127.0.0.1:5173/masterdata returned RuoYi 404 and is recorded as non-canonical; no R-10D is opened"
       ],
       "latestSession": "memory/sessions/2026-06-25-pre-release-breaking-change-policy.md",
       "handoverRequired": true,
