@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.business.masterdata.mapper.MasterDataMapper">
+
+    <resultMap type="MasterDataRecord" id="MasterDataRecordResult">
+        <id property="id" column="id" />
+        <result property="resource" column="resource" />
+        <result property="itemCode" column="item_code" />
+        <result property="itemName" column="item_name" />
+        <result property="parentId" column="parent_id" />
+        <result property="categoryId" column="category_id" />
+        <result property="seriesId" column="series_id" />
+        <result property="spec" column="spec" />
+        <result property="unit" column="unit" />
+        <result property="status" column="status" />
+        <result property="sortOrder" column="sort_order" />
+        <result property="delFlag" column="del_flag" />
+        <result property="createBy" column="create_by" />
+        <result property="createTime" column="create_time" />
+        <result property="updateBy" column="update_by" />
+        <result property="updateTime" column="update_time" />
+        <result property="remark" column="remark" />
+    </resultMap>
+
+    <sql id="selectRecordVo">
+        select
+            ${resource.idColumn} as id,
+            #{resource.pathValue} as resource,
+            ${resource.codeColumn} as item_code,
+            ${resource.nameColumn} as item_name,
+            <choose>
+                <when test="resource.parentScoped">parent_id,</when>
+                <otherwise>null as parent_id,</otherwise>
+            </choose>
+            <choose>
+                <when test="resource.categoryScoped">category_id,</when>
+                <otherwise>null as category_id,</otherwise>
+            </choose>
+            <choose>
+                <when test="resource.seriesScoped">series_id,</when>
+                <otherwise>null as series_id,</otherwise>
+            </choose>
+            <choose>
+                <when test="resource.specEnabled">spec,</when>
+                <otherwise>null as spec,</otherwise>
+            </choose>
+            <choose>
+                <when test="resource.unitEnabled">unit,</when>
+                <otherwise>null as unit,</otherwise>
+            </choose>
+            status, sort_order, del_flag, create_by, create_time, update_by, update_time, remark
+        from ${resource.tableName}
+    </sql>
+
+    <select id="selectRecordList" resultMap="MasterDataRecordResult">
+        <include refid="selectRecordVo"/>
+        <where>
+            del_flag = '0'
+            <if test="record != null and record.itemCode != null and record.itemCode != ''">
+                and ${resource.codeColumn} like concat('%', #{record.itemCode}, '%')
+            </if>
+            <if test="record != null and record.itemName != null and record.itemName != ''">
+                and ${resource.nameColumn} like concat('%', #{record.itemName}, '%')
+            </if>
+            <if test="record != null and record.status != null and record.status != ''">
+                and status = #{record.status}
+            </if>
+            <if test="resource.parentScoped and record != null and record.parentId != null">
+                and parent_id = #{record.parentId}
+            </if>
+            <if test="resource.categoryScoped and record != null and record.categoryId != null">
+                and category_id = #{record.categoryId}
+            </if>
+            <if test="resource.seriesScoped and record != null and record.seriesId != null">
+                and series_id = #{record.seriesId}
+            </if>
+        </where>
+        order by sort_order asc, ${resource.idColumn} desc
+    </select>
+
+    <select id="selectRecordById" resultMap="MasterDataRecordResult">
+        <include refid="selectRecordVo"/>
+        where ${resource.idColumn} = #{id}
+          and del_flag = '0'
+        limit 1
+    </select>
+
+    <select id="selectRecordByCode" resultMap="MasterDataRecordResult">
+        <include refid="selectRecordVo"/>
+        where ${resource.codeColumn} = #{code}
+          and del_flag = '0'
+        limit 1
+    </select>
+
+    <select id="countCode" resultType="int">
+        select count(1)
+        from ${resource.tableName}
+        where ${resource.codeColumn} = #{code}
+        <if test="id != null">
+            and ${resource.idColumn} != #{id}
+        </if>
+    </select>
+
+    <insert id="insertRecord">
+        insert into ${resource.tableName}(
+            ${resource.codeColumn},
+            ${resource.nameColumn},
+            <if test="resource.parentScoped">parent_id,</if>
+            <if test="resource.categoryScoped">category_id,</if>
+            <if test="resource.seriesScoped">series_id,</if>
+            <if test="resource.specEnabled">spec,</if>
+            <if test="resource.unitEnabled">unit,</if>
+            status, sort_order, del_flag, create_by, create_time, remark
+        ) values (
+            #{record.itemCode},
+            #{record.itemName},
+            <if test="resource.parentScoped">#{record.parentId},</if>
+            <if test="resource.categoryScoped">#{record.categoryId},</if>
+            <if test="resource.seriesScoped">#{record.seriesId},</if>
+            <if test="resource.specEnabled">#{record.spec},</if>
+            <if test="resource.unitEnabled">#{record.unit},</if>
+            #{record.status}, #{record.sortOrder}, #{record.delFlag}, #{record.createBy}, sysdate(), #{record.remark}
+        )
+    </insert>
+
+    <update id="updateRecord">
+        update ${resource.tableName}
+        <set>
+            ${resource.nameColumn} = #{record.itemName},
+            <if test="resource.parentScoped">parent_id = #{record.parentId},</if>
+            <if test="resource.categoryScoped">category_id = #{record.categoryId},</if>
+            <if test="resource.seriesScoped">series_id = #{record.seriesId},</if>
+            <if test="resource.specEnabled">spec = #{record.spec},</if>
+            <if test="resource.unitEnabled">unit = #{record.unit},</if>
+            status = #{record.status},
+            sort_order = #{record.sortOrder},
+            remark = #{record.remark},
+            update_by = #{record.updateBy},
+            update_time = sysdate()
+        </set>
+        where ${resource.idColumn} = #{record.id}
+          and del_flag = '0'
+    </update>
+
+    <update id="updateRecordStatus">
+        update ${resource.tableName}
+        set status = #{record.status},
+            update_by = #{record.updateBy},
+            update_time = sysdate()
+        where ${resource.idColumn} = #{record.id}
+          and del_flag = '0'
+    </update>
+
+    <update id="deleteRecordByIds">
+        update ${resource.tableName}
+        set del_flag = '2',
+            update_by = #{updateBy},
+            update_time = sysdate()
+        where ${resource.idColumn} in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+          and del_flag = '0'
+    </update>
+</mapper>

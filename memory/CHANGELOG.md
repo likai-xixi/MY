@@ -508,4 +508,7 @@
 - [local] Current-CR component and boundary exceptions preserve the R-09A.3 exact-path handling for inherited RuoYi system/tool/generator findings without changing checker implementations.
 - [not-run] GitHub Actions, `verify:release`, backend runtime API calls, browser acceptance, DB migration execution, Maven compile, and frontend production build were not run for this governance-only batch.
 - No sales-order runtime, customer runtime business logic, `CustomerFundServiceImpl`, `CustomerServiceImpl`, `.github/workflows`, or production config was modified.
-- Feature: `platform`.
+- Feature: `platform`.## 2026-06-28 — add-feature
+- Change: `ai/changes/CR-20260628-r-10b-masterdata-mvp-runtime`.
+- Updated change record, registry, graph, generated scans, memory, and handover.
+- Feature: `masterdata`.

@@ -86,6 +86,66 @@
       "source": "create-table"
     },
     {
+      "name": "masterdata_product_category",
+      "module": "masterdata",
+      "file": "sql/migrations/V20260628_005_masterdata_r10_schema.sql",
+      "source": "create-table"
+    },
+    {
+      "name": "masterdata_product_series",
+      "module": "masterdata",
+      "file": "sql/migrations/V20260628_005_masterdata_r10_schema.sql",
+      "source": "create-table"
+    },
+    {
+      "name": "masterdata_product_model",
+      "module": "masterdata",
+      "file": "sql/migrations/V20260628_005_masterdata_r10_schema.sql",
+      "source": "create-table"
+    },
+    {
+      "name": "masterdata_material_category",
+      "module": "masterdata",
+      "file": "sql/migrations/V20260628_005_masterdata_r10_schema.sql",
+      "source": "create-table"
+    },
+    {
+      "name": "masterdata_material_item",
+      "module": "masterdata",
+      "file": "sql/migrations/V20260628_005_masterdata_r10_schema.sql",
+      "source": "create-table"
+    },
+    {
+      "name": "masterdata_accessory_category",
+      "module": "masterdata",
+      "file": "sql/migrations/V20260628_005_masterdata_r10_schema.sql",
+      "source": "create-table"
+    },
+    {
+      "name": "masterdata_accessory_item",
+      "module": "masterdata",
+      "file": "sql/migrations/V20260628_005_masterdata_r10_schema.sql",
+      "source": "create-table"
+    },
+    {
+      "name": "masterdata_sales_option_category",
+      "module": "masterdata",
+      "file": "sql/migrations/V20260628_005_masterdata_r10_schema.sql",
+      "source": "create-table"
+    },
+    {
+      "name": "masterdata_sales_option_value",
+      "module": "masterdata",
+      "file": "sql/migrations/V20260628_005_masterdata_r10_schema.sql",
+      "source": "create-table"
+    },
+    {
+      "name": "sys_menu",
+      "module": "masterdata",
+      "file": "sql/migrations/V20260628_006_masterdata_r10_menu_permission.sql",
+      "source": "sql-reference"
+    },
+    {
       "name": "QRTZ_JOB_DETAILS",
       "module": "",
       "file": "sql/quartz.sql",
@@ -383,6 +443,72 @@
       "name": "idempotent_request",
       "module": "platform",
       "file": "sql/validation/idempotency_runtime_validation.sql",
+      "source": "sql-reference"
+    },
+    {
+      "name": "information_schema",
+      "module": "masterdata",
+      "file": "sql/validation/masterdata_runtime_validation.sql",
+      "source": "sql-reference"
+    },
+    {
+      "name": "sys_menu",
+      "module": "masterdata",
+      "file": "sql/validation/masterdata_runtime_validation.sql",
+      "source": "sql-reference"
+    },
+    {
+      "name": "masterdata_product_category",
+      "module": "masterdata",
+      "file": "sql/validation/masterdata_runtime_validation.sql",
+      "source": "sql-reference"
+    },
+    {
+      "name": "masterdata_product_series",
+      "module": "masterdata",
+      "file": "sql/validation/masterdata_runtime_validation.sql",
+      "source": "sql-reference"
+    },
+    {
+      "name": "masterdata_product_model",
+      "module": "masterdata",
+      "file": "sql/validation/masterdata_runtime_validation.sql",
+      "source": "sql-reference"
+    },
+    {
+      "name": "masterdata_material_category",
+      "module": "masterdata",
+      "file": "sql/validation/masterdata_runtime_validation.sql",
+      "source": "sql-reference"
+    },
+    {
+      "name": "masterdata_material_item",
+      "module": "masterdata",
+      "file": "sql/validation/masterdata_runtime_validation.sql",
+      "source": "sql-reference"
+    },
+    {
+      "name": "masterdata_accessory_category",
+      "module": "masterdata",
+      "file": "sql/validation/masterdata_runtime_validation.sql",
+      "source": "sql-reference"
+    },
+    {
+      "name": "masterdata_accessory_item",
+      "module": "masterdata",
+      "file": "sql/validation/masterdata_runtime_validation.sql",
+      "source": "sql-reference"
+    },
+    {
+      "name": "masterdata_sales_option_category",
+      "module": "masterdata",
+      "file": "sql/validation/masterdata_runtime_validation.sql",
+      "source": "sql-reference"
+    },
+    {
+      "name": "masterdata_sales_option_value",
+      "module": "masterdata",
+      "file": "sql/validation/masterdata_runtime_validation.sql",
       "source": "sql-reference"
     },
     {

@@ -9,15 +9,18 @@ graph TD
   frontend["frontend"]
   features["features"]
   feature_customer["features/customer.md"]
+  feature_masterdata["features/masterdata.md"]
   feature_monitor["features/monitor.md"]
   feature_platform["features/platform.md"]
   feature_system["features/system.md"]
   feature_tool["features/tool.md"]
   backend_customer["ruoyi-business/src/main/java/com/ruoyi/business/customer"]
+  backend_masterdata["ruoyi-business/src/main/java/com/ruoyi/business/masterdata"]
   backend_monitor["ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor"]
   backend_system["ruoyi-admin/src/main/java/com/ruoyi/web/controller/system"]
   backend_tool["ruoyi-admin/src/main/java/com/ruoyi/web/controller/tool"]
   frontend_customer["ruoyi-ui/src/views/customer"]
+  frontend_masterdata["ruoyi-ui/src/views/masterdata"]
   frontend_monitor["ruoyi-ui/src/views/monitor"]
   frontend_platform["ruoyi-ui/src/views/login.vue"]
   frontend_system["ruoyi-ui/src/views/system"]
@@ -34,12 +37,15 @@ graph TD
   features -->|drives| backend
   features -->|drives| frontend
   features -->|contains| feature_customer
+  features -->|contains| feature_masterdata
   features -->|contains| feature_monitor
   features -->|contains| feature_platform
   features -->|contains| feature_system
   features -->|contains| feature_tool
   backend -->|contains| backend_customer
   feature_customer -->|implements| backend_customer
+  backend -->|contains| backend_masterdata
+  feature_masterdata -->|implements| backend_masterdata
   backend -->|contains| backend_monitor
   feature_monitor -->|implements| backend_monitor
   backend -->|contains| backend_system
@@ -48,6 +54,8 @@ graph TD
   feature_tool -->|implements| backend_tool
   frontend -->|contains| frontend_customer
   feature_customer -->|implements| frontend_customer
+  frontend -->|contains| frontend_masterdata
+  feature_masterdata -->|implements| frontend_masterdata
   frontend -->|contains| frontend_monitor
   feature_monitor -->|implements| frontend_monitor
   frontend -->|contains| frontend_platform

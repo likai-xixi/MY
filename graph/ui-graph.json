@@ -83,6 +83,29 @@
       ]
     },
     {
+      "id": "masterdata:masterdata",
+      "route": "/masterdata",
+      "owner": "masterdata",
+      "module": "masterdata",
+      "file": "ruoyi-ui/src/views/masterdata/index.vue",
+      "usesApi": [
+        "/business/masterdata/{resource}/list",
+        "/business/masterdata/{resource}/options",
+        "/business/masterdata/{resource}/export",
+        "/business/masterdata/{resource}/{id}",
+        "/business/masterdata/{resource}",
+        "/business/masterdata/{resource}:update",
+        "/business/masterdata/{resource}/changeStatus",
+        "/business/masterdata/{resource}/{ids}"
+      ],
+      "states": [
+        "loading",
+        "empty",
+        "success",
+        "error"
+      ]
+    },
+    {
       "id": "monitor:monitor-cache:4",
       "route": "/monitor/cache",
       "owner": "monitor",

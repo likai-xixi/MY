@@ -12,6 +12,7 @@
   ],
   "modules": [
     "customer",
+    "masterdata",
     "monitor",
     "platform",
     "system",
@@ -169,6 +170,70 @@
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
       "source": "java-annotation",
       "permission": "business:customer:fund:view"
+    },
+    {
+      "module": "masterdata",
+      "method": "GET",
+      "path": "/business/masterdata/{resource}/list",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/masterdata/MasterDataController.java",
+      "source": "java-annotation",
+      "permission": "business:masterdata:list"
+    },
+    {
+      "module": "masterdata",
+      "method": "GET",
+      "path": "/business/masterdata/{resource}/options",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/masterdata/MasterDataController.java",
+      "source": "java-annotation",
+      "permission": "business:masterdata:list"
+    },
+    {
+      "module": "masterdata",
+      "method": "POST",
+      "path": "/business/masterdata/{resource}/export",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/masterdata/MasterDataController.java",
+      "source": "java-annotation",
+      "permission": "business:masterdata:export"
+    },
+    {
+      "module": "masterdata",
+      "method": "GET",
+      "path": "/business/masterdata/{resource}/{id}",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/masterdata/MasterDataController.java",
+      "source": "java-annotation",
+      "permission": "business:masterdata:query"
+    },
+    {
+      "module": "masterdata",
+      "method": "POST",
+      "path": "/business/masterdata/{resource}",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/masterdata/MasterDataController.java",
+      "source": "java-annotation",
+      "permission": "business:masterdata:add"
+    },
+    {
+      "module": "masterdata",
+      "method": "PUT",
+      "path": "/business/masterdata/{resource}",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/masterdata/MasterDataController.java",
+      "source": "java-annotation",
+      "permission": "business:masterdata:edit"
+    },
+    {
+      "module": "masterdata",
+      "method": "PUT",
+      "path": "/business/masterdata/{resource}/changeStatus",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/masterdata/MasterDataController.java",
+      "source": "java-annotation",
+      "permission": "business:masterdata:status"
+    },
+    {
+      "module": "masterdata",
+      "method": "DELETE",
+      "path": "/business/masterdata/{resource}/{ids}",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/masterdata/MasterDataController.java",
+      "source": "java-annotation",
+      "permission": "business:masterdata:remove"
     },
     {
       "module": "",

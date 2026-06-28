@@ -698,3 +698,65 @@
 - Path: `/business/customer/{customerId}/sample-rebate`
 - Owner: `customer`
 - Module: `customer`
+
+## /business/masterdata/{resource}/list
+
+- Method: `GET`
+- Path: `/business/masterdata/{resource}/list`
+- Owner: `masterdata`
+- Module: `masterdata`
+- Notes: Lists one approved R-10B masterdata resource. `resource` must be one of the nine MVP resources; the endpoint does not create sales-order, formula, field-scheme, or technical-decomposition runtime behavior.
+
+## /business/masterdata/{resource}/options
+
+- Method: `GET`
+- Path: `/business/masterdata/{resource}/options`
+- Owner: `masterdata`
+- Module: `masterdata`
+- Notes: Returns enabled option rows for relation selectors in the masterdata page.
+
+## /business/masterdata/{resource}/export
+
+- Method: `POST`
+- Path: `/business/masterdata/{resource}/export`
+- Owner: `masterdata`
+- Module: `masterdata`
+
+## /business/masterdata/{resource}/{id}
+
+- Method: `GET`
+- Path: `/business/masterdata/{resource}/{id}`
+- Owner: `masterdata`
+- Module: `masterdata`
+
+## /business/masterdata/{resource}
+
+- Method: `POST`
+- Path: `/business/masterdata/{resource}`
+- Owner: `masterdata`
+- Module: `masterdata`
+- Notes: Creates a row for one approved R-10B masterdata resource. Codes are normalized to uppercase and must remain stable after creation.
+
+## /business/masterdata/{resource}:update
+
+- Method: `PUT`
+- Path: `/business/masterdata/{resource}`
+- Owner: `masterdata`
+- Module: `masterdata`
+- Notes: Updates an existing row for one approved R-10B masterdata resource. The stable code is immutable.
+
+## /business/masterdata/{resource}/changeStatus
+
+- Method: `PUT`
+- Path: `/business/masterdata/{resource}/changeStatus`
+- Owner: `masterdata`
+- Module: `masterdata`
+- Notes: Changes enabled/disabled status for a masterdata row without publishing a version.
+
+## /business/masterdata/{resource}/{ids}
+
+- Method: `DELETE`
+- Path: `/business/masterdata/{resource}/{ids}`
+- Owner: `masterdata`
+- Module: `masterdata`
+- Notes: Performs logical delete with `del_flag = '2'`.

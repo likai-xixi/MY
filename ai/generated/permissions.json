@@ -112,6 +112,46 @@
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java"
     },
     {
+      "code": "business:masterdata:list",
+      "module": "masterdata",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/masterdata/MasterDataController.java"
+    },
+    {
+      "code": "business:masterdata:list",
+      "module": "masterdata",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/masterdata/MasterDataController.java"
+    },
+    {
+      "code": "business:masterdata:export",
+      "module": "masterdata",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/masterdata/MasterDataController.java"
+    },
+    {
+      "code": "business:masterdata:query",
+      "module": "masterdata",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/masterdata/MasterDataController.java"
+    },
+    {
+      "code": "business:masterdata:add",
+      "module": "masterdata",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/masterdata/MasterDataController.java"
+    },
+    {
+      "code": "business:masterdata:edit",
+      "module": "masterdata",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/masterdata/MasterDataController.java"
+    },
+    {
+      "code": "business:masterdata:status",
+      "module": "masterdata",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/masterdata/MasterDataController.java"
+    },
+    {
+      "code": "business:masterdata:remove",
+      "module": "masterdata",
+      "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/masterdata/MasterDataController.java"
+    },
+    {
       "code": "monitor:cache:list",
       "module": "monitor",
       "file": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor/CacheController.java"
@@ -770,6 +810,41 @@
       "code": "business:customer:sample-policy:edit",
       "module": "customer",
       "file": "ruoyi-ui/src/views/customer/index.vue"
+    },
+    {
+      "code": "business:masterdata:add",
+      "module": "masterdata",
+      "file": "ruoyi-ui/src/views/masterdata/index.vue"
+    },
+    {
+      "code": "business:masterdata:edit",
+      "module": "masterdata",
+      "file": "ruoyi-ui/src/views/masterdata/index.vue"
+    },
+    {
+      "code": "business:masterdata:remove",
+      "module": "masterdata",
+      "file": "ruoyi-ui/src/views/masterdata/index.vue"
+    },
+    {
+      "code": "business:masterdata:export",
+      "module": "masterdata",
+      "file": "ruoyi-ui/src/views/masterdata/index.vue"
+    },
+    {
+      "code": "business:masterdata:status",
+      "module": "masterdata",
+      "file": "ruoyi-ui/src/views/masterdata/index.vue"
+    },
+    {
+      "code": "business:masterdata:edit",
+      "module": "masterdata",
+      "file": "ruoyi-ui/src/views/masterdata/index.vue"
+    },
+    {
+      "code": "business:masterdata:remove",
+      "module": "masterdata",
+      "file": "ruoyi-ui/src/views/masterdata/index.vue"
     },
     {
       "code": "monitor:job:add",
@@ -1512,6 +1587,121 @@
       "file": "sql/migrations/V20260625_003_customer_menu_permission.sql"
     },
     {
+      "code": "business:masterdata:list",
+      "module": "masterdata",
+      "file": "sql/migrations/V20260628_006_masterdata_r10_menu_permission.sql"
+    },
+    {
+      "code": "business:masterdata:list",
+      "module": "masterdata",
+      "file": "sql/migrations/V20260628_006_masterdata_r10_menu_permission.sql"
+    },
+    {
+      "code": "business:masterdata:query",
+      "module": "masterdata",
+      "file": "sql/migrations/V20260628_006_masterdata_r10_menu_permission.sql"
+    },
+    {
+      "code": "business:masterdata:list",
+      "module": "masterdata",
+      "file": "sql/migrations/V20260628_006_masterdata_r10_menu_permission.sql"
+    },
+    {
+      "code": "business:masterdata:query",
+      "module": "masterdata",
+      "file": "sql/migrations/V20260628_006_masterdata_r10_menu_permission.sql"
+    },
+    {
+      "code": "business:masterdata:add",
+      "module": "masterdata",
+      "file": "sql/migrations/V20260628_006_masterdata_r10_menu_permission.sql"
+    },
+    {
+      "code": "business:masterdata:list",
+      "module": "masterdata",
+      "file": "sql/migrations/V20260628_006_masterdata_r10_menu_permission.sql"
+    },
+    {
+      "code": "business:masterdata:add",
+      "module": "masterdata",
+      "file": "sql/migrations/V20260628_006_masterdata_r10_menu_permission.sql"
+    },
+    {
+      "code": "business:masterdata:edit",
+      "module": "masterdata",
+      "file": "sql/migrations/V20260628_006_masterdata_r10_menu_permission.sql"
+    },
+    {
+      "code": "business:masterdata:list",
+      "module": "masterdata",
+      "file": "sql/migrations/V20260628_006_masterdata_r10_menu_permission.sql"
+    },
+    {
+      "code": "business:masterdata:edit",
+      "module": "masterdata",
+      "file": "sql/migrations/V20260628_006_masterdata_r10_menu_permission.sql"
+    },
+    {
+      "code": "business:masterdata:remove",
+      "module": "masterdata",
+      "file": "sql/migrations/V20260628_006_masterdata_r10_menu_permission.sql"
+    },
+    {
+      "code": "business:masterdata:list",
+      "module": "masterdata",
+      "file": "sql/migrations/V20260628_006_masterdata_r10_menu_permission.sql"
+    },
+    {
+      "code": "business:masterdata:remove",
+      "module": "masterdata",
+      "file": "sql/migrations/V20260628_006_masterdata_r10_menu_permission.sql"
+    },
+    {
+      "code": "business:masterdata:export",
+      "module": "masterdata",
+      "file": "sql/migrations/V20260628_006_masterdata_r10_menu_permission.sql"
+    },
+    {
+      "code": "business:masterdata:list",
+      "module": "masterdata",
+      "file": "sql/migrations/V20260628_006_masterdata_r10_menu_permission.sql"
+    },
+    {
+      "code": "business:masterdata:export",
+      "module": "masterdata",
+      "file": "sql/migrations/V20260628_006_masterdata_r10_menu_permission.sql"
+    },
+    {
+      "code": "business:masterdata:status",
+      "module": "masterdata",
+      "file": "sql/migrations/V20260628_006_masterdata_r10_menu_permission.sql"
+    },
+    {
+      "code": "business:masterdata:list",
+      "module": "masterdata",
+      "file": "sql/migrations/V20260628_006_masterdata_r10_menu_permission.sql"
+    },
+    {
+      "code": "business:masterdata:status",
+      "module": "masterdata",
+      "file": "sql/migrations/V20260628_006_masterdata_r10_menu_permission.sql"
+    },
+    {
+      "code": "business:masterdata:publish",
+      "module": "masterdata",
+      "file": "sql/migrations/V20260628_006_masterdata_r10_menu_permission.sql"
+    },
+    {
+      "code": "business:masterdata:list",
+      "module": "masterdata",
+      "file": "sql/migrations/V20260628_006_masterdata_r10_menu_permission.sql"
+    },
+    {
+      "code": "business:masterdata:publish",
+      "module": "masterdata",
+      "file": "sql/migrations/V20260628_006_masterdata_r10_menu_permission.sql"
+    },
+    {
       "code": "system:user:list",
       "module": "system",
       "file": "sql/ry_20260417.sql"
@@ -1910,6 +2100,26 @@
       "code": "tool:gen:code",
       "module": "tool",
       "file": "sql/ry_20260417.sql"
+    },
+    {
+      "code": "business:masterdata:list",
+      "module": "masterdata",
+      "file": "sql/validation/masterdata_runtime_validation.sql"
+    },
+    {
+      "code": "business:masterdata:list",
+      "module": "masterdata",
+      "file": "sql/validation/masterdata_runtime_validation.sql"
+    },
+    {
+      "code": "business:masterdata:publish",
+      "module": "masterdata",
+      "file": "sql/validation/masterdata_runtime_validation.sql"
+    },
+    {
+      "code": "business:masterdata:publish",
+      "module": "masterdata",
+      "file": "sql/validation/masterdata_runtime_validation.sql"
     }
   ]
 }

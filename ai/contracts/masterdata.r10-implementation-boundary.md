@@ -63,3 +63,7 @@ R-10B must not implement:
 ## Ownership Boundary
 
 R-10B must synchronize API/UI/SQL/permission/test ownership in the same runtime change that creates those artifacts. R-10A records that obligation but does not create runtime ownership entries for artifacts that do not yet exist.
+
+## R-10B Runtime Ownership
+
+`CR-20260628-r-10b-masterdata-mvp-runtime` implements runtime only under the `masterdata` feature roots, with executable SQL migrations, controller/service/mapper/domain code, a Vue page, an API client, feature/module registry entries, generated scans, graphs, memory, and `tests/masterdata-runtime.test.js`.

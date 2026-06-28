@@ -3582,6 +3582,13 @@
       "source": "vue-template-global"
     },
     {
+      "file": "ruoyi-ui/src/views/masterdata/index.vue",
+      "module": "masterdata",
+      "tag": "right-toolbar",
+      "componentId": "ruoyi-right-toolbar-index",
+      "source": "vue-template-global"
+    },
+    {
       "file": "ruoyi-ui/src/views/monitor/cache/index.vue",
       "module": "monitor",
       "tag": "monitor",

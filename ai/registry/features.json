@@ -299,6 +299,238 @@
       "updatedAt": "2026-06-25"
     },
     {
+      "id": "masterdata",
+      "name": "主数据配置",
+      "aliases": [
+        "主数据配置",
+        "主数据"
+      ],
+      "status": "active",
+      "featureBrief": "features/masterdata.md",
+      "backendModules": [
+        "ruoyi-business/src/main/java/com/ruoyi/business/masterdata",
+        "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/masterdata"
+      ],
+      "frontendModules": [
+        "ruoyi-ui/src/views/masterdata",
+        "ruoyi-ui/src/api/masterdata.contract.md",
+        "ruoyi-ui/src/api/masterdata.js"
+      ],
+      "apis": [
+        "/business/masterdata/{resource}",
+        "/business/masterdata/{resource}/changeStatus",
+        "/business/masterdata/{resource}/export",
+        "/business/masterdata/{resource}/list",
+        "/business/masterdata/{resource}/options",
+        "/business/masterdata/{resource}/{ids}",
+        "/business/masterdata/{resource}/{id}",
+        "/business/masterdata/{resource}:update"
+      ],
+      "screens": [
+        "masterdata:masterdata"
+      ],
+      "dbTables": [
+        "information_schema",
+        "masterdata_accessory_category",
+        "masterdata_accessory_item",
+        "masterdata_material_category",
+        "masterdata_material_item",
+        "masterdata_product_category",
+        "masterdata_product_model",
+        "masterdata_product_series",
+        "masterdata_sales_option_category",
+        "masterdata_sales_option_value",
+        "sys_menu"
+      ],
+      "permissions": [
+        "business:masterdata:add",
+        "business:masterdata:edit",
+        "business:masterdata:export",
+        "business:masterdata:list",
+        "business:masterdata:publish",
+        "business:masterdata:query",
+        "business:masterdata:remove",
+        "business:masterdata:status"
+      ],
+      "components": [],
+      "routes": [
+        "/business/masterdata/{resource}",
+        "/business/masterdata/{resource}/changeStatus",
+        "/business/masterdata/{resource}/export",
+        "/business/masterdata/{resource}/list",
+        "/business/masterdata/{resource}/options",
+        "/business/masterdata/{resource}/{ids}",
+        "/business/masterdata/{resource}/{id}",
+        "/masterdata"
+      ],
+      "tests": [
+        "tests/masterdata-runtime.test.js"
+      ],
+      "docs": [
+        "ai/contracts/masterdata.api.md",
+        "ai/contracts/masterdata.db.md",
+        "ai/contracts/masterdata.delete-ownership.md",
+        "ai/contracts/masterdata.permission.md",
+        "ai/contracts/masterdata.r10-contract-test-matrix.md",
+        "ai/contracts/masterdata.r10-implementation-boundary.md",
+        "ai/contracts/masterdata.ui.md",
+        "features/masterdata.md",
+        "graph/api-graph.json",
+        "graph/ui-graph.json",
+        "memory/API_CATALOG.md",
+        "ruoyi-ui/src/api/masterdata.contract.md",
+        "ruoyi-ui/src/views/masterdata/README.md",
+        "ruoyi-ui/src/views/masterdata/screen.md",
+        "sql/masterdata.ownership.md"
+      ],
+      "controllers": [
+        "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/masterdata/MasterDataController.java"
+      ],
+      "services": [
+        "ruoyi-business/src/main/java/com/ruoyi/business/masterdata/service/IMasterDataService.java",
+        "ruoyi-business/src/main/java/com/ruoyi/business/masterdata/service/impl/MasterDataServiceImpl.java"
+      ],
+      "mappers": [
+        "ruoyi-business/src/main/java/com/ruoyi/business/masterdata/mapper/MasterDataMapper.java"
+      ],
+      "domainObjects": [
+        "ruoyi-business/src/main/java/com/ruoyi/business/masterdata/domain/MasterDataRecord.java",
+        "ruoyi-business/src/main/java/com/ruoyi/business/masterdata/domain/MasterDataResource.java"
+      ],
+      "apiClients": [
+        "ruoyi-ui/src/api/masterdata.contract.md",
+        "ruoyi-ui/src/api/masterdata.js"
+      ],
+      "sqlFiles": [
+        "sql/masterdata.ownership.md",
+        "sql/migrations/V20260628_005_masterdata_r10_schema.sql",
+        "sql/migrations/V20260628_006_masterdata_r10_menu_permission.sql",
+        "sql/validation/masterdata_runtime_validation.sql"
+      ],
+      "mapperXmlFiles": [
+        "ruoyi-business/src/main/resources/mapper/masterdata/MasterDataMapper.xml"
+      ],
+      "menuSqlFiles": [
+        "sql/masterdata.ownership.md",
+        "sql/migrations/V20260628_005_masterdata_r10_schema.sql",
+        "sql/migrations/V20260628_006_masterdata_r10_menu_permission.sql",
+        "sql/validation/masterdata_runtime_validation.sql"
+      ],
+      "permissionFiles": [
+        "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/masterdata/MasterDataController.java",
+        "ruoyi-ui/src/views/masterdata/index.vue",
+        "sql/masterdata.ownership.md",
+        "sql/migrations/V20260628_005_masterdata_r10_schema.sql",
+        "sql/migrations/V20260628_006_masterdata_r10_menu_permission.sql",
+        "sql/validation/masterdata_runtime_validation.sql"
+      ],
+      "ownership": {
+        "backend": [
+          "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/masterdata",
+          "ruoyi-business/src/main/java/com/ruoyi/business/masterdata"
+        ],
+        "frontend": [
+          "ruoyi-ui/src/api/masterdata.contract.md",
+          "ruoyi-ui/src/api/masterdata.js",
+          "ruoyi-ui/src/views/masterdata"
+        ],
+        "api": [
+          "/business/masterdata/{resource}",
+          "/business/masterdata/{resource}/changeStatus",
+          "/business/masterdata/{resource}/export",
+          "/business/masterdata/{resource}/list",
+          "/business/masterdata/{resource}/options",
+          "/business/masterdata/{resource}/{ids}",
+          "/business/masterdata/{resource}/{id}",
+          "/business/masterdata/{resource}:update"
+        ],
+        "ui": [
+          "masterdata:masterdata"
+        ],
+        "database": [
+          "information_schema",
+          "masterdata_accessory_category",
+          "masterdata_accessory_item",
+          "masterdata_material_category",
+          "masterdata_material_item",
+          "masterdata_product_category",
+          "masterdata_product_model",
+          "masterdata_product_series",
+          "masterdata_sales_option_category",
+          "masterdata_sales_option_value",
+          "sql/masterdata.ownership.md",
+          "sql/migrations/V20260628_005_masterdata_r10_schema.sql",
+          "sql/migrations/V20260628_006_masterdata_r10_menu_permission.sql",
+          "sql/validation/masterdata_runtime_validation.sql",
+          "sys_menu"
+        ],
+        "permissions": [
+          "business:masterdata:add",
+          "business:masterdata:edit",
+          "business:masterdata:export",
+          "business:masterdata:list",
+          "business:masterdata:publish",
+          "business:masterdata:query",
+          "business:masterdata:remove",
+          "business:masterdata:status",
+          "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/masterdata/MasterDataController.java",
+          "ruoyi-ui/src/views/masterdata/index.vue",
+          "sql/masterdata.ownership.md",
+          "sql/migrations/V20260628_005_masterdata_r10_schema.sql",
+          "sql/migrations/V20260628_006_masterdata_r10_menu_permission.sql",
+          "sql/validation/masterdata_runtime_validation.sql"
+        ],
+        "menus": [
+          "sql/masterdata.ownership.md",
+          "sql/migrations/V20260628_005_masterdata_r10_schema.sql",
+          "sql/migrations/V20260628_006_masterdata_r10_menu_permission.sql",
+          "sql/validation/masterdata_runtime_validation.sql"
+        ],
+        "components": [],
+        "tests": [
+          "tests/masterdata-runtime.test.js"
+        ],
+        "docs": [
+          "ai/contracts/masterdata.api.md",
+          "ai/contracts/masterdata.db.md",
+          "ai/contracts/masterdata.delete-ownership.md",
+          "ai/contracts/masterdata.permission.md",
+          "ai/contracts/masterdata.r10-contract-test-matrix.md",
+          "ai/contracts/masterdata.r10-implementation-boundary.md",
+          "ai/contracts/masterdata.ui.md",
+          "features/masterdata.md",
+          "graph/api-graph.json",
+          "graph/ui-graph.json",
+          "memory/API_CATALOG.md",
+          "ruoyi-ui/src/api/masterdata.contract.md",
+          "ruoyi-ui/src/views/masterdata/README.md",
+          "ruoyi-ui/src/views/masterdata/screen.md",
+          "sql/masterdata.ownership.md"
+        ],
+        "apiClients": [
+          "ruoyi-ui/src/api/masterdata.contract.md",
+          "ruoyi-ui/src/api/masterdata.js"
+        ],
+        "controllers": [
+          "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/masterdata/MasterDataController.java"
+        ],
+        "services": [
+          "ruoyi-business/src/main/java/com/ruoyi/business/masterdata/service/IMasterDataService.java",
+          "ruoyi-business/src/main/java/com/ruoyi/business/masterdata/service/impl/MasterDataServiceImpl.java"
+        ],
+        "mappers": [
+          "ruoyi-business/src/main/java/com/ruoyi/business/masterdata/mapper/MasterDataMapper.java",
+          "ruoyi-business/src/main/resources/mapper/masterdata/MasterDataMapper.xml"
+        ],
+        "domainObjects": [
+          "ruoyi-business/src/main/java/com/ruoyi/business/masterdata/domain/MasterDataRecord.java",
+          "ruoyi-business/src/main/java/com/ruoyi/business/masterdata/domain/MasterDataResource.java"
+        ]
+      },
+      "lastChangedBy": "CR-20260628-r-10b-masterdata-mvp-runtime",
+      "updatedAt": "2026-06-28"
+    },
+    {
       "id": "monitor",
       "name": "监控管理",
       "aliases": [

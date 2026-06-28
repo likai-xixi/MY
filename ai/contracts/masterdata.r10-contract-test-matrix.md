@@ -24,3 +24,7 @@ R-10A creates only contracts, the R-10A change record, current-context handoff, 
 ## R-10B Required Closeout
 
 R-10B must run the active scaffold gates plus runtime-specific evidence created by the implementation. `npm run check` alone is not business-runtime proof.
+
+## R-10B Runtime Evidence Hook
+
+`tests/masterdata-runtime.test.js` now guards the R-10B object list, SQL ownership, API/client surface, permission boundary, and explicit exclusions for sales-order, field-scheme, formula, and technical-decomposition runtime.

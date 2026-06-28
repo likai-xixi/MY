@@ -1,37 +1,61 @@
 # Current Context
 
 Current feature: `customer`
-Current change: `CR-20260628-r-10a-masterdata-mvp-contract-package`
+Current change: `CR-20260628-r-10b-masterdata-mvp-runtime`
 Repository: RuoYi + Vue3 + Codex Auto Dev OS
 Profile: adapter `ruoyi`, locked `true`
 
 ## Allowed Edit Roots
 
-- `ai/contracts/masterdata.r10-scope.md`
-- `ai/contracts/masterdata.r10-api.md`
-- `ai/contracts/masterdata.r10-db.md`
-- `ai/contracts/masterdata.r10-ui.md`
-- `ai/contracts/masterdata.r10-permission.md`
-- `ai/contracts/masterdata.r10-migration-plan.md`
+- `ai/changes/CR-20260628-r-10b-masterdata-mvp-runtime`
+- `ai/changes/CURRENT_CHANGE.json`
+- `ai/contracts/masterdata.api.md`
+- `ai/contracts/masterdata.db.md`
+- `ai/contracts/masterdata.ui.md`
+- `ai/contracts/masterdata.permission.md`
+- `ai/contracts/masterdata.delete-ownership.md`
 - `ai/contracts/masterdata.r10-contract-test-matrix.md`
 - `ai/contracts/masterdata.r10-implementation-boundary.md`
-- `ai/changes/CR-20260628-r-10a-masterdata-mvp-contract-package`
-- `ai/changes/CURRENT_CHANGE.json`
-- `ai/context/current-context.md`
+- `ai/generated`
 - `ai/context/current-context.json`
-- `memory/HANDOVER.md`
+- `ai/context/current-context.md`
+- `ai/registry/features.json`
+- `ai/registry/migration-registry.json`
+- `ai/registry/modules.json`
+- `ai/registry/feature-id-dictionary.json`
+- `features/masterdata.md`
+- `graph/api-graph.json`
+- `graph/module-graph.json`
+- `graph/render-graph.mmd`
+- `graph/ui-graph.json`
+- `memory/API_CATALOG.md`
 - `memory/CHANGELOG.md`
+- `memory/HANDOVER.md`
+- `memory/MODULE_MAP.md`
+- `memory/PROJECT_STATE.md`
 - `memory/TASKS.json`
+- `ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/masterdata`
+- `ruoyi-business/src/main/java/com/ruoyi/business/masterdata`
+- `ruoyi-business/src/main/resources/mapper/masterdata`
+- `ruoyi-ui/src/api/masterdata.contract.md`
+- `ruoyi-ui/src/api/masterdata.js`
+- `ruoyi-ui/src/views/masterdata`
+- `sql/masterdata.ownership.md`
+- `sql/migrations/V20260628_005_masterdata_r10_schema.sql`
+- `sql/migrations/V20260628_006_masterdata_r10_menu_permission.sql`
+- `sql/validation/masterdata_runtime_validation.sql`
+- `tests/masterdata-runtime.test.js`
 
 ## Forbidden Edit Roots
 
-- `ruoyi-business/src/main/java`
-- `ruoyi-admin/src/main/java`
-- `ruoyi-business/src/main/resources/mapper`
-- `ruoyi-ui/src/views`
-- `ruoyi-ui/src/api`
-- `sql/migrations`
-- `sql/validation`
+- `ruoyi-business/src/main/java/com/ruoyi/business/salesorder`
+- `ruoyi-business/src/main/java/com/ruoyi/business/sales-order`
+- `ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/salesorder`
+- `ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/sales-order`
+- `ruoyi-ui/src/views/sales-order`
+- `ruoyi-ui/src/views/salesorder`
+- `ruoyi-ui/src/api/sales-order.js`
+- `ruoyi-ui/src/api/salesorder.js`
 - `package.json`
 - `tools`
 - `.github/workflows`
@@ -52,9 +76,9 @@ Profile: adapter `ruoyi`, locked `true`
 - `ai/roadmap/phase-gates.json` - beforeSalesOrder gate state.
 - `ai/roadmap/refactor-debt.json` - Known debt affecting sales-order handoff.
 - `ai/roadmap/enhancement-backlog.json` - Governance backlog and required/deferred evidence.
-- `ai/changes/CR-20260628-r-10a-masterdata-mvp-contract-package/impact.json` - Current change allowed and forbidden edit roots.
-- `ai/changes/CR-20260628-r-10a-masterdata-mvp-contract-package/plan.md` - Current change execution plan.
-- `ai/changes/CR-20260628-r-10a-masterdata-mvp-contract-package/verification.md` - Current change verification evidence.
+- `ai/changes/CR-20260628-r-10b-masterdata-mvp-runtime/impact.json` - Current change allowed and forbidden edit roots.
+- `ai/changes/CR-20260628-r-10b-masterdata-mvp-runtime/plan.md` - Current change execution plan.
+- `ai/changes/CR-20260628-r-10b-masterdata-mvp-runtime/verification.md` - Current change verification evidence.
 
 ## Must Not Break
 
@@ -115,9 +139,12 @@ Deferred:
 
 ## Planned Verification Commands
 
-- `npm run resume`
+- `npm run scan:all`
+- `npm run finalize:change`
 - `npm run check`
 - `git diff --check`
+- `mvn -pl ruoyi-admin -am -DskipTests compile`
+- `npm --prefix ruoyi-ui run build:prod`
 
 ## Next Steps
 

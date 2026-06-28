@@ -64,6 +64,12 @@
       "description": "客户管理 feature brief."
     },
     {
+      "id": "feature:masterdata",
+      "type": "feature",
+      "path": "features/masterdata.md",
+      "description": "主数据配置 feature brief."
+    },
+    {
       "id": "feature:monitor",
       "type": "feature",
       "path": "features/monitor.md",
@@ -94,6 +100,12 @@
       "description": "Customer backend module."
     },
     {
+      "id": "backend:masterdata",
+      "type": "backend-module",
+      "path": "ruoyi-business/src/main/java/com/ruoyi/business/masterdata",
+      "description": "Masterdata backend module."
+    },
+    {
       "id": "backend:monitor",
       "type": "backend-module",
       "path": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/monitor",
@@ -116,6 +128,12 @@
       "type": "frontend-module",
       "path": "ruoyi-ui/src/views/customer",
       "description": "Customer frontend module."
+    },
+    {
+      "id": "frontend:masterdata",
+      "type": "frontend-module",
+      "path": "ruoyi-ui/src/views/masterdata",
+      "description": "Masterdata frontend module."
     },
     {
       "id": "frontend:monitor",
@@ -205,6 +223,11 @@
     },
     {
       "from": "features",
+      "to": "feature:masterdata",
+      "type": "contains"
+    },
+    {
+      "from": "features",
       "to": "feature:monitor",
       "type": "contains"
     },
@@ -231,6 +254,16 @@
     {
       "from": "feature:customer",
       "to": "backend:customer",
+      "type": "implements"
+    },
+    {
+      "from": "backend",
+      "to": "backend:masterdata",
+      "type": "contains"
+    },
+    {
+      "from": "feature:masterdata",
+      "to": "backend:masterdata",
       "type": "implements"
     },
     {
@@ -271,6 +304,16 @@
     {
       "from": "feature:customer",
       "to": "frontend:customer",
+      "type": "implements"
+    },
+    {
+      "from": "frontend",
+      "to": "frontend:masterdata",
+      "type": "contains"
+    },
+    {
+      "from": "feature:masterdata",
+      "to": "frontend:masterdata",
       "type": "implements"
     },
     {

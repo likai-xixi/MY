@@ -21,6 +21,28 @@
       "owner": "workflow",
       "adapter": "ruoyi",
       "updatedAt": "2026-06-23"
+    },
+    {
+      "id": "masterdata",
+      "name": "主数据配置",
+      "type": "business-feature",
+      "feature": "masterdata",
+      "backendPath": "ruoyi-business/src/main/java/com/ruoyi/business/masterdata",
+      "frontendPath": "ruoyi-ui/src/views/masterdata",
+      "paths": [
+        "ruoyi-business/src/main/java/com/ruoyi/business/masterdata",
+        "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/masterdata",
+        "ruoyi-ui/src/views/masterdata",
+        "ruoyi-ui/src/api/masterdata.contract.md",
+        "ruoyi-ui/src/api/masterdata.js",
+        "sql/masterdata.ownership.md",
+        "sql/migrations/V20260628_005_masterdata_r10_schema.sql",
+        "sql/migrations/V20260628_006_masterdata_r10_menu_permission.sql",
+        "sql/validation/masterdata_runtime_validation.sql"
+      ],
+      "owner": "workflow",
+      "adapter": "ruoyi",
+      "updatedAt": "2026-06-28"
     }
   ]
 }

@@ -147,6 +147,86 @@
       ],
       "owner": "platform",
       "blocking": true
+    },
+    {
+      "migrationId": "masterdata-r10-schema",
+      "featureId": "masterdata",
+      "file": "sql/migrations/V20260628_005_masterdata_r10_schema.sql",
+      "type": "executable-sql",
+      "appliesToTables": [
+        "masterdata_product_category",
+        "masterdata_product_series",
+        "masterdata_product_model",
+        "masterdata_material_category",
+        "masterdata_material_item",
+        "masterdata_accessory_category",
+        "masterdata_accessory_item",
+        "masterdata_sales_option_category",
+        "masterdata_sales_option_value"
+      ],
+      "status": "required",
+      "phase": "R-10B-masterdata-mvp-runtime",
+      "rollbackPlan": "For an unreleased development database, drop the nine masterdata_* tables only after confirming no downstream runtime references exist. Production or released data requires a separate executable rollback plan before use.",
+      "verification": [
+        "npm run check:high-risk-governance",
+        "node --test tests/masterdata-runtime.test.js",
+        "mysql < sql/migrations/V20260628_005_masterdata_r10_schema.sql when a disposable MySQL test database is available"
+      ],
+      "dependsOn": [],
+      "owner": "masterdata",
+      "blocking": true
+    },
+    {
+      "migrationId": "masterdata-r10-menu-permission",
+      "featureId": "masterdata",
+      "file": "sql/migrations/V20260628_006_masterdata_r10_menu_permission.sql",
+      "type": "executable-sql",
+      "appliesToTables": [
+        "sys_menu"
+      ],
+      "status": "required",
+      "phase": "R-10B-masterdata-mvp-runtime",
+      "rollbackPlan": "For an unreleased development database, delete only sys_menu rows whose perms start with business:masterdata: or whose path/component identify the masterdata menu. Production or released data requires a separate executable rollback plan before use.",
+      "verification": [
+        "npm run check:high-risk-governance",
+        "node --test tests/masterdata-runtime.test.js",
+        "mysql < sql/migrations/V20260628_006_masterdata_r10_menu_permission.sql when a disposable MySQL test database is available"
+      ],
+      "dependsOn": [],
+      "owner": "masterdata",
+      "blocking": true
+    },
+    {
+      "migrationId": "masterdata-r10-runtime-validation",
+      "featureId": "masterdata",
+      "file": "sql/validation/masterdata_runtime_validation.sql",
+      "type": "runtime-validation-sql",
+      "appliesToTables": [
+        "masterdata_product_category",
+        "masterdata_product_series",
+        "masterdata_product_model",
+        "masterdata_material_category",
+        "masterdata_material_item",
+        "masterdata_accessory_category",
+        "masterdata_accessory_item",
+        "masterdata_sales_option_category",
+        "masterdata_sales_option_value",
+        "sys_menu"
+      ],
+      "status": "required",
+      "phase": "R-10B-masterdata-mvp-runtime",
+      "rollbackPlan": "Validation SQL is read-only and has no data rollback. If validation finds rows, use a separate approved cleanup or migration change before claiming runtime acceptance.",
+      "verification": [
+        "npm run check:high-risk-governance",
+        "node --test tests/masterdata-runtime.test.js",
+        "mysql < sql/validation/masterdata_runtime_validation.sql when a disposable MySQL test database is available"
+      ],
+      "dependsOn": [
+        "masterdata-r10-schema",
+        "masterdata-r10-menu-permission"
+      ],
+      "owner": "masterdata",
+      "blocking": true
     }
   ]
 }

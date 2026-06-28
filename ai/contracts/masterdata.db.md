@@ -1,0 +1,34 @@
+# Masterdata Database Ownership Contract
+
+Feature ID: `masterdata`
+
+## Owned Tables
+
+- `masterdata_product_category`
+- `masterdata_product_series`
+- `masterdata_product_model`
+- `masterdata_material_category`
+- `masterdata_material_item`
+- `masterdata_accessory_category`
+- `masterdata_accessory_item`
+- `masterdata_sales_option_category`
+- `masterdata_sales_option_value`
+
+## Required Common Columns
+
+Every R-10B table includes a stable code column, display name column, `status`, `sort_order`, `del_flag`, `remark`, and RuoYi audit fields.
+
+## Migration Files
+
+- `sql/migrations/V20260628_005_masterdata_r10_schema.sql`
+- `sql/migrations/V20260628_006_masterdata_r10_menu_permission.sql`
+- `sql/validation/masterdata_runtime_validation.sql`
+- `sql/masterdata.ownership.md`
+
+## Delete Rule
+
+R-10B uses logical delete through `del_flag = '2'`. Future referenced master data must be disabled, archived, unpublished, or superseded rather than physically removed.
+
+## Explicit Exclusions
+
+No sales-order, field-scheme, formula, technical-decomposition, inventory, BOM, production, scan/report, drawing, shipment, finance, or receipt tables are owned by this feature.

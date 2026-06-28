@@ -998,6 +998,102 @@
         "customer:customer"
       ],
       "permission": "business:customer:fund:view"
+    },
+    {
+      "id": "/business/masterdata/{resource}/list",
+      "method": "GET",
+      "path": "/business/masterdata/{resource}/list",
+      "owner": "masterdata",
+      "module": "masterdata",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/masterdata/MasterDataController.java",
+      "consumers": [
+        "masterdata:masterdata"
+      ],
+      "permission": "business:masterdata:list"
+    },
+    {
+      "id": "/business/masterdata/{resource}/options",
+      "method": "GET",
+      "path": "/business/masterdata/{resource}/options",
+      "owner": "masterdata",
+      "module": "masterdata",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/masterdata/MasterDataController.java",
+      "consumers": [
+        "masterdata:masterdata"
+      ],
+      "permission": "business:masterdata:list"
+    },
+    {
+      "id": "/business/masterdata/{resource}/export",
+      "method": "POST",
+      "path": "/business/masterdata/{resource}/export",
+      "owner": "masterdata",
+      "module": "masterdata",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/masterdata/MasterDataController.java",
+      "consumers": [
+        "masterdata:masterdata"
+      ],
+      "permission": "business:masterdata:export"
+    },
+    {
+      "id": "/business/masterdata/{resource}/{id}",
+      "method": "GET",
+      "path": "/business/masterdata/{resource}/{id}",
+      "owner": "masterdata",
+      "module": "masterdata",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/masterdata/MasterDataController.java",
+      "consumers": [
+        "masterdata:masterdata"
+      ],
+      "permission": "business:masterdata:query"
+    },
+    {
+      "id": "/business/masterdata/{resource}",
+      "method": "POST",
+      "path": "/business/masterdata/{resource}",
+      "owner": "masterdata",
+      "module": "masterdata",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/masterdata/MasterDataController.java",
+      "consumers": [
+        "masterdata:masterdata"
+      ],
+      "permission": "business:masterdata:add"
+    },
+    {
+      "id": "/business/masterdata/{resource}:update",
+      "method": "PUT",
+      "path": "/business/masterdata/{resource}",
+      "owner": "masterdata",
+      "module": "masterdata",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/masterdata/MasterDataController.java",
+      "consumers": [
+        "masterdata:masterdata"
+      ],
+      "permission": "business:masterdata:edit"
+    },
+    {
+      "id": "/business/masterdata/{resource}/changeStatus",
+      "method": "PUT",
+      "path": "/business/masterdata/{resource}/changeStatus",
+      "owner": "masterdata",
+      "module": "masterdata",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/masterdata/MasterDataController.java",
+      "consumers": [
+        "masterdata:masterdata"
+      ],
+      "permission": "business:masterdata:status"
+    },
+    {
+      "id": "/business/masterdata/{resource}/{ids}",
+      "method": "DELETE",
+      "path": "/business/masterdata/{resource}/{ids}",
+      "owner": "masterdata",
+      "module": "masterdata",
+      "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/masterdata/MasterDataController.java",
+      "consumers": [
+        "masterdata:masterdata"
+      ],
+      "permission": "business:masterdata:remove"
     }
   ]
 }

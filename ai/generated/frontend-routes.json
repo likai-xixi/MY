@@ -9,6 +9,7 @@
   ],
   "modules": [
     "customer",
+    "masterdata",
     "monitor",
     "platform",
     "system",
@@ -53,6 +54,14 @@
       "api": [],
       "states": [],
       "file": "ruoyi-ui/src/views/login.vue",
+      "source": "ruoyi-view"
+    },
+    {
+      "module": "masterdata",
+      "route": "/masterdata",
+      "api": [],
+      "states": [],
+      "file": "ruoyi-ui/src/views/masterdata/index.vue",
       "source": "ruoyi-view"
     },
     {
