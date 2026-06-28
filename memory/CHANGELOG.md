@@ -1,5 +1,17 @@
 # Changelog
 
+## 2026-06-28 - governance/r-09-contract-reconcile
+
+- Change: `ai/changes/CR-20260628-r-09-configurable-modeling-contract-package`.
+- R-09 reconcile keeps `origin/master` contract filenames as the source of truth: `masterdata.*`, `rule.*`, and `tech.*`.
+- Backed up local f959 as `backup/r09-local-f959` and used its `r09-*` contracts only as a clause reference; no `r09-*` files were created.
+- Strengthened product/material/sales-option/process, field scheme, option scheme, snapshot/versioning, formula/rule, technical decomposition, part template, calculation snapshot, and roadmap-boundary clauses.
+- No sales-order runtime, Java service/controller/mapper/domain, Vue page, API client, SQL migration, customer runtime, idempotency runtime, security config, `package.json`, `tools/`, or `.github/workflows` file was created or modified.
+- [local] Early closeout passed: `npm run resume`, JSON parse audit, `R09_CONTRACT_AUDIT_OK count=19`, `SALES_ORDER_RUNTIME_ABSENT_OK`, and forbidden runtime diff audit.
+- [local] `npm run context:build -- customer` passed and restored generated current-context idempotence.
+- [local] Final `npm run check` passed end to end with `npm test` 233/233, and `git diff --check` passed.
+- [not-run] GitHub Actions and runtime acceptance were not checked because this is a local contract-only reconcile.
+
 ## 2026-06-25 - runtime-validation
 
 - Change: `ai/changes/CR-20260625T022150Z-change`.

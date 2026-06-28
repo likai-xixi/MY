@@ -28,7 +28,8 @@
     "ai/context/current-context.md",
     "ai/context/current-context.json",
     "memory/HANDOVER.md",
-    "memory/CHANGELOG.md"
+    "memory/CHANGELOG.md",
+    "memory/TASKS.json"
   ],
   "forbiddenEditRoots": [
     "ruoyi-business/src/main/java",

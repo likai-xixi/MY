@@ -8,8 +8,8 @@
       "status": "in_progress",
       "owner": "Codex",
       "priority": "high",
-      "statusReason": "R-09A.3 governance cleanup CR-20260627-r-09a-3-governance-graph-validation-cleanup aligns SQL validation ownership, platform idempotent_request ownership, generated UI/API graph validation, Vue global component scanning, high-risk API permission graph checks, current context, and handover evidence without customer runtime or sales-order runtime implementation.",
-      "nextStep": "Continue with R-09B sales-order pre-implementation contract package only after R-09A.3 closeout remains green; keep beforeSalesOrder blocked.",
+      "statusReason": "R-09 configurable modeling contract reconcile keeps origin/master masterdata/rule/tech contract filenames as the source of truth and folds missing f959 r09-* clauses into those files without runtime, package, tool, workflow, customer, idempotency, security, SQL, Java, Vue, API, or sales-order implementation.",
+      "nextStep": "Complete R-09 local closeout gates and push. Only after acceptance, open R-10A product/material/sales-option master data MVP as a separate change; keep beforeSalesOrder blocked and do not create sales-order runtime.",
       "blockedBy": [],
       "verification": [
         "npm run profile:setup",
@@ -149,7 +149,7 @@
       "latestSession": "memory/sessions/2026-06-25-pre-release-breaking-change-policy.md",
       "handoverRequired": true,
       "updatedAt": "2026-06-27",
-      "latestChange": "CR-20260627T154818Z-r-09a-4-anti-false-green-minimum-closure"
+      "latestChange": "CR-20260628-r-09-configurable-modeling-contract-package"
     },
     {
       "id": "TASK-CUSTOMER",
@@ -159,7 +159,7 @@
       "owner": "workflow",
       "priority": "normal",
       "statusReason": "CR-20260626T145150Z-customer-runtime-tests is R-08: customer runtime idempotency tests now cover missing idempotent keys, same-key/different-hash rejection, PROCESSING duplicate rejection, SUCCESS replay, CUSTOMER_DEPOSIT/DEPOSIT_IN enforcement, PUBLIC customer fund entry rejection, SAMPLE_REBATE_GENERATE stamping, salesman candidate no-fallback behavior, and MySQL/Testcontainers concurrent deposit/idempotent_request uniqueness. Sales-order runtime, production safety config, package/tools, old three-account funds, database business table structure, and deduction/refund/adjustment/reversal runtime remain untouched.",
-      "nextStep": "Continue next with R-09B sales-order pre-implementation contract package after the governance-only R-09A rule-object kernel closes.",
+      "nextStep": "Do not start sales-order runtime. Wait for the separate later sales-order contract package and beforeSalesOrder approval after the R-09 configurable modeling reconcile and subsequent R-10A master-data work are accepted.",
       "blockedBy": [],
       "verification": [
         "npm run resume",

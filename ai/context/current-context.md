@@ -1,31 +1,40 @@
 # Current Context
 
+Current feature: `customer`
 Current change: `CR-20260628-r-09-configurable-modeling-contract-package`
 Repository: RuoYi + Vue3 + Codex Auto Dev OS
 Profile: adapter `ruoyi`, locked `true`
 
-## Current Work
+## Allowed Edit Roots
 
-R-09 is a contract-only configurable modeling package. It captures the future ERP direction before any sales-order, process, material, formula, drawing, or technical-review runtime work.
-
-## Core Decision
-
-Product category, product series, product model, sales options, sales configuration processes, field library entries, option schemas, formula variables, formula groups, calculation rules, glass rules, offset rules, decomposition templates, part templates, and calculation snapshots must be configuration/version/snapshot driven.
-
-`门`, `门匾`, `栅栏`, `护栏`, `钣金件`, `异形件`, `工程定制`, `单开`, `对开`, `子母`, `连体子母`, `玻璃拼接`, `整拼`, `铝卡`, `型材`, `拉手`, `锁具`, and `铰链` are configurable data examples, not fixed runtime models.
-
-## Allowed Edit Roots For This Change
-
-- `ai/contracts/masterdata.*.md`
-- `ai/contracts/rule.*.md`
-- `ai/contracts/tech*.md`
+- `ai/contracts/masterdata.product.md`
+- `ai/contracts/masterdata.material.md`
+- `ai/contracts/masterdata.sales-option.md`
+- `ai/contracts/masterdata.process.md`
+- `ai/contracts/masterdata.field-library.md`
+- `ai/contracts/masterdata.option-schema.md`
+- `ai/contracts/rule.formula-variable.md`
+- `ai/contracts/rule.formula-group.md`
+- `ai/contracts/rule.process-calculation.md`
+- `ai/contracts/rule.glass-rule.md`
+- `ai/contracts/rule.offset-rule.md`
+- `ai/contracts/tech.decomposition-template.md`
+- `ai/contracts/tech.part-template.md`
+- `ai/contracts/tech.calculation-snapshot.md`
+- `ai/contracts/tech-review.boundary.md`
+- `ai/contracts/masterdata.snapshot-versioning.md`
+- `ai/contracts/masterdata.permission.md`
+- `ai/contracts/masterdata.migration-plan.md`
+- `ai/contracts/masterdata.contract-test-matrix.md`
 - `ai/changes/CR-20260628-r-09-configurable-modeling-contract-package`
 - `ai/changes/CURRENT_CHANGE.json`
 - `ai/context/current-context.md`
 - `ai/context/current-context.json`
 - `memory/HANDOVER.md`
+- `memory/CHANGELOG.md`
+- `memory/TASKS.json`
 
-## Forbidden Edit Roots For This Change
+## Forbidden Edit Roots
 
 - `ruoyi-business/src/main/java`
 - `ruoyi-admin/src/main/java`
@@ -37,20 +46,96 @@ Product category, product series, product model, sales options, sales configurat
 - `package.json`
 - `tools`
 - `.github/workflows`
-- production or development security configuration files
+- `ruoyi-admin/src/main/resources/application.yml`
+- `ruoyi-admin/src/main/resources/application-druid.yml`
+- `ruoyi-admin/src/main/resources/application-prod.yml`
 
 ## Must Read Files
 
-- `AGENTS.md`
-- `memory/HANDOVER.md`
-- `ai/changes/CR-20260628-r-09-configurable-modeling-contract-package/impact.json`
-- `ai/contracts/masterdata.snapshot-versioning.md`
-- `ai/contracts/masterdata.contract-test-matrix.md`
+- `AGENTS.md` - Top-level workflow and boundary contract.
+- `ai/context/current-context.md` - Compact current handoff for new Codex windows.
+- `memory/HANDOVER.md` - Latest project handoff and verification boundary.
+- `ai/project-profile.json` - Locked adapter and profile-rule state.
+- `package.json` - Available workflow and check scripts.
+- `ai/registry/features.json` - Feature ownership and active customer context.
+- `ai/registry/modules.json` - Module ownership roots.
+- `ai/context/features/customer.md` - Focused context for customer.
+- `ai/roadmap/phase-gates.json` - beforeSalesOrder gate state.
+- `ai/roadmap/refactor-debt.json` - Known debt affecting sales-order handoff.
+- `ai/roadmap/enhancement-backlog.json` - Governance backlog and required/deferred evidence.
+- `ai/changes/CR-20260628-r-09-configurable-modeling-contract-package/impact.json` - Current change allowed and forbidden edit roots.
+- `ai/changes/CR-20260628-r-09-configurable-modeling-contract-package/plan.md` - Current change execution plan.
+- `ai/changes/CR-20260628-r-09-configurable-modeling-contract-package/verification.md` - Current change verification evidence.
 
-## Verification Boundary
+## Must Not Break
 
-R-09 was created through the GitHub connector. Local commands were not run in this evidence pass. A local closeout should run `npm run resume`, `npm run check`, and `git diff --check` before treating this batch as locally verified.
+- Do not implement sales-order in this governance change.
+- Do not modify customer-management business code in governance/rule-change work.
+- Do not change database business table structure in this governance change.
+- Do not loosen existing governance gates or profile lock.
 
-## Next Step
+## Roadmap Blockers
 
-After R-09 acceptance and local gate verification, continue to R-10 product/material/sales-option master data MVP. Do not create sales-order runtime before the later sales-order contract package is approved.
+- multi-role-review: in-progress - Run review:feature for the sales-order proposal and record the decision before implementation.
+- current-context: in-progress - Run npm run context:build -- customer before sales-order planning.
+- context-pack: in-progress - Keep current-context deterministic and below the line/read-budget thresholds.
+- doc-size: in-progress - Split or summarize oversized governance docs instead of appending indefinitely.
+- read-budget: in-progress - Add extra must-read files only with a written reason.
+- file-weight: in-progress - Before touching heavy files, add a split plan or weight exception to the change record.
+- roadmap-check: in-progress - Keep backlog item evidence and futureAction fields non-empty.
+- phase-gate-check: in-progress - Mark beforeSalesOrder ready only after required items are completed.
+- refactor-debt-check: in-progress - Resolve or explicitly accept debt before dependent sales-order behavior is implemented.
+- snapshot-contract: required - Draft snapshot contract in the sales-order pre-review batch.
+- state-machine-contract: required - Draft state-machine contract in the sales-order pre-review batch.
+- fund-boundary-contract: required - Draft fund-boundary contract before order fund behavior.
+
+## beforeSalesOrder Gate
+
+Status: `blocked`
+
+Required:
+- multi-role-review
+- current-context
+- doc-size
+- read-budget
+- context-pack
+- file-weight
+- roadmap-check
+- phase-gate-check
+- refactor-debt-check
+- snapshot-contract
+- state-machine-contract
+- fund-boundary-contract
+
+Deferred:
+- code-index: Can wait until the current-context package and sales-order contract scope are stable.
+- context-select: Dependency-closure selection should be added after the first compact context workflow is proven.
+- feature-coverage: Deep feature coverage checks need approved sales-order contract files first.
+- module-dependencies: Dependency matrix visualization is deferred until sales-order/delivery/finance boundaries exist.
+- api-integration-test: Requires approved API contracts and runtime fixtures.
+- ui-smoke-test: Requires approved UI screens and browser acceptance path.
+- github-actions: CI is deferred to avoid fake echo-success automation before local gates are stable.
+
+## Refactor Debt Summary
+
+- customer-contact-address-reinsert: open - beforeSalesOrder remains blocked until the snapshot contract defines required customer/contact/address snapshot fields.
+- customer-put-full-update: open - Current-context and sales-order review must call out the full-update boundary.
+- database-direction-mysql: open - Roadmap and context files must keep MySQL as the default database assumption.
+- change-salesman-mode-residue: open - Sales-order review must not depend on unclear owner-change semantics.
+- reserved-fund-adjust-permission: open - Fund-boundary contract must distinguish deposit entry, deduction, refund, adjustment, and reversal responsibilities.
+
+## Planned Verification Commands
+
+- `npm run resume`
+- `npm run scan:all`
+- `npm run context:build -- customer`
+- `npm run finalize:change -- --summary "新增销售订单前治理接手机制"`
+- `npm run check`
+- `npm test`
+- `git diff --check`
+
+## Next Steps
+
+- Keep this change governance-only.
+- Before sales-order implementation, run review:feature and require decision.md to explicitly contain Allow Implementation.
+- Complete snapshot, state-machine, and fund-boundary contracts before creating sales-order code or tables.

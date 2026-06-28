@@ -8,6 +8,7 @@ Mode: `contract-only`
 4. Do not create SQL migrations.
 5. Do not modify customer runtime, idempotency runtime, security configuration, package scripts, or tools.
 6. Update change record and handover evidence.
+7. Reconcile the backed-up f959 `r09-*` content into the remote `masterdata.*`, `rule.*`, and `tech.*` structure only; do not create `r09-*` files, merge two contract sets, or enter R-10.
 
 ## Explicit Non-goals
 

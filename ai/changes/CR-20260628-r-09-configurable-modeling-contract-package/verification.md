@@ -1,26 +1,32 @@
 # Verification
 
-Status: [github-connector] contract files created.
+Status: [local] R-09 reconcile locally verified and ready to commit.
 
 ## Evidence
 
-- [github-connector] Created 19 R-09 contract files under `ai/contracts/`.
-- [github-connector] Created this change record under `ai/changes/CR-20260628-r-09-configurable-modeling-contract-package/`.
-- [github-connector] Did not create sales-order runtime files.
-- [github-connector] Did not create process/material/formula/drawing runtime files.
-- [github-connector] Did not create SQL migration files.
-- [github-connector] Did not modify customer runtime files.
-- [github-connector] Did not modify idempotency runtime files.
-- [github-connector] Did not modify security configuration.
-- [github-connector] Did not modify `package.json` or `tools/`.
+- [local] `git status --short --branch` before reset showed `master...origin/master [ahead 1, behind 30]`.
+- [local] `git branch backup/r09-local-f959 f959233c3560f9ae7570d09e3d29152bab8c715c` was already satisfied; `git log --oneline backup/r09-local-f959 -1` returned `f959233 docs: add configurable modeling contracts`.
+- [local] `git fetch origin` failed with `Send failure: Connection was reset`; one-shot proxy bypass `git -c http.proxy= -c https.proxy= fetch origin` passed.
+- [local] `git diff --name-status origin/master..backup/r09-local-f959` confirmed f959 used `r09-*` files while origin/master uses `masterdata.*`, `rule.*`, and `tech.*` contracts.
+- [local] `git reset --hard origin/master` aligned local master to `6f30739 docs: update current context json for R-09 contracts`.
+- [local] Reconciled missing f959 clauses into existing remote contract files only; no `r09-*` file was created.
+- [local] `npm run resume` passed after reconcile edits.
+- [local] JSON parse audit passed for `memory/TASKS.json`, `ai/context/current-context.json`, `impact.json`, and `changed-files.json`.
+- [local] `R09_CONTRACT_AUDIT_OK count=19` passed.
+- [local] `SALES_ORDER_RUNTIME_ABSENT_OK` passed.
+- [local] `FORBIDDEN_RUNTIME_DIFF_ABSENT_OK` passed for Java/Vue/API/SQL/customer/idempotency/security/package/tools/workflow roots.
+- [local] `npm run context:build -- customer` passed and restored generated current-context idempotence.
+- [local] Current-CR `component-exception.md` and `boundary-exception.md` preserve exact inherited RuoYi system/tool/generator baseline exceptions without modifying checker or runtime files.
+- [local] `npm run check` passed end to end; final `npm test` passed 233/233.
+- [local] `git diff --check` passed.
 
 ## Four-Light Status
 
-- [not-run] `npm run check`: not-run; GitHub connector file creation does not execute local commands.
-- [not-run] `GitHub Actions`: not-run/unchecked for this change in this evidence pass.
-- [not-run] `verify:release`: not-run; this is contract-only and not a release candidate.
-- [not-run] `runtime acceptance`: not-run; no API, browser, DB, or manual runtime acceptance was executed.
+- [local] `npm run check`: passed end to end with final `npm test` 233/233.
+- [not-run] `GitHub Actions`: not checked in this local closeout pass.
+- [not-run] `verify:release`: not required for this contract-only reconcile.
+- [not-run] `runtime acceptance`: not required; no API, browser, DB, Java, Vue, or SQL runtime changed.
 
 ## Residual Risk
 
-Because this work was performed through the GitHub connector, local generated scans and formal closeout commands were not run. A later Codex/local pass should run `npm run resume`, `npm run check`, and `git diff --check` before treating the batch as fully locally verified.
+[not-run] Runtime API/browser/DB/Maven/frontend-build acceptance remains intentionally out of scope for this contract-only R-09 reconcile.
