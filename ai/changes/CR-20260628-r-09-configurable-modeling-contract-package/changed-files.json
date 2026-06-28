@@ -29,7 +29,6 @@
     "ai/changes/CURRENT_CHANGE.json",
     "ai/context/current-context.md",
     "ai/context/current-context.json",
-    "memory/HANDOVER.md",
-    "memory/CHANGELOG.md"
+    "memory/HANDOVER.md"
   ]
 }
