@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "files": [
+    "ai/changes/CR-20260628-r-10a-masterdata-mvp-contract-package/boundary-exception.md",
+    "ai/changes/CR-20260628-r-10a-masterdata-mvp-contract-package/changed-files.json",
+    "ai/changes/CR-20260628-r-10a-masterdata-mvp-contract-package/component-exception.md",
+    "ai/changes/CR-20260628-r-10a-masterdata-mvp-contract-package/handover.md",
+    "ai/changes/CR-20260628-r-10a-masterdata-mvp-contract-package/impact.json",
+    "ai/changes/CR-20260628-r-10a-masterdata-mvp-contract-package/plan.md",
+    "ai/changes/CR-20260628-r-10a-masterdata-mvp-contract-package/request.md",
+    "ai/changes/CR-20260628-r-10a-masterdata-mvp-contract-package/verification.md",
+    "ai/changes/CURRENT_CHANGE.json",
+    "ai/context/current-context.json",
+    "ai/context/current-context.md",
+    "ai/contracts/masterdata.r10-api.md",
+    "ai/contracts/masterdata.r10-contract-test-matrix.md",
+    "ai/contracts/masterdata.r10-db.md",
+    "ai/contracts/masterdata.r10-implementation-boundary.md",
+    "ai/contracts/masterdata.r10-migration-plan.md",
+    "ai/contracts/masterdata.r10-permission.md",
+    "ai/contracts/masterdata.r10-scope.md",
+    "ai/contracts/masterdata.r10-ui.md",
+    "memory/CHANGELOG.md",
+    "memory/HANDOVER.md",
+    "memory/TASKS.json"
+  ]
+}

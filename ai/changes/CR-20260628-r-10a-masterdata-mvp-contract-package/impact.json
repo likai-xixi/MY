@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "mode": "contract-only",
+  "feature": "platform",
+  "summary": "R-10A defines the product, material, accessory, and sales-option master-data MVP scope for later R-10B runtime implementation. It creates contracts, pre-review evidence, current context, and memory only.",
+  "allowedEditRoots": [
+    "ai/contracts/masterdata.r10-scope.md",
+    "ai/contracts/masterdata.r10-api.md",
+    "ai/contracts/masterdata.r10-db.md",
+    "ai/contracts/masterdata.r10-ui.md",
+    "ai/contracts/masterdata.r10-permission.md",
+    "ai/contracts/masterdata.r10-migration-plan.md",
+    "ai/contracts/masterdata.r10-contract-test-matrix.md",
+    "ai/contracts/masterdata.r10-implementation-boundary.md",
+    "ai/changes/CR-20260628-r-10a-masterdata-mvp-contract-package",
+    "ai/changes/CURRENT_CHANGE.json",
+    "ai/context/current-context.md",
+    "ai/context/current-context.json",
+    "memory/HANDOVER.md",
+    "memory/CHANGELOG.md",
+    "memory/TASKS.json"
+  ],
+  "forbiddenEditRoots": [
+    "ruoyi-business/src/main/java",
+    "ruoyi-admin/src/main/java",
+    "ruoyi-business/src/main/resources/mapper",
+    "ruoyi-ui/src/views",
+    "ruoyi-ui/src/api",
+    "sql/migrations",
+    "sql/validation",
+    "package.json",
+    "tools",
+    ".github/workflows",
+    "ruoyi-admin/src/main/resources/application.yml",
+    "ruoyi-admin/src/main/resources/application-druid.yml",
+    "ruoyi-admin/src/main/resources/application-prod.yml"
+  ],
+  "requiredCommands": [
+    "npm run resume",
+    "npm run check",
+    "git diff --check"
+  ],
+  "requiredEvidence": [
+    "Created R-10A contract/pre-review files only",
+    "Current change record is CR-20260628-r-10a-masterdata-mvp-contract-package",
+    "beforeSalesOrder remains blocked",
+    "No sales-order runtime files were created",
+    "No Java/Vue/API/SQL runtime files were created",
+    "R-10B SQL migration requirement is recorded but no R-10A SQL file is created",
+    "R-10B ownership sync requirement is recorded for API/UI/SQL/permission/tests"
+  ],
+  "blockers": []
+}

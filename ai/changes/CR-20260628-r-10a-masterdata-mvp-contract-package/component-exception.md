@@ -1,0 +1,19 @@
+# Component Exception
+
+Scope: `CR-20260628-r-10a-masterdata-mvp-contract-package`
+
+R-10A is a contract-only masterdata MVP pre-review package. It does not create customer-local reusable frontend components and does not change RuoYi system/tool UI code.
+
+The component checker is current-change scoped, so the inherited exact-path exception must be carried into this CR to keep pre-existing RuoYi platform/system/tool/generator pages from blocking unrelated contract closeout. These files are pre-existing RuoYi built-in pages/dialogs, are outside customer, masterdata, and sales-order runtime, and are not introduced by this change.
+
+The exception is limited to these exact paths:
+
+- `ruoyi-ui/src/views/system/role/selectUser.vue`
+- `ruoyi-ui/src/views/tool/build/CodeTypeDialog.vue`
+- `ruoyi-ui/src/views/tool/build/IconsDialog.vue`
+- `ruoyi-ui/src/views/tool/build/TreeNodeDialog.vue`
+- `ruoyi-ui/src/views/tool/gen/basicInfoForm.vue`
+- `ruoyi-ui/src/views/tool/gen/createTable.vue`
+- `ruoyi-ui/src/views/tool/gen/editTable.vue`
+- `ruoyi-ui/src/views/tool/gen/genInfoForm.vue`
+- `ruoyi-ui/src/views/tool/gen/importTable.vue`

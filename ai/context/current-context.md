@@ -1,32 +1,21 @@
 # Current Context
 
 Current feature: `customer`
-Current change: `CR-20260628-r-09-configurable-modeling-contract-package`
+Current change: `CR-20260628-r-10a-masterdata-mvp-contract-package`
 Repository: RuoYi + Vue3 + Codex Auto Dev OS
 Profile: adapter `ruoyi`, locked `true`
 
 ## Allowed Edit Roots
 
-- `ai/contracts/masterdata.product.md`
-- `ai/contracts/masterdata.material.md`
-- `ai/contracts/masterdata.sales-option.md`
-- `ai/contracts/masterdata.process.md`
-- `ai/contracts/masterdata.field-library.md`
-- `ai/contracts/masterdata.option-schema.md`
-- `ai/contracts/rule.formula-variable.md`
-- `ai/contracts/rule.formula-group.md`
-- `ai/contracts/rule.process-calculation.md`
-- `ai/contracts/rule.glass-rule.md`
-- `ai/contracts/rule.offset-rule.md`
-- `ai/contracts/tech.decomposition-template.md`
-- `ai/contracts/tech.part-template.md`
-- `ai/contracts/tech.calculation-snapshot.md`
-- `ai/contracts/tech-review.boundary.md`
-- `ai/contracts/masterdata.snapshot-versioning.md`
-- `ai/contracts/masterdata.permission.md`
-- `ai/contracts/masterdata.migration-plan.md`
-- `ai/contracts/masterdata.contract-test-matrix.md`
-- `ai/changes/CR-20260628-r-09-configurable-modeling-contract-package`
+- `ai/contracts/masterdata.r10-scope.md`
+- `ai/contracts/masterdata.r10-api.md`
+- `ai/contracts/masterdata.r10-db.md`
+- `ai/contracts/masterdata.r10-ui.md`
+- `ai/contracts/masterdata.r10-permission.md`
+- `ai/contracts/masterdata.r10-migration-plan.md`
+- `ai/contracts/masterdata.r10-contract-test-matrix.md`
+- `ai/contracts/masterdata.r10-implementation-boundary.md`
+- `ai/changes/CR-20260628-r-10a-masterdata-mvp-contract-package`
 - `ai/changes/CURRENT_CHANGE.json`
 - `ai/context/current-context.md`
 - `ai/context/current-context.json`
@@ -63,9 +52,9 @@ Profile: adapter `ruoyi`, locked `true`
 - `ai/roadmap/phase-gates.json` - beforeSalesOrder gate state.
 - `ai/roadmap/refactor-debt.json` - Known debt affecting sales-order handoff.
 - `ai/roadmap/enhancement-backlog.json` - Governance backlog and required/deferred evidence.
-- `ai/changes/CR-20260628-r-09-configurable-modeling-contract-package/impact.json` - Current change allowed and forbidden edit roots.
-- `ai/changes/CR-20260628-r-09-configurable-modeling-contract-package/plan.md` - Current change execution plan.
-- `ai/changes/CR-20260628-r-09-configurable-modeling-contract-package/verification.md` - Current change verification evidence.
+- `ai/changes/CR-20260628-r-10a-masterdata-mvp-contract-package/impact.json` - Current change allowed and forbidden edit roots.
+- `ai/changes/CR-20260628-r-10a-masterdata-mvp-contract-package/plan.md` - Current change execution plan.
+- `ai/changes/CR-20260628-r-10a-masterdata-mvp-contract-package/verification.md` - Current change verification evidence.
 
 ## Must Not Break
 
@@ -127,11 +116,7 @@ Deferred:
 ## Planned Verification Commands
 
 - `npm run resume`
-- `npm run scan:all`
-- `npm run context:build -- customer`
-- `npm run finalize:change -- --summary "新增销售订单前治理接手机制"`
 - `npm run check`
-- `npm test`
 - `git diff --check`
 
 ## Next Steps

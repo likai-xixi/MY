@@ -1,5 +1,17 @@
 # Changelog
 
+## 2026-06-28 - governance/r-10a-masterdata-contract-package
+
+- Change: `ai/changes/CR-20260628-r-10a-masterdata-mvp-contract-package`.
+- R-10A creates a contract/pre-review package for the later product/material/accessory/sales-option master-data MVP.
+- R-10B scope is limited to product category, product series, product model, material category, material record, accessory category, accessory record, sales option category, and sales option value.
+- Product examples such as `门`, `门匾`, `栅栏`, `护栏`, `钣金件`, `异形件`, `工程定制`, `庭院门`, `入户门`, `玻璃拼接门`, `整拼门`, `铝卡门`, and `型材门` are recorded as configurable data, not hard-coded models.
+- Sales option examples such as `单开`, `对开`, `子母`, `连体子母`, `颜色`, `拉手`, `锁具`, `铰链`, `玻璃`, `表面处理`, `包装方式`, and `材料体系` are recorded as configurable data, not hard-coded enums.
+- R-10A records stable code/display name/status/sort order/remark requirements, reference-safe delete/archive rules, snapshot code/name rules, R-10B executable MySQL migration requirement, and view/add/edit/remove/export/status/publish permission boundary.
+- No sales-order runtime, Java service/controller/mapper/domain, Vue page, API client, SQL migration, SQL validation, customer runtime, package, tool, workflow, or production configuration file was created or modified.
+- [local] `npm run context:build -- customer` passed after R-10A restored current-context generated idempotence.
+- [local] Final `npm run resume`, `npm run check` with `npm test` 233/233, and `git diff --check` passed.
+
 ## 2026-06-28 - governance/r-09-contract-reconcile
 
 - Change: `ai/changes/CR-20260628-r-09-configurable-modeling-contract-package`.

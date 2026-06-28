@@ -2,59 +2,28 @@
 
 ## Summary
 
-R-09 configurable modeling contract package is the current change.
+R-10A masterdata MVP contract package is the current change.
 
-Current change record: `ai/changes/CR-20260628-r-09-configurable-modeling-contract-package`.
-
-## Purpose
-
-R-09 records the user's configurable ERP direction before sales-order or technical runtime work. The local reconcile keeps the remote `masterdata.*`, `rule.*`, and `tech.*` contract structure, then folds missing f959 `r09-*` clauses into those files without creating a second contract set.
+Current change record: `ai/changes/CR-20260628-r-10a-masterdata-mvp-contract-package`.
 
 ## Impact
 
-This change affects R-09 contracts and closeout evidence only. It strengthens configurable modeling clauses for product/category/series/model, material/accessory data, sales options, sales configuration processes, field library and field schemes, option schemes, snapshots, formula variables/groups, process/glass/offset rules, technical decomposition templates, part templates, calculation snapshots, and the R-10 through R-17 roadmap boundary.
+This change creates the R-10A contract/pre-review package for the later R-10B master-data runtime slice. It defines the minimum R-10B scope as product category, product series, product model, material category, material record, accessory category, accessory record, sales option category, and sales option value.
 
-## Key Boundary
-
-- `门`, `门匾`, `栅栏`, `护栏`, `钣金件`, `异形件`, `工程定制`, `庭院门`, `入户门`, `玻璃拼接门`, `整拼门`, `铝卡门`, `型材门`, `单开`, `对开`, `子母`, `连体子母`, `玻璃拼接`, `整拼`, `铝卡`, `型材`, `发光字`, `铁艺栅栏`, `钣金折弯`, `拉手`, `锁具`, and `铰链` are configurable data examples, not hard-coded runtime models.
-- R-09 remains contract-only.
-- No `r09-*` files were created.
-- No sales-order runtime was created.
-- No Java service/controller/mapper/domain was created or modified.
-- No Vue page or API client was created or modified.
-- No SQL migration was created.
-- No customer runtime was changed.
-- No idempotency runtime was changed.
-- No security config was changed.
-- No `package.json`, `tools/`, or `.github/workflows` file was changed.
-
-## Reconciled Contract Areas
-
-- `masterdata.product.md`, `masterdata.material.md`, `masterdata.sales-option.md`, and `masterdata.process.md` now explicitly keep product, material, option, and sales-configuration-process concepts configurable.
-- `masterdata.field-library.md`, `masterdata.option-schema.md`, `masterdata.snapshot-versioning.md`, and `masterdata.contract-test-matrix.md` now carry field scheme, option scheme, snapshot, and audit expectations without creating `masterdata.field-scheme.md`.
-- `rule.formula-variable.md`, `rule.formula-group.md`, `rule.process-calculation.md`, `rule.glass-rule.md`, and `rule.offset-rule.md` now carry versioned formula/rule requirements, examples, and old-system concept mapping.
-- `tech.decomposition-template.md`, `tech.part-template.md`, `tech.calculation-snapshot.md`, and `tech-review.boundary.md` now carry the sales-vs-technical boundary, generated part list, calculation snapshot content, and R-10 through R-17 roadmap boundary.
+R-10A keeps all product families, product types, opening modes, colors, hardware, glass, surface treatment, packaging, and material-system names as configurable data. It creates no runtime implementation.
 
 ## Changed Files
 
-- `ai/contracts/masterdata.contract-test-matrix.md`
-- `ai/contracts/masterdata.field-library.md`
-- `ai/contracts/masterdata.material.md`
-- `ai/contracts/masterdata.option-schema.md`
-- `ai/contracts/masterdata.process.md`
-- `ai/contracts/masterdata.product.md`
-- `ai/contracts/masterdata.sales-option.md`
-- `ai/contracts/masterdata.snapshot-versioning.md`
-- `ai/contracts/rule.formula-group.md`
-- `ai/contracts/rule.formula-variable.md`
-- `ai/contracts/rule.glass-rule.md`
-- `ai/contracts/rule.offset-rule.md`
-- `ai/contracts/rule.process-calculation.md`
-- `ai/contracts/tech-review.boundary.md`
-- `ai/contracts/tech.calculation-snapshot.md`
-- `ai/contracts/tech.decomposition-template.md`
-- `ai/contracts/tech.part-template.md`
-- `ai/changes/CR-20260628-r-09-configurable-modeling-contract-package/*`
+- `ai/contracts/masterdata.r10-scope.md`
+- `ai/contracts/masterdata.r10-api.md`
+- `ai/contracts/masterdata.r10-db.md`
+- `ai/contracts/masterdata.r10-ui.md`
+- `ai/contracts/masterdata.r10-permission.md`
+- `ai/contracts/masterdata.r10-migration-plan.md`
+- `ai/contracts/masterdata.r10-contract-test-matrix.md`
+- `ai/contracts/masterdata.r10-implementation-boundary.md`
+- `ai/changes/CR-20260628-r-10a-masterdata-mvp-contract-package/*`
+- `ai/changes/CURRENT_CHANGE.json`
 - `ai/context/current-context.md`
 - `ai/context/current-context.json`
 - `memory/CHANGELOG.md`
@@ -63,41 +32,32 @@ This change affects R-09 contracts and closeout evidence only. It strengthens co
 
 ## Commands
 
-- [local] `git status --short --branch` before reset showed `master...origin/master [ahead 1, behind 30]`.
-- [local] `git log --oneline backup/r09-local-f959 -1` returned `f959233 docs: add configurable modeling contracts`.
-- [local] `git fetch origin` failed with the known HTTPS reset; `git -c http.proxy= -c https.proxy= fetch origin` passed.
-- [local] `git diff --name-status origin/master..backup/r09-local-f959` and `git diff origin/master..backup/r09-local-f959 -- ai/contracts` were used for reconcile intake without merge/rebase.
-- [local] `git reset --hard origin/master` aligned local master to `6f30739 docs: update current context json for R-09 contracts`.
-- [local] `npm run resume` passed after reconcile edits.
-- [local] JSON parse audit passed.
-- [local] `R09_CONTRACT_AUDIT_OK count=19` passed.
-- [local] `SALES_ORDER_RUNTIME_ABSENT_OK` passed.
-- [local] `FORBIDDEN_RUNTIME_DIFF_ABSENT_OK` passed.
-- [not-run] final `npm run check`: rerun after this handover structure fix.
-- [local] `git diff --check` passed before this handover structure fix.
+- [local] `npm run resume` passed before R-10A file creation.
+- [local] `git status --short --branch` returned `## master...origin/master` before R-10A file creation.
+- [local] `git -c http.proxy= -c https.proxy= fetch origin master` passed.
+- [local] `git rev-parse HEAD origin/master` confirmed both refs at `76f0d3de18287b402f34ed1f7f4793a7b8278054`.
+- [local] `Select-String` confirmed `beforeSalesOrder.status` is `blocked`.
+- [local] First `npm run check` reached `check:memory-quality`; fixed in R-10A handover/evidence files.
+- [local] Second `npm run check` reached `check:verification-provenance`; fixed in R-10A handover/evidence files.
+- [local] Third `npm run check` reached `check:components`; fixed by adding current-CR scoped exact-path exceptions for inherited RuoYi system/tool/generator component findings.
+- [local] Fourth `npm run check` reached `npm test`; fixed by running `npm run context:build -- customer` to restore current-context idempotence.
+- [local] `npm run context:build -- customer` passed.
+- [local] Final `npm run resume` passed after R-10A file creation and context regeneration.
+- [local] Final `npm run check` passed end to end; `npm test` passed 233/233.
+- [local] Final `git diff --check` passed.
 
 ## Verification
 
-- [local] `npm run resume` passed after reconcile edits.
-- [local] JSON parse audit passed for `memory/TASKS.json`, `ai/context/current-context.json`, `impact.json`, and `changed-files.json`.
-- [local] `R09_CONTRACT_AUDIT_OK count=19` passed.
-- [local] `SALES_ORDER_RUNTIME_ABSENT_OK` passed.
-- [local] `FORBIDDEN_RUNTIME_DIFF_ABSENT_OK` passed for Java/Vue/API/SQL/customer/idempotency/security/package/tools/workflow roots.
-- [local] `npm run context:build -- customer` passed and restored generated current-context idempotence.
-- [local] Current-CR component and boundary exceptions passed for exact inherited RuoYi system/tool/generator baseline paths; no Vue/router/checker file was edited.
-- [local] `npm run check` passed end to end; final `npm test` passed 233/233.
-- [local] `git diff --check` passed.
-- [not-run] GitHub Actions: not checked in this local closeout pass yet.
-- [not-run] `verify:release`: not required for this contract-only reconcile.
-- [not-run] runtime acceptance: not required because no API, browser, DB, Java, Vue, or SQL runtime changed.
+[local] Initial intake passed and confirmed the repository was aligned with `origin/master`, `beforeSalesOrder` was blocked, and the active work is R-10A contract/pre-review rather than R-10B runtime. [local] Early `npm run check` retries surfaced only closeout evidence wording, inherited RuoYi component exception needs, and current-context generation idempotence; fixes stayed inside the R-10A change record, current-context, handover, and memory scope. [local] Final `npm run check` passed end to end with `npm test` 233/233, and final `git diff --check` passed.
 
 ## Risks
 
-- [local] The f959 branch had stronger clauses, but its `r09-*` file structure was intentionally not adopted.
-- [not-run] Runtime API/browser/DB/Maven/frontend-build acceptance was not run because this reconcile changes only contracts and memory/evidence.
-- [local] `beforeSalesOrder` remains blocked; sales-order implementation still requires a later approved contract/review gate.
-- [not-run] GitHub Actions was not checked in this local closeout pass.
+- R-10A does not prove API, browser, DB, Maven, frontend-build, migration, or runtime behavior because it intentionally creates no runtime files.
+- R-10B still needs executable MySQL migration, API/UI/SQL/permission/test ownership sync, generated scans, and runtime-specific tests.
+- `beforeSalesOrder` remains blocked; sales-order implementation still requires its own contracts, review decision, and gate evidence.
 
 ## Next Actions
 
-After R-09 local gates pass and this change is accepted, R-10A product/material/sales-option master data MVP may be opened as a separate change. This reconcile does not start R-10A and must not create sales-order runtime.
+- After R-10A acceptance, open R-10B as a separate runtime change for the nine master-data MVP objects only.
+- R-10B must not include field schemes, formulas, technical templates, sales order, inventory, BOM, production route, scanning/reporting, drawing, shipment, finance, or receipt flows.
+- Before any sales-order runtime is created, complete the separate sales-order contracts/review and unblock `beforeSalesOrder` with explicit evidence.

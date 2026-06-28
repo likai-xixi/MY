@@ -3,33 +3,22 @@
   "generatedBy": "scripts/context-build.js",
   "generatedAt": "stable",
   "currentFeature": "customer",
-  "currentChange": "CR-20260628-r-09-configurable-modeling-contract-package",
+  "currentChange": "CR-20260628-r-10a-masterdata-mvp-contract-package",
   "repositoryProfile": {
     "adapter": "ruoyi",
     "locked": true,
     "stack": "RuoYi + Vue3 + Codex Auto Dev OS"
   },
   "allowedEditRoots": [
-    "ai/contracts/masterdata.product.md",
-    "ai/contracts/masterdata.material.md",
-    "ai/contracts/masterdata.sales-option.md",
-    "ai/contracts/masterdata.process.md",
-    "ai/contracts/masterdata.field-library.md",
-    "ai/contracts/masterdata.option-schema.md",
-    "ai/contracts/rule.formula-variable.md",
-    "ai/contracts/rule.formula-group.md",
-    "ai/contracts/rule.process-calculation.md",
-    "ai/contracts/rule.glass-rule.md",
-    "ai/contracts/rule.offset-rule.md",
-    "ai/contracts/tech.decomposition-template.md",
-    "ai/contracts/tech.part-template.md",
-    "ai/contracts/tech.calculation-snapshot.md",
-    "ai/contracts/tech-review.boundary.md",
-    "ai/contracts/masterdata.snapshot-versioning.md",
-    "ai/contracts/masterdata.permission.md",
-    "ai/contracts/masterdata.migration-plan.md",
-    "ai/contracts/masterdata.contract-test-matrix.md",
-    "ai/changes/CR-20260628-r-09-configurable-modeling-contract-package",
+    "ai/contracts/masterdata.r10-scope.md",
+    "ai/contracts/masterdata.r10-api.md",
+    "ai/contracts/masterdata.r10-db.md",
+    "ai/contracts/masterdata.r10-ui.md",
+    "ai/contracts/masterdata.r10-permission.md",
+    "ai/contracts/masterdata.r10-migration-plan.md",
+    "ai/contracts/masterdata.r10-contract-test-matrix.md",
+    "ai/contracts/masterdata.r10-implementation-boundary.md",
+    "ai/changes/CR-20260628-r-10a-masterdata-mvp-contract-package",
     "ai/changes/CURRENT_CHANGE.json",
     "ai/context/current-context.md",
     "ai/context/current-context.json",
@@ -98,15 +87,15 @@
       "reason": "Governance backlog and required/deferred evidence."
     },
     {
-      "path": "ai/changes/CR-20260628-r-09-configurable-modeling-contract-package/impact.json",
+      "path": "ai/changes/CR-20260628-r-10a-masterdata-mvp-contract-package/impact.json",
       "reason": "Current change allowed and forbidden edit roots."
     },
     {
-      "path": "ai/changes/CR-20260628-r-09-configurable-modeling-contract-package/plan.md",
+      "path": "ai/changes/CR-20260628-r-10a-masterdata-mvp-contract-package/plan.md",
       "reason": "Current change execution plan."
     },
     {
-      "path": "ai/changes/CR-20260628-r-09-configurable-modeling-contract-package/verification.md",
+      "path": "ai/changes/CR-20260628-r-10a-masterdata-mvp-contract-package/verification.md",
       "reason": "Current change verification evidence."
     }
   ],
@@ -312,11 +301,7 @@
   ],
   "verificationCommands": [
     "npm run resume",
-    "npm run scan:all",
-    "npm run context:build -- customer",
-    "npm run finalize:change -- --summary \"新增销售订单前治理接手机制\"",
     "npm run check",
-    "npm test",
     "git diff --check"
   ],
   "nextSteps": [
