@@ -12,7 +12,8 @@
         <el-input v-model="queryParams.itemName" placeholder="请输入名称" clearable style="width: 180px" @keyup.enter="handleQuery" />
       </el-form-item>
       <el-form-item v-if="currentConfig.categoryResource" label="所属分类" prop="categoryId">
-        <el-select v-model="queryParams.categoryId" placeholder="请选择" clearable filterable style="width: 180px">
+        <el-tree-select v-if="categoryUsesTreeSelect" v-model="queryParams.categoryId" :data="categoryTreeOptions" :props="treeSelectProps" node-key="id" placeholder="请选择" clearable filterable check-strictly style="width: 180px" />
+        <el-select v-else v-model="queryParams.categoryId" placeholder="请选择" clearable filterable style="width: 180px">
           <el-option v-for="item in categoryOptions" :key="item.id" :label="optionLabel(item)" :value="item.id" />
         </el-select>
       </el-form-item>
@@ -108,12 +109,14 @@
           <el-input v-model="form.itemName" placeholder="请输入名称" maxlength="120" />
         </el-form-item>
         <el-form-item v-if="currentConfig.parentEnabled" label="上级分类" prop="parentId">
-          <el-select v-model="form.parentId" placeholder="请选择" clearable filterable style="width: 100%" @change="handleParentChange">
-            <el-option v-for="item in parentOptions" :key="item.id" :label="optionLabel(item)" :value="item.id" :disabled="item.id === form.id" />
+          <el-tree-select v-if="parentUsesTreeSelect" v-model="form.parentId" :data="parentTreeOptions" :props="treeSelectProps" node-key="id" placeholder="请选择" clearable filterable check-strictly style="width: 100%" @change="handleParentChange" />
+          <el-select v-else v-model="form.parentId" placeholder="请选择" clearable filterable style="width: 100%" @change="handleParentChange">
+            <el-option v-for="item in parentOptions" :key="item.id" :label="optionLabel(item)" :value="item.id" :disabled="isParentOptionDisabled(item)" />
           </el-select>
         </el-form-item>
         <el-form-item v-if="currentConfig.categoryResource" label="所属分类" prop="categoryId">
-          <el-select v-model="form.categoryId" placeholder="请选择" filterable style="width: 100%" @change="handleFormCategoryChange">
+          <el-tree-select v-if="categoryUsesTreeSelect" v-model="form.categoryId" :data="categoryTreeOptions" :props="treeSelectProps" node-key="id" placeholder="请选择" filterable check-strictly style="width: 100%" @change="handleFormCategoryChange" />
+          <el-select v-else v-model="form.categoryId" placeholder="请选择" filterable style="width: 100%" @change="handleFormCategoryChange">
             <el-option v-for="item in categoryOptions" :key="item.id" :label="optionLabel(item)" :value="item.id" />
           </el-select>
         </el-form-item>
@@ -165,6 +168,9 @@ import {
 } from '@/api/masterdata'
 
 const { proxy } = getCurrentInstance()
+const PRODUCT_CATEGORY_MAX_DEPTH = 3
+const PRODUCT_CATEGORY_LEVEL_LABELS = ['L1', 'L2', 'L3']
+
 const props = defineProps({
   resourceGroup: {
     type: String,
@@ -174,11 +180,11 @@ const props = defineProps({
 const route = useRoute()
 
 const allResourceConfigs = [
-  { value: 'product-category', label: '产品大类', parentEnabled: true, treeEnabled: true },
+  { value: 'product-category', label: '产品大类', parentEnabled: true, treeEnabled: true, treeSelectEnabled: true, maxDepth: PRODUCT_CATEGORY_MAX_DEPTH },
   { value: 'product-series', label: '产品系列', categoryResource: 'product-category' },
   { value: 'product-model', label: '工艺型号', categoryResource: 'product-category', seriesResource: 'product-series' },
   { value: 'material-category', label: '物料分类' },
-  { value: 'material-item', label: '物料档案', categoryResource: 'material-category', specEnabled: true, unitEnabled: true },
+  { value: 'material-item', label: '原材料档案', categoryResource: 'material-category', specEnabled: true, unitEnabled: true },
   { value: 'accessory-category', label: '配件分类' },
   { value: 'accessory-item', label: '配件档案', categoryResource: 'accessory-category', specEnabled: true, unitEnabled: true },
   { value: 'sales-option-category', label: '销售选项分类' },
@@ -233,9 +239,8 @@ const multiple = ref(true)
 const open = ref(false)
 const title = ref('')
 const relationOptions = ref({})
-const PRODUCT_CATEGORY_MAX_DEPTH = 3
-const PRODUCT_CATEGORY_LEVEL_LABELS = ['L1', 'L2', 'L3']
 const treeProps = { children: 'children' }
+const treeSelectProps = { value: 'id', label: 'label', children: 'children', disabled: 'disabled' }
 
 const queryParams = ref({
   pageNum: 1,
@@ -253,14 +258,13 @@ const currentConfig = computed(() => resourceConfigs.value.find(item => item.val
 const isTreeTable = computed(() => currentConfig.value.treeEnabled === true)
 const tableRows = computed(() => isTreeTable.value ? buildTreeRows(recordList.value) : recordList.value)
 const categoryOptions = computed(() => relationOptions.value[currentConfig.value.categoryResource] || [])
+const categoryUsesTreeSelect = computed(() => relationResourceUsesTreeSelect(currentConfig.value.categoryResource))
+const parentUsesTreeSelect = computed(() => currentConfig.value.parentEnabled && relationResourceUsesTreeSelect(currentConfig.value.value))
+const categoryTreeOptions = computed(() => treeSelectOptions(currentConfig.value.categoryResource))
+const parentTreeOptions = computed(() => treeSelectOptions(currentConfig.value.value, isParentOptionDisabled))
 const parentOptions = computed(() => {
   const options = relationOptions.value[currentConfig.value.value] || []
-  if (!currentConfig.value.treeEnabled) {
-    return options.filter(item => item.id !== form.value.id)
-  }
-  const descendants = productCategoryDescendantIds(form.value.id)
-  const ownHeight = form.value.id ? productCategorySubtreeHeight(form.value.id) : 1
-  return options.filter(item => item.id !== form.value.id && !descendants.has(item.id) && productCategoryDepth(item.id) + ownHeight <= PRODUCT_CATEGORY_MAX_DEPTH)
+  return options.filter(item => !isParentOptionDisabled(item))
 })
 const filteredSeriesOptions = computed(() => {
   const options = relationOptions.value[currentConfig.value.seriesResource] || []
@@ -297,6 +301,15 @@ function optionLabel(item) {
   return item ? `${item.itemCode} ${item.itemName}` : ''
 }
 
+function resourceConfigByValue(resource) {
+  return allResourceConfigs.find(item => item.value === resource)
+}
+
+function relationResourceUsesTreeSelect(resource) {
+  const config = resourceConfigByValue(resource)
+  return Boolean(config?.treeSelectEnabled || config?.treeEnabled || config?.parentEnabled)
+}
+
 function relationName(resource, id) {
   if (!id) return ''
   const item = (relationOptions.value[resource] || []).find(option => option.id === id)
@@ -325,17 +338,41 @@ function buildTreeRows(rows) {
   return roots
 }
 
-function productCategoryItems() {
-  return relationOptions.value['product-category'] || []
+function treeSelectOptions(resource, disabledResolver) {
+  if (!resource || !relationResourceUsesTreeSelect(resource)) return []
+  const nodeMap = new Map()
+  resourceItems(resource).forEach(item => {
+    nodeMap.set(item.id, {
+      ...item,
+      label: optionLabel(item),
+      disabled: disabledResolver ? disabledResolver(item) : false,
+      children: []
+    })
+  })
+  const roots = []
+  nodeMap.forEach(node => {
+    const parentId = normalizeParentId(node.parentId)
+    const parent = parentId ? nodeMap.get(parentId) : undefined
+    if (parent) {
+      parent.children.push(node)
+    } else {
+      roots.push(node)
+    }
+  })
+  return roots
 }
 
-function productCategoryById() {
-  return new Map(productCategoryItems().map(item => [item.id, item]))
+function resourceItems(resource) {
+  return relationOptions.value[resource] || []
 }
 
-function productCategoryChildrenByParent() {
+function resourceById(resource) {
+  return new Map(resourceItems(resource).map(item => [item.id, item]))
+}
+
+function resourceChildrenByParent(resource) {
   const children = new Map()
-  productCategoryItems().forEach(item => {
+  resourceItems(resource).forEach(item => {
     const parentId = normalizeParentId(item.parentId)
     if (!parentId) return
     if (!children.has(parentId)) children.set(parentId, [])
@@ -344,18 +381,59 @@ function productCategoryChildrenByParent() {
   return children
 }
 
-function productCategoryDepth(id) {
-  const byId = productCategoryById()
+function resourceDepth(resource, id) {
+  const byId = resourceById(resource)
   const visited = new Set()
   let depth = 0
   let current = byId.get(id)
   while (current) {
-    if (visited.has(current.id)) return PRODUCT_CATEGORY_MAX_DEPTH + 1
+    if (visited.has(current.id)) return Number.MAX_SAFE_INTEGER
     visited.add(current.id)
     depth += 1
     current = byId.get(normalizeParentId(current.parentId))
   }
   return depth
+}
+
+function resourceSubtreeHeight(resource, id, visited = new Set()) {
+  if (!id || visited.has(id)) return 1
+  visited.add(id)
+  const children = resourceChildrenByParent(resource).get(id) || []
+  if (children.length === 0) return 1
+  return 1 + Math.max(...children.map(child => resourceSubtreeHeight(resource, child.id, visited)))
+}
+
+function resourceDescendantIds(resource, id) {
+  const descendants = new Set()
+  if (!id) return descendants
+  const children = resourceChildrenByParent(resource)
+  const stack = [...(children.get(id) || [])]
+  while (stack.length > 0) {
+    const current = stack.shift()
+    descendants.add(current.id)
+    stack.push(...(children.get(current.id) || []))
+  }
+  return descendants
+}
+
+function resourceMaxDepth(resource) {
+  return resourceConfigByValue(resource)?.maxDepth
+}
+
+function productCategoryItems() {
+  return resourceItems('product-category')
+}
+
+function productCategoryById() {
+  return resourceById('product-category')
+}
+
+function productCategoryChildrenByParent() {
+  return resourceChildrenByParent('product-category')
+}
+
+function productCategoryDepth(id) {
+  return resourceDepth('product-category', id)
 }
 
 function productCategoryRowDepth(row) {
@@ -505,46 +583,48 @@ function handleTreeExpandChange(row, expanded) {
 }
 
 function productCategorySubtreeHeight(id, visited = new Set()) {
-  if (!id || visited.has(id)) return 1
-  visited.add(id)
-  const children = productCategoryChildrenByParent().get(id) || []
-  if (children.length === 0) return 1
-  return 1 + Math.max(...children.map(child => productCategorySubtreeHeight(child.id, visited)))
+  return resourceSubtreeHeight('product-category', id, visited)
 }
 
 function productCategoryDescendantIds(id) {
-  const descendants = new Set()
-  if (!id) return descendants
-  const children = productCategoryChildrenByParent()
-  const stack = [...(children.get(id) || [])]
-  while (stack.length > 0) {
-    const current = stack.shift()
-    descendants.add(current.id)
-    stack.push(...(children.get(current.id) || []))
-  }
-  return descendants
+  return resourceDescendantIds('product-category', id)
 }
 
-function validateProductCategoryParent() {
-  if (!currentConfig.value.treeEnabled || !form.value.parentId) return true
+function isParentOptionDisabled(item) {
+  if (!item) return false
+  const resource = currentConfig.value.value
+  if (form.value.id && item.id === form.value.id) return true
+  if (resourceDescendantIds(resource, form.value.id).has(item.id)) return true
+  const maxDepth = resourceMaxDepth(resource)
+  if (!maxDepth) return false
+  const ownHeight = form.value.id ? resourceSubtreeHeight(resource, form.value.id) : 1
+  return resourceDepth(resource, item.id) + ownHeight > maxDepth
+}
+
+function validateHierarchicalParentSelection() {
+  if (!currentConfig.value.parentEnabled || !form.value.parentId) return true
+  const resource = currentConfig.value.value
   if (form.value.id && form.value.parentId === form.value.id) {
     proxy.$modal.msgError('上级分类不能选择自己')
     return false
   }
-  if (productCategoryDescendantIds(form.value.id).has(form.value.parentId)) {
+  if (resourceDescendantIds(resource, form.value.id).has(form.value.parentId)) {
     proxy.$modal.msgError('上级分类不能选择自己的子级或后代')
     return false
   }
-  const ownHeight = form.value.id ? productCategorySubtreeHeight(form.value.id) : 1
-  if (productCategoryDepth(form.value.parentId) + ownHeight > PRODUCT_CATEGORY_MAX_DEPTH) {
-    proxy.$modal.msgError('产品大类最多只允许3级')
-    return false
+  const maxDepth = resourceMaxDepth(resource)
+  if (maxDepth) {
+    const ownHeight = form.value.id ? resourceSubtreeHeight(resource, form.value.id) : 1
+    if (resourceDepth(resource, form.value.parentId) + ownHeight > maxDepth) {
+      proxy.$modal.msgError(`${currentConfig.value.label}最多只允许${maxDepth}级`)
+      return false
+    }
   }
   return true
 }
 
 function handleParentChange() {
-  if (!validateProductCategoryParent()) {
+  if (!validateHierarchicalParentSelection()) {
     form.value.parentId = undefined
   }
 }
@@ -706,7 +786,7 @@ function normalizeFormBeforeSubmit() {
 
 function submitForm() {
   normalizeFormBeforeSubmit()
-  if (!validateProductCategoryParent()) return
+  if (!validateHierarchicalParentSelection()) return
   proxy.$refs.recordRef.validate(valid => {
     if (!valid) return
     const isEdit = Boolean(form.value.id)

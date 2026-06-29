@@ -61,7 +61,7 @@ insert into sys_menu(
 )
 select
   '物料配置', masterdata_menu.menu_id, 2, 'material-config', 'masterdata/material-config', '', 'MasterdataMaterialConfig',
-  1, 0, 'C', '0', '0', 'business:masterdata:list', 'component', 'admin', sysdate(), '物料分类、物料档案'
+  1, 0, 'C', '0', '0', 'business:masterdata:list', 'component', 'admin', sysdate(), '物料分类、原材料档案'
 from sys_menu masterdata_menu
 join sys_menu business_menu on business_menu.menu_id = masterdata_menu.parent_id
 where business_menu.menu_name = '业务管理'

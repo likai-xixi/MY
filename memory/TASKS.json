@@ -8,10 +8,16 @@
       "status": "in_progress",
       "owner": "Codex",
       "priority": "high",
-      "statusReason": "CR-20260628T142217Z-change implements R-10I: masterdata keeps four grouped menu pages while 产品配置 displays 产品大类、产品系列、工艺型号; internal resource keys, backend /business/masterdata/{resource} APIs, ruoyi-ui/src/api/masterdata.js, and masterdata_product_model remain unchanged.",
-      "nextStep": "Review/approve commit and push for CR-20260628T142217Z-change if the grouped menu split and 产品大类/工艺型号 wording are acceptable. Do not create sales-order, formula, field-scheme, technical-decomposition, production, or DXF runtime and do not start sales-order runtime until beforeSalesOrder is explicitly unblocked.",
+      "statusReason": "CR-20260629T022303Z-change implements R-10J: self-developed business category selectors use config-driven tree select when the target category resource enables treeEnabled, parentEnabled, or treeSelectEnabled; product-category parent and product series/model category selectors are tree selects. The model-config / 工艺型号配置 pre-review correction is recorded as a current change note related to masterdata, not customer implementation.",
+      "nextStep": "Review R-10J diff, verification, and model-config pre-review note, then decide push. Do not create sales-order, formula, field-scheme, technical-decomposition, production, DXF, or model-config runtime until a later review explicitly approves implementation and beforeSalesOrder remains respected.",
       "blockedBy": [],
       "verification": [
+        "CR-20260629T022303Z-change R-10J focused verification passed: node --test tests/masterdata-runtime.test.js 28/28",
+        "CR-20260629T022303Z-change model-config pre-review note records that generated feature=customer was context residue; actual pre-review target is proposed feature model-config related to masterdata, decision remains Implementation blocked, and no runtime was created",
+        "CR-20260629T022303Z-change model-config pre-review note is kept inside the change record rather than ai/reviews because blocked ai/reviews packages are not implementation approvals during business implementation closeout",
+        "CR-20260629T022303Z-change closeout reran npm run check:review and npm run check:phase-gate successfully; beforeSalesOrder remains blocked",
+        "CR-20260629T022303Z-change R-10J final local verification passed: npm run scan:all, npm run context:build -- customer, npm run check with npm test 261/261, git diff --check, and npm --prefix ruoyi-ui run build:prod",
+        "CR-20260629T022303Z-change R-10J keeps backend /business/masterdata/{resource}, ruoyi-ui/src/api/masterdata.js, and SQL table structure unchanged while preserving R-10H product-category tree-table controlled expansion",
         "CR-20260628T142217Z-change R-10I display wording passed: 产品配置 shows 产品大类, 产品系列, and 工艺型号 while internal product-category, product-series, and product-model resource keys remain unchanged",
         "CR-20260628T142217Z-change R-10I final local verification passed: node --test tests/masterdata-runtime.test.js 27/27, npm run scan:all, npm run check with npm test 260/260, git diff --check, and npm --prefix ruoyi-ui run build:prod",
         "CR-20260628T142217Z-change R-10I preserved R-10H product-category tree visual and controlled expansion assertions and confirmed no sales-order, formula, field-scheme, technical-decomposition, production, or DXF runtime",
@@ -178,8 +184,8 @@
       ],
       "latestSession": "memory/sessions/2026-06-25-pre-release-breaking-change-policy.md",
       "handoverRequired": true,
-      "updatedAt": "2026-06-28",
-      "latestChange": "CR-20260628T142217Z-change"
+      "updatedAt": "2026-06-29",
+      "latestChange": "CR-20260629T022303Z-change"
     },
     {
       "id": "TASK-CUSTOMER",

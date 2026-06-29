@@ -1,7 +1,7 @@
 # Current Context
 
 Current feature: `customer`
-Current change: `CR-20260628T142217Z-change`
+Current change: `CR-20260629T022303Z-change`
 Repository: RuoYi + Vue3 + Codex Auto Dev OS
 Profile: adapter `ruoyi`, locked `true`
 
@@ -60,9 +60,9 @@ Profile: adapter `ruoyi`, locked `true`
 - `ai/roadmap/phase-gates.json` - beforeSalesOrder gate state.
 - `ai/roadmap/refactor-debt.json` - Known debt affecting sales-order handoff.
 - `ai/roadmap/enhancement-backlog.json` - Governance backlog and required/deferred evidence.
-- `ai/changes/CR-20260628T142217Z-change/impact.json` - Current change allowed and forbidden edit roots.
-- `ai/changes/CR-20260628T142217Z-change/plan.md` - Current change execution plan.
-- `ai/changes/CR-20260628T142217Z-change/verification.md` - Current change verification evidence.
+- `ai/changes/CR-20260629T022303Z-change/impact.json` - Current change allowed and forbidden edit roots.
+- `ai/changes/CR-20260629T022303Z-change/plan.md` - Current change execution plan.
+- `ai/changes/CR-20260629T022303Z-change/verification.md` - Current change verification evidence.
 
 ## Must Not Break
 

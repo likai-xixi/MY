@@ -3,7 +3,7 @@
   "generatedBy": "scripts/context-build.js",
   "generatedAt": "stable",
   "currentFeature": "customer",
-  "currentChange": "CR-20260628T142217Z-change",
+  "currentChange": "CR-20260629T022303Z-change",
   "repositoryProfile": {
     "adapter": "ruoyi",
     "locked": true,
@@ -94,15 +94,15 @@
       "reason": "Governance backlog and required/deferred evidence."
     },
     {
-      "path": "ai/changes/CR-20260628T142217Z-change/impact.json",
+      "path": "ai/changes/CR-20260629T022303Z-change/impact.json",
       "reason": "Current change allowed and forbidden edit roots."
     },
     {
-      "path": "ai/changes/CR-20260628T142217Z-change/plan.md",
+      "path": "ai/changes/CR-20260629T022303Z-change/plan.md",
       "reason": "Current change execution plan."
     },
     {
-      "path": "ai/changes/CR-20260628T142217Z-change/verification.md",
+      "path": "ai/changes/CR-20260629T022303Z-change/verification.md",
       "reason": "Current change verification evidence."
     }
   ],

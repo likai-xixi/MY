@@ -15,6 +15,10 @@ const PRODUCT_CONFIG_VIEW = 'ruoyi-ui/src/views/masterdata/product-config.vue';
 const MATERIAL_CONFIG_VIEW = 'ruoyi-ui/src/views/masterdata/material-config.vue';
 const ACCESSORY_CONFIG_VIEW = 'ruoyi-ui/src/views/masterdata/accessory-config.vue';
 const SALES_OPTION_CONFIG_VIEW = 'ruoyi-ui/src/views/masterdata/sales-option-config.vue';
+const FEATURE_DOC = 'features/masterdata.md';
+const UI_CONTRACT = 'ai/contracts/masterdata.ui.md';
+const VIEW_README = 'ruoyi-ui/src/views/masterdata/README.md';
+const VIEW_SCREEN = 'ruoyi-ui/src/views/masterdata/screen.md';
 const SCHEMA_SQL = 'sql/migrations/V20260628_005_masterdata_r10_schema.sql';
 const MENU_SQL = 'sql/migrations/V20260628_006_masterdata_r10_menu_permission.sql';
 const VALIDATION_SQL = 'sql/validation/masterdata_runtime_validation.sql';
@@ -272,7 +276,7 @@ test('frontend add dialog does not require or show code input', () => {
 test('product category list is configured as a tree table', () => {
   const view = readText(VIEW);
 
-  assert.match(view, /value: 'product-category', label: '产品大类', parentEnabled: true, treeEnabled: true/);
+  assert.match(view, /value: 'product-category', label: '产品大类', parentEnabled: true, treeEnabled: true, treeSelectEnabled: true, maxDepth: PRODUCT_CATEGORY_MAX_DEPTH/);
   assert.match(view, /:data="tableRows"/);
   assert.match(view, /row-key="id"/);
   assert.match(view, /:expand-row-keys="expandedTreeRowKeys"/);
@@ -284,6 +288,51 @@ test('product category list is configured as a tree table', () => {
   assert.match(view, /<el-table-column v-if="currentConfig\.parentEnabled && !isTreeTable" label="上级分类"/);
   assert.match(view, /delete params\.pageNum/);
   assert.match(view, /delete params\.pageSize/);
+});
+
+test('hierarchical category selections use tree select from explicit resource config', () => {
+  const view = readText(VIEW);
+  const treeSelectTags = view.match(/<el-tree-select[\s\S]*?\/>/g) || [];
+
+  assert.match(view, /function relationResourceUsesTreeSelect\(resource\)/);
+  assert.match(view, /config\?\.treeSelectEnabled \|\| config\?\.treeEnabled \|\| config\?\.parentEnabled/);
+  assert.match(view, /const categoryUsesTreeSelect = computed\(\(\) => relationResourceUsesTreeSelect\(currentConfig\.value\.categoryResource\)\)/);
+  assert.match(view, /const parentUsesTreeSelect = computed\(\(\) => currentConfig\.value\.parentEnabled && relationResourceUsesTreeSelect\(currentConfig\.value\.value\)\)/);
+  assert.match(view, /const treeSelectProps = \{ value: 'id', label: 'label', children: 'children', disabled: 'disabled' \}/);
+  assert.match(view, /function treeSelectOptions\(resource, disabledResolver\)/);
+  assert.match(view, /label: optionLabel\(item\)/);
+  assert.equal(treeSelectTags.length, 3);
+  for (const tag of treeSelectTags) {
+    assert.match(tag, /\scheck-strictly\b/);
+  }
+
+  assert.match(view, /<el-tree-select v-if="parentUsesTreeSelect"[\s\S]*v-model="form\.parentId"[\s\S]*@change="handleParentChange"/);
+  assert.match(view, /<el-tree-select v-if="categoryUsesTreeSelect"[\s\S]*v-model="form\.categoryId"[\s\S]*@change="handleFormCategoryChange"/);
+  assert.match(view, /<el-tree-select v-if="categoryUsesTreeSelect"[\s\S]*v-model="queryParams\.categoryId"/);
+  assert.match(view, /value: 'product-series', label: '产品系列', categoryResource: 'product-category'/);
+  assert.match(view, /value: 'product-model', label: '工艺型号', categoryResource: 'product-category'/);
+  assert.doesNotMatch(view, /default-expand-all/);
+  assert.doesNotMatch(view, /default-expanded-keys/);
+  assert.doesNotMatch(view, /defaultExpandedKeys/);
+});
+
+test('hierarchical tree selects allow parent nodes unless business rules disable them', () => {
+  const view = readText(VIEW);
+  const parentDisabledBlock = view.match(/function isParentOptionDisabled\(item\) \{[\s\S]*?\n\}/)?.[0] || '';
+  const categoryTreeSelectTags = view.match(/<el-tree-select[\s\S]*?v-model="(?:form|queryParams)\.categoryId"[\s\S]*?\/>/g) || [];
+
+  assert.match(view, /<el-tree-select v-if="parentUsesTreeSelect"[\s\S]*v-model="form\.parentId"[\s\S]*check-strictly/);
+  assert.match(view, /<el-tree-select v-if="categoryUsesTreeSelect"[\s\S]*v-model="form\.categoryId"[\s\S]*check-strictly/);
+  assert.match(view, /<el-tree-select v-if="categoryUsesTreeSelect"[\s\S]*v-model="queryParams\.categoryId"[\s\S]*check-strictly/);
+  assert.match(view, /const categoryTreeOptions = computed\(\(\) => treeSelectOptions\(currentConfig\.value\.categoryResource\)\)/);
+  assert.match(view, /const parentTreeOptions = computed\(\(\) => treeSelectOptions\(currentConfig\.value\.value, isParentOptionDisabled\)\)/);
+  assert.doesNotMatch(view, /treeSelectOptions\(currentConfig\.value\.categoryResource,\s*isParentOptionDisabled\)/);
+  assert.doesNotMatch(parentDisabledBlock, /children|childNodes|isLeaf|leaf/i);
+  assert.doesNotMatch(view, /disabled:\s*[^,\n]*(children|childNodes|isLeaf|leaf)/i);
+  assert.equal(categoryTreeSelectTags.length, 2);
+  for (const tag of categoryTreeSelectTags) {
+    assert.match(tag, /\scheck-strictly\b/);
+  }
 });
 
 test('masterdata grouped menu pages reuse one page implementation', () => {
@@ -313,8 +362,30 @@ test('masterdata grouped menu pages reuse one page implementation', () => {
   assert.doesNotMatch(view, /label: '产品型号'/);
   assert.doesNotMatch(view, /label: '产品分类'/);
   assert.match(view, /material:\s*\{[\s\S]*resources: \['material-category', 'material-item'\]/);
+  assert.match(view, /value: 'material-item', label: '原材料档案'/);
+  assert.doesNotMatch(view, /label: '物料档案'/);
   assert.match(view, /accessory:\s*\{[\s\S]*resources: \['accessory-category', 'accessory-item'\]/);
   assert.match(view, /'sales-option':\s*\{[\s\S]*resources: \['sales-option-category', 'sales-option-value'\]/);
+});
+
+test('material item is presented as base raw material archive only', () => {
+  const featureDoc = readText(FEATURE_DOC);
+  const uiContract = readText(UI_CONTRACT);
+  const readme = readText(VIEW_README);
+  const screen = readText(VIEW_SCREEN);
+  const docs = [featureDoc, uiContract, readme, screen].join('\n');
+
+  assert.match(readText(VIEW), /value: 'material-item', label: '原材料档案'/);
+  assert.match(readText(MENU_SQL), /物料分类、原材料档案/);
+  assert.doesNotMatch(readText(MENU_SQL), /物料分类、物料档案/);
+  assert.match(docs, /原材料档案 only maintains base materials/);
+  assert.match(docs, /must not maintain order-specific cutting dimensions/);
+  assert.match(docs, /Order-specific material usage is generated later by BOM, cut-list detail, or technical calculation/);
+  assert.match(docs, /sheet dimensions or profile lengths must not be created as 原材料档案 rows|sheet dimensions or profile lengths must not become 原材料档案 rows/);
+  assert.match(docs, /Current 原材料档案 fields stay simple: 名称、所属分类、规格、单位、排序、状态、备注/);
+  assert.match(docs, /规格 means the material's own specification/);
+  assert.match(docs, /thickness, cross-section, or whole-sheet specification/);
+  assert.match(docs, /not an order cutting size|not order cutting size/);
 });
 
 test('product category tree expansion is controlled without expanding all rows', () => {
@@ -363,8 +434,9 @@ test('product category maximum depth is three in backend and frontend', () => {
   assert.match(service, /parentDepth \+ subtreeHeight > PRODUCT_CATEGORY_MAX_DEPTH/);
   assert.match(service, /产品分类最多只允许3级/);
   assert.match(view, /const PRODUCT_CATEGORY_MAX_DEPTH = 3/);
-  assert.match(view, /productCategoryDepth\(item\.id\) \+ ownHeight <= PRODUCT_CATEGORY_MAX_DEPTH/);
-  assert.match(view, /产品大类最多只允许3级/);
+  assert.match(view, /maxDepth: PRODUCT_CATEGORY_MAX_DEPTH/);
+  assert.match(view, /resourceDepth\(resource, item\.id\) \+ ownHeight > maxDepth/);
+  assert.match(view, /`\$\{currentConfig\.value\.label\}最多只允许\$\{maxDepth\}级`/);
 });
 
 test('backend rejects creating or moving product category to level four', () => {
@@ -381,7 +453,7 @@ test('editing product category cannot select itself as parent', () => {
 
   assert.match(service, /id != null && id\.equals\(parentId\)/);
   assert.match(service, /产品分类的上级分类不能选择自己/);
-  assert.match(view, /item\.id !== form\.value\.id/);
+  assert.match(view, /item\.id === form\.value\.id/);
   assert.match(view, /上级分类不能选择自己/);
 });
 
@@ -391,8 +463,8 @@ test('editing product category cannot select a descendant as parent', () => {
 
   assert.match(service, /isDescendant\(parentId, id, childrenByParent\)/);
   assert.match(service, /产品分类的上级分类不能选择自己的子级或后代/);
-  assert.match(view, /productCategoryDescendantIds\(form\.value\.id\)/);
-  assert.match(view, /!descendants\.has\(item\.id\)/);
+  assert.match(view, /resourceDescendantIds\(resource, form\.value\.id\)\.has\(item\.id\)/);
+  assert.match(view, /resourceDescendantIds\(resource, form\.value\.id\)\.has\(form\.value\.parentId\)/);
   assert.match(view, /上级分类不能选择自己的子级或后代/);
 });
 

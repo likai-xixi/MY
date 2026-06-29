@@ -32,9 +32,16 @@ Grouped menu routes:
 
 - Four thin route wrappers reuse `index.vue`; the active resource tabs are filtered by group.
 - 产品配置 shows only 产品大类, 产品系列, and 工艺型号. Internal resource keys remain `product-category`, `product-series`, and `product-model`.
-- 物料配置 shows only material category and material item.
+- 物料配置 shows only 物料分类 and 原材料档案.
+- 原材料档案 only maintains base materials. It does not maintain order-specific cutting dimensions.
+- Order-specific material usage is generated later by BOM, cut-list detail, or technical calculation; every order's sheet dimensions or profile lengths must not become 原材料档案 rows.
+- 原材料档案的规格 means the material's own specification, such as thickness, cross-section, or whole-sheet specification, not order cutting size.
 - 配件配置 shows only accessory category and accessory item.
 - 销售选项配置 shows only sales option category and sales option value.
+- R-10J tree-select switching is explicit-resource-config driven. Category targets marked with `treeEnabled`, `parentEnabled`, or `treeSelectEnabled` render as default-collapsed tree selects with code plus name labels.
+- Tree selects allow parent and child nodes to be selected; nodes are not disabled merely because they have `children`.
+- 产品大类的上级分类、产品系列的所属产品大类, and 工艺型号的所属产品大类 use tree select because `product-category` is hierarchical.
+- 原材料档案、配件档案, and 销售选项值 can continue normal category selects while their target category resources do not enable hierarchy.
 - Add dialog: no required code input.
 - Edit dialog: code is displayed read-only.
 - List/search may continue to show and filter by code.
@@ -43,4 +50,4 @@ Grouped menu routes:
 
 ## Boundary
 
-The screen provides only basic master-data maintenance for the nine R-10B resources and does not implement sales-order, field-scheme, formula, technical-decomposition, inventory, BOM, production, scan/report, drawing, shipment, finance, or receipt flows.
+The screen provides only basic master-data maintenance for the nine R-10B resources and does not implement sales-order, field-scheme, formula, technical-decomposition, inventory, BOM, cut-list detail, technical calculation output, production, DXF, scan/report, drawing, shipment, finance, or receipt flows.

@@ -1,5 +1,27 @@
 # Changelog
 
+## 2026-06-29 - governance/model-config-pre-review-note
+
+- Note: `ai/changes/CR-20260629T022303Z-change/model-config-pre-review-note.md`.
+- Recorded the pre-review metadata correction for 工艺型号配置打通主数据: the generated `feature=customer` value came from `scripts/review-feature.js` defaulting omitted `--feature` to `customer` while the current context had been built for customer.
+- Actual pre-review target is proposed feature `model-config`, related feature `masterdata`; this is not customer implementation.
+- Decision remains `Implementation blocked`; no runtime implementation is approved.
+- No customer runtime, sales-order runtime, formula runtime, production runtime, DXF runtime, controller, service, mapper, Vue page, API client, or SQL migration was created.
+- The generated blocked review package was not kept under `ai/reviews/` because the current R-10J change contains business implementation paths and `check:review --require-allow` treats `ai/reviews/*` as implementation gate records in that situation.
+- [local] `npm run check:review` passed after preserving the blocked decision as a current change note instead of a false implementation approval.
+- [local] `npm run check:phase-gate` passed; `beforeSalesOrder` remains blocked.
+
+## 2026-06-29 - masterdata/r-10j-category-tree-select-rule
+
+- Change: `ai/changes/CR-20260629T022303Z-change`.
+- R-10J defines the self-developed business category tree-select rule: 分类、上级分类、所属分类, and 父级分类 use tree select when the target category resource explicitly enables `treeEnabled`, `parentEnabled`, or `treeSelectEnabled`.
+- Tree-select switching is config-driven, default collapsed, does not use `default-expand-all`, does not set default all-expanded keys, and displays code plus name labels.
+- 产品大类的上级分类、产品系列的所属产品大类, and 工艺型号的所属产品大类 use tree select because `product-category` is hierarchical.
+- Material, accessory, and sales option category selectors remain normal selects while their category resources do not enable hierarchy, but the shared UI can switch automatically when they do.
+- R-10H product-category tree-table visuals and controlled expansion behavior are preserved.
+- No backend API, `ruoyi-ui/src/api/masterdata.js`, SQL table structure, sales-order, formula, field-scheme, technical-decomposition, production, or DXF runtime was changed or created.
+- [local] Final verification passed: `node --test tests/masterdata-runtime.test.js` 28/28, `npm run scan:all`, `npm run context:build -- customer`, `npm run check` with npm test 261/261, `git diff --check`, and `npm --prefix ruoyi-ui run build:prod`.
+
 ## 2026-06-29 - masterdata/r-10i-grouped-menu-labels
 
 - Change: `ai/changes/CR-20260628T142217Z-change`.
@@ -596,4 +618,19 @@
 - Feature: `masterdata`.## 2026-06-29 — update
 - Change: `ai/changes/CR-20260628T142217Z-change`.
 - R-10I 主数据配置分组菜单和产品显示文案调整
+- Feature: `masterdata`.## 2026-06-29 — update
+- Change: `ai/changes/CR-20260629T022303Z-change`.
+- Updated change record, registry, graph, generated scans, memory, and handover.
+- Feature: `masterdata`.## 2026-06-29 — update
+- Change: `ai/changes/CR-20260629T022303Z-change`.
+- R-10J fixes masterdata tree selects so parent and child nodes are selectable
+- Feature: `masterdata`.## 2026-06-29 — update
+- Change: `ai/changes/CR-20260629T022303Z-change`.
+- R-10J relabels material item as raw material archive and keeps order material usage out of masterdata
+- Feature: `masterdata`.## 2026-06-29 — update
+- Change: `ai/changes/CR-20260629T022303Z-change`.
+- R-10J masterdata tree select and raw-material wording with model-config pre-review metadata correction
+- Feature: `masterdata`.## 2026-06-29 — update
+- Change: `ai/changes/CR-20260629T022303Z-change`.
+- R-10J masterdata tree select and raw-material wording with model-config pre-review note
 - Feature: `masterdata`.
