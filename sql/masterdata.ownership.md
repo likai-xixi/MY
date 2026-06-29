@@ -23,6 +23,10 @@ Feature name: 主数据配置
 
 ## Owned Menu And Permission Codes
 
+- menu path `业务管理 / 主数据配置 / 产品配置`
+- menu path `业务管理 / 主数据配置 / 物料配置`
+- menu path `业务管理 / 主数据配置 / 配件配置`
+- menu path `业务管理 / 主数据配置 / 销售选项配置`
 - `business:masterdata:list`
 - `business:masterdata:query`
 - `business:masterdata:add`

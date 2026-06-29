@@ -3582,10 +3582,38 @@
       "source": "vue-template-global"
     },
     {
+      "file": "ruoyi-ui/src/views/masterdata/accessory-config.vue",
+      "module": "masterdata",
+      "tag": "masterdata",
+      "componentId": "",
+      "source": "vue-template-global"
+    },
+    {
       "file": "ruoyi-ui/src/views/masterdata/index.vue",
       "module": "masterdata",
       "tag": "right-toolbar",
       "componentId": "ruoyi-right-toolbar-index",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/views/masterdata/material-config.vue",
+      "module": "masterdata",
+      "tag": "masterdata",
+      "componentId": "",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/views/masterdata/product-config.vue",
+      "module": "masterdata",
+      "tag": "masterdata",
+      "componentId": "",
+      "source": "vue-template-global"
+    },
+    {
+      "file": "ruoyi-ui/src/views/masterdata/sales-option-config.vue",
+      "module": "masterdata",
+      "tag": "masterdata",
+      "componentId": "",
       "source": "vue-template-global"
     },
     {
@@ -3951,6 +3979,11 @@
     {
       "tag": "sidebar-item",
       "count": 2,
+      "warning": "global component tag is used frequently but is not registered in the component registry/catalog"
+    },
+    {
+      "tag": "masterdata",
+      "count": 4,
       "warning": "global component tag is used frequently but is not registered in the component registry/catalog"
     },
     {

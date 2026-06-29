@@ -1,52 +1,51 @@
 # Current Context
 
 Current feature: `customer`
-Current change: `CR-20260628-r-10h-product-category-tree-visual-enhancement`
+Current change: `CR-20260628T142217Z-change`
 Repository: RuoYi + Vue3 + Codex Auto Dev OS
 Profile: adapter `ruoyi`, locked `true`
 
 ## Allowed Edit Roots
 
-- `ai/changes/CR-20260628-r-10h-product-category-tree-visual-enhancement`
-- `ai/changes/CURRENT_CHANGE.json`
+- `features/masterdata.md`
+- `ruoyi-business/src/main/java/com/ruoyi/business/masterdata`
+- `ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/masterdata`
+- `ruoyi-ui/src/views/masterdata`
+- `ruoyi-ui/src/api/masterdata.contract.md`
+- `ruoyi-ui/src/api/masterdata.js`
+- `tests/masterdata-runtime.test.js`
+- `ai/contracts/masterdata.api.md`
+- `ai/contracts/masterdata.db.md`
+- `ai/contracts/masterdata.delete-ownership.md`
+- `ai/contracts/masterdata.permission.md`
+- `ai/contracts/masterdata.r10-contract-test-matrix.md`
+- `ai/contracts/masterdata.r10-implementation-boundary.md`
+- `ai/contracts/masterdata.ui.md`
+- `graph/api-graph.json`
+- `graph/ui-graph.json`
+- `memory/API_CATALOG.md`
+- `ruoyi-ui/src/views/masterdata/README.md`
+- `ruoyi-ui/src/views/masterdata/screen.md`
+- `sql/masterdata.ownership.md`
+- `sql/migrations/V20260628_005_masterdata_r10_schema.sql`
+- `sql/migrations/V20260628_006_masterdata_r10_menu_permission.sql`
+- `sql/validation/masterdata_runtime_validation.sql`
+- `ruoyi-business/src/main/resources/mapper/masterdata/MasterDataMapper.xml`
+- `ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/masterdata/MasterDataController.java`
+- `ruoyi-ui/src/views/masterdata/index.vue`
+- `ai/registry/features.json`
+- `ai/registry/modules.json`
 - `ai/context/current-context.json`
 - `ai/context/current-context.md`
-- `features/masterdata.md`
-- `memory/CHANGELOG.md`
-- `memory/HANDOVER.md`
-- `memory/TASKS.json`
-- `ruoyi-ui/src/views/masterdata/index.vue`
-- `tests/masterdata-runtime.test.js`
+- `ai/changes`
+- `ai/generated`
+- `graph`
+- `memory`
+- `features`
+- `tests`
 
 ## Forbidden Edit Roots
 
-- `ruoyi-business/src/main/java/com/ruoyi/business/customer`
-- `ruoyi-business/src/main/java/com/ruoyi/business/idempotency`
-- `ruoyi-business/src/main/java/com/ruoyi/business/masterdata`
-- `ruoyi-business/src/main/java/com/ruoyi/business/salesorder`
-- `ruoyi-business/src/main/java/com/ruoyi/business/sales-order`
-- `ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer`
-- `ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/masterdata`
-- `ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/salesorder`
-- `ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/sales-order`
-- `ruoyi-business/src/main/resources/mapper/masterdata`
-- `ruoyi-ui/src/views/customer`
-- `ruoyi-ui/src/views/sales-order`
-- `ruoyi-ui/src/views/salesorder`
-- `ruoyi-ui/src/api/customer.js`
-- `ruoyi-ui/src/api/masterdata.js`
-- `ruoyi-ui/src/api/sales-order.js`
-- `ruoyi-ui/src/api/salesorder.js`
-- `sql`
-- `package.json`
-- `tools`
-- `scripts`
-- `.github/workflows`
-- `ruoyi-admin/src/main/resources/application.yml`
-- `ruoyi-admin/src/main/resources/application-druid.yml`
-- `ruoyi-admin/src/main/resources/application-prod.yml`
-- `ruoyi-framework`
-- `ruoyi-common`
 
 ## Must Read Files
 
@@ -61,9 +60,9 @@ Profile: adapter `ruoyi`, locked `true`
 - `ai/roadmap/phase-gates.json` - beforeSalesOrder gate state.
 - `ai/roadmap/refactor-debt.json` - Known debt affecting sales-order handoff.
 - `ai/roadmap/enhancement-backlog.json` - Governance backlog and required/deferred evidence.
-- `ai/changes/CR-20260628-r-10h-product-category-tree-visual-enhancement/impact.json` - Current change allowed and forbidden edit roots.
-- `ai/changes/CR-20260628-r-10h-product-category-tree-visual-enhancement/plan.md` - Current change execution plan.
-- `ai/changes/CR-20260628-r-10h-product-category-tree-visual-enhancement/verification.md` - Current change verification evidence.
+- `ai/changes/CR-20260628T142217Z-change/impact.json` - Current change allowed and forbidden edit roots.
+- `ai/changes/CR-20260628T142217Z-change/plan.md` - Current change execution plan.
+- `ai/changes/CR-20260628T142217Z-change/verification.md` - Current change verification evidence.
 
 ## Must Not Break
 
@@ -124,14 +123,9 @@ Deferred:
 
 ## Planned Verification Commands
 
-- `npm run resume`
-- `git status --short --branch`
-- `git -c http.proxy= -c https.proxy= fetch origin master`
-- `git rev-parse HEAD origin/master FETCH_HEAD`
-- `npm run impact -- masterdata --mode update --json`
+- `npm run scan:all`
+- `npm run close:change`
 - `npm run check`
-- `git diff --check`
-- `npm --prefix ruoyi-ui run build:prod`
 
 ## Next Steps
 

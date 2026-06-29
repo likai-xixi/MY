@@ -6,7 +6,7 @@ Status: contract/pre-review only. This matrix defines future R-10B evidence and 
 | Contract Area | R-10B Must Hold | Future Evidence |
 |---|---|---|
 | Scope | Runtime includes only the nine MVP master-data objects | R-10B changed-files and ownership audit |
-| Product data | Product category, series, and model are configurable rows | API/UI/DB tests and seed-data audit |
+| Product data | Product category, series, and model are configurable rows. R-10I displays them as 产品大类, 产品系列, and 工艺型号 while keeping `product-model` as the internal resource key. | API/UI/DB tests and seed-data audit |
 | Material data | Material and accessory categories/records are configurable rows | API/UI/DB tests and DB validation |
 | Sales options | Option categories/values are configurable rows, not enums | API/UI tests rejecting hard-coded arrays |
 | Common fields | Every MVP object has backend-generated stable code, display name, status, sort order, and remark | DB/schema/API contract tests |
@@ -30,4 +30,4 @@ R-10B must run the active scaffold gates plus runtime-specific evidence created 
 
 ## R-10B Runtime Evidence Hook
 
-`tests/masterdata-runtime.test.js` now guards the R-10B object list, SQL ownership, API/client surface, permission boundary, R-10D backend code generation, R-10F product-category tree/depth/cycle/delete protections, frontend add/edit code behavior, bounded retry, and explicit exclusions for sales-order, field-scheme, formula, and technical-decomposition runtime.
+`tests/masterdata-runtime.test.js` now guards the R-10B object list, SQL ownership, API/client surface, permission boundary, R-10D backend code generation, R-10F product-category tree/depth/cycle/delete protections, R-10I grouped menu display labels, frontend add/edit code behavior, bounded retry, and explicit exclusions for sales-order, field-scheme, formula, technical-decomposition, production, and DXF runtime.

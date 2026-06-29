@@ -58,10 +58,42 @@
     },
     {
       "module": "masterdata",
+      "route": "/masterdata/accessory-config",
+      "api": [],
+      "states": [],
+      "file": "ruoyi-ui/src/views/masterdata/accessory-config.vue",
+      "source": "ruoyi-view"
+    },
+    {
+      "module": "masterdata",
       "route": "/masterdata",
       "api": [],
       "states": [],
       "file": "ruoyi-ui/src/views/masterdata/index.vue",
+      "source": "ruoyi-view"
+    },
+    {
+      "module": "masterdata",
+      "route": "/masterdata/material-config",
+      "api": [],
+      "states": [],
+      "file": "ruoyi-ui/src/views/masterdata/material-config.vue",
+      "source": "ruoyi-view"
+    },
+    {
+      "module": "masterdata",
+      "route": "/masterdata/product-config",
+      "api": [],
+      "states": [],
+      "file": "ruoyi-ui/src/views/masterdata/product-config.vue",
+      "source": "ruoyi-view"
+    },
+    {
+      "module": "masterdata",
+      "route": "/masterdata/sales-option-config",
+      "api": [],
+      "states": [],
+      "file": "ruoyi-ui/src/views/masterdata/sales-option-config.vue",
       "source": "ruoyi-view"
     },
     {

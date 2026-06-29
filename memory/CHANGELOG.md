@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-06-29 - masterdata/r-10i-grouped-menu-labels
+
+- Change: `ai/changes/CR-20260628T142217Z-change`.
+- R-10I keeps the four grouped masterdata menu pages and changes product-facing wording only: 产品配置 shows 产品大类、产品系列、工艺型号.
+- Internal resources remain `product-category`, `product-series`, and `product-model`; `/business/masterdata/{resource}`, `ruoyi-ui/src/api/masterdata.js`, and `masterdata_product_model` are unchanged.
+- R-10H product-category tree-table visuals and controlled expansion behavior are preserved.
+- No sales-order, formula, field-scheme, technical-decomposition, production, or DXF runtime was created.
+- [local] Final verification passed: `node --test tests/masterdata-runtime.test.js` 27/27, `npm run scan:all`, `npm run check` with npm test 260/260, `git diff --check`, and `npm --prefix ruoyi-ui run build:prod`.
+
 ## 2026-06-28 - masterdata/r-10h-product-category-tree-visual-enhancement
 
 - Change: `ai/changes/CR-20260628-r-10h-product-category-tree-visual-enhancement`.
@@ -576,4 +585,15 @@
 - Feature: `masterdata`.## 2026-06-28 — update-feature
 - Change: `ai/changes/CR-20260628-r-10f-product-category-tree-table`.
 - R-10F product category tree table and hierarchy constraints
+- Feature: `masterdata`.## 2026-06-28 — update
+- Change: `ai/changes/CR-20260628T142217Z-change`.
+- 主数据配置拆分为四个菜单分组页
+- [local] Applied menu SQL to `my_ry_vue_runtime`; `主数据配置` is now an expandable directory with four grouped child pages.
+- [local] Final verification passed: `npm run check` with npm test 258/258, `git diff --check`, and `npm --prefix ruoyi-ui run build:prod`.
+- Feature: `masterdata`.## 2026-06-29 — update
+- Change: `ai/changes/CR-20260628T142217Z-change`.
+- Updated change record, registry, graph, generated scans, memory, and handover.
+- Feature: `masterdata`.## 2026-06-29 — update
+- Change: `ai/changes/CR-20260628T142217Z-change`.
+- R-10I 主数据配置分组菜单和产品显示文案调整
 - Feature: `masterdata`.

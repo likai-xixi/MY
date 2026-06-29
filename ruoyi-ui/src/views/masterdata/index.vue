@@ -153,6 +153,7 @@
 
 <script setup name="Masterdata">
 import { computed, getCurrentInstance, onMounted, ref, watch } from 'vue'
+import { useRoute } from 'vue-router'
 import {
   addMasterData,
   changeMasterDataStatus,
@@ -164,11 +165,18 @@ import {
 } from '@/api/masterdata'
 
 const { proxy } = getCurrentInstance()
+const props = defineProps({
+  resourceGroup: {
+    type: String,
+    default: ''
+  }
+})
+const route = useRoute()
 
-const resourceConfigs = [
-  { value: 'product-category', label: '产品分类', parentEnabled: true, treeEnabled: true },
+const allResourceConfigs = [
+  { value: 'product-category', label: '产品大类', parentEnabled: true, treeEnabled: true },
   { value: 'product-series', label: '产品系列', categoryResource: 'product-category' },
-  { value: 'product-model', label: '产品型号', categoryResource: 'product-category', seriesResource: 'product-series' },
+  { value: 'product-model', label: '工艺型号', categoryResource: 'product-category', seriesResource: 'product-series' },
   { value: 'material-category', label: '物料分类' },
   { value: 'material-item', label: '物料档案', categoryResource: 'material-category', specEnabled: true, unitEnabled: true },
   { value: 'accessory-category', label: '配件分类' },
@@ -177,7 +185,42 @@ const resourceConfigs = [
   { value: 'sales-option-value', label: '销售选项值', categoryResource: 'sales-option-category' }
 ]
 
-const activeResource = ref('product-category')
+const DEFAULT_RESOURCE_GROUP = 'product'
+const resourceGroups = {
+  product: {
+    label: '产品配置',
+    resources: ['product-category', 'product-series', 'product-model']
+  },
+  material: {
+    label: '物料配置',
+    resources: ['material-category', 'material-item']
+  },
+  accessory: {
+    label: '配件配置',
+    resources: ['accessory-category', 'accessory-item']
+  },
+  'sales-option': {
+    label: '销售选项配置',
+    resources: ['sales-option-category', 'sales-option-value']
+  }
+}
+
+function normalizeResourceGroup(value) {
+  const group = Array.isArray(value) ? value[0] : value
+  return Object.prototype.hasOwnProperty.call(resourceGroups, group) ? group : DEFAULT_RESOURCE_GROUP
+}
+
+const activeResourceGroup = computed(() => normalizeResourceGroup(props.resourceGroup || route.query.group))
+const resourceConfigs = computed(() => {
+  const group = resourceGroups[activeResourceGroup.value] || resourceGroups[DEFAULT_RESOURCE_GROUP]
+  return allResourceConfigs.filter(item => group.resources.includes(item.value))
+})
+
+function firstResourceForGroup(group) {
+  return (resourceGroups[group] || resourceGroups[DEFAULT_RESOURCE_GROUP]).resources[0]
+}
+
+const activeResource = ref(firstResourceForGroup(activeResourceGroup.value))
 const loading = ref(false)
 const showSearch = ref(true)
 const total = ref(0)
@@ -206,7 +249,7 @@ const queryParams = ref({
 
 const form = ref({})
 
-const currentConfig = computed(() => resourceConfigs.find(item => item.value === activeResource.value) || resourceConfigs[0])
+const currentConfig = computed(() => resourceConfigs.value.find(item => item.value === activeResource.value) || resourceConfigs.value[0] || allResourceConfigs[0])
 const isTreeTable = computed(() => currentConfig.value.treeEnabled === true)
 const tableRows = computed(() => isTreeTable.value ? buildTreeRows(recordList.value) : recordList.value)
 const categoryOptions = computed(() => relationOptions.value[currentConfig.value.categoryResource] || [])
@@ -235,6 +278,17 @@ const rules = computed(() => ({
 }))
 
 watch(activeResource, () => {
+  resetFormState()
+  resetQueryState()
+  loadRelationOptions().then(getList)
+})
+
+watch(activeResourceGroup, () => {
+  if (!resourceConfigs.value.some(item => item.value === activeResource.value)) {
+    activeResource.value = firstResourceForGroup(activeResourceGroup.value)
+    return
+  }
+  resetFormState()
   resetQueryState()
   loadRelationOptions().then(getList)
 })
@@ -483,7 +537,7 @@ function validateProductCategoryParent() {
   }
   const ownHeight = form.value.id ? productCategorySubtreeHeight(form.value.id) : 1
   if (productCategoryDepth(form.value.parentId) + ownHeight > PRODUCT_CATEGORY_MAX_DEPTH) {
-    proxy.$modal.msgError('产品分类最多只允许3级')
+    proxy.$modal.msgError('产品大类最多只允许3级')
     return false
   }
   return true

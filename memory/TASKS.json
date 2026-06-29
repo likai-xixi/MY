@@ -8,10 +8,17 @@
       "status": "in_progress",
       "owner": "Codex",
       "priority": "high",
-      "statusReason": "R-10H masterdata product category tree visual enhancement is implemented as a UI-only change. The product category name column now has smaller L1/L2/L3 hierarchy tags, indentation, branch guidance, path tooltip context, and controlled expand/collapse state while existing 3-level rules and backend validations remain unchanged.",
-      "nextStep": "Run final R-10H verification for CR-20260628-r-10h-product-category-tree-visual-enhancement, then review/approve commit and push if the scope is acceptable. Do not enter R-11/R-11A runtime work and do not start sales-order runtime until beforeSalesOrder is explicitly unblocked.",
+      "statusReason": "CR-20260628T142217Z-change implements R-10I: masterdata keeps four grouped menu pages while 产品配置 displays 产品大类、产品系列、工艺型号; internal resource keys, backend /business/masterdata/{resource} APIs, ruoyi-ui/src/api/masterdata.js, and masterdata_product_model remain unchanged.",
+      "nextStep": "Review/approve commit and push for CR-20260628T142217Z-change if the grouped menu split and 产品大类/工艺型号 wording are acceptable. Do not create sales-order, formula, field-scheme, technical-decomposition, production, or DXF runtime and do not start sales-order runtime until beforeSalesOrder is explicitly unblocked.",
       "blockedBy": [],
       "verification": [
+        "CR-20260628T142217Z-change R-10I display wording passed: 产品配置 shows 产品大类, 产品系列, and 工艺型号 while internal product-category, product-series, and product-model resource keys remain unchanged",
+        "CR-20260628T142217Z-change R-10I final local verification passed: node --test tests/masterdata-runtime.test.js 27/27, npm run scan:all, npm run check with npm test 260/260, git diff --check, and npm --prefix ruoyi-ui run build:prod",
+        "CR-20260628T142217Z-change R-10I preserved R-10H product-category tree visual and controlled expansion assertions and confirmed no sales-order, formula, field-scheme, technical-decomposition, production, or DXF runtime",
+        "CR-20260628T142217Z-change runtime menu DB check passed: my_ry_vue_runtime.sys_menu now has 主数据配置 as an M directory with 产品配置, 物料配置, 配件配置, and 销售选项配置 child C menus",
+        "CR-20260628T142217Z-change final local verification passed: node --test tests/masterdata-runtime.test.js 25/25, npm run scan:all, npm run check with npm test 258/258, git diff --check, and npm --prefix ruoyi-ui run build:prod",
+        "CR-20260628T142217Z-change keeps backend /business/masterdata/{resource} APIs and ruoyi-ui/src/api/masterdata.js unchanged while adding four thin masterdata group route wrappers",
+        "CR-20260628T142217Z-change keeps beforeSalesOrder blocked and does not create sales-order, formula, field-scheme, or technical-decomposition runtime",
         "CR-20260628-r-10h-product-category-tree-visual-enhancement focused verification passed: node --test tests/masterdata-runtime.test.js 23/23",
         "CR-20260628-r-10h-product-category-tree-visual-enhancement replaced product category default-expand-all with controlled expand-row-keys, keeps initial/reset search collapsed, expands only the parent path after add-child, and preserves/prunes expansion on edit/delete refresh",
         "CR-20260628-r-10h-product-category-tree-visual-enhancement is UI-only and keeps product category 3-level rule, backend validation, PC auto code, self/descendant parent rejection, child-protected delete, and other masterdata resource table rendering unchanged",
@@ -172,7 +179,7 @@
       "latestSession": "memory/sessions/2026-06-25-pre-release-breaking-change-policy.md",
       "handoverRequired": true,
       "updatedAt": "2026-06-28",
-      "latestChange": "CR-20260628-r-10f-product-category-tree-table"
+      "latestChange": "CR-20260628T142217Z-change"
     },
     {
       "id": "TASK-CUSTOMER",
@@ -406,9 +413,9 @@
         "git diff --check passed for CR-20260626T145150Z-customer-runtime-tests"
       ],
       "latestSession": "memory/sessions/2026-06-25-customer-fund-concurrency.md",
-      "latestChange": "CR-20260628-r-10h-product-category-tree-visual-enhancement",
+      "latestChange": "CR-20260628T142217Z-change",
       "handoverRequired": true,
-      "updatedAt": "2026-06-28"
+      "updatedAt": "2026-06-29"
     }
   ]
 }

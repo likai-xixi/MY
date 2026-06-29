@@ -20,6 +20,8 @@ The frontend uses `/business/masterdata/{resource}` where `{resource}` is one of
 - `sales-option-category`
 - `sales-option-value`
 
+Display labels may differ from resource keys. R-10I displays `product-category` as 产品大类 and `product-model` as 工艺型号; the API client and `/business/masterdata/{resource}` paths remain unchanged.
+
 ## Operations
 
 - `GET /business/masterdata/{resource}/list`

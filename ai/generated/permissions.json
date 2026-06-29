@@ -1597,12 +1597,17 @@
       "file": "sql/migrations/V20260628_006_masterdata_r10_menu_permission.sql"
     },
     {
-      "code": "business:masterdata:query",
+      "code": "business:masterdata:list",
       "module": "masterdata",
       "file": "sql/migrations/V20260628_006_masterdata_r10_menu_permission.sql"
     },
     {
       "code": "business:masterdata:list",
+      "module": "masterdata",
+      "file": "sql/migrations/V20260628_006_masterdata_r10_menu_permission.sql"
+    },
+    {
+      "code": "business:masterdata:query",
       "module": "masterdata",
       "file": "sql/migrations/V20260628_006_masterdata_r10_menu_permission.sql"
     },
@@ -1613,11 +1618,6 @@
     },
     {
       "code": "business:masterdata:add",
-      "module": "masterdata",
-      "file": "sql/migrations/V20260628_006_masterdata_r10_menu_permission.sql"
-    },
-    {
-      "code": "business:masterdata:list",
       "module": "masterdata",
       "file": "sql/migrations/V20260628_006_masterdata_r10_menu_permission.sql"
     },
@@ -1628,11 +1628,6 @@
     },
     {
       "code": "business:masterdata:edit",
-      "module": "masterdata",
-      "file": "sql/migrations/V20260628_006_masterdata_r10_menu_permission.sql"
-    },
-    {
-      "code": "business:masterdata:list",
       "module": "masterdata",
       "file": "sql/migrations/V20260628_006_masterdata_r10_menu_permission.sql"
     },
@@ -1643,11 +1638,6 @@
     },
     {
       "code": "business:masterdata:remove",
-      "module": "masterdata",
-      "file": "sql/migrations/V20260628_006_masterdata_r10_menu_permission.sql"
-    },
-    {
-      "code": "business:masterdata:list",
       "module": "masterdata",
       "file": "sql/migrations/V20260628_006_masterdata_r10_menu_permission.sql"
     },
@@ -1658,11 +1648,6 @@
     },
     {
       "code": "business:masterdata:export",
-      "module": "masterdata",
-      "file": "sql/migrations/V20260628_006_masterdata_r10_menu_permission.sql"
-    },
-    {
-      "code": "business:masterdata:list",
       "module": "masterdata",
       "file": "sql/migrations/V20260628_006_masterdata_r10_menu_permission.sql"
     },
@@ -1673,11 +1658,6 @@
     },
     {
       "code": "business:masterdata:status",
-      "module": "masterdata",
-      "file": "sql/migrations/V20260628_006_masterdata_r10_menu_permission.sql"
-    },
-    {
-      "code": "business:masterdata:list",
       "module": "masterdata",
       "file": "sql/migrations/V20260628_006_masterdata_r10_menu_permission.sql"
     },
@@ -1688,11 +1668,6 @@
     },
     {
       "code": "business:masterdata:publish",
-      "module": "masterdata",
-      "file": "sql/migrations/V20260628_006_masterdata_r10_menu_permission.sql"
-    },
-    {
-      "code": "business:masterdata:list",
       "module": "masterdata",
       "file": "sql/migrations/V20260628_006_masterdata_r10_menu_permission.sql"
     },

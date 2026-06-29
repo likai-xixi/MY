@@ -79,3 +79,9 @@ R-10D must not refactor customer code generation. `CustomerServiceImpl` may be r
 `CR-20260628-r-10f-product-category-tree-table` keeps the same nine-resource runtime slice and changes only product-category hierarchy behavior inside masterdata. It may update the masterdata service, mapper contract if required, the masterdata Vue page/API client if required, focused masterdata tests, masterdata contracts, generated scans, graphs, current context, and memory.
 
 R-10F must not modify product series, product model, material, accessory, sales option runtime behavior except where shared masterdata tests or generated scans reflect unchanged ownership. It must not create R-11, sales-order, field-scheme, formula, technical-decomposition, inventory, BOM, production, scan, drawing, shipment, finance, or receipt runtime.
+
+## R-10I Grouped Menu And Display Label Boundary
+
+`CR-20260628T142217Z-change` keeps the current grouped masterdata menu pages and changes only user-facing display wording for the product group: `product-category` displays as 产品大类 and `product-model` displays as 工艺型号. Internal resource keys, `/business/masterdata/{resource}` API paths, `ruoyi-ui/src/api/masterdata.js`, and the `masterdata_product_model` table remain unchanged.
+
+R-10I must not create sales-order, formula, field-scheme, technical-decomposition, production, DXF, drawing, part-template, process-route, or shop-floor runtime. R-10H product-category tree-table visuals and controlled expansion behavior must remain intact.

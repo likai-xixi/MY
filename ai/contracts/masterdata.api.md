@@ -18,6 +18,8 @@ Feature ID: `masterdata`
 - `sales-option-category`
 - `sales-option-value`
 
+R-10I changes display wording only. `product-category` is shown to users as 产品大类 and `product-model` is shown to users as 工艺型号; `/business/masterdata/{resource}` and the resource keys above do not change.
+
 ## Owned Endpoints
 
 - `GET /business/masterdata/{resource}/list`

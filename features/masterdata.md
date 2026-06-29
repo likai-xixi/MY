@@ -11,7 +11,7 @@ Operators can maintain the configurable master-data base required before later s
 
 ## MVP Scope
 
-R-10B implements only these nine maintenance objects:
+R-10B implements only these nine maintenance objects. User-facing product labels are 产品大类, 产品系列, and 工艺型号; internal resource keys remain `product-category`, `product-series`, and `product-model`.
 
 - product category
 - product series
@@ -31,6 +31,8 @@ R-10F presents product category as a tree table and limits the product category 
 
 R-10H keeps the same product-category business rules and improves only tree-table readability in the name column with clearer indentation, branch guidance, smaller L1/L2/L3 level tags, path tooltip hints, and controlled expansion state.
 
+R-10I keeps the grouped menu split and adjusts product-facing display wording: 产品配置 contains 产品大类, 产品系列, and 工艺型号. 工艺型号 is still the existing `product-model` resource and `masterdata_product_model` table; formula, drawing, part template, and route runtime are deferred.
+
 ## Non-goals
 
 - No sales-order runtime.
@@ -45,6 +47,12 @@ R-10H keeps the same product-category business rules and improves only tree-tabl
 
 - MySQL migrations create the nine masterdata tables and RuoYi menu/permission rows.
 - Backend APIs support list, options, detail, add, edit, status change, logical delete, and export under `/business/masterdata/{resource}`.
+- RuoYi menus expose `业务管理 / 主数据配置 / 产品配置`, `物料配置`, `配件配置`, and `销售选项配置` as four grouped pages.
+- 产品配置 shows only 产品大类、产品系列、工艺型号.
+- 物料配置 shows only 物料分类、物料档案.
+- 配件配置 shows only 配件分类、配件档案.
+- 销售选项配置 shows only 销售选项分类、销售选项值.
+- The frontend reuses the current masterdata page logic through thin grouped route wrappers and keeps `ruoyi-ui/src/api/masterdata.js` unchanged.
 - Add does not require or trust caller-entered code; the backend generates the code and retries bounded duplicate-key collisions.
 - Edit keeps the original code immutable even if the payload contains a different code.
 - The Vue page provides search, list, add without code input, edit with read-only code, status change, delete, and export for the nine resources.

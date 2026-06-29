@@ -327,7 +327,11 @@
         "/business/masterdata/{resource}:update"
       ],
       "screens": [
-        "masterdata:masterdata"
+        "masterdata:masterdata",
+        "masterdata:masterdata-accessory-config:5",
+        "masterdata:masterdata-material-config:7",
+        "masterdata:masterdata-product-config:8",
+        "masterdata:masterdata-sales-option-config:9"
       ],
       "dbTables": [
         "information_schema",
@@ -361,7 +365,11 @@
         "/business/masterdata/{resource}/options",
         "/business/masterdata/{resource}/{ids}",
         "/business/masterdata/{resource}/{id}",
-        "/masterdata"
+        "/masterdata",
+        "/masterdata/accessory-config",
+        "/masterdata/material-config",
+        "/masterdata/product-config",
+        "/masterdata/sales-option-config"
       ],
       "tests": [
         "tests/masterdata-runtime.test.js"
@@ -446,7 +454,11 @@
           "/business/masterdata/{resource}:update"
         ],
         "ui": [
-          "masterdata:masterdata"
+          "masterdata:masterdata",
+          "masterdata:masterdata-accessory-config:5",
+          "masterdata:masterdata-material-config:7",
+          "masterdata:masterdata-product-config:8",
+          "masterdata:masterdata-sales-option-config:9"
         ],
         "database": [
           "information_schema",

@@ -9,7 +9,7 @@ Feature ID: `masterdata`
 
 ## UI Scope
 
-The screen provides tabbed maintenance for the nine R-10B resources only:
+The screen provides grouped maintenance for the nine R-10B resources only. R-10I adjusts display labels only: `product-category` is shown as 产品大类 and `product-model` is shown as 工艺型号. Internal resource keys, API paths, and database table names remain unchanged.
 
 - product category
 - product series
@@ -33,9 +33,9 @@ The screen provides tabbed maintenance for the nine R-10B resources only:
 
 ## Product Category Tree Table
 
-Product category uses the existing list API data with `parentId` to render a tree table. The parent-category column is hidden for product category because the tree itself expresses hierarchy. The visible columns remain code, name, sort order, status, remark, create time, and actions.
+产品大类 uses the existing `product-category` list API data with `parentId` to render a tree table. The parent-category column is hidden because the tree itself expresses hierarchy. The visible columns remain code, name, sort order, status, remark, create time, and actions.
 
-Product category add/edit parent selection filters out the current row and descendants, and blocks selections that would exceed the three-level hierarchy limit.
+产品大类 add/edit parent selection filters out the current row and descendants, and blocks selections that would exceed the three-level hierarchy limit.
 
 ## Boundary
 

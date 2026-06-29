@@ -83,6 +83,20 @@
       ]
     },
     {
+      "id": "masterdata:masterdata-accessory-config:5",
+      "route": "/masterdata/accessory-config",
+      "owner": "masterdata",
+      "module": "masterdata",
+      "file": "ruoyi-ui/src/views/masterdata/accessory-config.vue",
+      "usesApi": [],
+      "states": [
+        "loading",
+        "empty",
+        "success",
+        "error"
+      ]
+    },
+    {
       "id": "masterdata:masterdata",
       "route": "/masterdata",
       "owner": "masterdata",
@@ -98,6 +112,48 @@
         "/business/masterdata/{resource}/changeStatus",
         "/business/masterdata/{resource}/{ids}"
       ],
+      "states": [
+        "loading",
+        "empty",
+        "success",
+        "error"
+      ]
+    },
+    {
+      "id": "masterdata:masterdata-material-config:7",
+      "route": "/masterdata/material-config",
+      "owner": "masterdata",
+      "module": "masterdata",
+      "file": "ruoyi-ui/src/views/masterdata/material-config.vue",
+      "usesApi": [],
+      "states": [
+        "loading",
+        "empty",
+        "success",
+        "error"
+      ]
+    },
+    {
+      "id": "masterdata:masterdata-product-config:8",
+      "route": "/masterdata/product-config",
+      "owner": "masterdata",
+      "module": "masterdata",
+      "file": "ruoyi-ui/src/views/masterdata/product-config.vue",
+      "usesApi": [],
+      "states": [
+        "loading",
+        "empty",
+        "success",
+        "error"
+      ]
+    },
+    {
+      "id": "masterdata:masterdata-sales-option-config:9",
+      "route": "/masterdata/sales-option-config",
+      "owner": "masterdata",
+      "module": "masterdata",
+      "file": "ruoyi-ui/src/views/masterdata/sales-option-config.vue",
+      "usesApi": [],
       "states": [
         "loading",
         "empty",

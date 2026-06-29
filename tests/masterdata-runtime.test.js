@@ -11,6 +11,10 @@ const MAPPER_XML = 'ruoyi-business/src/main/resources/mapper/masterdata/MasterDa
 const CODE_GENERATOR = 'ruoyi-business/src/main/java/com/ruoyi/business/common/code/BusinessMonthlyCodeGenerator.java';
 const API_CLIENT = 'ruoyi-ui/src/api/masterdata.js';
 const VIEW = 'ruoyi-ui/src/views/masterdata/index.vue';
+const PRODUCT_CONFIG_VIEW = 'ruoyi-ui/src/views/masterdata/product-config.vue';
+const MATERIAL_CONFIG_VIEW = 'ruoyi-ui/src/views/masterdata/material-config.vue';
+const ACCESSORY_CONFIG_VIEW = 'ruoyi-ui/src/views/masterdata/accessory-config.vue';
+const SALES_OPTION_CONFIG_VIEW = 'ruoyi-ui/src/views/masterdata/sales-option-config.vue';
 const SCHEMA_SQL = 'sql/migrations/V20260628_005_masterdata_r10_schema.sql';
 const MENU_SQL = 'sql/migrations/V20260628_006_masterdata_r10_menu_permission.sql';
 const VALIDATION_SQL = 'sql/validation/masterdata_runtime_validation.sql';
@@ -29,6 +33,37 @@ const RESOURCE_PREFIXES = {
 };
 
 const RESOURCE_PATHS = Object.keys(RESOURCE_PREFIXES);
+
+const RESOURCE_GROUPS = {
+  product: {
+    wrapper: PRODUCT_CONFIG_VIEW,
+    routeName: 'MasterdataProductConfig',
+    menuName: '产品配置',
+    component: 'masterdata/product-config',
+    resources: ['product-category', 'product-series', 'product-model']
+  },
+  material: {
+    wrapper: MATERIAL_CONFIG_VIEW,
+    routeName: 'MasterdataMaterialConfig',
+    menuName: '物料配置',
+    component: 'masterdata/material-config',
+    resources: ['material-category', 'material-item']
+  },
+  accessory: {
+    wrapper: ACCESSORY_CONFIG_VIEW,
+    routeName: 'MasterdataAccessoryConfig',
+    menuName: '配件配置',
+    component: 'masterdata/accessory-config',
+    resources: ['accessory-category', 'accessory-item']
+  },
+  'sales-option': {
+    wrapper: SALES_OPTION_CONFIG_VIEW,
+    routeName: 'MasterdataSalesOptionConfig',
+    menuName: '销售选项配置',
+    component: 'masterdata/sales-option-config',
+    resources: ['sales-option-category', 'sales-option-value']
+  }
+};
 
 const TABLES = [
   'masterdata_product_category',
@@ -101,6 +136,22 @@ const TECH_DECOMPOSITION_RUNTIME_PATHS = [
   'ruoyi-ui/src/views/technical-decomposition',
   'ruoyi-ui/src/api/technical-decomposition.js',
   'sql/technical-decomposition.ownership.md'
+];
+
+const PRODUCTION_RUNTIME_PATHS = [
+  'ruoyi-business/src/main/java/com/ruoyi/business/production',
+  'ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/production',
+  'ruoyi-ui/src/views/production',
+  'ruoyi-ui/src/api/production.js',
+  'sql/production.ownership.md'
+];
+
+const DXF_RUNTIME_PATHS = [
+  'ruoyi-business/src/main/java/com/ruoyi/business/dxf',
+  'ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/dxf',
+  'ruoyi-ui/src/views/dxf',
+  'ruoyi-ui/src/api/dxf.js',
+  'sql/dxf.ownership.md'
 ];
 
 function createTableNames(sql) {
@@ -221,7 +272,7 @@ test('frontend add dialog does not require or show code input', () => {
 test('product category list is configured as a tree table', () => {
   const view = readText(VIEW);
 
-  assert.match(view, /value: 'product-category', label: '产品分类', parentEnabled: true, treeEnabled: true/);
+  assert.match(view, /value: 'product-category', label: '产品大类', parentEnabled: true, treeEnabled: true/);
   assert.match(view, /:data="tableRows"/);
   assert.match(view, /row-key="id"/);
   assert.match(view, /:expand-row-keys="expandedTreeRowKeys"/);
@@ -233,6 +284,37 @@ test('product category list is configured as a tree table', () => {
   assert.match(view, /<el-table-column v-if="currentConfig\.parentEnabled && !isTreeTable" label="上级分类"/);
   assert.match(view, /delete params\.pageNum/);
   assert.match(view, /delete params\.pageSize/);
+});
+
+test('masterdata grouped menu pages reuse one page implementation', () => {
+  const view = readText(VIEW);
+
+  assert.match(view, /const allResourceConfigs = \[/);
+  assert.match(view, /const resourceGroups = \{/);
+  assert.match(view, /const resourceConfigs = computed\(\(\) => \{/);
+  assert.match(view, /allResourceConfigs\.filter\(item => group\.resources\.includes\(item\.value\)\)/);
+  assert.match(view, /resourceGroup:/);
+  assert.match(view, /useRoute\(\)/);
+  assert.match(view, /watch\(activeResourceGroup/);
+
+  for (const [group, config] of Object.entries(RESOURCE_GROUPS)) {
+    const wrapper = readText(config.wrapper);
+    assert.match(wrapper, /import Masterdata from '\.\/index\.vue'/);
+    assert.match(wrapper, new RegExp(`<Masterdata resource-group="${escaped(group)}" \\/>`));
+    assert.match(wrapper, new RegExp(`name="Masterdata${config.routeName.replace('Masterdata', '')}"`));
+    assert.doesNotMatch(wrapper, /listMasterData|addMasterData|updateMasterData|resourceConfigs/);
+    for (const resource of config.resources) {
+      assert.match(view, new RegExp(`'${escaped(resource)}'`), `${group} must include ${resource}`);
+    }
+  }
+
+  assert.match(view, /product:\s*\{[\s\S]*resources: \['product-category', 'product-series', 'product-model'\]/);
+  assert.match(view, /value: 'product-model', label: '工艺型号'/);
+  assert.doesNotMatch(view, /label: '产品型号'/);
+  assert.doesNotMatch(view, /label: '产品分类'/);
+  assert.match(view, /material:\s*\{[\s\S]*resources: \['material-category', 'material-item'\]/);
+  assert.match(view, /accessory:\s*\{[\s\S]*resources: \['accessory-category', 'accessory-item'\]/);
+  assert.match(view, /'sales-option':\s*\{[\s\S]*resources: \['sales-option-category', 'sales-option-value'\]/);
 });
 
 test('product category tree expansion is controlled without expanding all rows', () => {
@@ -282,7 +364,7 @@ test('product category maximum depth is three in backend and frontend', () => {
   assert.match(service, /产品分类最多只允许3级/);
   assert.match(view, /const PRODUCT_CATEGORY_MAX_DEPTH = 3/);
   assert.match(view, /productCategoryDepth\(item\.id\) \+ ownHeight <= PRODUCT_CATEGORY_MAX_DEPTH/);
-  assert.match(view, /产品分类最多只允许3级/);
+  assert.match(view, /产品大类最多只允许3级/);
 });
 
 test('backend rejects creating or moving product category to level four', () => {
@@ -343,6 +425,26 @@ test('masterdata SQL creates exactly the nine MVP tables and permissions', () =>
   }
 });
 
+test('masterdata SQL creates four grouped menu pages without changing API permissions', () => {
+  const menuSql = readText(MENU_SQL);
+  const ownership = readText(OWNERSHIP_SQL);
+
+  assert.match(menuSql, /masterdata_menu\.menu_type = 'M'/);
+  assert.match(menuSql, /masterdata_menu\.component = null/);
+  assert.match(menuSql, /masterdata_menu\.perms = ''/);
+  assert.match(menuSql, /'主数据配置目录'/);
+
+  for (const config of Object.values(RESOURCE_GROUPS)) {
+    assert.match(menuSql, new RegExp(`'${config.menuName}'`));
+    assert.match(menuSql, new RegExp(`'${escaped(config.component)}'`));
+    assert.match(menuSql, new RegExp(`'${config.routeName}'`));
+    assert.match(menuSql, new RegExp(`'business:masterdata:list'`));
+    assert.match(ownership, new RegExp(`业务管理 / 主数据配置 / ${config.menuName}`));
+  }
+  assert.match(menuSql, /产品大类、产品系列、工艺型号/);
+  assert.doesNotMatch(menuSql, /business:masterdata:product|business:masterdata:material|business:masterdata:accessory|business:masterdata:sales-option/);
+});
+
 test('masterdata frontend uses generic resource API', () => {
   const api = readText(API_CLIENT);
   const view = readText(VIEW);
@@ -377,4 +479,16 @@ test('TECH_DECOMPOSITION_RUNTIME_ABSENT_OK', () => {
   assert.deepEqual(TECH_DECOMPOSITION_RUNTIME_PATHS.filter((file) => fileExists(file)), []);
   const runtimeText = [CONTROLLER, SERVICE, API_CLIENT, VIEW, SCHEMA_SQL].map(readText).join('\n');
   assert.doesNotMatch(runtimeText, /technical-?decomposition|tech-?decomposition|decomposition/i);
+});
+
+test('PRODUCTION_RUNTIME_ABSENT_OK', () => {
+  assert.deepEqual(PRODUCTION_RUNTIME_PATHS.filter((file) => fileExists(file)), []);
+  const runtimeText = [CONTROLLER, SERVICE, API_CLIENT, VIEW, SCHEMA_SQL].map(readText).join('\n');
+  assert.doesNotMatch(runtimeText, /production/i);
+});
+
+test('DXF_RUNTIME_ABSENT_OK', () => {
+  assert.deepEqual(DXF_RUNTIME_PATHS.filter((file) => fileExists(file)), []);
+  const runtimeText = [CONTROLLER, SERVICE, API_CLIENT, VIEW, SCHEMA_SQL].map(readText).join('\n');
+  assert.doesNotMatch(runtimeText, /dxf/i);
 });
