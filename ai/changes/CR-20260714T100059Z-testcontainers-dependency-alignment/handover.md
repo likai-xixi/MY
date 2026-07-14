@@ -63,10 +63,6 @@ Only `ruoyi-business/pom.xml` changes: `org.testcontainers:mysql` now inherits t
 
 ## Next Actions
 
-- Finish independent staged review and commit only after every reviewer is GO; any review-driven correction must be followed by the relevant verification, the complete repository gate, and an exact staged-scope audit.
+- Complete the independent staged review; if it reports no actionable finding, commit this isolated dependency batch, otherwise correct the evidence or implementation and rerun the affected verification plus the complete gate and scope audit before commit.
 - Complete the separate frontend dependency migration, then perform the final repository review, push, and GitHub Actions confirmation.
 - Do not release or deploy.
-
-## Recovery Pointer
-
-New Codex windows should read `AGENTS.md`, `ai/context/current-context.md`, and this handover first. The exact current scope is the 15-file list above; historical change records do not need to be bulk-read before resuming this dependency closeout.

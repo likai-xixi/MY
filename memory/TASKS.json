@@ -8,10 +8,15 @@
       "status": "in_progress",
       "owner": "Codex",
       "priority": "high",
-      "statusReason": "CR-20260714T091310Z-production-druid-property-completeness-gate lexically binds active DruidProperties @Value keys to exact production YAML scalar paths in both safety entry points; TDD is 47/47 after four RED stages, both safety commands pass, standalone and complete npm gates are 426/426, scanners report no contract change, and finalization/closeout pass for the exact 17-file record; staged re-review and commit remain.",
-      "nextStep": "Stage and independently review the exact 17-file Druid completeness governance batch, commit it, then complete Testcontainers alignment and frontend dependency migration. Keep beforeSalesOrder blocked and do not release or deploy.",
+      "statusReason": "CR-20260714T100059Z-testcontainers-dependency-alignment removes the direct Testcontainers mysql 1.21.3 override so the existing Spring Boot BOM resolves all four Testcontainers artifacts at 1.21.4; clean Maven unit 58/58, real MySQL integration 2/2, eight-module compile, scanners, standalone/full Node 426/426, finalization, closeout, and exact scope audit pass; independent review and commit remain.",
+      "nextStep": "Independently review and commit the exact 15-file Testcontainers dependency-maintenance record, then complete the separate frontend dependency migration. Keep beforeSalesOrder blocked and do not release or deploy.",
       "blockedBy": [],
       "verification": [
+        "CR-20260714T100059Z-testcontainers-dependency-alignment pre-change tree mixed mysql 1.21.3 with jdbc/database-commons/core 1.21.4; post-change assertion reports TESTCONTAINERS_CONVERGENCE_OK artifacts=4 versions=1.21.4 oldVersionHits=0",
+        "CR-20260714T100059Z-testcontainers-dependency-alignment configured Maven clean unit tests pass 58/58 and clean MySQL 8.0.36 Testcontainers integration tests pass 2/2 with runtime Testcontainers 1.21.4",
+        "CR-20260714T100059Z-testcontainers-dependency-alignment eight-module admin reactor compile passes; scan:all reports no contract change and standalone npm test passes 426/426",
+        "CR-20260714T100059Z-testcontainers-dependency-alignment finalization and close:change pass for the exact 15-file record; refreshed complete npm run check passes 426/426 after three evidence-only corrections",
+        "CR-20260714T100059Z-testcontainers-dependency-alignment cached scope audit reports changed=15 outside=0 forbidden=0 recordMismatch=0 unstaged=0",
         "CR-20260714T091310Z-production-druid-property-completeness-gate focused TDD moved through 7 pass and 16 fail, 27 pass and 2 fail, 34 pass and 6 fail, and 41 pass and 6 fail to 47/47 pass",
         "CR-20260714T091310Z-production-druid-property-completeness-gate covers 13 real omissions, a synthetic future key, normal CLI wiring, Java comment/string/text-block false tokens, invalid lexer terminal states, unsupported active syntax, strict YAML, leaf/intermediate-map aliases, exact paths, and scalar validity",
         "CR-20260714T091310Z-production-druid-property-completeness-gate check:config-safety and check:prod-safety pass; standalone npm test passes 426/426 and scan:all reports no contract change",
@@ -200,10 +205,10 @@
         "R-10C frontend browser acceptance passed on canonical http://127.0.0.1:5173/business/masterdata with nine tabs and product-category add/edit/disable/delete",
         "R-10C direct http://127.0.0.1:5173/masterdata returned RuoYi 404 and is recorded as non-canonical; no R-10D is opened"
       ],
-      "latestSession": "memory/sessions/2026-07-14-production-druid-completeness-gate.md",
+      "latestSession": "memory/sessions/2026-07-14-testcontainers-dependency-alignment.md",
       "handoverRequired": true,
       "updatedAt": "2026-07-14",
-      "latestChange": "CR-20260714T091310Z-production-druid-property-completeness-gate"
+      "latestChange": "CR-20260714T100059Z-testcontainers-dependency-alignment"
     },
     {
       "id": "TASK-CUSTOMER",

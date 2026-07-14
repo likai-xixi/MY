@@ -1,39 +1,52 @@
 # Current Context
 
 Current feature: `platform`
-Current change: `CR-20260714T091310Z-production-druid-property-completeness-gate`
+Current change: `CR-20260714T100059Z-testcontainers-dependency-alignment`
 Repository: RuoYi + Vue3 + Codex Auto Dev OS
 Profile: adapter `ruoyi`, locked `true`
 
 ## Allowed Edit Roots
 
-- `tools/config-safety-checker.js`
-- `tests/production-safety.test.js`
-- `ai/rule-proposals/2026-07-14-production-druid-property-completeness-gate.json`
-- `ai/changes/CR-20260714T091310Z-production-druid-property-completeness-gate`
+- `ruoyi-business/pom.xml`
+- `ai/changes/CR-20260714T100059Z-testcontainers-dependency-alignment`
 - `ai/changes/CURRENT_CHANGE.json`
-- `ai/context`
-- `memory`
+- `ai/context/current-context.json`
+- `ai/context/current-context.md`
+- `memory/HANDOVER.md`
+- `memory/PROJECT_STATE.md`
+- `memory/TASKS.json`
+- `memory/CHANGELOG.md`
+- `memory/sessions/2026-07-14-testcontainers-dependency-alignment.md`
 
 ## Forbidden Edit Roots
 
+- `pom.xml`
+- `ruoyi-admin/pom.xml`
+- `ruoyi-common/pom.xml`
+- `ruoyi-framework/pom.xml`
+- `ruoyi-generator/pom.xml`
+- `ruoyi-quartz/pom.xml`
+- `ruoyi-system/pom.xml`
+- `ruoyi-business/src`
+- `ruoyi-admin/src`
+- `ruoyi-common/src`
+- `ruoyi-framework/src`
+- `ruoyi-generator/src`
+- `ruoyi-quartz/src`
+- `ruoyi-system/src`
+- `ruoyi-ui`
 - `package.json`
 - `package-lock.json`
 - `.github`
+- `tools`
 - `scripts`
 - `ai/rules`
 - `ai/registry`
+- `ai/rule-proposals`
+- `ai/reviews`
 - `graph`
 - `features`
 - `docs`
-- `ruoyi-admin/src/main`
-- `ruoyi-framework/src/main`
-- `ruoyi-business`
-- `ruoyi-system`
-- `ruoyi-common`
-- `ruoyi-generator`
-- `ruoyi-quartz`
-- `ruoyi-ui`
 - `sql`
 
 ## Must Read Files
@@ -49,9 +62,9 @@ Profile: adapter `ruoyi`, locked `true`
 - `ai/roadmap/phase-gates.json` - beforeSalesOrder gate state.
 - `ai/roadmap/refactor-debt.json` - Known debt affecting sales-order handoff.
 - `ai/roadmap/enhancement-backlog.json` - Governance backlog and required/deferred evidence.
-- `ai/changes/CR-20260714T091310Z-production-druid-property-completeness-gate/impact.json` - Current change allowed and forbidden edit roots.
-- `ai/changes/CR-20260714T091310Z-production-druid-property-completeness-gate/plan.md` - Current change execution plan.
-- `ai/changes/CR-20260714T091310Z-production-druid-property-completeness-gate/verification.md` - Current change verification evidence.
+- `ai/changes/CR-20260714T100059Z-testcontainers-dependency-alignment/impact.json` - Current change allowed and forbidden edit roots.
+- `ai/changes/CR-20260714T100059Z-testcontainers-dependency-alignment/plan.md` - Current change execution plan.
+- `ai/changes/CR-20260714T100059Z-testcontainers-dependency-alignment/verification.md` - Current change verification evidence.
 
 ## Must Not Break
 
@@ -113,15 +126,19 @@ Deferred:
 ## Planned Verification Commands
 
 - `npm run resume`
-- `node --test tests/production-safety.test.js`
-- `npm run check:config-safety`
-- `npm run check:prod-safety`
+- `npm run impact -- platform`
+- `npm run context:build -- platform`
+- `configured Maven dependency:tree for org.testcontainers`
+- `configured Maven -pl ruoyi-business -am test`
+- `configured Maven -pl ruoyi-business -am -Pintegration-test verify`
+- `configured Maven -pl ruoyi-admin -am -DskipTests compile`
+- `npm run scan:all`
 - `npm test`
-- `npm run check`
 - `npm run finalize:change`
+- `npm run check`
 - `npm run close:change`
 - `git diff --check`
-- `forbidden runtime-path audit`
+- `forbidden-path audit`
 
 ## Next Steps
 

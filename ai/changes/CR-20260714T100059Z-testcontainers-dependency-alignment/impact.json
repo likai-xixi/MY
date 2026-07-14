@@ -1,0 +1,85 @@
+{
+  "schemaVersion": 1,
+  "mode": "update",
+  "changeType": "dependency/maintenance",
+  "baseRevision": "13966097247520449a8e2da1aabe537b1c907175",
+  "feature": {
+    "id": "platform",
+    "name": "平台底座",
+    "status": "active"
+  },
+  "summary": "Remove the Testcontainers version override in ruoyi-business so the existing Spring Boot BOM manages the complete test dependency family at one version.",
+  "affected": {
+    "buildConfig": [
+      "ruoyi-business/pom.xml"
+    ],
+    "existingIntegrationTests": [
+      "ruoyi-business/src/test/java/com/ruoyi/business/customer/service/CustomerFundMySqlIT.java",
+      "ruoyi-business/src/test/java/com/ruoyi/business/masterdata/service/MasterDataReferenceMySqlIT.java"
+    ]
+  },
+  "allowedEditRoots": [
+    "ruoyi-business/pom.xml",
+    "ai/changes/CR-20260714T100059Z-testcontainers-dependency-alignment",
+    "ai/changes/CURRENT_CHANGE.json",
+    "ai/context/current-context.json",
+    "ai/context/current-context.md",
+    "memory/HANDOVER.md",
+    "memory/PROJECT_STATE.md",
+    "memory/TASKS.json",
+    "memory/CHANGELOG.md",
+    "memory/sessions/2026-07-14-testcontainers-dependency-alignment.md"
+  ],
+  "forbiddenEditRoots": [
+    "pom.xml",
+    "ruoyi-admin/pom.xml",
+    "ruoyi-common/pom.xml",
+    "ruoyi-framework/pom.xml",
+    "ruoyi-generator/pom.xml",
+    "ruoyi-quartz/pom.xml",
+    "ruoyi-system/pom.xml",
+    "ruoyi-business/src",
+    "ruoyi-admin/src",
+    "ruoyi-common/src",
+    "ruoyi-framework/src",
+    "ruoyi-generator/src",
+    "ruoyi-quartz/src",
+    "ruoyi-system/src",
+    "ruoyi-ui",
+    "package.json",
+    "package-lock.json",
+    ".github",
+    "tools",
+    "scripts",
+    "ai/rules",
+    "ai/registry",
+    "ai/rule-proposals",
+    "ai/reviews",
+    "graph",
+    "features",
+    "docs",
+    "sql"
+  ],
+  "blockers": [],
+  "nonGoals": [
+    "No root-POM or additional BOM/property change; Spring Boot already manages the entire Testcontainers family.",
+    "No Java, integration-test source, runtime configuration, API, UI, DB, permission, component, registry, graph, business-module, or sales-order change.",
+    "No governance rule, scanner, script, workflow, package script, release, deployment, or force push."
+  ],
+  "requiredCommands": [
+    "npm run resume",
+    "npm run impact -- platform",
+    "npm run context:build -- platform",
+    "configured Maven dependency:tree for org.testcontainers",
+    "configured Maven -pl ruoyi-business -am test",
+    "configured Maven -pl ruoyi-business -am -Pintegration-test verify",
+    "configured Maven -pl ruoyi-admin -am -DskipTests compile",
+    "npm run scan:all",
+    "npm test",
+    "npm run finalize:change",
+    "npm run check",
+    "npm run close:change",
+    "git diff --check",
+    "forbidden-path audit"
+  ]
+}

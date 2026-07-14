@@ -1,5 +1,17 @@
 # Changelog
 
+## 2026-07-14 - platform/Testcontainers dependency alignment
+
+- Change: `ai/changes/CR-20260714T100059Z-testcontainers-dependency-alignment`.
+- Removed the direct Testcontainers MySQL 1.21.3 version override so Spring Boot 3.5.14 dependency management is the single authority for the test dependency family.
+- [local] The resolved graph moved from mixed 1.21.3/1.21.4 to four artifacts all at 1.21.4; the strict assertion reported `TESTCONTAINERS_CONVERGENCE_OK artifacts=4 versions=1.21.4 oldVersionHits=0`.
+- [local] Clean unit tests pass 58/58; clean MySQL 8.0.36 Testcontainers integration tests pass 2/2 and log Testcontainers 1.21.4; all eight backend reactor modules compile.
+- [local] Scanners report no contract change and standalone Node tests pass 426/426.
+- [local] Finalization and closeout pass for the exact 15-file record; after correcting three evidence-only gate findings, the refreshed complete repository gate passes 426/426.
+- [local] Exact staging and scope audit report 15 changed, zero outside allowed roots, zero forbidden, zero record mismatch, and zero unstaged.
+- [not-run] Independent review, commit, push, and CI remain pending.
+- Root/other POMs, Java, tests, UI, runtime configuration, SQL, governance rules, package scripts, workflows, business behavior, sales-order, release, and deployment are unchanged.
+
 ## 2026-07-14 - governance/production-druid-property-completeness-gate
 
 - Change: `ai/changes/CR-20260714T091310Z-production-druid-property-completeness-gate`.
