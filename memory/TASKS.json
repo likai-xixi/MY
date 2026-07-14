@@ -8,10 +8,12 @@
       "status": "in_progress",
       "owner": "Codex",
       "priority": "high",
-      "statusReason": "CR-20260714T114811Z-frontend-ci-and-esm-scanner-hardening closes frontend CI, portable release-verification, and executable .mjs governance false-greens. Final focused coverage passes 234/234, CI hardening passes 42/42, portable release coverage passes 94/94, and two independent adversarial reviews report no P0-P3; final verify:release passes with 480/480 Node tests, 60/60 Java tests including two MySQL/Testcontainers integrations, 7/7 UI tests, zero vulnerabilities across 360 dependencies, and a 2601-module production build. Commit, push, post-push governance, and Actions confirmation remain.",
-      "nextStep": "Finalize the evidence, rerun the final repository and close gates, audit exact staging, commit and push master, confirm GitHub Actions and post-push governance, keep beforeSalesOrder blocked, preserve both stashes, and do not release or deploy.",
+      "statusReason": "CR-20260714T225634Z-github-actions-node24-and-cache-warning-cleanup follows successful run 29374274047 by upgrading immutable checkout/setup-node/setup-java pins to verified Node 24 action runtimes and removing only the unused governance Maven cache. Focused tests pass 43/43, CI declaration and immutable-action lint pass, and the complete repository gate passes 481/481. Exact finalization, closeout, push, post-push governance, and warning-free Actions confirmation remain.",
+      "nextStep": "Finalize verified evidence, rerun the close and exact scope gates, commit and push master, confirm all three GitHub Actions jobs with the repaired annotations absent, run post-push governance, keep beforeSalesOrder blocked, preserve both stashes, and do not release or deploy.",
       "blockedBy": [],
       "verification": [
+        "CR-20260714T225634Z-github-actions-node24-and-cache-warning-cleanup focused workflow regression passes 43/43, CI declaration and immutable-action lint pass, and the complete governance gate passes 481/481",
+        "CR-20260714T225634Z-github-actions-node24-and-cache-warning-cleanup pins checkout v5.0.1, setup-node v5.0.0, and setup-java v5.5.0 at verified Node 24 runtime SHAs while retaining project Node 20, both JDK 17 setups, backend Maven cache, and all CI commands",
         "CR-20260714T114811Z-frontend-ci-and-esm-scanner-hardening portable release-verifier and anti-false-green coverage passes 94/94 across fixed stage order, configured/fallback Maven resolution, no retry after reactor failure, and every fail-fast boundary",
         "CR-20260714T114811Z-frontend-ci-and-esm-scanner-hardening final verify:release passes with 480/480 Node tests, 60/60 Java tests including two MySQL/Testcontainers integrations, 7/7 UI tests, zero vulnerabilities across 360 dependencies, and a 2601-module production build",
         "CR-20260714T114811Z-frontend-ci-and-esm-scanner-hardening focused governance/scanner regressions pass 234/234, CI hardening passes 42/42, and two independent adversarial reviews report no P0-P3",
@@ -215,10 +217,10 @@
         "R-10C frontend browser acceptance passed on canonical http://127.0.0.1:5173/business/masterdata with nine tabs and product-category add/edit/disable/delete",
         "R-10C direct http://127.0.0.1:5173/masterdata returned RuoYi 404 and is recorded as non-canonical; no R-10D is opened"
       ],
-      "latestSession": "memory/sessions/2026-07-15-frontend-ci-and-esm-scanner-hardening.md",
+      "latestSession": "memory/sessions/2026-07-15-github-actions-node24-and-cache-warning-cleanup.md",
       "handoverRequired": true,
       "updatedAt": "2026-07-15",
-      "latestChange": "CR-20260714T114811Z-frontend-ci-and-esm-scanner-hardening"
+      "latestChange": "CR-20260714T225634Z-github-actions-node24-and-cache-warning-cleanup"
     },
     {
       "id": "TASK-CUSTOMER",

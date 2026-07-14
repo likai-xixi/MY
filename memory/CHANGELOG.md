@@ -767,3 +767,9 @@
 - Change: `ai/changes/CR-20260714T102910Z-frontend-dependency-hardening`.
 - Harden frontend dependencies, safe SVG spritemap delivery, and cache chart/request lifecycle behavior.
 - Feature: `platform`.
+
+## 2026-07-15 - rule-change
+
+- Change: `ai/changes/CR-20260714T225634Z-github-actions-node24-and-cache-warning-cleanup`.
+- Upgrade GitHub Actions to immutable Node 24 runtime pins and remove only the unused governance Maven cache while preserving all CI coverage.
+- Feature: `platform`.

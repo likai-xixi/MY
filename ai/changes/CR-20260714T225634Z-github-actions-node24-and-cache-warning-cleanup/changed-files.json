@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "files": [
+    ".github/workflows/ci.yml",
+    "ai/changes/CR-20260714T225634Z-github-actions-node24-and-cache-warning-cleanup/changed-files.json",
+    "ai/changes/CR-20260714T225634Z-github-actions-node24-and-cache-warning-cleanup/handover.md",
+    "ai/changes/CR-20260714T225634Z-github-actions-node24-and-cache-warning-cleanup/impact.json",
+    "ai/changes/CR-20260714T225634Z-github-actions-node24-and-cache-warning-cleanup/plan.md",
+    "ai/changes/CR-20260714T225634Z-github-actions-node24-and-cache-warning-cleanup/request.md",
+    "ai/changes/CR-20260714T225634Z-github-actions-node24-and-cache-warning-cleanup/verification.md",
+    "ai/changes/CURRENT_CHANGE.json",
+    "ai/context/current-context.json",
+    "ai/context/current-context.md",
+    "ai/rule-proposals/2026-07-14-github-actions-node24-and-cache-warning-cleanup.json",
+    "memory/CHANGELOG.md",
+    "memory/HANDOVER.md",
+    "memory/PROJECT_STATE.md",
+    "memory/TASKS.json",
+    "memory/sessions/2026-07-15-github-actions-node24-and-cache-warning-cleanup.md",
+    "tests/ci-coverage-hardening.test.js"
+  ]
+}

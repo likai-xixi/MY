@@ -8,6 +8,25 @@ import { validateCiCoverageDeclaration } from '../tools/ci-coverage-declaration-
 const CHECKOUT_SHA = '1111111111111111111111111111111111111111';
 const REUSABLE_SHA = '2222222222222222222222222222222222222222';
 const IMAGE_DIGEST = 'a'.repeat(64);
+const NODE24_ACTION_PINS = {
+  checkout: '93cb6efe18208431cddfb8368fd83d5badbf9bfd',
+  setupNode: 'a0853c24544627f65ddf259abe73b1d18a591444',
+  setupJava: '0f481fcb613427c0f801b606911222b5b6f3083a'
+};
+
+test('repository CI pins Node 24-compatible actions and avoids an unused governance Maven cache', () => {
+  const workflow = fs.readFileSync(new URL('../.github/workflows/ci.yml', import.meta.url), 'utf8');
+  const governance = workflow.match(/\n  governance:\n([\s\S]*?)\n  backend-tests:/)?.[1] || '';
+  const backend = workflow.match(/\n  backend-tests:\n([\s\S]*?)\n  frontend-build:/)?.[1] || '';
+
+  assert.equal(workflow.match(new RegExp(`actions/checkout@${NODE24_ACTION_PINS.checkout}`, 'g'))?.length, 3);
+  assert.equal(workflow.match(new RegExp(`actions/setup-node@${NODE24_ACTION_PINS.setupNode}`, 'g'))?.length, 2);
+  assert.equal(workflow.match(new RegExp(`actions/setup-java@${NODE24_ACTION_PINS.setupJava}`, 'g'))?.length, 2);
+  assert.match(governance, new RegExp(`actions/setup-java@${NODE24_ACTION_PINS.setupJava}`));
+  assert.doesNotMatch(governance, /cache:\s*maven/);
+  assert.match(backend, new RegExp(`actions/setup-java@${NODE24_ACTION_PINS.setupJava}`));
+  assert.match(backend, /cache:\s*maven/);
+});
 
 function withRoot(fn) {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'codex-ci-coverage-hardening-'));

@@ -1,0 +1,83 @@
+{
+  "schemaVersion": 1,
+  "mode": "rule-change",
+  "changeType": "governance/rule-change",
+  "baseRevision": "c083c9cbdbdbb033c75b957a95f76df59f2b683f",
+  "proposalId": "2026-07-14-github-actions-node24-and-cache-warning-cleanup",
+  "feature": {
+    "id": "platform",
+    "name": "平台底座治理",
+    "status": "active"
+  },
+  "contextFeatureOverride": {
+    "featureId": "platform",
+    "reason": "This rule-change only updates the repository-wide GitHub Actions execution baseline and its governance evidence."
+  },
+  "summary": "Remove only the unused Maven cache from the governance Java setup and replace deprecated Node 20-based GitHub Action pins with verified Node 24-compatible release pins while preserving JDK 17, every existing CI command, and the backend Maven cache.",
+  "affected": {
+    "ci": [
+      ".github/workflows/ci.yml"
+    ],
+    "tests": [
+      "tests/ci-coverage-hardening.test.js"
+    ],
+    "governance": [
+      "ai/rule-proposals/2026-07-14-github-actions-node24-and-cache-warning-cleanup.json"
+    ],
+    "changeRecord": [
+      "ai/changes/CR-20260714T225634Z-github-actions-node24-and-cache-warning-cleanup"
+    ]
+  },
+  "allowedEditRoots": [
+    ".github/workflows/ci.yml",
+    "tests/ci-coverage-hardening.test.js",
+    "ai/rule-proposals/2026-07-14-github-actions-node24-and-cache-warning-cleanup.json",
+    "ai/changes/CR-20260714T225634Z-github-actions-node24-and-cache-warning-cleanup",
+    "ai/changes/CURRENT_CHANGE.json",
+    "ai/context/current-context.json",
+    "ai/context/current-context.md",
+    "memory/CHANGELOG.md",
+    "memory/HANDOVER.md",
+    "memory/PROJECT_STATE.md",
+    "memory/TASKS.json",
+    "memory/sessions/2026-07-15-github-actions-node24-and-cache-warning-cleanup.md"
+  ],
+  "forbiddenEditRoots": [
+    "package.json",
+    "package-lock.json",
+    "tools",
+    "scripts",
+    "ai/rules",
+    "graph",
+    "features",
+    "backend",
+    "frontend",
+    "ruoyi-admin",
+    "ruoyi-framework",
+    "ruoyi-business",
+    "ruoyi-system",
+    "ruoyi-common",
+    "ruoyi-generator",
+    "ruoyi-quartz",
+    "ruoyi-ui",
+    "sql"
+  ],
+  "blockers": [],
+  "nonGoals": [
+    "No business code, API, route, permission, database, SQL, graph, dependency, or lockfile change.",
+    "Do not remove or weaken npm, Maven, frontend test, dependency audit, or production build coverage.",
+    "No release, deployment, pull request, force push, stash mutation, or sales-order implementation."
+  ],
+  "requiredCommands": [
+    "npm run resume",
+    "npm run context:build -- platform",
+    "node --test tests/ci-coverage-hardening.test.js",
+    "npm run check:ci-coverage-declaration",
+    "npm run check",
+    "npm run finalize:change",
+    "npm run close:change",
+    "git diff --check",
+    "exact allowed and forbidden root audit",
+    "GitHub Actions scaffold-ci confirmation after push"
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "id": "2026-07-14-github-actions-node24-and-cache-warning-cleanup",
+  "title": "github-actions-node24-and-cache-warning-cleanup",
+  "reason": "The successful master CI run 29374274047 reported Node.js 20 action-runtime deprecation annotations and a governance Maven cache path that is never populated; update pinned actions to Node 24-compatible releases and remove the unused governance Java setup without weakening any gate.",
+  "status": "implemented",
+  "requiredChangeMode": "rule-change",
+  "oldRule": "The workflow pinned actions/checkout v4.2.2, actions/setup-node v4.4.0, and actions/setup-java v4.7.1 builds that run on the deprecated Node.js 20 action runtime. The Node-only governance job also enabled setup-java Maven caching even though it never invokes Maven, so the cache path was never created.",
+  "newRule": "Pin checkout v5.0.1, setup-node v5.0.0, and setup-java v5.5.0 by their immutable release SHAs. The governance job retains JDK 17 but does not request Maven caching because it never populates the Maven repository; the backend-tests job retains setup-java and cache: maven.",
+  "evidence": {
+    "sourceRun": "https://github.com/likai-xixi/MY/actions/runs/29374274047",
+    "localVerification": "Focused workflow regression 43/43; complete repository gate 481/481; CI declaration and immutable-action lint pass.",
+    "releasePins": {
+      "actions/checkout@v5.0.1": "93cb6efe18208431cddfb8368fd83d5badbf9bfd",
+      "actions/setup-node@v5.0.0": "a0853c24544627f65ddf259abe73b1d18a591444",
+      "actions/setup-java@v5.5.0": "0f481fcb613427c0f801b606911222b5b6f3083a"
+    }
+  },
+  "checklist": [
+    "Explain old rule and new rule.",
+    "List affected scanners and registries.",
+    "List sample files proving the project base needs this rule.",
+    "Run npm run check after the rule proposal is accepted."
+  ]
+}

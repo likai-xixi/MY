@@ -1,51 +1,16 @@
 # Current Context
 
 Current feature: `platform`
-Current change: `CR-20260714T114811Z-frontend-ci-and-esm-scanner-hardening`
+Current change: `CR-20260714T225634Z-github-actions-node24-and-cache-warning-cleanup`
 Repository: RuoYi + Vue3 + Codex Auto Dev OS
 Profile: adapter `ruoyi`, locked `true`
 
 ## Allowed Edit Roots
 
 - `.github/workflows/ci.yml`
-- `package.json`
-- `tools/governance-checker-utils.js`
-- `tools/ci-coverage-declaration-checker.js`
-- `tools/release-verifier.js`
-- `docs/runtime-verification-boundary.md`
-- `docs/production-readiness.md`
-- `tools/scan-utils.js`
-- `tools/scan-api-clients.js`
-- `tools/scan-permissions.js`
-- `tools/scan-components.js`
-- `tools/boundary-lint.js`
-- `tools/diff-checker.js`
-- `tools/impact-analyzer.js`
-- `tools/orphan-code-checker.js`
-- `tools/duplicate-scan.js`
-- `tools/ownership-syncer.js`
-- `tools/phase-gate-checker.js`
-- `tools/file-weight-checker.js`
-- `scripts/finalize-change.js`
-- `scripts/remove-feature.js`
 - `tests/ci-coverage-hardening.test.js`
-- `tests/diff-checker.test.js`
-- `tests/governance-gates.test.js`
-- `tests/governance-sales-order-handoff-gate.test.js`
-- `tests/ownership-syncer.test.js`
-- `tests/package-scripts.test.js`
-- `tests/production-safety.test.js`
-- `tests/remove-feature.test.js`
-- `tests/frontend-esm-scanner-governance.test.js`
-- `tests/false-green-matrix-checker.test.js`
-- `tests/release-verifier-governance.test.js`
-- `ai/governance/false-green-regression-matrix.json`
-- `ai/roadmap/enhancement-backlog.json`
-- `ai/roadmap/phase-gates.json`
-- `tools/false-green-matrix-checker.js`
-- `ai/registry/test-ownership-exceptions.json`
-- `ai/rule-proposals/2026-07-14-frontend-ci-and-esm-scanner-hardening.json`
-- `ai/changes/CR-20260714T114811Z-frontend-ci-and-esm-scanner-hardening`
+- `ai/rule-proposals/2026-07-14-github-actions-node24-and-cache-warning-cleanup.json`
+- `ai/changes/CR-20260714T225634Z-github-actions-node24-and-cache-warning-cleanup`
 - `ai/changes/CURRENT_CHANGE.json`
 - `ai/context/current-context.json`
 - `ai/context/current-context.md`
@@ -53,18 +18,21 @@ Profile: adapter `ruoyi`, locked `true`
 - `memory/HANDOVER.md`
 - `memory/PROJECT_STATE.md`
 - `memory/TASKS.json`
-- `memory/sessions/2026-07-15-frontend-ci-and-esm-scanner-hardening.md`
+- `memory/sessions/2026-07-15-github-actions-node24-and-cache-warning-cleanup.md`
 
 ## Forbidden Edit Roots
 
+- `package.json`
 - `package-lock.json`
+- `tools`
+- `scripts`
 - `ai/rules`
 - `graph`
 - `features`
 - `backend`
 - `frontend`
-- `ruoyi-admin/src/main`
-- `ruoyi-framework/src/main`
+- `ruoyi-admin`
+- `ruoyi-framework`
 - `ruoyi-business`
 - `ruoyi-system`
 - `ruoyi-common`
@@ -86,9 +54,9 @@ Profile: adapter `ruoyi`, locked `true`
 - `ai/roadmap/phase-gates.json` - beforeSalesOrder gate state.
 - `ai/roadmap/refactor-debt.json` - Known debt affecting sales-order handoff.
 - `ai/roadmap/enhancement-backlog.json` - Governance backlog and required/deferred evidence.
-- `ai/changes/CR-20260714T114811Z-frontend-ci-and-esm-scanner-hardening/impact.json` - Current change allowed and forbidden edit roots.
-- `ai/changes/CR-20260714T114811Z-frontend-ci-and-esm-scanner-hardening/plan.md` - Current change execution plan.
-- `ai/changes/CR-20260714T114811Z-frontend-ci-and-esm-scanner-hardening/verification.md` - Current change verification evidence.
+- `ai/changes/CR-20260714T225634Z-github-actions-node24-and-cache-warning-cleanup/impact.json` - Current change allowed and forbidden edit roots.
+- `ai/changes/CR-20260714T225634Z-github-actions-node24-and-cache-warning-cleanup/plan.md` - Current change execution plan.
+- `ai/changes/CR-20260714T225634Z-github-actions-node24-and-cache-warning-cleanup/verification.md` - Current change verification evidence.
 
 ## Must Not Break
 
@@ -150,20 +118,14 @@ Deferred:
 
 - `npm run resume`
 - `npm run context:build -- platform`
-- `node --test tests/ci-coverage-hardening.test.js tests/diff-checker.test.js tests/frontend-esm-scanner-governance.test.js tests/false-green-matrix-checker.test.js tests/governance-gates.test.js tests/governance-sales-order-handoff-gate.test.js tests/ownership-syncer.test.js tests/package-scripts.test.js tests/production-safety.test.js tests/release-verifier-governance.test.js tests/remove-feature.test.js`
+- `node --test tests/ci-coverage-hardening.test.js`
 - `npm run check:ci-coverage-declaration`
-- `npm run check:false-green-matrix`
-- `npm run scan:all`
-- `npm --prefix ruoyi-ui test`
-- `npm --prefix ruoyi-ui audit --audit-level=moderate --include=dev`
-- `npm --prefix ruoyi-ui run build:prod`
-- `npm test`
-- `npm run verify:release`
-- `npm run finalize:change`
 - `npm run check`
+- `npm run finalize:change`
 - `npm run close:change`
 - `git diff --check`
 - `exact allowed and forbidden root audit`
+- `GitHub Actions scaffold-ci confirmation after push`
 
 ## Next Steps
 
