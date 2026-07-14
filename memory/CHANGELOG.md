@@ -1,5 +1,16 @@
 # Changelog
 
+## 2026-07-14 - governance/production-druid-property-completeness-gate
+
+- Change: `ai/changes/CR-20260714T091310Z-production-druid-property-completeness-gate`.
+- The existing safety checker now dynamically derives every Druid `@Value` binding from Java source and validates exact non-empty scalar paths in production YAML through both normal and production entry points.
+- Fail-closed coverage includes missing/empty/unsupported Java source, invalid or duplicate YAML, each of 13 real omissions, a synthetic future binding, wrong nesting, and invalid values; valid `false` and `0` remain accepted.
+- [local] Focused TDD moved through 7 pass/16 fail, 27 pass/2 fail, review-hardening 34 pass/6 fail, and adversarial hardening 41 pass/6 fail to 47/47; both safety commands, scanners, and standalone `npm test` 426/426 pass.
+- Review hardening added Java lexical false-token and invalid-terminal-state rejection, leaf/intermediate-map alias resolution, and explicit null/empty/whitespace mutations.
+- [local] After correcting one handover evidence-wording issue and completing both review-hardening rounds, the refreshed complete `npm run check` passed 426/426, and finalization plus the close gate passed for the exact 17-file record.
+- [local] Cached diff validation passed and the exact impact-root audit reported 17 changed, zero outside allowed roots, and zero forbidden paths.
+- No application config, Java runtime, package script, workflow, dependency, API, UI, DB, permission, component, business-module, sales-order, release, or deployment change is included.
+
 ## 2026-07-14 - platform/production-profile-completeness
 
 - Change: `ai/changes/CR-20260714T084732Z-change`.

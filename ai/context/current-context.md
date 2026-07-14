@@ -1,35 +1,39 @@
 # Current Context
 
 Current feature: `platform`
-Current change: `CR-20260714T084732Z-change`
+Current change: `CR-20260714T091310Z-production-druid-property-completeness-gate`
 Repository: RuoYi + Vue3 + Codex Auto Dev OS
 Profile: adapter `ruoyi`, locked `true`
 
 ## Allowed Edit Roots
 
-- `features/platform.md`
-- `ruoyi-admin/src/main/resources/application-prod.yml`
-- `ai/changes`
+- `tools/config-safety-checker.js`
+- `tests/production-safety.test.js`
+- `ai/rule-proposals/2026-07-14-production-druid-property-completeness-gate.json`
+- `ai/changes/CR-20260714T091310Z-production-druid-property-completeness-gate`
+- `ai/changes/CURRENT_CHANGE.json`
 - `ai/context`
-- `ai/generated`
-- `graph`
 - `memory`
 
 ## Forbidden Edit Roots
 
-- `tools`
-- `scripts`
-- `.github`
 - `package.json`
-- `pom.xml`
-- `ruoyi-ui`
-- `ruoyi-framework`
+- `package-lock.json`
+- `.github`
+- `scripts`
+- `ai/rules`
+- `ai/registry`
+- `graph`
+- `features`
+- `docs`
+- `ruoyi-admin/src/main`
+- `ruoyi-framework/src/main`
 - `ruoyi-business`
 - `ruoyi-system`
 - `ruoyi-common`
 - `ruoyi-generator`
 - `ruoyi-quartz`
-- `tests`
+- `ruoyi-ui`
 - `sql`
 
 ## Must Read Files
@@ -45,9 +49,9 @@ Profile: adapter `ruoyi`, locked `true`
 - `ai/roadmap/phase-gates.json` - beforeSalesOrder gate state.
 - `ai/roadmap/refactor-debt.json` - Known debt affecting sales-order handoff.
 - `ai/roadmap/enhancement-backlog.json` - Governance backlog and required/deferred evidence.
-- `ai/changes/CR-20260714T084732Z-change/impact.json` - Current change allowed and forbidden edit roots.
-- `ai/changes/CR-20260714T084732Z-change/plan.md` - Current change execution plan.
-- `ai/changes/CR-20260714T084732Z-change/verification.md` - Current change verification evidence.
+- `ai/changes/CR-20260714T091310Z-production-druid-property-completeness-gate/impact.json` - Current change allowed and forbidden edit roots.
+- `ai/changes/CR-20260714T091310Z-production-druid-property-completeness-gate/plan.md` - Current change execution plan.
+- `ai/changes/CR-20260714T091310Z-production-druid-property-completeness-gate/verification.md` - Current change verification evidence.
 
 ## Must Not Break
 
@@ -108,10 +112,16 @@ Deferred:
 
 ## Planned Verification Commands
 
-- `packaged prod startup probe`
-- `npm run scan:all`
-- `npm run close:change`
+- `npm run resume`
+- `node --test tests/production-safety.test.js`
+- `npm run check:config-safety`
+- `npm run check:prod-safety`
+- `npm test`
 - `npm run check`
+- `npm run finalize:change`
+- `npm run close:change`
+- `git diff --check`
+- `forbidden runtime-path audit`
 
 ## Next Steps
 

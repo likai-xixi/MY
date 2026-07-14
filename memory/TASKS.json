@@ -8,10 +8,15 @@
       "status": "in_progress",
       "owner": "Codex",
       "priority": "high",
-      "statusReason": "CR-20260714T084732Z-change moved the production Druid profile from 13 missing Java-required keys to none, passed production safety and eight-module packaging, reached the expected database boundary without unresolved placeholders, passed the 386/386 complete gate, persists reproducible sanitized runtime evidence, and finalized/closed its exact 17-file record; staged re-review and commit remain.",
-      "nextStep": "Stage and independently re-review the exact 17-file production-profile batch, commit it, then open a separate governance checker record followed by Testcontainers alignment and frontend dependency migration. Keep beforeSalesOrder blocked and do not release or deploy.",
+      "statusReason": "CR-20260714T091310Z-production-druid-property-completeness-gate lexically binds active DruidProperties @Value keys to exact production YAML scalar paths in both safety entry points; TDD is 47/47 after four RED stages, both safety commands pass, standalone and complete npm gates are 426/426, scanners report no contract change, and finalization/closeout pass for the exact 17-file record; staged re-review and commit remain.",
+      "nextStep": "Stage and independently review the exact 17-file Druid completeness governance batch, commit it, then complete Testcontainers alignment and frontend dependency migration. Keep beforeSalesOrder blocked and do not release or deploy.",
       "blockedBy": [],
       "verification": [
+        "CR-20260714T091310Z-production-druid-property-completeness-gate focused TDD moved through 7 pass and 16 fail, 27 pass and 2 fail, 34 pass and 6 fail, and 41 pass and 6 fail to 47/47 pass",
+        "CR-20260714T091310Z-production-druid-property-completeness-gate covers 13 real omissions, a synthetic future key, normal CLI wiring, Java comment/string/text-block false tokens, invalid lexer terminal states, unsupported active syntax, strict YAML, leaf/intermediate-map aliases, exact paths, and scalar validity",
+        "CR-20260714T091310Z-production-druid-property-completeness-gate check:config-safety and check:prod-safety pass; standalone npm test passes 426/426 and scan:all reports no contract change",
+        "CR-20260714T091310Z-production-druid-property-completeness-gate refreshed complete npm run check passes 426/426; finalization and close:change pass for the exact finalized 17-file record",
+        "CR-20260714T091310Z-production-druid-property-completeness-gate cached diff check passes and impact-root audit reports FORBIDDEN_RUNTIME_PATH_AUDIT_OK changed=17 outside=0 forbidden=0",
         "CR-20260714T084732Z-change dynamic Druid @Value/YAML probe moved from all 13 required keys missing to an empty missing list",
         "CR-20260714T084732Z-change npm run check:prod-safety passed and configured Maven packaged all eight modules with BUILD SUCCESS",
         "CR-20260714T084732Z-change packaged prod startup contained zero unresolved placeholders and reached the intentionally unreachable MySQL/Druid CommunicationsException and Connection refused boundary",
@@ -195,10 +200,10 @@
         "R-10C frontend browser acceptance passed on canonical http://127.0.0.1:5173/business/masterdata with nine tabs and product-category add/edit/disable/delete",
         "R-10C direct http://127.0.0.1:5173/masterdata returned RuoYi 404 and is recorded as non-canonical; no R-10D is opened"
       ],
-      "latestSession": "memory/sessions/2026-07-14-production-profile-completeness.md",
+      "latestSession": "memory/sessions/2026-07-14-production-druid-completeness-gate.md",
       "handoverRequired": true,
       "updatedAt": "2026-07-14",
-      "latestChange": "CR-20260714T084732Z-change"
+      "latestChange": "CR-20260714T091310Z-production-druid-property-completeness-gate"
     },
     {
       "id": "TASK-CUSTOMER",

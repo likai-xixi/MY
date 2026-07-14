@@ -3,35 +3,39 @@
   "generatedBy": "scripts/context-build.js",
   "generatedAt": "stable",
   "currentFeature": "platform",
-  "currentChange": "CR-20260714T084732Z-change",
+  "currentChange": "CR-20260714T091310Z-production-druid-property-completeness-gate",
   "repositoryProfile": {
     "adapter": "ruoyi",
     "locked": true,
     "stack": "RuoYi + Vue3 + Codex Auto Dev OS"
   },
   "allowedEditRoots": [
-    "features/platform.md",
-    "ruoyi-admin/src/main/resources/application-prod.yml",
-    "ai/changes",
+    "tools/config-safety-checker.js",
+    "tests/production-safety.test.js",
+    "ai/rule-proposals/2026-07-14-production-druid-property-completeness-gate.json",
+    "ai/changes/CR-20260714T091310Z-production-druid-property-completeness-gate",
+    "ai/changes/CURRENT_CHANGE.json",
     "ai/context",
-    "ai/generated",
-    "graph",
     "memory"
   ],
   "forbiddenEditRoots": [
-    "tools",
-    "scripts",
-    ".github",
     "package.json",
-    "pom.xml",
-    "ruoyi-ui",
-    "ruoyi-framework",
+    "package-lock.json",
+    ".github",
+    "scripts",
+    "ai/rules",
+    "ai/registry",
+    "graph",
+    "features",
+    "docs",
+    "ruoyi-admin/src/main",
+    "ruoyi-framework/src/main",
     "ruoyi-business",
     "ruoyi-system",
     "ruoyi-common",
     "ruoyi-generator",
     "ruoyi-quartz",
-    "tests",
+    "ruoyi-ui",
     "sql"
   ],
   "mustReadFiles": [
@@ -80,15 +84,15 @@
       "reason": "Governance backlog and required/deferred evidence."
     },
     {
-      "path": "ai/changes/CR-20260714T084732Z-change/impact.json",
+      "path": "ai/changes/CR-20260714T091310Z-production-druid-property-completeness-gate/impact.json",
       "reason": "Current change allowed and forbidden edit roots."
     },
     {
-      "path": "ai/changes/CR-20260714T084732Z-change/plan.md",
+      "path": "ai/changes/CR-20260714T091310Z-production-druid-property-completeness-gate/plan.md",
       "reason": "Current change execution plan."
     },
     {
-      "path": "ai/changes/CR-20260714T084732Z-change/verification.md",
+      "path": "ai/changes/CR-20260714T091310Z-production-druid-property-completeness-gate/verification.md",
       "reason": "Current change verification evidence."
     }
   ],
@@ -293,10 +297,16 @@
     }
   ],
   "verificationCommands": [
-    "packaged prod startup probe",
-    "npm run scan:all",
+    "npm run resume",
+    "node --test tests/production-safety.test.js",
+    "npm run check:config-safety",
+    "npm run check:prod-safety",
+    "npm test",
+    "npm run check",
+    "npm run finalize:change",
     "npm run close:change",
-    "npm run check"
+    "git diff --check",
+    "forbidden runtime-path audit"
   ],
   "nextSteps": [
     "Keep edits inside the active impact boundary.",

@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "mode": "rule-change",
+  "changeType": "governance/rule-change",
+  "baseRevision": "4c9a4e5ca5ccb1f98da9de3fe38adfeb42834d54",
+  "proposalId": "2026-07-14-production-druid-property-completeness-gate",
+  "feature": {
+    "id": "platform",
+    "name": "平台底座治理",
+    "status": "active"
+  },
+  "summary": "Make the existing configuration safety gate dynamically enforce every production Druid property required by Java source.",
+  "affected": {
+    "checker": [
+      "tools/config-safety-checker.js"
+    ],
+    "tests": [
+      "tests/production-safety.test.js"
+    ],
+    "proposal": [
+      "ai/rule-proposals/2026-07-14-production-druid-property-completeness-gate.json"
+    ],
+    "changeRecord": [
+      "ai/changes/CR-20260714T091310Z-production-druid-property-completeness-gate"
+    ]
+  },
+  "allowedEditRoots": [
+    "tools/config-safety-checker.js",
+    "tests/production-safety.test.js",
+    "ai/rule-proposals/2026-07-14-production-druid-property-completeness-gate.json",
+    "ai/changes/CR-20260714T091310Z-production-druid-property-completeness-gate",
+    "ai/changes/CURRENT_CHANGE.json",
+    "ai/context",
+    "memory"
+  ],
+  "forbiddenEditRoots": [
+    "package.json",
+    "package-lock.json",
+    ".github",
+    "scripts",
+    "ai/rules",
+    "ai/registry",
+    "graph",
+    "features",
+    "docs",
+    "ruoyi-admin/src/main",
+    "ruoyi-framework/src/main",
+    "ruoyi-business",
+    "ruoyi-system",
+    "ruoyi-common",
+    "ruoyi-generator",
+    "ruoyi-quartz",
+    "ruoyi-ui",
+    "sql"
+  ],
+  "blockers": [],
+  "nonGoals": [
+    "No production YAML or Java runtime change; the preceding platform configuration commit owns those files.",
+    "No package-script change because check:config-safety is already in npm run check and check:prod-safety already uses the same checker.",
+    "No dependency, API, UI, DB, permission, component, business-module, or sales-order change.",
+    "No release, deployment, force push, gate weakening, static copied key list, or success-only test."
+  ],
+  "requiredCommands": [
+    "npm run resume",
+    "node --test tests/production-safety.test.js",
+    "npm run check:config-safety",
+    "npm run check:prod-safety",
+    "npm test",
+    "npm run check",
+    "npm run finalize:change",
+    "npm run close:change",
+    "git diff --check",
+    "forbidden runtime-path audit"
+  ]
+}

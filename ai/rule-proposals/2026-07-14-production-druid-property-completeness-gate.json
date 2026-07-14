@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "id": "2026-07-14-production-druid-property-completeness-gate",
+  "title": "Production Druid property completeness gate",
+  "reason": "Production YAML must fail closed whenever DruidProperties adds a required @Value key without a matching profile value.",
+  "status": "implemented",
+  "requiredChangeMode": "rule-change",
+  "oldRule": "Production safety validates environment placeholders, unsafe defaults, disabled consoles, and anonymous Druid access, but does not compare Java-required Druid @Value keys with application-prod.yml.",
+  "newRule": "Both normal and production safety validation dynamically extract every required Druid @Value key from Java source and fail when the production YAML lacks the exact nested path.",
+  "affectedScanners": [
+    "tools/config-safety-checker.js"
+  ],
+  "affectedRegistries": [],
+  "projectEvidence": [
+    "ruoyi-framework/src/main/java/com/ruoyi/framework/config/properties/DruidProperties.java",
+    "ruoyi-admin/src/main/resources/application-prod.yml",
+    "ai/changes/CR-20260714T084732Z-change/runtime-evidence/production-profile-probes.md"
+  ],
+  "regressionContract": [
+    "Delete each real required key individually and require a failure.",
+    "Add a synthetic future @Value key to Java source and require a failure without changing the checker.",
+    "Keep the existing safe production fixture green when every extracted key is present.",
+    "Ignore deceptive @Value text in Java comments, strings, and text blocks while rejecting unsupported active syntax and invalid lexer terminal states.",
+    "Reject null, container, empty, and whitespace values while accepting leaf and intermediate-map scalar aliases, false, and zero.",
+    "Run the checker through the existing npm run check wiring."
+  ],
+  "implementedBy": "CR-20260714T091310Z-production-druid-property-completeness-gate",
+  "verification": [
+    "Focused production safety tests pass 47/47 after four RED stages.",
+    "Both check:config-safety and check:prod-safety pass on the repository.",
+    "The complete npm run check passes with 426/426 Node tests."
+  ]
+}

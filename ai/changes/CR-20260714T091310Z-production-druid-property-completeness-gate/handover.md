@@ -6,7 +6,7 @@ Active governance change `CR-20260714T091310Z-production-druid-property-complete
 
 ## Impact
 
-The existing configuration safety checker lexically locates active `@Value` placeholders in `DruidProperties.java`, ignores deceptive comment/string/text-block tokens, rejects invalid lexer terminal states, strictly parses `application-prod.yml`, resolves leaf and intermediate-map aliases, and validates exact non-empty scalar paths in both normal and production entry points. Scope is limited to the checker, its mutation tests, proposal, and required evidence/context/memory. Production YAML, Java runtime, package scripts, workflows, dependencies, business modules, and SQL are unchanged; `beforeSalesOrder` stays blocked.
+The existing configuration safety checker now lexically locates active `@Value` placeholders in `DruidProperties.java`, ignores deceptive comment/string/text-block tokens, rejects invalid lexer terminal states, strictly parses `application-prod.yml`, resolves leaf and intermediate-map aliases, and validates exact non-empty scalar paths in both normal and production entry points. Scope is limited to the checker, its mutation tests, proposal, and required evidence/context/memory. Production YAML, Java runtime, package scripts, workflows, dependencies, business modules, and SQL are unchanged; `beforeSalesOrder` stays blocked.
 
 ## Changed Files
 
