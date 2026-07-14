@@ -1,14 +1,32 @@
 # Current Context
 
 Current feature: `platform`
-Current change: `CR-20260714T100059Z-testcontainers-dependency-alignment`
+Current change: `CR-20260714T102910Z-frontend-dependency-hardening`
 Repository: RuoYi + Vue3 + Codex Auto Dev OS
 Profile: adapter `ruoyi`, locked `true`
 
 ## Allowed Edit Roots
 
-- `ruoyi-business/pom.xml`
-- `ai/changes/CR-20260714T100059Z-testcontainers-dependency-alignment`
+- `ruoyi-ui/package.json`
+- `ruoyi-ui/package-lock.json`
+- `ruoyi-ui/vite/plugins/svg-icon.js`
+- `ruoyi-ui/vite/plugins/index.js`
+- `ruoyi-ui/src/main.js`
+- `ruoyi-ui/src/components/SvgIcon/index.vue`
+- `ruoyi-ui/src/views/monitor/cache/index.vue`
+- `ruoyi-ui/src/views/monitor/cache/cache-request-controller.mjs`
+- `ruoyi-ui/src/views/monitor/cache/chart-lifecycle.mjs`
+- `ruoyi-ui/src/assets/icons/svg/button.svg`
+- `ruoyi-ui/src/assets/icons/svg/monitor.svg`
+- `ruoyi-ui/src/assets/icons/svg/redis-list.svg`
+- `ruoyi-ui/src/assets/icons/svg/system.svg`
+- `ruoyi-ui/tests/spritemap-production.test.js`
+- `ruoyi-ui/tests/cache-request-controller.test.js`
+- `ruoyi-ui/tests/cache-chart-lifecycle.test.js`
+- `tests/frontend-dependency-hardening.test.js`
+- `ai/registry/features.json`
+- `features/platform.md`
+- `ai/changes/CR-20260714T102910Z-frontend-dependency-hardening`
 - `ai/changes/CURRENT_CHANGE.json`
 - `ai/context/current-context.json`
 - `ai/context/current-context.md`
@@ -16,38 +34,37 @@ Profile: adapter `ruoyi`, locked `true`
 - `memory/PROJECT_STATE.md`
 - `memory/TASKS.json`
 - `memory/CHANGELOG.md`
-- `memory/sessions/2026-07-14-testcontainers-dependency-alignment.md`
+- `memory/sessions/2026-07-14-frontend-dependency-hardening.md`
 
 ## Forbidden Edit Roots
 
-- `pom.xml`
-- `ruoyi-admin/pom.xml`
-- `ruoyi-common/pom.xml`
-- `ruoyi-framework/pom.xml`
-- `ruoyi-generator/pom.xml`
-- `ruoyi-quartz/pom.xml`
-- `ruoyi-system/pom.xml`
-- `ruoyi-business/src`
-- `ruoyi-admin/src`
-- `ruoyi-common/src`
-- `ruoyi-framework/src`
-- `ruoyi-generator/src`
-- `ruoyi-quartz/src`
-- `ruoyi-system/src`
-- `ruoyi-ui`
+- `.github`
 - `package.json`
 - `package-lock.json`
-- `.github`
 - `tools`
 - `scripts`
 - `ai/rules`
-- `ai/registry`
 - `ai/rule-proposals`
 - `ai/reviews`
+- `ai/governance`
+- `ai/registry/components.json`
+- `ai/registry/modules.json`
 - `graph`
-- `features`
 - `docs`
 - `sql`
+- `ruoyi-admin`
+- `ruoyi-business`
+- `ruoyi-common`
+- `ruoyi-framework`
+- `ruoyi-generator`
+- `ruoyi-quartz`
+- `ruoyi-system`
+- `ruoyi-ui/src/api`
+- `ruoyi-ui/src/router`
+- `ruoyi-ui/src/views/customer`
+- `ruoyi-ui/src/views/masterdata`
+- `ruoyi-ui/src/views/system`
+- `ruoyi-ui/src/views/tool`
 
 ## Must Read Files
 
@@ -62,9 +79,9 @@ Profile: adapter `ruoyi`, locked `true`
 - `ai/roadmap/phase-gates.json` - beforeSalesOrder gate state.
 - `ai/roadmap/refactor-debt.json` - Known debt affecting sales-order handoff.
 - `ai/roadmap/enhancement-backlog.json` - Governance backlog and required/deferred evidence.
-- `ai/changes/CR-20260714T100059Z-testcontainers-dependency-alignment/impact.json` - Current change allowed and forbidden edit roots.
-- `ai/changes/CR-20260714T100059Z-testcontainers-dependency-alignment/plan.md` - Current change execution plan.
-- `ai/changes/CR-20260714T100059Z-testcontainers-dependency-alignment/verification.md` - Current change verification evidence.
+- `ai/changes/CR-20260714T102910Z-frontend-dependency-hardening/impact.json` - Current change allowed and forbidden edit roots.
+- `ai/changes/CR-20260714T102910Z-frontend-dependency-hardening/plan.md` - Current change execution plan.
+- `ai/changes/CR-20260714T102910Z-frontend-dependency-hardening/verification.md` - Current change verification evidence.
 
 ## Must Not Break
 
@@ -128,17 +145,20 @@ Deferred:
 - `npm run resume`
 - `npm run impact -- platform`
 - `npm run context:build -- platform`
-- `configured Maven dependency:tree for org.testcontainers`
-- `configured Maven -pl ruoyi-business -am test`
-- `configured Maven -pl ruoyi-business -am -Pintegration-test verify`
-- `configured Maven -pl ruoyi-admin -am -DskipTests compile`
+- `node --test tests/frontend-dependency-hardening.test.js`
+- `npm --prefix ruoyi-ui ci`
+- `npm --prefix ruoyi-ui test`
+- `npm --prefix ruoyi-ui ls echarts @spiriit/vite-plugin-svg-spritemap svgo vite-plugin-svg-icons svg-baker postcss --all`
+- `npm --prefix ruoyi-ui audit --audit-level=moderate`
+- `npm --prefix ruoyi-ui run build:prod`
+- `browser acceptance for login icons and cache charts`
 - `npm run scan:all`
 - `npm test`
 - `npm run finalize:change`
 - `npm run check`
 - `npm run close:change`
 - `git diff --check`
-- `forbidden-path audit`
+- `exact allowed/forbidden-path audit`
 
 ## Next Steps
 

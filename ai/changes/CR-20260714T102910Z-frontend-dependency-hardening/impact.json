@@ -1,0 +1,123 @@
+{
+  "schemaVersion": 1,
+  "mode": "update",
+  "changeType": "dependency/maintenance",
+  "baseRevision": "752ed0f730fb2f9bd062f5df03bd57e4d08ff079",
+  "reviewId": "RV-20260714T112343Z-svg-spritemap",
+  "feature": {
+    "id": "platform",
+    "name": "平台底座",
+    "status": "active"
+  },
+  "summary": "Remove the four moderate frontend dependency findings by upgrading ECharts and replacing the abandoned SVG build chain, while hardening chart and icon lifecycle behavior.",
+  "affected": {
+    "dependencies": [
+      "echarts",
+      "@spiriit/vite-plugin-svg-spritemap",
+      "svgo",
+      "vite-plugin-svg-icons",
+      "svg-baker",
+      "postcss"
+    ],
+    "frontendBuild": [
+      "ruoyi-ui/vite/plugins/svg-icon.js",
+      "ruoyi-ui/vite/plugins/index.js",
+      "ruoyi-ui/src/main.js"
+    ],
+    "frontendRuntime": [
+      "ruoyi-ui/src/components/SvgIcon/index.vue",
+      "ruoyi-ui/src/views/monitor/cache/index.vue",
+      "ruoyi-ui/src/views/monitor/cache/cache-request-controller.mjs",
+      "ruoyi-ui/src/views/monitor/cache/chart-lifecycle.mjs"
+    ],
+    "executableTests": [
+      "ruoyi-ui/tests/spritemap-production.test.js",
+      "ruoyi-ui/tests/cache-request-controller.test.js",
+      "ruoyi-ui/tests/cache-chart-lifecycle.test.js"
+    ]
+  },
+  "allowedEditRoots": [
+    "ruoyi-ui/package.json",
+    "ruoyi-ui/package-lock.json",
+    "ruoyi-ui/vite/plugins/svg-icon.js",
+    "ruoyi-ui/vite/plugins/index.js",
+    "ruoyi-ui/src/main.js",
+    "ruoyi-ui/src/components/SvgIcon/index.vue",
+    "ruoyi-ui/src/views/monitor/cache/index.vue",
+    "ruoyi-ui/src/views/monitor/cache/cache-request-controller.mjs",
+    "ruoyi-ui/src/views/monitor/cache/chart-lifecycle.mjs",
+    "ruoyi-ui/src/assets/icons/svg/button.svg",
+    "ruoyi-ui/src/assets/icons/svg/monitor.svg",
+    "ruoyi-ui/src/assets/icons/svg/redis-list.svg",
+    "ruoyi-ui/src/assets/icons/svg/system.svg",
+    "ruoyi-ui/tests/spritemap-production.test.js",
+    "ruoyi-ui/tests/cache-request-controller.test.js",
+    "ruoyi-ui/tests/cache-chart-lifecycle.test.js",
+    "tests/frontend-dependency-hardening.test.js",
+    "ai/registry/features.json",
+    "features/platform.md",
+    "ai/changes/CR-20260714T102910Z-frontend-dependency-hardening",
+    "ai/changes/CURRENT_CHANGE.json",
+    "ai/context/current-context.json",
+    "ai/context/current-context.md",
+    "memory/HANDOVER.md",
+    "memory/PROJECT_STATE.md",
+    "memory/TASKS.json",
+    "memory/CHANGELOG.md",
+    "memory/sessions/2026-07-14-frontend-dependency-hardening.md"
+  ],
+  "forbiddenEditRoots": [
+    ".github",
+    "package.json",
+    "package-lock.json",
+    "tools",
+    "scripts",
+    "ai/rules",
+    "ai/rule-proposals",
+    "ai/reviews",
+    "ai/governance",
+    "ai/registry/components.json",
+    "ai/registry/modules.json",
+    "graph",
+    "docs",
+    "sql",
+    "ruoyi-admin",
+    "ruoyi-business",
+    "ruoyi-common",
+    "ruoyi-framework",
+    "ruoyi-generator",
+    "ruoyi-quartz",
+    "ruoyi-system",
+    "ruoyi-ui/src/api",
+    "ruoyi-ui/src/router",
+    "ruoyi-ui/src/views/customer",
+    "ruoyi-ui/src/views/masterdata",
+    "ruoyi-ui/src/views/system",
+    "ruoyi-ui/src/views/tool"
+  ],
+  "blockers": [],
+  "nonGoals": [
+    "No backend, API, DB, SQL, permission, route, business workflow, customer, masterdata, sales-order, or production configuration change.",
+    "No governance checker, rule, script, workflow, root package, release, deployment, stash restore, or force push.",
+    "No compatibility layer for the removed virtual SVG module; the pre-release frontend moves directly to the approved spritemap contract."
+  ],
+  "requiredCommands": [
+    "npm run resume",
+    "npm run impact -- platform",
+    "npm run context:build -- platform",
+    "node --test tests/frontend-dependency-hardening.test.js",
+    "npm --prefix ruoyi-ui ci",
+    "npm --prefix ruoyi-ui test",
+    "npm --prefix ruoyi-ui ls echarts @spiriit/vite-plugin-svg-spritemap svgo vite-plugin-svg-icons svg-baker postcss --all",
+    "npm --prefix ruoyi-ui audit --audit-level=moderate",
+    "npm --prefix ruoyi-ui run build:prod",
+    "browser acceptance for login icons and cache charts",
+    "npm run scan:all",
+    "npm test",
+    "npm run finalize:change",
+    "npm run check",
+    "npm run close:change",
+    "git diff --check",
+    "exact allowed/forbidden-path audit"
+  ]
+}

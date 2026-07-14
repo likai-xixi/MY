@@ -8,10 +8,15 @@
       "status": "in_progress",
       "owner": "Codex",
       "priority": "high",
-      "statusReason": "CR-20260714T100059Z-testcontainers-dependency-alignment removes the direct Testcontainers mysql 1.21.3 override so the existing Spring Boot BOM resolves all four Testcontainers artifacts at 1.21.4; clean Maven unit 58/58, real MySQL integration 2/2, eight-module compile, scanners, standalone/full Node 426/426, finalization, closeout, and exact scope audit pass; independent review and commit remain.",
-      "nextStep": "Independently review and commit the exact 15-file Testcontainers dependency-maintenance record, then complete the separate frontend dependency migration. Keep beforeSalesOrder blocked and do not release or deploy.",
+      "statusReason": "CR-20260714T102910Z-frontend-dependency-hardening is fully locally verified: four moderate UI findings are removed, audit is 0, the production sprite preserves 90/90 safe icons, browser cache/icon acceptance passes, UI tests are 7/7, the complete repository gate passes 431/431, closeout passes, and two independent reviewers return GO. Implementation commit, the isolated CI/scanner governance batch, push, and Actions confirmation remain.",
+      "nextStep": "Commit the verified frontend dependency batch, then complete the isolated governance/rule-change for explicit UI tests, moderate audit enforcement, and .mjs scanner completeness. Run the final combined gate, push master, confirm Actions, keep beforeSalesOrder blocked, and do not release or deploy.",
       "blockedBy": [],
       "verification": [
+        "CR-20260714T102910Z-frontend-dependency-hardening root focused tests pass 5/5 and UI tests pass 7/7, including the real Vite spritemap plugin, deferred request behavior, and ten chart mount/dispose cycles",
+        "CR-20260714T102910Z-frontend-dependency-hardening audit reports 0 vulnerabilities; ECharts/spritemap/SVGO/PostCSS resolve to 6.1.0/6.0.0/4.0.2/8.5.15 and the legacy SVG chain is absent",
+        "CR-20260714T102910Z-frontend-dependency-hardening production build passes after UI prebuild tests and emits one hashed 90/90 safe spritemap; browser acceptance confirms all 90 picker icons, two cache charts, responsive resize, real Redis data, and no console warning/error",
+        "CR-20260714T102910Z-frontend-dependency-hardening scanners remain stable with no fake helper routes or API/permission/DB/component contract changes; full npm run check passes 431/431 and close:change passes",
+        "CR-20260714T102910Z-frontend-dependency-hardening is bound to committed pre-review RV-20260714T112343Z-svg-spritemap; two independent final reviews report GO with no P0-P3 finding",
         "CR-20260714T100059Z-testcontainers-dependency-alignment pre-change tree mixed mysql 1.21.3 with jdbc/database-commons/core 1.21.4; post-change assertion reports TESTCONTAINERS_CONVERGENCE_OK artifacts=4 versions=1.21.4 oldVersionHits=0",
         "CR-20260714T100059Z-testcontainers-dependency-alignment configured Maven clean unit tests pass 58/58 and clean MySQL 8.0.36 Testcontainers integration tests pass 2/2 with runtime Testcontainers 1.21.4",
         "CR-20260714T100059Z-testcontainers-dependency-alignment eight-module admin reactor compile passes; scan:all reports no contract change and standalone npm test passes 426/426",
@@ -205,10 +210,10 @@
         "R-10C frontend browser acceptance passed on canonical http://127.0.0.1:5173/business/masterdata with nine tabs and product-category add/edit/disable/delete",
         "R-10C direct http://127.0.0.1:5173/masterdata returned RuoYi 404 and is recorded as non-canonical; no R-10D is opened"
       ],
-      "latestSession": "memory/sessions/2026-07-14-testcontainers-dependency-alignment.md",
+      "latestSession": "memory/sessions/2026-07-14-frontend-dependency-hardening.md",
       "handoverRequired": true,
       "updatedAt": "2026-07-14",
-      "latestChange": "CR-20260714T100059Z-testcontainers-dependency-alignment"
+      "latestChange": "CR-20260714T102910Z-frontend-dependency-hardening"
     },
     {
       "id": "TASK-CUSTOMER",

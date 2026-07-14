@@ -1,6 +1,6 @@
 <template>
   <svg :class="svgClass" aria-hidden="true">
-    <use :xlink:href="iconName" :fill="color" />
+    <use :href="iconName" :fill="color" />
   </svg>
 </template>
 
@@ -22,7 +22,7 @@ export default defineComponent({
   },
   setup(props) {
     return {
-      iconName: computed(() => `#icon-${props.iconClass}`),
+      iconName: computed(() => `/__spritemap#icon-${props.iconClass}`),
       svgClass: computed(() => {
         if (props.className) {
           return `svg-icon ${props.className}`

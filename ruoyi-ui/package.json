@@ -7,7 +7,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "test": "node --test tests/*.test.js",
     "build": "npm run build:prod",
+    "prebuild:prod": "npm test",
     "build:prod": "vite build",
     "build:stage": "vite build --mode staging",
     "preview": "vite preview"
@@ -22,7 +24,7 @@
     "@vueuse/core": "14.1.0",
     "axios": "1.18.1",
     "clipboard": "2.0.11",
-    "echarts": "5.6.0",
+    "echarts": "6.1.0",
     "element-plus": "2.13.1",
     "file-saver": "2.0.5",
     "fuse.js": "7.1.0",
@@ -37,13 +39,14 @@
     "vuedraggable": "4.1.0"
   },
   "devDependencies": {
+    "@spiriit/vite-plugin-svg-spritemap": "6.0.0",
     "@vitejs/plugin-vue": "5.2.4",
     "sass-embedded": "1.97.2",
+    "svgo": "4.0.2",
     "unplugin-auto-import": "0.18.6",
     "unplugin-vue-setup-extend-plus": "1.0.1",
     "vite": "6.4.3",
-    "vite-plugin-compression": "0.5.1",
-    "vite-plugin-svg-icons": "2.0.1"
+    "vite-plugin-compression": "0.5.1"
   },
   "overrides": {
     "quill": "2.0.2",

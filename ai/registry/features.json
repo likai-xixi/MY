@@ -981,7 +981,9 @@
         "/redirect",
         "/register"
       ],
-      "tests": [],
+      "tests": [
+        "tests/frontend-dependency-hardening.test.js"
+      ],
       "docs": [
         "features/platform.md"
       ],
@@ -1038,7 +1040,9 @@
           "@/components/iFrame",
           "@/layout/components/HeaderNotice/DetailView"
         ],
-        "tests": [],
+        "tests": [
+          "tests/frontend-dependency-hardening.test.js"
+        ],
         "docs": [
           "features/platform.md"
         ],

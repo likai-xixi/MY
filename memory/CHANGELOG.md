@@ -747,3 +747,9 @@
 - Replaced parent-document notice `v-html` with an empty-sandbox, CSP-first `srcdoc` renderer and added a review-hardened 5/5 security, theme, and Quill-format regression.
 - Real Chrome confirmed absent child execution markers, zero reachable attacker endpoint requests, preserved dark/Quill presentation, and unchanged parent state; the complete repository gate passed 386/386 and the close gate passed.
 - Feature: `system`.
+
+## 2026-07-14 — frontend dependency hardening
+
+- Change: `ai/changes/CR-20260714T102910Z-frontend-dependency-hardening`.
+- Harden frontend dependencies, safe SVG spritemap delivery, and cache chart/request lifecycle behavior.
+- Feature: `platform`.
