@@ -21,12 +21,13 @@
     "lint:codex": "node tools/codex-lint.js",
     "scan:duplicates": "node tools/duplicate-scan.js",
     "check:diff": "node tools/diff-checker.js",
-    "check": "npm run validate:agents && npm run check:profile-lock && npm run scan:all:check && npm run check:registry && npm run check:ownership && npm run check:graph && npm run build:graph:check && npm run sync:memory:check && npm run handover:check && npm run check:memory-quality && npm run check:doc-size && npm run check:context-pack && npm run check:read-budget && npm run check:file-weight && npm run check:current-doc-state && npm run check:feature-test-ownership && npm run check:config-safety && npm run check:verification-provenance && npm run check:ci-coverage-declaration && npm run check:false-green-matrix && npm run check:roadmap && npm run check:phase-gate && npm run check:refactor-debt && npm run check:high-risk-governance && npm run check:rule-objects && npm run check:review && npm run check:components && npm run check:component-similarity && npm run check:boundaries && npm run check:stale-docs && npm run check:orphan && npm run lint:codex && npm run check:change && npm run check:rule-lock && npm run check:pre-release-policy && npm run check:diff && npm run scan:duplicates && npm run check:runtime && npm test",
+    "check": "npm run validate:agents && npm run check:profile-lock && npm run scan:all:check && npm run check:registry && npm run check:ownership && npm run check:graph && npm run build:graph:check && npm run sync:memory:check && npm run handover:check && npm run check:memory-quality && npm run check:doc-size && npm run check:context-pack && npm run check:read-budget && npm run check:file-weight && npm run check:current-doc-state && npm run check:feature-test-ownership && npm run check:config-safety && npm run check:verification-provenance && npm run check:ci-coverage-declaration && npm run check:false-green-matrix && npm run check:roadmap && npm run check:phase-gate && npm run check:refactor-debt && npm run check:high-risk-governance && npm run check:rule-objects && npm run check:review && npm run check:legacy-baseline && npm run check:components && npm run check:component-similarity && npm run check:boundaries && npm run check:stale-docs && npm run check:orphan && npm run lint:codex && npm run check:change && npm run check:rule-lock && npm run check:pre-release-policy && npm run check:diff && npm run scan:duplicates && npm run check:runtime && npm test",
     "test": "node --test tests/*.test.js",
     "resume": "node scripts/resume.js",
     "context:build": "node scripts/context-build.js",
     "review:feature": "node scripts/review-feature.js",
     "check:review": "node tools/review-checker.js --require-allow",
+    "check:legacy-baseline": "node tools/legacy-baseline.js",
     "check:doc-size": "node tools/doc-size-checker.js",
     "check:context-pack": "node tools/context-pack-checker.js",
     "check:read-budget": "node tools/read-budget-checker.js",
@@ -86,12 +87,15 @@
     "ai:do": "node scripts/ai-do.js",
     "check:ownership": "node tools/ownership-checker.js",
     "check:runtime": "node tools/runtime-checker.js",
-    "verify:release": "npm run check && npm run check:prod-safety && mvn -pl ruoyi-admin -am -DskipTests compile && npm --prefix ruoyi-ui run build:prod",
+    "verify:release": "npm run check && npm run check:prod-safety && mvn -pl ruoyi-business -am -Pintegration-test verify && npm --prefix ruoyi-ui audit --audit-level=high && npm --prefix ruoyi-ui run build:prod",
     "sync:ownership": "node tools/ownership-syncer.js",
     "build": "npm run build:graph",
     "sync:ownership:check": "node tools/ownership-syncer.js --check"
   },
   "engines": {
     "node": ">=20"
+  },
+  "dependencies": {
+    "yaml": "2.9.0"
   }
 }

@@ -155,7 +155,7 @@ test('package scripts expose production safety and release verification', () => 
   assert.equal(pkg.scripts['check:prod-safety'], 'node tools/config-safety-checker.js --prod');
   assert.equal(
     pkg.scripts['verify:release'],
-    'npm run check && npm run check:prod-safety && mvn -pl ruoyi-admin -am -DskipTests compile && npm --prefix ruoyi-ui run build:prod'
+    'npm run check && npm run check:prod-safety && mvn -pl ruoyi-business -am -Pintegration-test verify && npm --prefix ruoyi-ui audit --audit-level=high && npm --prefix ruoyi-ui run build:prod'
   );
 });
 
@@ -163,7 +163,9 @@ test('verify:release is explicit and not only check:runtime execution', () => {
   const script = readJson('package.json').scripts['verify:release'];
   assert.ok(script.includes('npm run check'));
   assert.ok(script.includes('npm run check:prod-safety'));
-  assert.ok(script.includes('mvn -pl ruoyi-admin -am -DskipTests compile'));
+  assert.ok(script.includes('mvn -pl ruoyi-business -am -Pintegration-test verify'));
+  assert.ok(script.includes('npm --prefix ruoyi-ui audit --audit-level=high'));
   assert.ok(script.includes('npm --prefix ruoyi-ui run build:prod'));
+  assert.equal(/-DskipTests|-DskipITs|-Dmaven\.test\.skip/.test(script), false);
   assert.equal(/check:runtime\s+--execute/.test(script), false);
 });

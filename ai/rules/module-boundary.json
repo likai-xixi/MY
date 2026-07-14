@@ -35,5 +35,31 @@
   "frontend": {
     "businessRoot": "frontend/src/modules/<feature>",
     "sharedComponents": "frontend/src/components"
+  },
+  "legacyBaseline": {
+    "file": "ai/rules/ruoyi-legacy-baseline.json",
+    "validator": "tools/legacy-baseline.js",
+    "hashAlgorithm": "sha256:utf8-no-bom-lf",
+    "matching": "exact-file-and-target",
+    "requirements": [
+      "Every reviewed legacy boundary finding must name one exact normalized repository file, one or more exact target feature ids, a canonical SHA256, a non-empty reason, and a full source commit.",
+      "A legacy boundary baseline consumes only the named file-target finding while the exact file hash matches; any additional target remains a violation.",
+      "Glob paths, directory paths, duplicate findings, missing files, hash drift, and stale expected targets must fail the gate."
+    ]
+  },
+  "currentChangeExceptions": {
+    "file": "ai/changes/<current>/boundary-exception.md",
+    "changedFiles": "ai/changes/<current>/changed-files.json",
+    "requiredFields": [
+      "file",
+      "target",
+      "reason"
+    ],
+    "matching": "exact-file-and-target",
+    "requirements": [
+      "The exception file must use structured entries with an exact backticked repository file, one target feature id, and a non-empty reason.",
+      "The named file must be an actual file in the current changed-files.json; historical or untouched files cannot borrow the current change exception.",
+      "allow-all, prose-only path mentions, unstructured path bullets, glob paths, directory paths, duplicate entries, stale findings, and whole-file skips are forbidden."
+    ]
   }
 }

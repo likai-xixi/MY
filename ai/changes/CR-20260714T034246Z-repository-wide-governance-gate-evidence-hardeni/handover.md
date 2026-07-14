@@ -2,11 +2,11 @@
 
 ## Summary
 
-The active record is `ai/changes/CR-20260714T034246Z-repository-wide-governance-gate-evidence-hardeni`. It is a governance-only repair for repository-wide false greens found while reviewing customer, masterdata, system notice, production configuration, dependencies, and release evidence. No release or deployment is authorized.
+This rule-change hardens the repository governance baseline, immutable Git evidence, pre-implementation review binding, deterministic context, Java test ownership, verification provenance, runtime detection, and reproducible CI. It does not modify business runtime code or the production application profile.
 
 ## Impact
 
-This batch replaces copied RuoYi exceptions with exact canonical hashes; binds changed-files to an immutable Git range; requires pre-committed review approval for all RuoYi runtime modules; validates real context files and approved feature overrides; makes Java test exceptions rule-change-only; and requires immutable GitHub Actions, lockfile installs, real Node/Maven tests, frontend audit, and production build. Business runtime and `application-prod.yml` remain outside this change. `beforeSalesOrder` remains blocked.
+The active change is `CR-20260714T034246Z-repository-wide-governance-gate-evidence-hardeni`. It replaces copied legacy exceptions with exact canonical hashes; records actual Git changes from a fixed base commit; rejects self-approved review packages, moving revisions, dangerous edit roots, missing context files, mutable Actions, and business-authored test exceptions; and wires locked Node/UI installs, real Maven integration tests, audit, and production build into CI.
 
 ## Changed Files
 
@@ -86,27 +86,27 @@ This batch replaces copied RuoYi exceptions with exact canonical hashes; binds c
 - `[local] npm --prefix ruoyi-ui run build:prod`
 - `[local] mvn -pl ruoyi-business -am -Pintegration-test verify`
 - `[local] npm run finalize:change`
-- `[local] npm run check:change`
-- `[local] npm run close:change`
 - `[local] npm run check`
+- `[local] npm run close:change`
 - `[local] git diff --check`
 
 ## Verification
 
-- [local] The refreshed all-up `npm run check` passed end to end with 377/377 Node tests after staged/index cancellation, index/worktree legacy divergence, invalid UTF-8 evidence, contradictory non-success provenance, canonical/unique file evidence, indented duplicate sections, structured top-level status, root/module Java test discovery, executable matrix gates, real test-call binding, YAML-AST CI, shell-control, and exact-handover probes were repaired; all focused gates pass at their recorded checkpoints.
-- [local] Root/UI locked installs, the high-severity dependency audit, the 2556-module production build, 37 Maven unit tests, and 1 MySQL/Testcontainers integration test passed.
-- [local] `scan:all:check`, legacy baseline, review, context, phase gate, test ownership, CI declaration, false-green matrix, rule-lock, change integrity, and close gate passed at their recorded checkpoints.
-- [local] The first full main gate exposed a finalizer-generated handover without provenance. The repaired generator now preserves rich plan/handover evidence and tags generated commands as not-run; its preservation regression and the final all-up gate pass.
+- [local] The refreshed all-up `npm run check` passed end to end with 377/377 Node tests; focused legacy/index evidence and consumers passed 97/97, evidence/handoff/finalizer passed 69/69, ownership/matrix/review passed 78/78, standalone matrix tests passed 13/13, and CI/governance hardening passed 49/49 after all independently reproduced bypasses were repaired.
+- [local] Locked installs, high-severity audit, frontend production build, Maven unit tests, and the MySQL/Testcontainers integration test passed.
+- [local] The refreshed all-up `npm run check`, `git diff --check`, root dependency audit, and focused change, close, diff, legacy, ownership, matrix, CI, and provenance gates passed at their recorded checkpoints.
+- [local] Expanded finalization matches 63 recorded and actual paths, and the forbidden business-path audit reports zero hits.
+- [not-run] Final staged review and post-commit check remain required before this record is complete.
 
 ## Risks
 
-- Four moderate UI dependency findings remain: ECharts 5 and the legacy SVG/PostCSS 5 build chain. A separate breaking dependency migration will remove them and raise the audit threshold only through a later governance change.
-- Production Druid property coverage requires an ordered platform config change plus packaged startup proof, followed by a separate checker-hardening rule-change.
-- The verified masterdata repair remains protected in the stash named `codex/masterdata-reference-integrity-before-governance` (currently `stash@{1}`) until this governance commit is complete.
+- Four moderate frontend dependency findings remain and must be removed in a separate breaking dependency-migration change; the current CI blocks high/critical findings.
+- The production Druid property coverage false-green is intentionally split: first add the real properties and packaged startup evidence in the platform business/config change, then harden the checker in a second rule-change.
+- GitHub Actions results are not available until the final authorized push.
 
 ## Next Actions
 
-- Stage the exact 63-file set, perform the final independent review, then commit the active governance record.
-- Restore the stash named `codex/masterdata-reference-integrity-before-governance`, rebind it to the governance commit, register its Java tests, and repeat its business verification before committing.
-- Complete the separate system notice XSS, production profile, production-checker, and dependency migration records.
-- Push the reviewed commit series to `origin/master`, confirm GitHub Actions, and stop without release or deployment.
+- Stage the exact 63-file set, complete the independent staged review, then commit this governance-only record.
+- Restore and rebase the verified masterdata stash onto that commit and run its full business gate before committing.
+- Complete the separate system notice, platform production-profile, production-checker, and dependency-migration records.
+- Push all reviewed commits to `origin/master`, then confirm GitHub Actions; do not release or deploy.

@@ -2,63 +2,47 @@
   "schemaVersion": 1,
   "generatedBy": "scripts/context-build.js",
   "generatedAt": "stable",
-  "currentFeature": "customer",
-  "currentChange": "CR-20260714T013244Z-change",
+  "currentFeature": "platform",
+  "currentChange": "CR-20260714T034246Z-repository-wide-governance-gate-evidence-hardeni",
   "repositoryProfile": {
     "adapter": "ruoyi",
     "locked": true,
     "stack": "RuoYi + Vue3 + Codex Auto Dev OS"
   },
   "allowedEditRoots": [
-    "features/customer.md",
-    "ruoyi-business/src/main/java/com/ruoyi/business/customer",
-    "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer",
-    "ruoyi-ui/src/views/customer",
-    "ruoyi-ui/src/utils/region-data.js",
-    "ruoyi-ui/src/api/customer.contract.md",
-    "ruoyi-ui/src/api/customer.js",
-    "tests/customer-risk-gate.test.js",
-    "ai/contracts/customer.api.md",
-    "ai/contracts/customer.db.md",
-    "ai/contracts/customer.delete-ownership.md",
-    "ai/contracts/customer.permission.md",
-    "ai/contracts/customer.ui.md",
-    "graph/api-graph.json",
-    "graph/ui-graph.json",
-    "memory/API_CATALOG.md",
-    "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/README.md",
-    "ruoyi-business/src/main/java/com/ruoyi/business/customer/README.md",
-    "ruoyi-ui/src/views/customer/README.md",
-    "sql/customer.ownership.md",
-    "sql/migrations/V20260625_001_customer_schema.sql",
-    "sql/migrations/V20260625_002_customer_seed_public_customer.sql",
-    "sql/migrations/V20260625_003_customer_menu_permission.sql",
-    "sql/validation/customer_runtime_validation.sql",
-    "ruoyi-business/src/main/resources/mapper/customer/CustomerMapper.xml",
-    "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
-    "ruoyi-ui/src/views/customer/index.vue",
-    "ai/registry/features.json",
-    "ai/registry/modules.json",
-    "ai/reviews/RV-20260714T012241Z-review",
-    "ai/changes",
-    "ai/generated",
-    "graph",
-    "memory",
-    "features",
-    "tests"
-  ],
-  "forbiddenEditRoots": [
+    ".github/workflows",
+    ".gitignore",
+    "package.json",
+    "package-lock.json",
+    "ruoyi-ui/package.json",
+    "ruoyi-ui/package-lock.json",
+    "ruoyi-ui/.gitignore",
     "tools",
     "scripts",
-    ".github",
-    "package.json",
-    "ruoyi-business/src/main/java/com/ruoyi/business/masterdata",
-    "ruoyi-system",
+    "tests",
+    "ai/changes",
+    "ai/context",
+    "ai/governance",
+    "ai/rules",
+    "ai/registry",
+    "ai/reviews/RV-20260714T012241Z-review",
+    "ai/roadmap",
+    "ai/rule-proposals",
+    "docs",
+    "README.md",
+    "memory"
+  ],
+  "forbiddenEditRoots": [
+    "ruoyi-business/src/main/java",
+    "ruoyi-business/src/main/resources",
+    "ruoyi-admin/src/main/java",
     "ruoyi-admin/src/main/resources/application-prod.yml",
+    "ruoyi-ui/src/views",
     "ruoyi-ui/src/layout/components/HeaderNotice",
-    "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/sales-order",
-    "ruoyi-business/src/main/java/com/ruoyi/business/sales-order",
-    "ruoyi-ui/src/views/sales-order"
+    "ruoyi-ui/src/api",
+    "sql",
+    "graph",
+    "features"
   ],
   "mustReadFiles": [
     {
@@ -83,15 +67,15 @@
     },
     {
       "path": "ai/registry/features.json",
-      "reason": "Feature ownership and active customer context."
+      "reason": "Feature ownership and active feature context."
     },
     {
       "path": "ai/registry/modules.json",
       "reason": "Module ownership roots."
     },
     {
-      "path": "ai/context/features/customer.md",
-      "reason": "Focused context for customer."
+      "path": "features/platform.md",
+      "reason": "Focused context for platform."
     },
     {
       "path": "ai/roadmap/phase-gates.json",
@@ -106,22 +90,22 @@
       "reason": "Governance backlog and required/deferred evidence."
     },
     {
-      "path": "ai/changes/CR-20260714T013244Z-change/impact.json",
+      "path": "ai/changes/CR-20260714T034246Z-repository-wide-governance-gate-evidence-hardeni/impact.json",
       "reason": "Current change allowed and forbidden edit roots."
     },
     {
-      "path": "ai/changes/CR-20260714T013244Z-change/plan.md",
+      "path": "ai/changes/CR-20260714T034246Z-repository-wide-governance-gate-evidence-hardeni/plan.md",
       "reason": "Current change execution plan."
     },
     {
-      "path": "ai/changes/CR-20260714T013244Z-change/verification.md",
+      "path": "ai/changes/CR-20260714T034246Z-repository-wide-governance-gate-evidence-hardeni/verification.md",
       "reason": "Current change verification evidence."
     }
   ],
   "mustNotBreak": [
-    "Do not implement sales-order in this governance change.",
-    "Do not modify customer-management business code in governance/rule-change work.",
-    "Do not change database business table structure in this governance change.",
+    "Do not edit outside the active impact allowedEditRoots.",
+    "Do not mix governance/rule-change work with business runtime implementation.",
+    "Do not cross the active impact forbiddenEditRoots.",
     "Do not loosen existing governance gates or profile lock."
   ],
   "roadmapBlockers": [
@@ -319,13 +303,20 @@
     }
   ],
   "verificationCommands": [
-    "npm run scan:all",
+    "npm run resume",
+    "npm run rule:preflight -- before-sales-order-phase-gate",
+    "targeted governance tests",
+    "npm test",
+    "npm run check",
+    "npm run finalize:change",
+    "npm run check:change",
     "npm run close:change",
-    "npm run check"
+    "git diff --check",
+    "forbidden business-path audit"
   ],
   "nextSteps": [
-    "Keep this change governance-only.",
-    "Before sales-order implementation, run review:feature and require decision.md to explicitly contain Allow Implementation.",
-    "Complete snapshot, state-machine, and fund-boundary contracts before creating sales-order code or tables."
+    "Keep edits inside the active impact boundary.",
+    "For complex business implementation, bind impact.reviewId to an approved review package.",
+    "Complete the active phase gates before entering their protected implementation scope."
   ]
 }

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "changeId": "CR-20260627T154818Z-r-09a-4-anti-false-green-minimum-closure",
+  "changeId": "CR-20260714T034246Z-repository-wide-governance-gate-evidence-hardeni",
   "items": [
     {
       "id": "package-script-anti-theater",
@@ -31,7 +31,7 @@
         "A risk item can be marked covered without a test file or source evidence."
       ],
       "mustFailWhen": [
-        "A covered matrix item has no coveredByTests entry, points at a missing test file, lacks sourceFiles, or references a missing source file."
+        "A required matrix contract is deleted; a covered item changes its governance owner, verification change, gate, required tests, sources, or checker binding; its gate does not execute the bound checker; or a required test file lacks a real test declaration."
       ],
       "coveredByTests": [
         "tests/false-green-matrix-checker.test.js"
@@ -43,7 +43,7 @@
       ],
       "status": "covered",
       "owner": "governance",
-      "lastVerifiedByChange": "CR-20260627T154818Z-r-09a-4-anti-false-green-minimum-closure"
+      "lastVerifiedByChange": "CR-20260714T034246Z-repository-wide-governance-gate-evidence-hardeni"
     },
     {
       "id": "ci-green-not-release-green",
@@ -57,7 +57,8 @@
       ],
       "coveredByTests": [
         "tests/false-green-matrix-checker.test.js",
-        "tests/package-scripts.test.js"
+        "tests/package-scripts.test.js",
+        "tests/production-safety.test.js"
       ],
       "sourceFiles": [
         "docs/chat-driven-codex-workflow.md",
@@ -81,7 +82,8 @@
       ],
       "coveredByTests": [
         "tests/false-green-matrix-checker.test.js",
-        "tests/package-scripts.test.js"
+        "tests/package-scripts.test.js",
+        "tests/governance-gates.test.js"
       ],
       "sourceFiles": [
         "docs/chat-driven-codex-workflow.md",
@@ -104,7 +106,8 @@
       ],
       "coveredByTests": [
         "tests/customer-risk-gate.test.js",
-        "tests/false-green-matrix-checker.test.js"
+        "tests/false-green-matrix-checker.test.js",
+        "tests/governance-sales-order-handoff-gate.test.js"
       ],
       "sourceFiles": [
         "ai/roadmap/phase-gates.json",
@@ -274,7 +277,8 @@
       ],
       "coveredByTests": [
         "tests/false-green-matrix-checker.test.js",
-        "tests/package-scripts.test.js"
+        "tests/package-scripts.test.js",
+        "tests/rule-object-governance.test.js"
       ],
       "sourceFiles": [
         "tools/rule-object-checker.js",
@@ -284,6 +288,273 @@
       "status": "covered",
       "owner": "governance",
       "lastVerifiedByChange": "CR-20260627T154818Z-r-09a-4-anti-false-green-minimum-closure"
+    },
+    {
+      "id": "ruoyi-legacy-baseline-exact-hash",
+      "title": "RuoYi legacy findings require an exact canonical hash baseline",
+      "gate": "check:legacy-baseline",
+      "risk": [
+        "Stable imported RuoYi findings can disappear behind change-local path exceptions, or a changed file can continue borrowing an obsolete legacy exemption."
+      ],
+      "mustFailWhen": [
+        "A legacy entry uses a non-canonical path, glob, or directory path; lacks a reason or full source commit; names a missing, shallow, post-base, or non-ancestor commit; points to a symlink, gitlink, invalid UTF-8 source, or sourceCommit:file whose regular-blob canonical hash differs at the source commit, impact base, or current tree; duplicates a finding; or no longer maps to the exact component check or boundary target."
+      ],
+      "coveredByTests": [
+        "tests/legacy-baseline.test.js",
+        "tests/component-checker.test.js",
+        "tests/component-similarity-checker.test.js",
+        "tests/boundary-lint.test.js"
+      ],
+      "sourceFiles": [
+        "ai/rules/ruoyi-legacy-baseline.json",
+        "tools/legacy-baseline.js",
+        "tools/component-checker.js",
+        "tools/component-similarity-checker.js",
+        "tools/boundary-lint.js"
+      ],
+      "status": "covered",
+      "owner": "governance",
+      "lastVerifiedByChange": "CR-20260714T034246Z-repository-wide-governance-gate-evidence-hardeni"
+    },
+    {
+      "id": "current-change-exception-exact-scope",
+      "title": "Current-change exceptions require exact structured actual-file scope",
+      "gate": "check",
+      "risk": [
+        "An active change can turn unrelated historical findings green through allow-all text, prose path mentions, wildcards, or a whole-file boundary skip."
+      ],
+      "mustFailWhen": [
+        "A component or boundary exception is not a structured exact file-check or file-target entry with a reason, names a file absent from current changed-files.json or the baseRevision-bound actual Git set, uses allow-all or a wildcard, duplicates an entry, or no longer corresponds to an observed finding."
+      ],
+      "coveredByTests": [
+        "tests/legacy-baseline.test.js",
+        "tests/component-checker.test.js",
+        "tests/component-similarity-checker.test.js",
+        "tests/boundary-lint.test.js"
+      ],
+      "sourceFiles": [
+        "ai/rules/component-policy.json",
+        "ai/rules/module-boundary.json",
+        "tools/legacy-baseline.js",
+        "tools/component-checker.js",
+        "tools/component-similarity-checker.js",
+        "tools/boundary-lint.js"
+      ],
+      "status": "covered",
+      "owner": "governance",
+      "lastVerifiedByChange": "CR-20260714T034246Z-repository-wide-governance-gate-evidence-hardeni"
+    },
+    {
+      "id": "canonical-edit-root-scope",
+      "title": "Edit and approval roots are canonical repository-relative paths",
+      "gate": "check:diff",
+      "risk": [
+        "Empty, root, absolute, parent-relative, duplicated-separator, or backslash roots can normalize into an allow-all scope and bypass allowed or approved edit boundaries."
+      ],
+      "mustFailWhen": [
+        "Any allowedEditRoots or forbiddenEditRoots entry is empty, absolute, dot-relative, parent-relative, has dot segments, duplicate separators, backslashes, surrounding whitespace, or a trailing separator; invalid approvedEditRoots must never authorize a runtime file."
+      ],
+      "coveredByTests": [
+        "tests/diff-checker.test.js",
+        "tests/governance-sales-order-handoff-gate.test.js"
+      ],
+      "sourceFiles": [
+        "tools/diff-checker.js",
+        "tools/review-checker.js"
+      ],
+      "status": "covered",
+      "owner": "governance",
+      "lastVerifiedByChange": "CR-20260714T034246Z-repository-wide-governance-gate-evidence-hardeni"
+    },
+    {
+      "id": "review-exact-binding",
+      "title": "Implementation review approval binds exact revision feature and roots",
+      "gate": "check:review",
+      "risk": [
+        "An unrelated, same-diff, or stale approved review can be reused to authorize a different feature, runtime module, edit root, or Git range."
+      ],
+      "mustFailWhen": [
+        "A complex business change lacks impact.reviewId or a fixed full commit baseRevision, the referenced review package did not already exist at the implementation base, changes in the same Git range, lacks its own fixed baseRevision or explicit approval, has a different id or approved feature, treats a non-Markdown file under generic backend/frontend/ruoyi-ui or any RuoYi main/test source tree as non-implementation, treats a nested src/common dist or node_modules directory as generated output, omits a runtime file from approvedEditRoots, has a review base outside the impact ancestry, or lets a context override trust review.json while decision.md is not exactly Allow Implementation."
+      ],
+      "coveredByTests": [
+        "tests/governance-sales-order-handoff-gate.test.js"
+      ],
+      "sourceFiles": [
+        "tools/review-checker.js",
+        "tools/diff-checker.js",
+        "scripts/review-feature.js"
+      ],
+      "status": "covered",
+      "owner": "governance",
+      "lastVerifiedByChange": "CR-20260714T034246Z-repository-wide-governance-gate-evidence-hardeni"
+    },
+    {
+      "id": "changed-files-exact-git-coverage",
+      "title": "Changed-files evidence equals the exact Git range",
+      "gate": "check:change",
+      "risk": [
+        "Finalized evidence can omit committed changes, generated-looking source paths, or overclaim untouched files when it is built from request text, moving revisions, impact roots, or working-tree-only observations."
+      ],
+      "mustFailWhen": [
+        "impact.baseRevision is not a fixed full 40-character commit OID, rename detection collapses an old path instead of governing both delete and add paths, raw Git mode/object evidence is missing, an allowed-root change introduces a symlink or gitlink, a mode-only change is accepted as current-exception content evidence, a Git-reported base-to-worktree deleted, renamed, untracked, or generated-looking source path is absent from changed-files.json, or changed-files.json contains a file not changed since the bound base revision."
+      ],
+      "coveredByTests": [
+        "tests/diff-checker.test.js",
+        "tests/change-handoff-integrity-checker.test.js",
+        "tests/governance-sales-order-handoff-gate.test.js"
+      ],
+      "sourceFiles": [
+        "tools/diff-checker.js",
+        "tools/change-handoff-integrity-checker.js",
+        "scripts/finalize-change.js"
+      ],
+      "status": "covered",
+      "owner": "governance",
+      "lastVerifiedByChange": "CR-20260714T034246Z-repository-wide-governance-gate-evidence-hardeni"
+    },
+    {
+      "id": "handover-exact-file-coverage",
+      "title": "Active and memory handovers list the exact changed-file set",
+      "gate": "check:handover-integrity",
+      "risk": [
+        "A handover can pass with a category summary, truncated list, omitted changed file, or invented file even while changed-files.json is exact."
+      ],
+      "mustFailWhen": [
+        "The active change handover or memory/HANDOVER.md lacks a parseable Changed Files section, contains anything other than one canonical backticked file bullet per line, truncates the list, duplicates a path, omits a changed-files.json path, or lists a path outside changed-files.json."
+      ],
+      "coveredByTests": [
+        "tests/change-handoff-integrity-checker.test.js",
+        "tests/package-scripts.test.js"
+      ],
+      "sourceFiles": [
+        "tools/change-handoff-integrity-checker.js",
+        "scripts/finalize-change.js"
+      ],
+      "status": "covered",
+      "owner": "governance",
+      "lastVerifiedByChange": "CR-20260714T034246Z-repository-wide-governance-gate-evidence-hardeni"
+    },
+    {
+      "id": "java-test-feature-ownership",
+      "title": "Java tests require explicit feature ownership",
+      "gate": "check:feature-test-ownership",
+      "risk": [
+        "Tests under src/test/java can exist outside the feature registry or self-add a broad exception and create untraceable or misleading runtime coverage."
+      ],
+      "mustFailWhen": [
+        "A Java or Node test matches a feature but is missing from both feature tests and ownership.tests; test discovery skips target, build, tmp, dist, or node_modules below tests or src/test/java; a business-matched test is disguised as governance-test or shared-test; a cross-feature exception does not independently match at least two features or omits a matched owner; an exception names a fake or unrelated owner; a Java test matches no feature or multiple features; or a non-rule-change edits the exception registry."
+      ],
+      "coveredByTests": [
+        "tests/governance-sales-order-handoff-gate.test.js",
+        "tests/governance-gates.test.js",
+        "tests/rule-change-guard.test.js"
+      ],
+      "sourceFiles": [
+        "tools/feature-test-ownership-checker.js",
+        "tools/rule-change-guard.js",
+        "ai/registry/features.json",
+        "ai/registry/test-ownership-exceptions.json"
+      ],
+      "status": "covered",
+      "owner": "governance",
+      "lastVerifiedByChange": "CR-20260714T034246Z-repository-wide-governance-gate-evidence-hardeni"
+    },
+    {
+      "id": "deterministic-current-context-binding",
+      "title": "Current context is deterministic and bound to active impact",
+      "gate": "check:context-pack",
+      "risk": [
+        "A hardcoded or stale context can report the wrong feature, change id, edit roots, nonexistent must-read file, or local absolute path while governance checks appear green."
+      ],
+      "mustFailWhen": [
+        "current-context currentChange, registered currentFeature, allowedEditRoots, forbiddenEditRoots, generated mustReadFiles, or Markdown rendering differs from the active impact and JSON truth; a must-read path is missing, non-file, or absolute; Markdown leaks a Windows/UNC workspace path; or a focused feature override is not explicitly covered by an unchanged review package already committed at the fixed impact base."
+      ],
+      "coveredByTests": [
+        "tests/governance-sales-order-handoff-gate.test.js"
+      ],
+      "sourceFiles": [
+        "scripts/context-build.js",
+        "tools/context-pack-checker.js",
+        "ai/context/current-context.json",
+        "ai/context/current-context.md"
+      ],
+      "status": "covered",
+      "owner": "governance",
+      "lastVerifiedByChange": "CR-20260714T034246Z-repository-wide-governance-gate-evidence-hardeni"
+    },
+    {
+      "id": "ci-locked-install-test-audit-build",
+      "title": "CI requires immutable actions locked installs real tests audit and production build",
+      "gate": "check:ci-coverage-declaration",
+      "risk": [
+        "CI can be green after mutable third-party Action resolution, unlocked dependency resolution, compile-only Maven work, skipped tests, missing frontend audit, or a non-production frontend build."
+      ],
+      "mustFailWhen": [
+        "The workflow uses invalid YAML, a non-SHA third-party Action or reusable-workflow reference, a non-digest Docker image, an escaped YAML key that bypasses semantic parsing, a custom or inherited verification shell, a dependency-skippable needs job, or a shallow checkout while historical baselines exist; counts strategy/matrix data, heredoc/string/function/conditional/subshell text, or any non-dedicated run program as executed coverage; omits root npm ci, npm test, Maven unit and integration verification, ruoyi-ui npm ci, high-severity npm audit, or build:prod; places required coverage behind a job or step condition; masks a required command failure with shell control flow, disabled errexit, an unsafe pipeline, background execution, trailing success, or any non-false continue-on-error value; uses skip-test flags or echo-only commands; or counts root npm commands as frontend coverage."
+      ],
+      "coveredByTests": [
+        "tests/governance-gates.test.js",
+        "tests/ci-coverage-hardening.test.js",
+        "tests/package-scripts.test.js",
+        "tests/production-safety.test.js"
+      ],
+      "sourceFiles": [
+        ".github/workflows/ci.yml",
+        "package.json",
+        "package-lock.json",
+        "ruoyi-ui/package.json",
+        "ruoyi-ui/package-lock.json",
+        "tools/governance-checker-utils.js",
+        "tools/ci-coverage-declaration-checker.js",
+        "tools/verification-provenance-checker.js"
+      ],
+      "status": "covered",
+      "owner": "governance",
+      "lastVerifiedByChange": "CR-20260714T034246Z-repository-wide-governance-gate-evidence-hardeni"
+    },
+    {
+      "id": "phase-gate-executable-file-scope",
+      "title": "Phase-gate content scanning distinguishes executable files from Markdown",
+      "gate": "check:phase-gate",
+      "risk": [
+        "Scanning governance Markdown as runtime code creates false blockers and encourages broad exceptions that could then hide real sales-order implementation."
+      ],
+      "mustFailWhen": [
+        "An incomplete beforeSalesOrder gate permits sales-order paths or content in executable Java, JavaScript, TypeScript, Vue, SQL, XML, properties, YAML, or Kotlin files, while Markdown ownership and governance prose must remain non-runtime evidence."
+      ],
+      "coveredByTests": [
+        "tests/governance-sales-order-handoff-gate.test.js"
+      ],
+      "sourceFiles": [
+        "tools/phase-gate-checker.js",
+        "ai/roadmap/phase-gates.json",
+        "ai/roadmap/enhancement-backlog.json"
+      ],
+      "status": "covered",
+      "owner": "governance",
+      "lastVerifiedByChange": "CR-20260714T034246Z-repository-wide-governance-gate-evidence-hardeni"
+    },
+    {
+      "id": "single-maven-reactor-execution",
+      "title": "Runtime verification executes one aggregate Maven reactor",
+      "gate": "check:runtime",
+      "risk": [
+        "Running the root Maven reactor and its child modules independently duplicates work, can produce inconsistent evidence, and can hide which aggregate result governs readiness."
+      ],
+      "mustFailWhen": [
+        "Runtime project detection schedules child Maven modules separately after a root reactor pom declares them, or executable runtime verification invokes more than one aggregate Maven run for that reactor."
+      ],
+      "coveredByTests": [
+        "tests/runtime-checker.test.js"
+      ],
+      "sourceFiles": [
+        "tools/runtime-checker.js",
+        "ai/rules/runtime-policy.json",
+        "pom.xml"
+      ],
+      "status": "covered",
+      "owner": "governance",
+      "lastVerifiedByChange": "CR-20260714T034246Z-repository-wide-governance-gate-evidence-hardeni"
     }
   ]
 }

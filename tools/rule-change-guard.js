@@ -1,5 +1,5 @@
-import { execFileSync } from 'node:child_process';
 import { finish, isCli, readJson } from './common.js';
+import { collectChangedFiles as collectActualChangedFiles } from './diff-checker.js';
 
 const PROTECTED_PREFIXES = [
   '.codex/skills/',
@@ -13,6 +13,10 @@ const PROTECTED_PREFIXES = [
   'ai/project-profile.json'
 ];
 
+const STRICT_RULE_CHANGE_FILES = new Set([
+  'ai/registry/test-ownership-exceptions.json'
+]);
+
 const RULE_MODES = new Set([
   'baseline',
   'governance',
@@ -21,30 +25,6 @@ const RULE_MODES = new Set([
   'rule-change',
   'template'
 ]);
-
-function runGit(args) {
-  try {
-    return execFileSync('git', args, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim();
-  } catch {
-    return '';
-  }
-}
-
-function isGitRepository() {
-  return runGit(['rev-parse', '--is-inside-work-tree']) === 'true';
-}
-
-function gitChangedFiles() {
-  if (!isGitRepository()) {
-    return [];
-  }
-  const unstaged = runGit(['diff', '--name-only', '--diff-filter=ACMRTUXB', '--']);
-  const staged = runGit(['diff', '--cached', '--name-only', '--diff-filter=ACMRTUXB', '--']);
-  const untracked = runGit(['ls-files', '--others', '--exclude-standard']);
-  return [...new Set([...unstaged.split('\n'), ...staged.split('\n'), ...untracked.split('\n')]
-    .map((file) => file.trim().replace(/\\/g, '/'))
-    .filter(Boolean))];
-}
 
 function currentChangeId() {
   try {
@@ -66,37 +46,27 @@ function currentImpact() {
   }
 }
 
-function changedFilesFromRecord() {
-  const id = currentChangeId();
-  if (!id) {
-    return [];
-  }
-  try {
-    const changed = readJson(`ai/changes/${id}/changed-files.json`);
-    return Array.isArray(changed.files) ? changed.files : [];
-  } catch {
-    return [];
-  }
-}
-
-function collectChangedFiles() {
-  const gitFiles = gitChangedFiles();
-  return gitFiles.length > 0 ? gitFiles : changedFilesFromRecord();
-}
-
 function protectedPath(file) {
-  return PROTECTED_PREFIXES.some((prefix) => file === prefix || file.startsWith(prefix));
+  return STRICT_RULE_CHANGE_FILES.has(file)
+    || PROTECTED_PREFIXES.some((prefix) => file === prefix || file.startsWith(prefix));
 }
 
-export function validateRuleChangeGuard({ files = collectChangedFiles(), impact = currentImpact() } = {}) {
+export function validateRuleChangeGuard({ files = collectActualChangedFiles(), impact = currentImpact() } = {}) {
   const errors = [];
-  const protectedFiles = files.filter(protectedPath);
+  const normalizedFiles = files.map((file) => String(file || '').replace(/\\/g, '/'));
+  const protectedFiles = normalizedFiles.filter(protectedPath);
   if (protectedFiles.length === 0) {
     return errors;
   }
   const mode = impact?.mode || '';
+  const strictFiles = protectedFiles.filter((file) => STRICT_RULE_CHANGE_FILES.has(file));
+  if (mode !== 'rule-change') {
+    for (const file of strictFiles) {
+      errors.push(`${file} is a protected governance registry and requires an active rule-change record before editing.`);
+    }
+  }
   if (!RULE_MODES.has(mode)) {
-    for (const file of protectedFiles) {
+    for (const file of protectedFiles.filter((file) => !STRICT_RULE_CHANGE_FILES.has(file))) {
       errors.push(`${file} is a protected governance file. Use a profile or rule-change record before editing scanner, rule, script, workflow, package, skill, or project profile files.`);
     }
   }

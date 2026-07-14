@@ -9,6 +9,12 @@ import {
   readText
 } from './common.js';
 import { configuredPaths, existingSharedComponentRoot } from './project-config.js';
+import {
+  inspectCurrentChangeExceptions,
+  inspectLegacyBaseline,
+  isCurrentComponentException,
+  isLegacyComponentFinding
+} from './legacy-baseline.js';
 
 export const COMPONENT_EXTENSIONS = new Set(['.tsx', '.jsx', '.vue', '.ts', '.js']);
 const GENERIC_COMPONENT_NAMES = new Set([
@@ -76,32 +82,6 @@ export function isModuleComponentCandidate(file) {
 function hasGenericComponentName(value) {
   const normalized = normalizeComponentName(value);
   return GENERIC_COMPONENT_NAMES.has(normalized) || componentNameTokens(value).some((token) => GENERIC_COMPONENT_NAMES.has(token));
-}
-
-export function currentChangeId({ read = readJson } = {}) {
-  try {
-    return read('ai/changes/CURRENT_CHANGE.json').current || '';
-  } catch {
-    return '';
-  }
-}
-
-export function componentExceptionText({ read = readJson, readTextFile = readText } = {}) {
-  const changeId = currentChangeId({ read });
-  if (!changeId) {
-    return '';
-  }
-  try {
-    return readTextFile(`ai/changes/${changeId}/component-exception.md`);
-  } catch {
-    return '';
-  }
-}
-
-export function hasComponentException(file, options = {}) {
-  const text = componentExceptionText(options);
-  const normalized = normalizedPath(file);
-  return text.includes(normalized) || text.includes(file) || /allow-all\s*:\s*true/i.test(text);
 }
 
 function normalizeComponentName(value) {
@@ -302,10 +282,24 @@ export function validateSharedComponentCoverage({ files = listFiles, read = read
   return errors;
 }
 
-export function validateModuleComponents({ files = listFiles, read = readJson, readTextFile = readText } = {}) {
+export function validateModuleComponents({
+  files = listFiles,
+  read = readJson,
+  readTextFile = readText,
+  readChangedFiles,
+  legacyState,
+  exceptionState
+} = {}) {
   const errors = [];
   const config = configuredPaths();
   const root = existingSharedComponentRoot();
+  const projectBaseline = legacyState || inspectLegacyBaseline();
+  const currentExceptions = exceptionState || inspectCurrentChangeExceptions('component', {
+    read,
+    readTextFile,
+    readChangedFiles
+  });
+  errors.push(...projectBaseline.errors, ...currentExceptions.errors);
   const catalog = readComponentCatalog({ read, root });
   const sharedNames = new Set(
     (catalog.components || []).flatMap((component) => [
@@ -318,9 +312,28 @@ export function validateModuleComponents({ files = listFiles, read = readJson, r
   const moduleComponentFiles = [...new Set(config.frontendModuleRoots.flatMap((moduleRoot) => files(moduleRoot, (file) => {
     return isModuleComponentCandidate(file);
   })))];
+  const candidates = new Set(moduleComponentFiles);
+
+  if (projectBaseline.valid) {
+    for (const entry of projectBaseline.baseline.componentFiles) {
+      if (entry.checks.includes('component') && !candidates.has(entry.file)) {
+        errors.push(`Legacy component baseline entry is stale because the file is no longer a component candidate: ${entry.file}.`);
+      }
+    }
+  }
+  if (currentExceptions.valid) {
+    for (const entry of currentExceptions.entries) {
+      if (entry.check === 'component' && !candidates.has(entry.file)) {
+        errors.push(`Current component exception is stale because the file is no longer a component candidate: ${entry.file}.`);
+      }
+    }
+  }
 
   for (const file of moduleComponentFiles) {
-    if (hasComponentException(file, { read, readTextFile })) {
+    if (
+      isLegacyComponentFinding(projectBaseline, file, 'component')
+      || isCurrentComponentException(currentExceptions, file, 'component')
+    ) {
       continue;
     }
     const name = basenameWithoutExtension(file);

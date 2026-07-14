@@ -1,62 +1,46 @@
 # Current Context
 
-Current feature: `customer`
-Current change: `CR-20260714T013244Z-change`
+Current feature: `platform`
+Current change: `CR-20260714T034246Z-repository-wide-governance-gate-evidence-hardeni`
 Repository: RuoYi + Vue3 + Codex Auto Dev OS
 Profile: adapter `ruoyi`, locked `true`
 
 ## Allowed Edit Roots
 
-- `features/customer.md`
-- `ruoyi-business/src/main/java/com/ruoyi/business/customer`
-- `ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer`
-- `ruoyi-ui/src/views/customer`
-- `ruoyi-ui/src/utils/region-data.js`
-- `ruoyi-ui/src/api/customer.contract.md`
-- `ruoyi-ui/src/api/customer.js`
-- `tests/customer-risk-gate.test.js`
-- `ai/contracts/customer.api.md`
-- `ai/contracts/customer.db.md`
-- `ai/contracts/customer.delete-ownership.md`
-- `ai/contracts/customer.permission.md`
-- `ai/contracts/customer.ui.md`
-- `graph/api-graph.json`
-- `graph/ui-graph.json`
-- `memory/API_CATALOG.md`
-- `ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/README.md`
-- `ruoyi-business/src/main/java/com/ruoyi/business/customer/README.md`
-- `ruoyi-ui/src/views/customer/README.md`
-- `sql/customer.ownership.md`
-- `sql/migrations/V20260625_001_customer_schema.sql`
-- `sql/migrations/V20260625_002_customer_seed_public_customer.sql`
-- `sql/migrations/V20260625_003_customer_menu_permission.sql`
-- `sql/validation/customer_runtime_validation.sql`
-- `ruoyi-business/src/main/resources/mapper/customer/CustomerMapper.xml`
-- `ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java`
-- `ruoyi-ui/src/views/customer/index.vue`
-- `ai/registry/features.json`
-- `ai/registry/modules.json`
-- `ai/reviews/RV-20260714T012241Z-review`
-- `ai/changes`
-- `ai/generated`
-- `graph`
-- `memory`
-- `features`
+- `.github/workflows`
+- `.gitignore`
+- `package.json`
+- `package-lock.json`
+- `ruoyi-ui/package.json`
+- `ruoyi-ui/package-lock.json`
+- `ruoyi-ui/.gitignore`
+- `tools`
+- `scripts`
 - `tests`
+- `ai/changes`
+- `ai/context`
+- `ai/governance`
+- `ai/rules`
+- `ai/registry`
+- `ai/reviews/RV-20260714T012241Z-review`
+- `ai/roadmap`
+- `ai/rule-proposals`
+- `docs`
+- `README.md`
+- `memory`
 
 ## Forbidden Edit Roots
 
-- `tools`
-- `scripts`
-- `.github`
-- `package.json`
-- `ruoyi-business/src/main/java/com/ruoyi/business/masterdata`
-- `ruoyi-system`
+- `ruoyi-business/src/main/java`
+- `ruoyi-business/src/main/resources`
+- `ruoyi-admin/src/main/java`
 - `ruoyi-admin/src/main/resources/application-prod.yml`
+- `ruoyi-ui/src/views`
 - `ruoyi-ui/src/layout/components/HeaderNotice`
-- `ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/sales-order`
-- `ruoyi-business/src/main/java/com/ruoyi/business/sales-order`
-- `ruoyi-ui/src/views/sales-order`
+- `ruoyi-ui/src/api`
+- `sql`
+- `graph`
+- `features`
 
 ## Must Read Files
 
@@ -65,21 +49,21 @@ Profile: adapter `ruoyi`, locked `true`
 - `memory/HANDOVER.md` - Latest project handoff and verification boundary.
 - `ai/project-profile.json` - Locked adapter and profile-rule state.
 - `package.json` - Available workflow and check scripts.
-- `ai/registry/features.json` - Feature ownership and active customer context.
+- `ai/registry/features.json` - Feature ownership and active feature context.
 - `ai/registry/modules.json` - Module ownership roots.
-- `ai/context/features/customer.md` - Focused context for customer.
+- `features/platform.md` - Focused context for platform.
 - `ai/roadmap/phase-gates.json` - beforeSalesOrder gate state.
 - `ai/roadmap/refactor-debt.json` - Known debt affecting sales-order handoff.
 - `ai/roadmap/enhancement-backlog.json` - Governance backlog and required/deferred evidence.
-- `ai/changes/CR-20260714T013244Z-change/impact.json` - Current change allowed and forbidden edit roots.
-- `ai/changes/CR-20260714T013244Z-change/plan.md` - Current change execution plan.
-- `ai/changes/CR-20260714T013244Z-change/verification.md` - Current change verification evidence.
+- `ai/changes/CR-20260714T034246Z-repository-wide-governance-gate-evidence-hardeni/impact.json` - Current change allowed and forbidden edit roots.
+- `ai/changes/CR-20260714T034246Z-repository-wide-governance-gate-evidence-hardeni/plan.md` - Current change execution plan.
+- `ai/changes/CR-20260714T034246Z-repository-wide-governance-gate-evidence-hardeni/verification.md` - Current change verification evidence.
 
 ## Must Not Break
 
-- Do not implement sales-order in this governance change.
-- Do not modify customer-management business code in governance/rule-change work.
-- Do not change database business table structure in this governance change.
+- Do not edit outside the active impact allowedEditRoots.
+- Do not mix governance/rule-change work with business runtime implementation.
+- Do not cross the active impact forbiddenEditRoots.
 - Do not loosen existing governance gates or profile lock.
 
 ## Roadmap Blockers
@@ -134,12 +118,19 @@ Deferred:
 
 ## Planned Verification Commands
 
-- `npm run scan:all`
-- `npm run close:change`
+- `npm run resume`
+- `npm run rule:preflight -- before-sales-order-phase-gate`
+- `targeted governance tests`
+- `npm test`
 - `npm run check`
+- `npm run finalize:change`
+- `npm run check:change`
+- `npm run close:change`
+- `git diff --check`
+- `forbidden business-path audit`
 
 ## Next Steps
 
-- Keep this change governance-only.
-- Before sales-order implementation, run review:feature and require decision.md to explicitly contain Allow Implementation.
-- Complete snapshot, state-machine, and fund-boundary contracts before creating sales-order code or tables.
+- Keep edits inside the active impact boundary.
+- For complex business implementation, bind impact.reviewId to an approved review package.
+- Complete the active phase gates before entering their protected implementation scope.

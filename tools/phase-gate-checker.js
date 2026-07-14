@@ -24,6 +24,19 @@ const REQUIRED_BEFORE_SALES_ORDER = [
 ];
 
 const COMPLETE_STATUSES = new Set(['complete', 'completed', 'done', 'passed', 'verified']);
+const RUNTIME_EXTENSIONS = new Set([
+  '.java',
+  '.js',
+  '.kt',
+  '.properties',
+  '.sql',
+  '.ts',
+  '.tsx',
+  '.vue',
+  '.xml',
+  '.yaml',
+  '.yml'
+]);
 
 function readCurrentImpact(readJsonFile) {
   try {
@@ -99,8 +112,17 @@ function hasSalesOrderName(relativePath) {
     || keys.some((key, index) => key === 'sales' && keys[index + 1]?.startsWith('order'));
 }
 
+function hasRuntimeExtension(file) {
+  const normalized = String(file || '').toLowerCase();
+  const index = normalized.lastIndexOf('.');
+  return index !== -1 && RUNTIME_EXTENSIONS.has(normalized.slice(index));
+}
+
 export function isSalesOrderImplementationPath(file) {
   const normalized = String(file).replace(/\\/g, '/').replace(/^\.\/+/, '');
+  if (!hasRuntimeExtension(normalized)) {
+    return false;
+  }
   return SALES_ORDER_IMPLEMENTATION_ROOTS.some((root) => {
     if (!normalized.startsWith(root)) {
       return false;
@@ -111,7 +133,8 @@ export function isSalesOrderImplementationPath(file) {
 
 function isSalesOrderRuntimeTextRoot(file) {
   const normalized = String(file).replace(/\\/g, '/').replace(/^\.\/+/, '');
-  return SALES_ORDER_RUNTIME_TEXT_ROOTS.some((root) => normalized.startsWith(root));
+  return hasRuntimeExtension(normalized)
+    && SALES_ORDER_RUNTIME_TEXT_ROOTS.some((root) => normalized.startsWith(root));
 }
 
 function readTextSafe(readTextFile, file) {

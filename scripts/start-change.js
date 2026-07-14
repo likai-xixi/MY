@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { finish, formatJson, isCli, projectPath, writeOrCheck } from '../tools/common.js';
+import { currentHeadRevision } from '../tools/diff-checker.js';
 import { slugify } from './new-feature.js';
 
 function timestamp() {
@@ -18,14 +19,14 @@ function writeFile(relativePath, content) {
   fs.writeFileSync(absolute, content);
 }
 
-export function startChange({ title, mode = 'update' }) {
+export function startChange({ title, mode = 'update', baseRevision = currentHeadRevision() }) {
   if (!title || !title.trim()) {
     return { id: '', errors: ['Change title is required.'] };
   }
   const id = changeId(title);
   const dir = `ai/changes/${id}`;
   writeFile(`${dir}/request.md`, `# Request\n\n${title.trim()}\n`);
-  writeFile(`${dir}/impact.json`, formatJson({ schemaVersion: 1, mode, feature: '', affected: {}, blockers: [] }));
+  writeFile(`${dir}/impact.json`, formatJson({ schemaVersion: 1, mode, baseRevision, feature: '', affected: {}, blockers: [] }));
   writeFile(`${dir}/plan.md`, '# Plan\n\nCodex must fill this plan after running impact analysis.\n');
   writeFile(`${dir}/changed-files.json`, formatJson({ schemaVersion: 1, files: [] }));
   writeFile(`${dir}/verification.md`, '# Verification\n\n- Pending.\n');

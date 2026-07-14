@@ -214,7 +214,21 @@ function upsertModuleOwnership({ id = '', name = '' }) {
 function writeChangeImpact(impact) {
   const current = currentChangeId();
   const errors = [];
-  writeOrCheck(`ai/changes/${current}/impact.json`, formatJson(impact), false, errors);
+  let existing = {};
+  try {
+    existing = readJson(`ai/changes/${current}/impact.json`);
+  } catch {
+    existing = {};
+  }
+  const merged = {
+    ...impact,
+    baseRevision: impact.baseRevision || existing.baseRevision || '',
+    ...(impact.reviewId || existing.reviewId ? { reviewId: impact.reviewId || existing.reviewId } : {}),
+    ...(impact.contextFeatureOverride || existing.contextFeatureOverride
+      ? { contextFeatureOverride: impact.contextFeatureOverride || existing.contextFeatureOverride }
+      : {})
+  };
+  writeOrCheck(`ai/changes/${current}/impact.json`, formatJson(merged), false, errors);
   return errors;
 }
 

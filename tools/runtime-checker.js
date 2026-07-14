@@ -1,3 +1,4 @@
+import fs from 'node:fs';
 import path from 'node:path';
 import { fileExists, finish, isCli, projectPath, readJson } from './common.js';
 import { defaultProcessRunner } from './process-runner.js';
@@ -68,13 +69,28 @@ function runCommand(command, args, cwd, runner = defaultProcessRunner) {
 }
 
 export function detectMavenProjects() {
-  return [
+  const projects = [
     '.',
     'ruoyi-admin',
     'ruoyi-business',
     'ruoyi-system',
     'backend'
   ].filter((dir) => fileExists(path.posix.join(dir, 'pom.xml')));
+
+  if (!projects.includes('.')) {
+    return projects;
+  }
+
+  const rootPom = fs.readFileSync(projectPath('pom.xml'), 'utf8');
+  const reactorModules = new Set(
+    [...rootPom.matchAll(/<module>\s*([^<]+?)\s*<\/module>/g)]
+      .map((match) => match[1].trim().replace(/\\/g, '/').replace(/^\.\//, '').replace(/\/$/, ''))
+  );
+  if (reactorModules.size === 0) {
+    return projects;
+  }
+
+  return projects.filter((dir) => dir === '.' || !reactorModules.has(dir));
 }
 
 export function detectFrontendProjects() {

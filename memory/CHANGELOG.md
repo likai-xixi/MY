@@ -1,5 +1,16 @@
 # Changelog
 
+## 2026-07-14 - governance/repository-wide-gate-evidence-hardening
+
+- Change: `ai/changes/CR-20260714T034246Z-repository-wide-governance-gate-evidence-hardeni`.
+- Replaces copied RuoYi component/boundary exceptions with exact canonical SHA256 legacy findings and structured current-change exceptions.
+- Binds review, context, changed-files, handoff, Java test ownership, CI declarations, and runtime detection to immutable repository facts.
+- Rejects generated-looking source omissions, dangerous edit roots, moving Git revisions, same-diff self-approval, missing context files, Windows absolute paths, mutable Actions, and business-authored test exceptions.
+- Adds reproducible root/UI installs, Maven unit/integration verification, frontend audit, and production build coverage.
+- Keeps business runtime, production application profile, sales-order runtime, release, and deployment out of scope; `beforeSalesOrder` remains blocked.
+- [local] The refreshed all-up `npm run check` passed end to end with 377/377 Node tests after staged/index cancellation, index/worktree legacy divergence, strict UTF-8/provenance, canonical file evidence, CommonMark section/status parsing, root/module Java discovery, executable matrix gate and real test-call binding, YAML-AST CI, shell-control, and exact-handover false-green repairs; expanded finalization matches 63 recorded and actual paths with zero forbidden business-path hits.
+- [not-run] Final staged review, commit, push, and GitHub Actions are pending.
+
 ## 2026-06-29 - governance/model-config-pre-review-note
 
 - Note: `ai/changes/CR-20260629T022303Z-change/model-config-pre-review-note.md`.
@@ -639,4 +650,43 @@
 - Feature: `customer`.## 2026-07-14 — update
 - Change: `ai/changes/CR-20260714T013244Z-change`.
 - 修复客户详情权限、查询写入、样品返现伪造与重复入账、归属并发审计和角色校验风险
-- Feature: `customer`.
+- Feature: `customer`.## 2026-07-14 — rule-change
+- Change: `ai/changes/CR-20260714T034246Z-repository-wide-governance-gate-evidence-hardeni`.
+- Harden repository governance baselines, immutable evidence, review binding, and reproducible CI
+- Feature: `platform`.## 2026-07-14 — rule-change
+- Change: `ai/changes/CR-20260714T034246Z-repository-wide-governance-gate-evidence-hardeni`.
+- Updated change record, registry, graph, generated scans, memory, and handover.
+- Feature: `platform`.## 2026-07-14 — rule-change
+- Change: `ai/changes/CR-20260714T034246Z-repository-wide-governance-gate-evidence-hardeni`.
+- Updated change record, registry, graph, generated scans, memory, and handover.
+- Feature: `platform`.## 2026-07-14 — rule-change
+- Change: `ai/changes/CR-20260714T034246Z-repository-wide-governance-gate-evidence-hardeni`.
+- Updated change record, registry, graph, generated scans, memory, and handover.
+- Feature: `platform`.## 2026-07-14 — rule-change
+- Change: `ai/changes/CR-20260714T034246Z-repository-wide-governance-gate-evidence-hardeni`.
+- Updated change record, registry, graph, generated scans, memory, and handover.
+- Feature: `platform`.## 2026-07-14 — rule-change
+- Change: `ai/changes/CR-20260714T034246Z-repository-wide-governance-gate-evidence-hardeni`.
+- Updated change record, registry, graph, generated scans, memory, and handover.
+- Feature: `platform`.## 2026-07-14 — rule-change
+- Change: `ai/changes/CR-20260714T034246Z-repository-wide-governance-gate-evidence-hardeni`.
+- Updated change record, registry, graph, generated scans, memory, and handover.
+- Feature: `platform`.## 2026-07-14 — rule-change
+- Change: `ai/changes/CR-20260714T034246Z-repository-wide-governance-gate-evidence-hardeni`.
+- Updated change record, registry, graph, generated scans, memory, and handover.
+- Feature: `platform`.## 2026-07-14 — rule-change
+- Change: `ai/changes/CR-20260714T034246Z-repository-wide-governance-gate-evidence-hardeni`.
+- Updated change record, registry, graph, generated scans, memory, and handover.
+- Feature: `platform`.## 2026-07-14 — rule-change
+- Change: `ai/changes/CR-20260714T034246Z-repository-wide-governance-gate-evidence-hardeni`.
+- Updated change record, registry, graph, generated scans, memory, and handover.
+- Feature: `platform`.## 2026-07-14 — rule-change
+- Change: `ai/changes/CR-20260714T034246Z-repository-wide-governance-gate-evidence-hardeni`.
+- Updated change record, registry, graph, generated scans, memory, and handover.
+- Feature: `platform`.## 2026-07-14 — rule-change
+- Change: `ai/changes/CR-20260714T034246Z-repository-wide-governance-gate-evidence-hardeni`.
+- Updated change record, registry, graph, generated scans, memory, and handover.
+- Feature: `platform`.## 2026-07-14 — rule-change
+- Change: `ai/changes/CR-20260714T034246Z-repository-wide-governance-gate-evidence-hardeni`.
+- Updated change record, registry, graph, generated scans, memory, and handover.
+- Feature: `platform`.

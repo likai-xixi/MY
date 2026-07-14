@@ -1,6 +1,13 @@
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
+import {
+  isAlias,
+  isMap,
+  isSeq,
+  LineCounter,
+  parseDocument
+} from 'yaml';
 
 export const GENERATED_DIRS = new Set([
   '.git',
@@ -56,7 +63,9 @@ export function isGeneratedPath(relativePath) {
   return normalizePath(relativePath).split('/').some((part) => GENERATED_DIRS.has(part));
 }
 
-export function listFiles(root, relativeDir, predicate = () => true) {
+export function listFiles(root, relativeDir, predicate = () => true, {
+  shouldTraverseDirectory = (relativePath) => !isGeneratedPath(relativePath)
+} = {}) {
   const base = resolveInside(root, relativeDir);
   if (!fs.existsSync(base)) {
     return [];
@@ -67,7 +76,7 @@ export function listFiles(root, relativeDir, predicate = () => true) {
       const full = path.join(dir, entry.name);
       const rel = normalizePath(path.relative(root, full));
       if (entry.isDirectory()) {
-        if (!isGeneratedPath(rel)) {
+        if (shouldTraverseDirectory(rel)) {
           walk(full);
         }
       } else if (predicate(rel)) {
@@ -264,90 +273,261 @@ export function workflowContains(root, pattern) {
   return pattern.test(workflowText(root));
 }
 
-function yamlIndent(line) {
-  return line.match(/^\s*/)?.[0].length || 0;
+function resolveYamlNode(document, node) {
+  let current = node;
+  const seen = new Set();
+  while (isAlias(current)) {
+    if (seen.has(current)) {
+      return null;
+    }
+    seen.add(current);
+    current = current.resolve(document);
+  }
+  return current;
 }
 
-function unquoteYamlValue(value) {
-  const trimmed = String(value || '').trim();
-  const match = trimmed.match(/^['"](.+)['"]$/);
-  return match ? match[1] : trimmed;
+function yamlNodeValue(document, node) {
+  const resolved = resolveYamlNode(document, node);
+  if (resolved === null || resolved === undefined) {
+    return undefined;
+  }
+  if ('value' in resolved) {
+    return resolved.value;
+  }
+  return resolved.toJSON?.() ?? undefined;
+}
+
+function yamlMapPair(document, node, key) {
+  const map = resolveYamlNode(document, node);
+  if (!isMap(map)) {
+    return null;
+  }
+  return map.items.find((pair) => String(yamlNodeValue(document, pair.key)) === key) || null;
+}
+
+function yamlMapNode(document, node, key) {
+  return resolveYamlNode(document, yamlMapPair(document, node, key)?.value);
+}
+
+function yamlString(document, node) {
+  const value = yamlNodeValue(document, node);
+  return value === null || value === undefined ? '' : String(value);
+}
+
+function yamlLine(lineCounter, node) {
+  const offset = node?.range?.[0];
+  return Number.isInteger(offset) ? lineCounter.linePos(offset).line : 0;
+}
+
+function parsedWorkflowDocuments(root) {
+  return workflowFiles(root).map((file) => {
+    const lineCounter = new LineCounter();
+    const document = parseDocument(readText(root, file), {
+      lineCounter,
+      prettyErrors: false,
+      uniqueKeys: true
+    });
+    return { file, document, lineCounter };
+  });
+}
+
+function workflowJobs(entry) {
+  if (entry.document.errors.length > 0) {
+    return [];
+  }
+  const jobs = yamlMapNode(entry.document, entry.document.contents, 'jobs');
+  if (!isMap(jobs)) {
+    return [];
+  }
+  return jobs.items.flatMap((pair) => {
+    const job = resolveYamlNode(entry.document, pair.value);
+    return isMap(job) ? [{ id: yamlString(entry.document, pair.key), node: job }] : [];
+  });
+}
+
+function explicitFalse(document, pair) {
+  return Boolean(pair) && yamlNodeValue(document, pair.value) === false;
+}
+
+function defaultRunPair(document, node, key) {
+  const defaults = yamlMapNode(document, node, 'defaults');
+  const run = yamlMapNode(document, defaults, 'run');
+  return yamlMapPair(document, run, key);
+}
+
+function defaultWorkingDirectory(document, node) {
+  return yamlString(document, defaultRunPair(document, node, 'working-directory')?.value);
+}
+
+function workflowStepRecords(entry) {
+  const records = [];
+  const workflowDefault = defaultWorkingDirectory(entry.document, entry.document.contents);
+  const workflowDefaultShell = defaultRunPair(entry.document, entry.document.contents, 'shell');
+  for (const job of workflowJobs(entry)) {
+    const steps = yamlMapNode(entry.document, job.node, 'steps');
+    if (!isSeq(steps)) {
+      continue;
+    }
+    const jobCondition = yamlMapPair(entry.document, job.node, 'if');
+    const jobContinueOnError = yamlMapPair(entry.document, job.node, 'continue-on-error');
+    const jobNeeds = yamlMapPair(entry.document, job.node, 'needs');
+    const jobDefault = defaultWorkingDirectory(entry.document, job.node) || workflowDefault;
+    const jobDefaultShell = defaultRunPair(entry.document, job.node, 'shell') || workflowDefaultShell;
+    steps.items.forEach((item, stepIndex) => {
+      const step = resolveYamlNode(entry.document, item);
+      if (!isMap(step)) {
+        return;
+      }
+      const condition = yamlMapPair(entry.document, step, 'if');
+      const continueOnError = yamlMapPair(entry.document, step, 'continue-on-error');
+      const workingDirectory = yamlMapPair(entry.document, step, 'working-directory');
+      const shell = yamlMapPair(entry.document, step, 'shell') || jobDefaultShell;
+      records.push({
+        file: entry.file,
+        document: entry.document,
+        lineCounter: entry.lineCounter,
+        jobId: job.id,
+        stepIndex,
+        node: step,
+        workingDirectory: workingDirectory
+          ? yamlString(entry.document, workingDirectory.value)
+          : jobDefault,
+        conditionSpecified: Boolean(condition),
+        condition: yamlString(entry.document, condition?.value),
+        jobConditionSpecified: Boolean(jobCondition),
+        jobCondition: yamlString(entry.document, jobCondition?.value),
+        jobNeedsSpecified: Boolean(jobNeeds),
+        shellSpecified: Boolean(shell),
+        shell: yamlString(entry.document, shell?.value),
+        continueOnErrorSpecified: Boolean(continueOnError),
+        continueOnErrorExplicitFalse: explicitFalse(entry.document, continueOnError),
+        continueOnErrorLine: yamlLine(entry.lineCounter, continueOnError?.key),
+        jobContinueOnErrorSpecified: Boolean(jobContinueOnError),
+        jobContinueOnErrorExplicitFalse: explicitFalse(entry.document, jobContinueOnError),
+        jobContinueOnErrorLine: yamlLine(entry.lineCounter, jobContinueOnError?.key)
+      });
+    });
+  }
+  return records;
+}
+
+export function workflowYamlDiagnostics(root) {
+  return parsedWorkflowDocuments(root).flatMap((entry) => entry.document.errors.map((error) => ({
+    file: entry.file,
+    line: Number.isInteger(error.pos?.[0])
+      ? entry.lineCounter.linePos(error.pos[0]).line
+      : Number(error.linePos?.[0]?.line || 0),
+    message: error.message
+  })));
+}
+
+export function workflowContinueOnErrorSettings(root) {
+  const settings = [];
+  for (const entry of parsedWorkflowDocuments(root)) {
+    for (const job of workflowJobs(entry)) {
+      const jobSetting = yamlMapPair(entry.document, job.node, 'continue-on-error');
+      if (jobSetting) {
+        settings.push({
+          file: entry.file,
+          line: yamlLine(entry.lineCounter, jobSetting.key),
+          kind: 'job',
+          explicitFalse: explicitFalse(entry.document, jobSetting)
+        });
+      }
+      const steps = yamlMapNode(entry.document, job.node, 'steps');
+      if (!isSeq(steps)) {
+        continue;
+      }
+      for (const item of steps.items) {
+        const step = resolveYamlNode(entry.document, item);
+        const stepSetting = yamlMapPair(entry.document, step, 'continue-on-error');
+        if (stepSetting) {
+          settings.push({
+            file: entry.file,
+            line: yamlLine(entry.lineCounter, stepSetting.key),
+            kind: 'step',
+            explicitFalse: explicitFalse(entry.document, stepSetting)
+          });
+        }
+      }
+    }
+  }
+  return settings;
 }
 
 export function workflowRunSteps(root) {
   const steps = [];
-  for (const file of workflowFiles(root)) {
-    const lines = readText(root, file).split(/\r?\n/);
-    let current = null;
-
-    const pushCurrent = () => {
-      if (current && current.command.trim()) {
-        steps.push({
-          file,
-          line: current.line,
-          command: current.command.trim(),
-          workingDirectory: current.workingDirectory
-        });
-      }
-    };
-
-    const setKey = (key, rawValue, keyIndent, index) => {
-      const value = String(rawValue || '').trim();
-      if (key === 'working-directory') {
-        current.workingDirectory = unquoteYamlValue(value);
-        return index;
-      }
-      if (key !== 'run') {
-        return index;
-      }
-      if (value === '|' || value === '>') {
-        const commandLines = [];
-        let nextIndex = index + 1;
-        for (; nextIndex < lines.length; nextIndex += 1) {
-          const line = lines[nextIndex];
-          if (line.trim() && yamlIndent(line) <= keyIndent) {
-            break;
-          }
-          commandLines.push(line.trimStart());
-        }
-        current.command = commandLines.join('\n');
-        current.line = index + 1;
-        return nextIndex - 1;
-      }
-      current.command = unquoteYamlValue(value);
-      current.line = index + 1;
-      return index;
-    };
-
-    for (let index = 0; index < lines.length; index += 1) {
-      const line = lines[index];
-      const stepMatch = line.match(/^(\s*)-\s+(.+?)\s*$/);
-      if (stepMatch) {
-        pushCurrent();
-        current = {
-          stepIndent: stepMatch[1].length,
-          line: index + 1,
-          command: '',
-          workingDirectory: ''
-        };
-        const keyMatch = stepMatch[2].match(/^([A-Za-z-]+):\s*(.*)$/);
-        if (keyMatch) {
-          index = setKey(keyMatch[1], keyMatch[2], stepMatch[1].length + 2, index);
-        }
+  for (const entry of parsedWorkflowDocuments(root)) {
+    for (const step of workflowStepRecords(entry)) {
+      const run = yamlMapPair(entry.document, step.node, 'run');
+      const command = yamlString(entry.document, run?.value).trim();
+      if (!run || !command) {
         continue;
       }
-
-      if (!current || yamlIndent(line) <= current.stepIndent) {
-        continue;
-      }
-      const keyMatch = line.match(/^\s*([A-Za-z-]+):\s*(.*)$/);
-      if (keyMatch) {
-        index = setKey(keyMatch[1], keyMatch[2], yamlIndent(line), index);
-      }
+      steps.push({
+        file: step.file,
+        line: yamlLine(entry.lineCounter, run.key),
+        command,
+        workingDirectory: step.workingDirectory,
+        conditionSpecified: step.conditionSpecified,
+        condition: step.condition,
+        jobConditionSpecified: step.jobConditionSpecified,
+        jobCondition: step.jobCondition,
+        jobNeedsSpecified: step.jobNeedsSpecified,
+        shellSpecified: step.shellSpecified,
+        shell: step.shell,
+        continueOnErrorSpecified: step.continueOnErrorSpecified,
+        continueOnErrorExplicitFalse: step.continueOnErrorExplicitFalse,
+        jobContinueOnErrorSpecified: step.jobContinueOnErrorSpecified,
+        jobContinueOnErrorExplicitFalse: step.jobContinueOnErrorExplicitFalse
+      });
     }
-    pushCurrent();
   }
   return steps;
+}
+
+function workflowStepInputs(entry, step) {
+  const inputs = {};
+  const withNode = yamlMapNode(entry.document, step, 'with');
+  if (!isMap(withNode)) {
+    return inputs;
+  }
+  for (const pair of withNode.items) {
+    inputs[yamlString(entry.document, pair.key)] = yamlString(entry.document, pair.value);
+  }
+  return inputs;
+}
+
+export function workflowUses(root) {
+  const uses = [];
+  for (const entry of parsedWorkflowDocuments(root)) {
+    for (const job of workflowJobs(entry)) {
+      const jobUse = yamlMapPair(entry.document, job.node, 'uses');
+      if (jobUse) {
+        uses.push({
+          file: entry.file,
+          line: yamlLine(entry.lineCounter, jobUse.key),
+          target: yamlString(entry.document, jobUse.value),
+          kind: 'job',
+          inputs: {}
+        });
+      }
+    }
+    for (const step of workflowStepRecords(entry)) {
+      const stepUse = yamlMapPair(entry.document, step.node, 'uses');
+      if (!stepUse) {
+        continue;
+      }
+      uses.push({
+        file: entry.file,
+        line: yamlLine(entry.lineCounter, stepUse.key),
+        target: yamlString(entry.document, stepUse.value),
+        kind: 'step',
+        inputs: workflowStepInputs(entry, step.node)
+      });
+    }
+  }
+  return uses;
 }
 
 export function runGit(root, args) {

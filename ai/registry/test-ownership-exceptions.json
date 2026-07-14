@@ -25,6 +25,12 @@
       "relatedFeatures": [
         "customer"
       ]
+    },
+    {
+      "file": "ruoyi-business/src/test/java/com/ruoyi/business/common/idempotency/IdempotencyServiceTest.java",
+      "type": "shared-test",
+      "reason": "Validates the cross-feature idempotency utility rather than one business feature.",
+      "owner": "platform"
     }
   ]
 }

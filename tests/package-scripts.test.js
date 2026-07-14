@@ -1,8 +1,11 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
+  buildMemoryHandover,
+  controlledSectionDuplicates,
   parseArgs,
   shouldReplaceGeneratedText,
+  synchronizeChangedFilesSection,
   templatePhrase
 } from '../scripts/finalize-change.js';
 import { fileExists, readJson } from '../tools/common.js';
@@ -145,7 +148,150 @@ test('finalize:change detects template verification and preserves real evidence 
   assert.equal(templatePhrase('Status: prepared'), 'Status: prepared');
   assert.equal(shouldReplaceGeneratedText('# Verification\n\nStatus: pending\n'), true);
   assert.equal(shouldReplaceGeneratedText('# Verification\n\nStatus: verified\n\n## Evidence\n\nnpm test passed.\n'), false);
+  const verifiedWithQuotedPendingStatus = [
+    '# Verification',
+    '',
+    'Status: verified',
+    '',
+    '## Evidence',
+    '',
+    'The regression fixture contains the literal text `Status: pending` in its body.'
+  ].join('\n');
+  assert.equal(templatePhrase(verifiedWithQuotedPendingStatus), '');
+  assert.equal(shouldReplaceGeneratedText(verifiedWithQuotedPendingStatus), false);
+  for (const phrase of [
+    'Pending implementation',
+    'Describe passing and failing verification',
+    'Use `npm run check` as the full governance gate'
+  ]) {
+    const verifiedBody = `# Verification\n\nStatus: verified [local]\n\n## Evidence\n\nQuoted fixture: ${phrase}`;
+    assert.equal(templatePhrase(verifiedBody), '', phrase);
+    assert.equal(shouldReplaceGeneratedText(verifiedBody), false, phrase);
+  }
+  const fencedPending = '# Verification\n\nStatus: verified [local]\n\n```text\nStatus: pending [not-run]\n```\n\n## Evidence\n\nReal evidence.';
+  assert.equal(templatePhrase(fencedPending), '');
+  assert.equal(shouldReplaceGeneratedText(fencedPending), false);
+  assert.equal(templatePhrase('# Verification\n\nStatus: pending [not-run]\n'), 'Status: pending');
+  assert.equal(templatePhrase('# Verification\n\nStatus: prepared [not-run]\n'), 'Status: prepared');
+  const duplicateStatus = '# Verification\n\nStatus: verified [local]\nStatus: pending [not-run]\n';
+  assert.equal(templatePhrase(duplicateStatus), '');
+  assert.equal(shouldReplaceGeneratedText(duplicateStatus), false);
   assert.equal(shouldReplaceGeneratedText('# Verification\n\nStatus: verified\n\n## Evidence\n\nnpm test passed.\n', { force: true }), true);
+  assert.equal(shouldReplaceGeneratedText('# Handover\n\n## Verification\n\nUse `npm run check` as the full governance gate.\n'), false);
+  assert.equal(shouldReplaceGeneratedText('# Plan\n\n## Remaining Work\n\nIndependent staged review is still required.\n'), false);
+});
+
+test('finalize:change generated handover uses explicit not-run provenance', () => {
+  const handover = buildMemoryHandover({
+    id: 'CR-TEST',
+    summary: 'Governance closeout',
+    changedFiles: ['tools/diff-checker.js'],
+    commands: ['npm test', '[local] npm run check:diff']
+  });
+  assert.match(handover, /\[not-run\] `npm test`/);
+  assert.match(handover, /\[local\] `npm run check:diff`/);
+  assert.match(handover, /\[not-run\] `npm run check` is the remaining full governance gate/);
+});
+
+test('finalize:change memory handover lists every changed file without a truncation summary', () => {
+  const changedFiles = Array.from({ length: 35 }, (_, index) => `tools/generated-${index}.js`);
+  const handover = buildMemoryHandover({
+    id: 'CR-TEST',
+    summary: 'Governance closeout',
+    changedFiles,
+    commands: ['npm test']
+  });
+  for (const file of changedFiles) {
+    assert.ok(handover.split('\n').includes(`- \`${file}\``), file);
+  }
+  assert.doesNotMatch(handover, /additional files in the current change record/);
+});
+
+test('finalize:change synchronizes exact changed files without replacing rich handover evidence', () => {
+  const rich = [
+    '# Handover',
+    '',
+    '## Summary',
+    '',
+    'Keep this independently reviewed summary.',
+    '',
+    '  ## Changed Files',
+    '',
+    '- Governance tools and focused tests.',
+    '',
+    '## Verification',
+    '',
+    'Keep this independently reviewed verification evidence.',
+    ''
+  ].join('\n');
+  const synchronized = synchronizeChangedFilesSection(rich, [
+    'tests/change-handoff-integrity-checker.test.js',
+    'tools/change-handoff-integrity-checker.js'
+  ]);
+  assert.match(synchronized, /Keep this independently reviewed summary/);
+  assert.match(synchronized, /Keep this independently reviewed verification evidence/);
+  assert.ok(synchronized.split('\n').includes('- `tests/change-handoff-integrity-checker.test.js`'));
+  assert.ok(synchronized.split('\n').includes('- `tools/change-handoff-integrity-checker.js`'));
+  assert.doesNotMatch(synchronized, /Governance tools and focused tests/);
+  assert.match(synchronized, /- `tools\/change-handoff-integrity-checker\.js`\n\n## Verification/);
+});
+
+test('finalize:change collapses duplicate Changed Files sections into one exact controlled section', () => {
+  const handover = [
+    '# Handover',
+    '',
+    '## Summary',
+    '',
+    'Keep this summary.',
+    '',
+    '## Changed Files',
+    '',
+    '- stale first claim',
+    '',
+    '## Verification',
+    '',
+    'Keep verified evidence.',
+    '',
+    '## Changed Files',
+    '',
+    '- deceptive second claim',
+    '',
+    '## Risks',
+    '',
+    'No runtime risk.',
+    ''
+  ].join('\n');
+  const synchronized = synchronizeChangedFilesSection(handover, [
+    'tools/change-handoff-integrity-checker.js'
+  ]);
+
+  assert.equal((synchronized.match(/^ {0,3}## Changed Files$/gm) || []).length, 1);
+  assert.ok(synchronized.split('\n').includes('- `tools/change-handoff-integrity-checker.js`'));
+  assert.doesNotMatch(synchronized, /stale first claim|deceptive second claim/);
+  assert.match(synchronized, /Keep verified evidence/);
+});
+
+test('finalize:change identifies duplicate controlled sections that must be rejected', () => {
+  const handover = [
+    '# Handover',
+    '',
+    '   ## Verification',
+    '',
+    'First evidence.',
+    '',
+    '## Risks',
+    '',
+    'No runtime risk.',
+    '',
+    '## Verification',
+    '',
+    'Deceptive second evidence.',
+    ''
+  ].join('\n');
+  assert.deepEqual(controlledSectionDuplicates(handover), ['## Verification']);
+
+  const codeBlock = `${handover}\n    ## Verification\n\n    Example code, not a heading.\n`;
+  assert.deepEqual(controlledSectionDuplicates(codeBlock), ['## Verification']);
 });
 
 test('package gate scripts cannot be success theater', () => {
@@ -172,4 +318,17 @@ test('false-green matrix check points to a real checker file', () => {
   const pkg = readJson('package.json');
   assert.equal(pkg.scripts['check:false-green-matrix'], 'node tools/false-green-matrix-checker.js');
   assert.equal(fileExists('tools/false-green-matrix-checker.js'), true);
+});
+
+test('main check runs the legacy baseline before legacy component and boundary gates', () => {
+  const pkg = readJson('package.json');
+  assert.equal(pkg.scripts['check:legacy-baseline'], 'node tools/legacy-baseline.js');
+  assert.equal(fileExists('tools/legacy-baseline.js'), true);
+
+  const check = pkg.scripts.check;
+  const baselineIndex = check.indexOf('npm run check:legacy-baseline');
+  assert.ok(baselineIndex >= 0);
+  for (const command of ['npm run check:components', 'npm run check:component-similarity', 'npm run check:boundaries']) {
+    assert.ok(baselineIndex < check.indexOf(command), `${command} must run after check:legacy-baseline`);
+  }
 });

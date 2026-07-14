@@ -10,6 +10,12 @@ import {
   readText
 } from './common.js';
 import { configuredPaths, inferFeatureFromPath, listFilesUnderRoots, readFeatureRegistry } from './project-config.js';
+import {
+  inspectCurrentChangeExceptions,
+  inspectLegacyBaseline,
+  isCurrentBoundaryException,
+  isLegacyBoundaryFinding
+} from './legacy-baseline.js';
 
 const FORBIDDEN_BACKEND_ROOT_LAYERS = [
   'backend/api',
@@ -39,31 +45,6 @@ function readBoundaryPolicy({ readRule = readJson } = {}) {
   } catch {
     return DEFAULT_BOUNDARY_POLICY;
   }
-}
-
-function currentChangeId({ read = readJson } = {}) {
-  try {
-    return read('ai/changes/CURRENT_CHANGE.json').current || '';
-  } catch {
-    return '';
-  }
-}
-
-function boundaryExceptionText({ read = readJson, readTextFile = readText } = {}) {
-  const changeId = currentChangeId({ read });
-  if (!changeId) {
-    return '';
-  }
-  try {
-    return readTextFile(`ai/changes/${changeId}/boundary-exception.md`);
-  } catch {
-    return '';
-  }
-}
-
-function hasBoundaryException(file, options = {}) {
-  const text = boundaryExceptionText(options);
-  return text.includes(file) || /allow-all\s*:\s*true/i.test(text);
 }
 
 function backendPolicyFrom(policy = DEFAULT_BOUNDARY_POLICY) {
@@ -256,16 +237,30 @@ function validateGenericFrontendBoundaries({ files = listFiles, read = readText 
   return errors;
 }
 
-function validateRuoyiFrontendBoundaries({ read = readText } = {}) {
+function validateRuoyiFrontendBoundaries({
+  ruoyiRead = readText,
+  ruoyiFiles = listFilesUnderRoots,
+  ruoyiFeatures,
+  legacyState,
+  exceptionState,
+  currentChangeRead = readJson,
+  currentChangeReadText = readText,
+  currentChangedFiles
+} = {}) {
   const errors = [];
   const config = configuredPaths();
-  const features = readFeatureRegistry().filter((feature) => feature.status !== 'removed');
-  const frontendFiles = listFilesUnderRoots(config.frontendScanRoots, (file) => isCodeFile(file));
+  const features = (ruoyiFeatures || readFeatureRegistry()).filter((feature) => feature.status !== 'removed');
+  const projectBaseline = legacyState || inspectLegacyBaseline();
+  const currentExceptions = exceptionState || inspectCurrentChangeExceptions('boundary', {
+    read: currentChangeRead,
+    readTextFile: currentChangeReadText,
+    readChangedFiles: currentChangedFiles
+  });
+  errors.push(...projectBaseline.errors, ...currentExceptions.errors);
+  const frontendFiles = ruoyiFiles(config.frontendScanRoots, (file) => isCodeFile(file));
+  const observedFindings = new Set();
   for (const file of frontendFiles) {
-    if (hasBoundaryException(file)) {
-      continue;
-    }
-    const text = read(file);
+    const text = ruoyiRead(file);
     if (file.startsWith('ruoyi-ui/src/components/')) {
       ensure(!/ruoyi-ui[\\/]src[\\/]views[\\/]/.test(text), `${file} must not import from ruoyi-ui/src/views/<feature>/. Shared components cannot depend on business pages.`, errors);
     }
@@ -278,7 +273,31 @@ function validateRuoyiFrontendBoundaries({ read = readText } = {}) {
         continue;
       }
       if (text.includes(`@/views/${feature.id}/`) || text.includes(`@/api/${feature.id}`)) {
+        const findingKey = `${file}\u0000${feature.id}`;
+        observedFindings.add(findingKey);
+        if (
+          isLegacyBoundaryFinding(projectBaseline, file, feature.id)
+          || isCurrentBoundaryException(currentExceptions, file, feature.id)
+        ) {
+          continue;
+        }
         errors.push(`${file} must not import another RuoYi feature internals (${feature.id}). Use shared components or an explicit API contract.`);
+      }
+    }
+  }
+  if (projectBaseline.valid) {
+    for (const entry of projectBaseline.baseline.boundaryFindings) {
+      for (const target of entry.expectedTargets) {
+        if (!observedFindings.has(`${entry.file}\u0000${target}`)) {
+          errors.push(`Legacy boundary baseline finding is stale or no longer detected: ${entry.file} (${target}).`);
+        }
+      }
+    }
+  }
+  if (currentExceptions.valid) {
+    for (const entry of currentExceptions.entries) {
+      if (!observedFindings.has(`${entry.file}\u0000${entry.target}`)) {
+        errors.push(`Current boundary exception is stale or no longer detected: ${entry.file} (${entry.target}).`);
       }
     }
   }

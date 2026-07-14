@@ -1,4 +1,5 @@
-import { finish, formatJson, isCli, readJson, writeOrCheck } from '../tools/common.js';
+import { fileExists, finish, formatJson, isCli, readJson, writeOrCheck } from '../tools/common.js';
+import { validateContextOverrideReview } from '../tools/review-checker.js';
 
 function currentChangeId() {
   try {
@@ -14,6 +15,64 @@ function readJsonOrDefault(file, fallback) {
   } catch {
     return fallback;
   }
+}
+
+function activeImpact() {
+  const changeId = currentChangeId();
+  return readJsonOrDefault(`ai/changes/${changeId}/impact.json`, {});
+}
+
+function featureId(impact) {
+  return typeof impact?.feature === 'object' ? impact.feature.id || '' : impact?.feature || '';
+}
+
+export function contextOverrideApproved({
+  impact = activeImpact(),
+  requestedFeature = '',
+  changedFiles = null,
+  readJsonFile = readJson,
+  contextOverrideValidation = {},
+  validateContextOverrideReviewFn = validateContextOverrideReview
+} = {}) {
+  const activeFeature = featureId(impact);
+  const override = impact?.contextFeatureOverride;
+  const candidate = String(requestedFeature || override?.feature || '').trim();
+  if (candidate === activeFeature) {
+    return true;
+  }
+  if (!candidate || candidate !== String(override?.feature || '').trim() || !String(override?.reason || '').trim()) {
+    return false;
+  }
+  return validateContextOverrideReviewFn({
+    impact,
+    requestedFeature: candidate,
+    changedFiles,
+    readJsonFile,
+    ...contextOverrideValidation
+  }).length === 0;
+}
+
+export function deriveContextFeature({
+  feature = '',
+  impact = activeImpact(),
+  changedFiles = null,
+  readJsonFile = readJson,
+  contextOverrideValidation = {},
+  validateContextOverrideReviewFn = validateContextOverrideReview
+} = {}) {
+  const activeFeature = featureId(impact);
+  const override = impact?.contextFeatureOverride;
+  const requestedFeature = String(feature || override?.feature || '').trim();
+  return contextOverrideApproved({
+    impact,
+    requestedFeature,
+    changedFiles,
+    readJsonFile,
+    contextOverrideValidation,
+    validateContextOverrideReviewFn
+  })
+    ? requestedFeature
+    : activeFeature;
 }
 
 function compactDebt() {
@@ -39,16 +98,20 @@ function roadmapBlockers() {
     }));
 }
 
-function mustReadFiles({ feature, changeId }) {
+export function buildMustReadFiles({ feature, changeId }) {
+  const generatedFeatureContext = `ai/context/features/${feature}.md`;
+  const focusedFeatureContext = fileExists(generatedFeatureContext)
+    ? generatedFeatureContext
+    : `features/${feature}.md`;
   return [
     { path: 'AGENTS.md', reason: 'Top-level workflow and boundary contract.' },
     { path: 'ai/context/current-context.md', reason: 'Compact current handoff for new Codex windows.' },
     { path: 'memory/HANDOVER.md', reason: 'Latest project handoff and verification boundary.' },
     { path: 'ai/project-profile.json', reason: 'Locked adapter and profile-rule state.' },
     { path: 'package.json', reason: 'Available workflow and check scripts.' },
-    { path: 'ai/registry/features.json', reason: 'Feature ownership and active customer context.' },
+    { path: 'ai/registry/features.json', reason: 'Feature ownership and active feature context.' },
     { path: 'ai/registry/modules.json', reason: 'Module ownership roots.' },
-    { path: `ai/context/features/${feature}.md`, reason: `Focused context for ${feature}.` },
+    { path: focusedFeatureContext, reason: `Focused context for ${feature}.` },
     { path: 'ai/roadmap/phase-gates.json', reason: 'beforeSalesOrder gate state.' },
     { path: 'ai/roadmap/refactor-debt.json', reason: 'Known debt affecting sales-order handoff.' },
     { path: 'ai/roadmap/enhancement-backlog.json', reason: 'Governance backlog and required/deferred evidence.' },
@@ -58,9 +121,10 @@ function mustReadFiles({ feature, changeId }) {
   ];
 }
 
-function buildContext(feature) {
+export function buildContext(feature = '') {
   const changeId = currentChangeId();
   const impact = readJsonOrDefault(`ai/changes/${changeId}/impact.json`, {});
+  const resolvedFeature = deriveContextFeature({ feature, impact });
   const phaseGates = readJsonOrDefault('ai/roadmap/phase-gates.json', {});
   const profile = readJsonOrDefault('ai/project-profile.json', {});
 
@@ -68,7 +132,7 @@ function buildContext(feature) {
     schemaVersion: 1,
     generatedBy: 'scripts/context-build.js',
     generatedAt: 'stable',
-    currentFeature: feature,
+    currentFeature: resolvedFeature,
     currentChange: changeId,
     repositoryProfile: {
       adapter: profile.adapter || '',
@@ -77,11 +141,11 @@ function buildContext(feature) {
     },
     allowedEditRoots: impact.allowedEditRoots || [],
     forbiddenEditRoots: impact.forbiddenEditRoots || [],
-    mustReadFiles: mustReadFiles({ feature, changeId }),
+    mustReadFiles: buildMustReadFiles({ feature: resolvedFeature, changeId }),
     mustNotBreak: [
-      'Do not implement sales-order in this governance change.',
-      'Do not modify customer-management business code in governance/rule-change work.',
-      'Do not change database business table structure in this governance change.',
+      'Do not edit outside the active impact allowedEditRoots.',
+      'Do not mix governance/rule-change work with business runtime implementation.',
+      'Do not cross the active impact forbiddenEditRoots.',
       'Do not loosen existing governance gates or profile lock.'
     ],
     roadmapBlockers: roadmapBlockers(),
@@ -92,21 +156,21 @@ function buildContext(feature) {
       : [
         'npm run resume',
         'npm run scan:all',
-        `npm run context:build -- ${feature}`,
-        'npm run finalize:change -- --summary "新增销售订单前治理接手机制"',
+        `npm run context:build -- ${resolvedFeature}`,
+        'npm run finalize:change -- --summary "Finalize active change evidence"',
         'npm run check',
         'npm test',
         'git diff --check'
       ],
     nextSteps: [
-      'Keep this change governance-only.',
-      'Before sales-order implementation, run review:feature and require decision.md to explicitly contain Allow Implementation.',
-      'Complete snapshot, state-machine, and fund-boundary contracts before creating sales-order code or tables.'
+      'Keep edits inside the active impact boundary.',
+      'For complex business implementation, bind impact.reviewId to an approved review package.',
+      'Complete the active phase gates before entering their protected implementation scope.'
     ]
   };
 }
 
-function buildMarkdown(context) {
+export function buildMarkdown(context) {
   const blockers = context.roadmapBlockers.map((item) => `- ${item.id}: ${item.status} - ${item.futureAction}`);
   const debts = context.refactorDebt.map((item) => `- ${item.id}: ${item.status} - ${item.guard}`);
   const mustRead = context.mustReadFiles.map((item) => `- \`${item.path}\` - ${item.reason}`);
@@ -165,8 +229,15 @@ function buildMarkdown(context) {
   ].join('\n');
 }
 
-export function buildCurrentContext({ feature = 'customer', checkMode = false } = {}) {
+export function buildCurrentContext({ feature = '', checkMode = false } = {}) {
   const errors = [];
+  const impact = activeImpact();
+  const activeFeature = featureId(impact);
+  const requestedFeature = String(feature || '').trim();
+  const validOverride = contextOverrideApproved({ impact, requestedFeature });
+  if (requestedFeature && requestedFeature !== activeFeature && !validOverride) {
+    return [`Requested context feature ${requestedFeature} does not match active impact feature ${activeFeature}; add impact.contextFeatureOverride with a reason to use a focused context.`];
+  }
   const context = buildContext(feature);
   writeOrCheck('ai/context/current-context.json', formatJson(context), checkMode, errors);
   writeOrCheck('ai/context/current-context.md', buildMarkdown(context), checkMode, errors);
@@ -175,7 +246,7 @@ export function buildCurrentContext({ feature = 'customer', checkMode = false } 
 
 function parseArgs(args) {
   return {
-    feature: args.find((arg) => !arg.startsWith('--')) || 'customer',
+    feature: args.find((arg) => !arg.startsWith('--')) || '',
     checkMode: args.includes('--check')
   };
 }

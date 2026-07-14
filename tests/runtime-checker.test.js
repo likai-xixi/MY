@@ -100,3 +100,41 @@ test('runtime checker falls back to default Maven command when configured path i
     'mvn'
   ]);
 });
+
+test('runtime checker executes an aggregate Maven reactor only once', () => {
+  const calls = [];
+  const runner = {
+    canRun(command) {
+      return command === 'custom-mvn.cmd' || command === 'npm';
+    },
+    run(command, args, options) {
+      calls.push({ command, args, cwd: options.cwd });
+      return { status: 0 };
+    }
+  };
+
+  const errors = validateRuntimeReadiness({
+    execute: true,
+    force: true,
+    profile: { templateSetup: false },
+    policy: {
+      skipWhenTemplateSetup: false,
+      requireToolingWhenDetected: true,
+      requireFrontendBuildScript: false,
+      commands: {
+        maven: ['test'],
+        npm: []
+      },
+      toolPaths: {
+        maven: 'custom-mvn.cmd'
+      }
+    },
+    runner
+  });
+
+  assert.deepEqual(errors, []);
+  const mavenRuns = calls.filter((call) => call.command === 'custom-mvn.cmd');
+  assert.equal(mavenRuns.length, 1);
+  assert.deepEqual(mavenRuns[0].args, ['test']);
+  assert.equal(mavenRuns[0].cwd, process.cwd());
+});

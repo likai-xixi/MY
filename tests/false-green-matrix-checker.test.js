@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
 import {
   REQUIRED_FALSE_GREEN_IDS,
   validateFalseGreenMatrix
@@ -17,6 +18,14 @@ const baseFiles = new Set([
   'tests/false-green-matrix-checker.test.js',
   'package.json'
 ]);
+
+function repositoryMatrix() {
+  return JSON.parse(fs.readFileSync('ai/governance/false-green-regression-matrix.json', 'utf8'));
+}
+
+function repositoryScripts() {
+  return JSON.parse(fs.readFileSync('package.json', 'utf8')).scripts;
+}
 
 function matrixWithRequired(overridesById = {}) {
   return {
@@ -45,7 +54,8 @@ function validate(matrix, options = {}) {
   return validateFalseGreenMatrix({
     matrix,
     packageScripts: options.scripts || baseScripts,
-    exists: (file) => files.has(file)
+    exists: (file) => files.has(file),
+    coverageContracts: options.coverageContracts || {}
   });
 }
 
@@ -60,6 +70,100 @@ test('matrix requires every anti-false-green risk id', () => {
   const errors = validate(matrix);
 
   assert.ok(errors.some((error) => error.includes('must include required id ci-green-not-release-green')));
+});
+
+test('matrix cannot delete a required current governance regression contract', () => {
+  const matrix = repositoryMatrix();
+  matrix.items = matrix.items.filter((item) => item.id !== 'review-exact-binding');
+
+  const errors = validateFalseGreenMatrix({ matrix });
+
+  assert.ok(errors.some((error) => error.includes('must include required id review-exact-binding')));
+});
+
+test('covered matrix contracts reject unrelated owner change gate test source and checker bindings', () => {
+  const matrix = repositoryMatrix();
+  const item = matrix.items.find((entry) => entry.id === 'review-exact-binding');
+  item.owner = 'nobody';
+  item.lastVerifiedByChange = 'not-a-change';
+  item.gate = 'tools/common.js';
+  item.coveredByTests = ['tests/memory.test.js'];
+  item.sourceFiles = ['tools/common.js'];
+
+  const errors = validateFalseGreenMatrix({ matrix });
+
+  for (const expected of [
+    'owner must be governance',
+    'lastVerifiedByChange must equal',
+    'gate must equal check:review',
+    'coveredByTests must include tests/governance-sales-order-handoff-gate.test.js',
+    'sourceFiles must include tools/review-checker.js'
+  ]) {
+    assert.ok(errors.some((error) => error.includes(expected)), expected);
+  }
+});
+
+test('covered matrix gate must execute its bound checker and tests must contain real test declarations', () => {
+  const matrix = repositoryMatrix();
+  const scripts = repositoryScripts();
+  scripts['check:review'] = 'node tools/common.js';
+
+  const gateErrors = validateFalseGreenMatrix({ matrix, packageScripts: scripts });
+  assert.ok(gateErrors.some((error) => error.includes('gate check:review must execute tools/review-checker.js')));
+
+  const testErrors = validateFalseGreenMatrix({
+    matrix,
+    packageScripts: repositoryScripts(),
+    readTextFile: (file) => file.endsWith('governance-sales-order-handoff-gate.test.js')
+      ? '# documentation only\n'
+      : fs.readFileSync(file, 'utf8')
+  });
+  assert.ok(testErrors.some((error) => error.includes('must contain a real test declaration')));
+});
+
+test('covered matrix gate rejects pseudo execution shell control path concatenation and missing required arguments', () => {
+  const attacks = [
+    ['check:runtime', 'echo node tools/runtime-checker.js'],
+    ['check:runtime', 'node -e "console.log(\'tools/runtime-checker.js\')"'],
+    ['check:runtime', 'node tools/runtime-checker.js || exit 0'],
+    ['check:runtime', 'node tools/runtime-checker.js-suffix'],
+    ['check:review', 'node tools/review-checker.js']
+  ];
+
+  for (const [gate, command] of attacks) {
+    const scripts = repositoryScripts();
+    scripts[gate] = command;
+    const errors = validateFalseGreenMatrix({ matrix: repositoryMatrix(), packageScripts: scripts });
+    assert.ok(
+      errors.some((error) => error.includes('dedicated fail-fast command')),
+      `${gate} must reject ${command}`
+    );
+  }
+});
+
+test('covered matrix test evidence rejects comments strings and uncalled test references', () => {
+  const fakeSources = [
+    '// test( is only a comment\n',
+    'const text = "test(";\n',
+    'import test from "node:test"; const reference = test;\n',
+    'const text = "import test from \'node:test\'; test(\'fake\')";\n',
+    'import test from "node:test"; const pattern = /test\\(/; const reference = test;\n',
+    'import test from "node:test"; const suite = { test() {} }; const reference = test;\n'
+  ];
+
+  for (const source of fakeSources) {
+    const errors = validateFalseGreenMatrix({
+      matrix: repositoryMatrix(),
+      packageScripts: repositoryScripts(),
+      readTextFile: (file) => file === 'tests/runtime-checker.test.js'
+        ? source
+        : fs.readFileSync(file, 'utf8')
+    });
+    assert.ok(
+      errors.some((error) => error.includes('must contain a real node:test test() or it() call')),
+      source
+    );
+  }
 });
 
 test('matrix rejects duplicate ids', () => {

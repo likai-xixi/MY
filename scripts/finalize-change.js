@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import { finish, formatJson, isCli, projectPath, readJson, readText, writeOrCheck } from '../tools/common.js';
 import { collectChangedFiles } from '../tools/diff-checker.js';
+import { markdownStructureRecords, parseTopLevelStatus } from '../tools/verification-provenance-checker.js';
 
 function unique(items) {
   return [...new Set((items || []).filter(Boolean).map((item) => String(item).replace(/\\/g, '/')))].sort();
@@ -8,14 +9,6 @@ function unique(items) {
 
 function pathExists(relativePath) {
   return fs.existsSync(projectPath(relativePath));
-}
-
-function pathIsFile(relativePath) {
-  try {
-    return fs.statSync(projectPath(relativePath)).isFile();
-  } catch {
-    return false;
-  }
 }
 
 function pathIsDirectory(relativePath) {
@@ -26,21 +19,22 @@ function pathIsDirectory(relativePath) {
   }
 }
 
-const TEMPLATE_PHRASES = [
-  'Status: prepared',
-  'Status: pending',
-  'Pending',
-  'Pending implementation',
-  'The change record was populated before the main gate',
-  'Change record prepared by the chat-driven workflow',
-  'Describe passing and failing verification',
-  'List residual risks',
-  'List the next concrete actions'
+const TEMPLATE_STATUSES = new Set(['prepared', 'pending']);
+const CONTROLLED_HANDOVER_HEADINGS = [
+  '## Summary',
+  '## Impact',
+  '## Changed Files',
+  '## Commands',
+  '## Verification',
+  '## Risks',
+  '## Next Actions'
 ];
 
 export function templatePhrase(text = '') {
-  const lower = String(text).toLowerCase();
-  return TEMPLATE_PHRASES.find((phrase) => lower.includes(phrase.toLowerCase())) || '';
+  const parsed = parseTopLevelStatus(text);
+  return parsed.unique && TEMPLATE_STATUSES.has(parsed.status)
+    ? `Status: ${parsed.status}`
+    : '';
 }
 
 export function shouldReplaceGeneratedText(currentText = '', { exists = true, force = false } = {}) {
@@ -88,45 +82,98 @@ function readJsonOrDefault(relativePath, fallback) {
   }
 }
 
-function flattenImpactFiles(impact) {
-  const affected = impact.affected || {};
-  return unique([
-    affected.feature,
-    ...(affected.backendModules || []),
-    ...(affected.frontendModules || []),
-    ...(affected.tests || []),
-    ...(affected.docs || []),
-    ...(affected.generatedScans || []),
-    ...(impact.removeFiles || []),
-    ...(impact.updateFiles || []),
-    ...(impact.allowedEditRoots || []).filter((item) => pathIsFile(item) && !['ai/changes', 'ai/generated', 'graph', 'memory', 'features', 'tests'].includes(item))
-  ]);
-}
-
 export function filterChangedFileRecords(files) {
   return unique(files)
     .filter((file) => !file.startsWith('node_modules/') && !file.startsWith('.git/'))
     .filter((file) => !pathIsDirectory(file));
 }
 
-function changeRecordFiles(id) {
-  return [
-    `ai/changes/${id}/request.md`,
-    `ai/changes/${id}/impact.json`,
-    `ai/changes/${id}/plan.md`,
-    `ai/changes/${id}/changed-files.json`,
-    `ai/changes/${id}/verification.md`,
-    `ai/changes/${id}/handover.md`,
-    'ai/changes/CURRENT_CHANGE.json'
-  ];
+export function resolveFinalizedChangedFiles({ actualFiles = [] } = {}) {
+  return filterChangedFileRecords(actualFiles);
 }
 
 function markdownList(items, empty = '- none') {
   return items.length ? items.map((item) => `- \`${item}\``) : [empty];
 }
 
+function sectionRanges(text, heading) {
+  const expected = heading.replace(/^##\s+/, '');
+  const records = markdownStructureRecords(text);
+  const levelTwoHeadings = records.filter((record) => record.heading?.level === 2);
+  return levelTwoHeadings
+    .filter((record) => record.heading.text === expected)
+    .map((record) => ({
+      start: record.index,
+      end: levelTwoHeadings.find((candidate) => candidate.index > record.index)?.index
+        ?? records.length
+    }));
+}
+
+export function controlledSectionDuplicates(text = '') {
+  return CONTROLLED_HANDOVER_HEADINGS.filter((heading) => sectionRanges(text, heading).length > 1);
+}
+
+export function synchronizeChangedFilesSection(currentText = '', changedFiles = []) {
+  const text = String(currentText || '').replace(/\r\n?/g, '\n').trimEnd();
+  const blockLines = [
+    '## Changed Files',
+    '',
+    ...markdownList(unique(changedFiles)),
+    ''
+  ];
+  const lines = text.split('\n');
+  const ranges = sectionRanges(text, '## Changed Files');
+  if (ranges.length > 0) {
+    const rangesByStart = new Map(ranges.map((range) => [range.start, range]));
+    const synchronized = [];
+    let index = 0;
+    let inserted = false;
+    while (index < lines.length) {
+      const range = rangesByStart.get(index);
+      if (!range) {
+        synchronized.push(lines[index]);
+        index += 1;
+        continue;
+      }
+      if (!inserted) {
+        synchronized.push(...blockLines);
+        inserted = true;
+      }
+      index = range.end;
+    }
+    return `${synchronized.join('\n').trimEnd()}\n`;
+  }
+  const block = blockLines.join('\n');
+  const insertion = text.match(/^## (?:Commands|Verification|Risks|Next Actions)\s*$/m);
+  if (insertion && insertion.index !== undefined) {
+    return `${text.slice(0, insertion.index).trimEnd()}\n\n${block}\n${text.slice(insertion.index).trimStart()}`.trimEnd() + '\n';
+  }
+  return `${text}\n\n${block}`.trimEnd() + '\n';
+}
+
+function writeSynchronizedHandover(relativePath, generatedContent, changedFiles, errors) {
+  const current = readOptionalText(relativePath);
+  const source = shouldReplaceGeneratedText(current.text, { exists: current.exists })
+    ? generatedContent
+    : current.text;
+  const synchronized = synchronizeChangedFilesSection(source, changedFiles);
+  const duplicates = controlledSectionDuplicates(synchronized);
+  if (duplicates.length > 0) {
+    errors.push(`${relativePath} contains duplicate controlled handover sections: ${duplicates.join(', ')}.`);
+    return;
+  }
+  writeOrCheck(relativePath, synchronized, false, errors);
+}
+
 function commandList(items) {
-  return items.length ? items.map((item) => `- \`${item}\``) : ['- `npm run check`'];
+  const values = items.length ? items : ['npm run check'];
+  return values.map((item) => {
+    const text = String(item || '').trim();
+    const match = text.match(/^\[(local|ci|ci-planned|runtime-local|runtime-ci|not-run|inconclusive)\]\s*(.*)$/i);
+    const provenance = match ? `[${match[1]}]` : '[not-run]';
+    const command = match ? match[2] : text;
+    return `- ${provenance} \`${command}\``;
+  });
 }
 
 function buildPlan({ summary, mode, featureId }) {
@@ -189,7 +236,7 @@ function buildChangeHandover({ summary, changedFiles, commands, risks = [], next
     '',
     '## Verification',
     '',
-    '`npm run check` remains the final gate. The change record includes affected files and verification commands so `close:change` can enforce evidence instead of accepting an empty record.',
+    '- [not-run] `npm run check` remains the final gate. The change record includes affected files and verification commands so `close:change` can enforce evidence instead of accepting an empty record.',
     '',
     '## Risks',
     '',
@@ -203,7 +250,7 @@ function buildChangeHandover({ summary, changedFiles, commands, risks = [], next
 }
 
 
-function buildMemoryHandover({ id, summary, changedFiles, commands, risks = [], nextActions = [] }) {
+export function buildMemoryHandover({ id, summary, changedFiles, commands, risks = [], nextActions = [] }) {
   return [
     '# Handover',
     '',
@@ -221,8 +268,7 @@ function buildMemoryHandover({ id, summary, changedFiles, commands, risks = [], 
     '',
     '## Changed Files',
     '',
-    ...markdownList(changedFiles.slice(0, 30)),
-    changedFiles.length > 30 ? `- plus ${changedFiles.length - 30} additional files in the current change record.` : '',
+    ...markdownList(changedFiles),
     '',
     '## Commands',
     '',
@@ -230,7 +276,7 @@ function buildMemoryHandover({ id, summary, changedFiles, commands, risks = [], 
     '',
     '## Verification',
     '',
-    'Use `npm run check` as the full governance gate. Read the current change record for the complete changed-files list and command evidence.',
+    '- [not-run] `npm run check` is the remaining full governance gate. Read the current change record for the complete changed-files list and command evidence.',
     '',
     '## Risks',
     '',
@@ -284,7 +330,6 @@ function updateTaskMemory({ featureId, mode }, errors) {
 export function finalizeChange({
   id = currentChangeId(),
   summary = '',
-  changedFiles = [],
   commands = ['npm run scan:all', 'npm run close:change', 'npm run check'],
   verificationStatus = 'prepared',
   verificationEvidence = '',
@@ -301,34 +346,54 @@ export function finalizeChange({
   const impact = readJsonOrDefault(`${dir}/impact.json`, { schemaVersion: 1, mode: 'update', feature: {}, affected: {}, allowedEditRoots: ['ai/changes'] });
   const featureId = impact.feature?.id || impact.slug || impact.feature || '';
   const mode = impact.mode || 'update';
-  const gitOrRecorded = collectChangedFiles();
-  const files = filterChangedFileRecords([
-    ...changedFiles,
-    ...gitOrRecorded,
-    ...flattenImpactFiles(impact),
-    ...changeRecordFiles(id)
-  ]);
-
-  const safeFiles = files.length ? files : changeRecordFiles(id);
-  writeOrCheck(`${dir}/changed-files.json`, formatJson({ schemaVersion: 1, files: safeFiles }), false, errors);
-  writeOrCheck(`${dir}/plan.md`, buildPlan({ summary, mode, featureId }), false, errors);
+  writeGeneratedMarkdown(`${dir}/plan.md`, buildPlan({ summary, mode, featureId }), {}, errors);
   writeGeneratedMarkdown(
     `${dir}/verification.md`,
     buildVerification({ commands, status: verificationStatus, evidence: verificationEvidence }),
     { force: forceVerification },
     errors
   );
-  writeGeneratedMarkdown(
-    `${dir}/handover.md`,
-    buildChangeHandover({ summary, changedFiles: safeFiles, commands, risks, nextActions }),
-    {},
-    errors
-  );
-
   if (updateMemory) {
-    writeOrCheck('memory/HANDOVER.md', buildMemoryHandover({ id, summary, changedFiles: safeFiles, commands, risks, nextActions }), false, errors);
     appendChangelog({ id, summary, featureId, mode }, errors);
     updateTaskMemory({ featureId, mode }, errors);
+    const provisionalFiles = resolveFinalizedChangedFiles({
+      actualFiles: collectChangedFiles({ baseRevision: impact.baseRevision })
+    });
+    writeSynchronizedHandover(
+      'memory/HANDOVER.md',
+      buildMemoryHandover({ id, summary, changedFiles: provisionalFiles, commands, risks, nextActions }),
+      provisionalFiles,
+      errors
+    );
+  }
+
+  const exactFiles = resolveFinalizedChangedFiles({
+    actualFiles: collectChangedFiles({ baseRevision: impact.baseRevision })
+  });
+  writeOrCheck(`${dir}/changed-files.json`, formatJson({ schemaVersion: 1, files: exactFiles }), false, errors);
+  writeSynchronizedHandover(
+    `${dir}/handover.md`,
+    buildChangeHandover({ summary, changedFiles: exactFiles, commands, risks, nextActions }),
+    exactFiles,
+    errors
+  );
+  const settledFiles = resolveFinalizedChangedFiles({
+    actualFiles: collectChangedFiles({ baseRevision: impact.baseRevision })
+  });
+  writeOrCheck(`${dir}/changed-files.json`, formatJson({ schemaVersion: 1, files: settledFiles }), false, errors);
+  writeSynchronizedHandover(
+    `${dir}/handover.md`,
+    buildChangeHandover({ summary, changedFiles: settledFiles, commands, risks, nextActions }),
+    settledFiles,
+    errors
+  );
+  if (updateMemory) {
+    writeSynchronizedHandover(
+      'memory/HANDOVER.md',
+      buildMemoryHandover({ id, summary, changedFiles: settledFiles, commands, risks, nextActions }),
+      settledFiles,
+      errors
+    );
   }
   return errors;
 }

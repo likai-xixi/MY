@@ -1,0 +1,99 @@
+{
+  "schemaVersion": 1,
+  "mode": "rule-change",
+  "changeType": "governance/rule-change",
+  "baseRevision": "fdd3998a39530337122854681b55d15db47982f7",
+  "reviewId": "RV-20260714T012241Z-review",
+  "proposalId": "2026-07-14-repository-wide-governance-gate-and-evidence-hardening",
+  "feature": {
+    "id": "platform",
+    "name": "平台底座治理",
+    "status": "active"
+  },
+  "summary": "Repair repository-wide governance false-greens and unstable legacy baselines without touching business runtime code.",
+  "affected": {
+    "legacyBaselines": [
+      "component checker",
+      "component similarity checker",
+      "frontend boundary checker"
+    ],
+    "evidenceAndContext": [
+      "context build idempotency",
+      "finalize changed-file precision",
+      "fixed revision and canonical root binding",
+      "pre-committed review and complete runtime-root binding",
+      "real context file and approved override binding",
+      "rule-change-only Java test ownership exceptions"
+    ],
+    "runtimeAndRelease": [
+      "runtime reactor execution",
+      "phase-gate source scanning"
+    ],
+    "ci": [
+      "dependency lockfiles",
+      "immutable GitHub Action revisions",
+      "Node and Maven tests",
+      "frontend audit and production build"
+    ],
+    "proposal": [
+      "ai/rule-proposals/2026-07-14-repository-wide-governance-gate-and-evidence-hardening.json"
+    ],
+    "changeRecord": [
+      "ai/changes/CR-20260714T034246Z-repository-wide-governance-gate-evidence-hardeni"
+    ]
+  },
+  "allowedEditRoots": [
+    ".github/workflows",
+    ".gitignore",
+    "package.json",
+    "package-lock.json",
+    "ruoyi-ui/package.json",
+    "ruoyi-ui/package-lock.json",
+    "ruoyi-ui/.gitignore",
+    "tools",
+    "scripts",
+    "tests",
+    "ai/changes",
+    "ai/context",
+    "ai/governance",
+    "ai/rules",
+    "ai/registry",
+    "ai/reviews/RV-20260714T012241Z-review",
+    "ai/roadmap",
+    "ai/rule-proposals",
+    "docs",
+    "README.md",
+    "memory"
+  ],
+  "forbiddenEditRoots": [
+    "ruoyi-business/src/main/java",
+    "ruoyi-business/src/main/resources",
+    "ruoyi-admin/src/main/java",
+    "ruoyi-admin/src/main/resources/application-prod.yml",
+    "ruoyi-ui/src/views",
+    "ruoyi-ui/src/layout/components/HeaderNotice",
+    "ruoyi-ui/src/api",
+    "sql",
+    "graph",
+    "features"
+  ],
+  "blockers": [],
+  "nonGoals": [
+    "No customer, masterdata, sales-order, system-notice, or other business runtime edits.",
+    "No production application profile edit; the separate platform batch owns application-prod.yml.",
+    "No release, deployment, force push, or beforeSalesOrder state change.",
+    "No gate weakening, broad allow-all exception, path-only exception, or success theater."
+  ],
+  "requiredCommands": [
+    "npm run resume",
+    "npm run rule:preflight -- before-sales-order-phase-gate",
+    "targeted governance tests",
+    "npm test",
+    "npm run check",
+    "npm run finalize:change",
+    "npm run check:change",
+    "npm run close:change",
+    "git diff --check",
+    "forbidden business-path audit"
+  ]
+}

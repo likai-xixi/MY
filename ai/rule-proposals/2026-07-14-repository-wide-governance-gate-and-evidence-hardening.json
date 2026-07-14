@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "id": "2026-07-14-repository-wide-governance-gate-and-evidence-hardening",
+  "title": "Repository-wide governance gate and evidence hardening",
+  "reason": "Replace change-local RuoYi baseline exceptions with hash-bound project baselines; repair context/finalize/review evidence binding, Java test ownership, runtime and production-build checks, and real CI coverage without weakening new-change detection.",
+  "status": "implemented",
+  "acceptedForChange": "CR-20260714T034246Z-repository-wide-governance-gate-evidence-hardeni",
+  "requiredChangeMode": "rule-change",
+  "oldRule": [
+    "RuoYi legacy component and boundary findings were repeatedly copied into the active change exception Markdown and matched by path substring or allow-all text.",
+    "A boundary exception could skip every finding in one file instead of consuming one reviewed file-target edge.",
+    "Review approval, changed-files evidence, current context, Java test ownership, CI coverage, phase-gate scanning, and runtime execution were not all bound to exact repository facts."
+  ],
+  "newRule": [
+    "Stable imported RuoYi findings live in ai/rules/ruoyi-legacy-baseline.json and are accepted only by exact file/check or file/target identity plus canonical SHA256.",
+    "Current-change component and boundary exceptions require structured file, check or target, and reason fields; the exact file must exist in the current changed-files.json.",
+    "Wildcards, directory scopes, allow-all switches, prose substring matches, and whole-file boundary skips are forbidden.",
+    "Review approval, changed-files evidence, current context, Java tests, CI commands, executable phase-gate files, and Maven reactor execution must bind to the exact facts recorded by their owning gate.",
+    "Git evidence must retain every path reported by Git, use fixed full commit OIDs, and reject non-canonical edit roots; business reviews must predate implementation and remain unchanged in its Git range."
+  ],
+  "affectedScannersAndRegistries": [
+    "tools/legacy-baseline.js",
+    "tools/component-checker.js",
+    "tools/component-similarity-checker.js",
+    "tools/boundary-lint.js",
+    "tools/review-checker.js",
+    "tools/diff-checker.js",
+    "tools/change-handoff-integrity-checker.js",
+    "tools/context-pack-checker.js",
+    "tools/feature-test-ownership-checker.js",
+    "tools/rule-change-guard.js",
+    "tools/ci-coverage-declaration-checker.js",
+    "tools/phase-gate-checker.js",
+    "tools/runtime-checker.js",
+    "ai/rules/ruoyi-legacy-baseline.json",
+    "ai/registry/features.json",
+    "ai/registry/test-ownership-exceptions.json",
+    "ai/governance/false-green-regression-matrix.json"
+  ],
+  "sampleEvidence": [
+    "ruoyi-ui/src/router/index.js",
+    "ruoyi-ui/src/views/system/role/selectUser.vue",
+    "ruoyi-ui/src/views/tool/gen/editTable.vue",
+    "ruoyi-ui/src/views/tool/gen/genInfoForm.vue",
+    "tests/legacy-baseline.test.js",
+    "tests/governance-sales-order-handoff-gate.test.js",
+    "tests/change-handoff-integrity-checker.test.js",
+    "tests/governance-gates.test.js",
+    "tests/runtime-checker.test.js"
+  ],
+  "acceptanceConstraints": [
+    "The proposal authorizes governance-only implementation inside the active rule-change impact roots.",
+    "Business runtime files and the production application profile remain outside this proposal.",
+    "beforeSalesOrder remains blocked and this proposal does not authorize release or deployment.",
+    "The proposal remains accepted until implementation evidence, full gates, and closeout are complete; it must not be marked implemented early."
+  ],
+  "checklist": [
+    "Explain old rule and new rule.",
+    "List affected scanners and registries.",
+    "List sample files proving the project base needs this rule.",
+    "Run npm run check after the rule proposal is accepted."
+  ]
+}

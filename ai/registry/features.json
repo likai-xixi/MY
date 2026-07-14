@@ -97,6 +97,10 @@
         "/customer"
       ],
       "tests": [
+        "ruoyi-business/src/test/java/com/ruoyi/business/customer/service/CustomerFundMySqlIT.java",
+        "ruoyi-business/src/test/java/com/ruoyi/business/customer/service/CustomerFundServiceTest.java",
+        "ruoyi-business/src/test/java/com/ruoyi/business/customer/service/CustomerServiceTest.java",
+        "ruoyi-business/src/test/java/com/ruoyi/business/customer/service/CustomerTestSupport.java",
         "tests/customer-risk-gate.test.js"
       ],
       "docs": [
@@ -248,6 +252,10 @@
         ],
         "components": [],
         "tests": [
+          "ruoyi-business/src/test/java/com/ruoyi/business/customer/service/CustomerFundMySqlIT.java",
+          "ruoyi-business/src/test/java/com/ruoyi/business/customer/service/CustomerFundServiceTest.java",
+          "ruoyi-business/src/test/java/com/ruoyi/business/customer/service/CustomerServiceTest.java",
+          "ruoyi-business/src/test/java/com/ruoyi/business/customer/service/CustomerTestSupport.java",
           "tests/customer-risk-gate.test.js"
         ],
         "docs": [

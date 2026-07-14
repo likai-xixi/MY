@@ -1,4 +1,3 @@
-import { execFileSync } from 'node:child_process';
 import {
   ensure,
   fileExists,
@@ -7,6 +6,12 @@ import {
   readJson,
   readText
 } from './common.js';
+import { collectChangedFiles, collectFileDiffs, validateBaseRevision } from './diff-checker.js';
+import {
+  markdownStructureRecords,
+  nonSuccessProvenanceSuccessClaims,
+  parseTopLevelStatus
+} from './verification-provenance-checker.js';
 
 const TEMPLATE_PHRASES = [
   'codex must fill',
@@ -24,16 +29,15 @@ const TEMPLATE_PHRASES = [
   'update this list'
 ];
 
-const GENERATED_DIRS = new Set([
-  '.git',
-  '.vite',
-  'build',
-  'coverage',
-  'dist',
-  'node_modules',
-  'target',
-  'tmp'
-]);
+const CONTROLLED_HANDOVER_HEADINGS = [
+  '## Summary',
+  '## Impact',
+  '## Changed Files',
+  '## Commands',
+  '## Verification',
+  '## Risks',
+  '## Next Actions'
+];
 
 const SEMANTIC_GATES = [
   {
@@ -130,21 +134,6 @@ const SEMANTIC_GATES = [
   }
 ];
 
-function runGit(args) {
-  try {
-    return execFileSync('git', ['-c', 'core.quotepath=false', ...args], {
-      encoding: 'utf8',
-      stdio: ['ignore', 'pipe', 'ignore']
-    }).trim();
-  } catch {
-    return '';
-  }
-}
-
-function isGitRepository() {
-  return runGit(['rev-parse', '--is-inside-work-tree']) === 'true';
-}
-
 function unique(items) {
   return [...new Set((items || []).map(normalizePath).filter(Boolean))].sort();
 }
@@ -153,36 +142,42 @@ function normalizePath(file) {
   return String(file || '').trim().replace(/\\/g, '/').replace(/^\.\//, '');
 }
 
-function isGeneratedPath(file) {
-  return normalizePath(file).split('/').some((part) => GENERATED_DIRS.has(part));
+function isCanonicalRepositoryFile(rawFile) {
+  if (typeof rawFile !== 'string') {
+    return false;
+  }
+  const file = normalizePath(rawFile);
+  return Boolean(file)
+    && rawFile === file
+    && !file.startsWith('/')
+    && !/^[A-Za-z]:/.test(file)
+    && !file.split('/').some((part) => part === '.' || part === '..' || part === '')
+    && !/[*?\[\]{}!]/.test(file)
+    && !file.endsWith('/');
 }
 
-function gitChangedFiles() {
-  if (!isGitRepository()) {
+function validateRawChangedFiles({ files, label, errors }) {
+  if (!Array.isArray(files)) {
+    errors.push(`${label} files must be an array of exact canonical repository-relative paths.`);
     return [];
   }
-  const unstaged = runGit(['diff', '--name-only', '--diff-filter=ACMRTUXB', '--']);
-  const staged = runGit(['diff', '--cached', '--name-only', '--diff-filter=ACMRTUXB', '--']);
-  const untracked = runGit(['ls-files', '--others', '--exclude-standard']);
-  return unique([
-    ...unstaged.split('\n'),
-    ...staged.split('\n'),
-    ...untracked.split('\n')
-  ]).filter((file) => !isGeneratedPath(file));
-}
-
-function gitDiffForFile(file) {
-  if (!isGitRepository()) {
-    return '';
+  const seen = new Set();
+  const validated = [];
+  for (const [index, rawFile] of files.entries()) {
+    if (typeof rawFile === 'string' && seen.has(rawFile)) {
+      errors.push(`${label} contains duplicate raw file entry: ${rawFile}.`);
+      continue;
+    }
+    if (typeof rawFile === 'string') {
+      seen.add(rawFile);
+    }
+    if (!isCanonicalRepositoryFile(rawFile)) {
+      errors.push(`${label} entry ${index + 1} must be one exact canonical repository-relative path: ${JSON.stringify(rawFile)}.`);
+      continue;
+    }
+    validated.push(rawFile);
   }
-  return [
-    runGit(['diff', '--', file]),
-    runGit(['diff', '--cached', '--', file])
-  ].filter(Boolean).join('\n');
-}
-
-function gitFileDiffs(files) {
-  return new Map(unique(files).map((file) => [file, gitDiffForFile(file)]));
+  return validated.sort();
 }
 
 function currentChangeId({ readJsonFile = readJson } = {}) {
@@ -210,13 +205,97 @@ function readTextSafe(relativePath, readFile) {
 }
 
 function sectionText(text, heading) {
-  const escaped = heading.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  const match = text.match(new RegExp(`^${escaped}\\s*$([\\s\\S]*?)(?=^##\\s+|(?![\\s\\S]))`, 'm'));
-  return match ? match[1].trim() : '';
+  const expected = heading.replace(/^##\s+/, '');
+  const records = markdownStructureRecords(text);
+  const start = records.find((record) => record.heading?.level === 2 && record.heading.text === expected);
+  if (!start) {
+    return '';
+  }
+  const end = records.find((record) => record.index > start.index && record.heading?.level === 2)?.index
+    ?? records.length;
+  return records.slice(start.index + 1, end).map((record) => record.text).join('\n').trim();
 }
 
 function hasHeading(text, heading) {
-  return new RegExp(`^${heading.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*$`, 'm').test(text);
+  const expected = heading.replace(/^##\s+/, '');
+  return markdownStructureRecords(text)
+    .some((record) => record.heading?.level === 2 && record.heading.text === expected);
+}
+
+function headingCount(text, heading) {
+  const expected = heading.replace(/^##\s+/, '');
+  return markdownStructureRecords(text)
+    .filter((record) => record.heading?.level === 2 && record.heading.text === expected)
+    .length;
+}
+
+function validateControlledHandoverSections({ handover, label, errors }) {
+  for (const heading of CONTROLLED_HANDOVER_HEADINGS) {
+    const count = headingCount(handover, heading);
+    ensure(count === 1, `${label} must contain exactly one ${heading} section; found ${count}.`, errors);
+  }
+}
+
+function validateNonSuccessProvenanceClaims({ text, label, errors }) {
+  for (const contradiction of nonSuccessProvenanceSuccessClaims(text)) {
+    errors.push(
+      `${label}:${contradiction.line} uses non-success provenance [${contradiction.tag}] while claiming a successful result (${contradiction.assertion}) in the same record.`
+    );
+  }
+}
+
+function parseHandoverChangedFiles({ handover, label, errors }) {
+  if (!hasHeading(handover, '## Changed Files')) {
+    errors.push(`${label} must include ## Changed Files with one exact backticked file per bullet.`);
+    return [];
+  }
+  const section = sectionText(handover, '## Changed Files');
+  if (!section) {
+    errors.push(`${label} ## Changed Files must not be empty.`);
+    return [];
+  }
+  const files = [];
+  const seen = new Set();
+  for (const [index, line] of section.split('\n').entries()) {
+    if (!line.trim()) continue;
+    const match = line.match(/^\s*-\s+`([^`]+)`\s*$/);
+    if (!match) {
+      errors.push(`${label} cannot parse Changed Files line ${index + 1}: ${line.trim()}`);
+      continue;
+    }
+    const rawFile = match[1];
+    const file = normalizePath(rawFile);
+    if (
+      rawFile !== file
+      || file.startsWith('/')
+      || /^[A-Za-z]:/.test(file)
+      || file.split('/').some((part) => part === '.' || part === '..')
+      || /[*?\[\]{}!]/.test(file)
+      || file.endsWith('/')
+    ) {
+      errors.push(`${label} Changed Files path must be one exact normalized file: ${rawFile}`);
+      continue;
+    }
+    if (seen.has(file)) {
+      errors.push(`${label} Changed Files contains duplicate file: ${file}`);
+      continue;
+    }
+    seen.add(file);
+    files.push(file);
+  }
+  return files;
+}
+
+function validateHandoverChangedFiles({ changedFiles, handover, label, errors }) {
+  const listedFiles = parseHandoverChangedFiles({ handover, label, errors });
+  const recorded = new Set(changedFiles);
+  const listed = new Set(listedFiles);
+  for (const file of changedFiles) {
+    ensure(listed.has(file), `${label} ## Changed Files is missing recorded file: ${file}.`, errors);
+  }
+  for (const file of listedFiles) {
+    ensure(recorded.has(file), `${label} ## Changed Files lists ${file}, which is not recorded in changed-files.json.`, errors);
+  }
 }
 
 function containsTemplateText(text) {
@@ -270,12 +349,13 @@ function referencesCurrentChange(text, id) {
 }
 
 function validateChangedFilesCoverage({ id, changedFiles, actualFiles, errors }) {
-  if (actualFiles.length === 0) {
-    return;
-  }
   const recorded = new Set(changedFiles);
+  const actual = new Set(actualFiles);
   for (const file of actualFiles) {
     ensure(recorded.has(file), `${file} is changed in Git but missing from ai/changes/${id}/changed-files.json.`, errors);
+  }
+  for (const file of changedFiles) {
+    ensure(actual.has(file), `${file} is recorded in ai/changes/${id}/changed-files.json but is not changed since impact.baseRevision.`, errors);
   }
 }
 
@@ -283,8 +363,19 @@ function validateVerification({ id, changedFiles, verification, errors }) {
   ensure(verification.trim().length > 0, `ai/changes/${id}/verification.md must not be empty.`, errors);
   const substantiveFiles = changedFiles.filter((file) => isSubstantiveFile(file, id));
   const templatePhrase = containsTemplateText(verification);
+  const parsedStatus = parseTopLevelStatus(verification);
   ensure(!templatePhrase, `ai/changes/${id}/verification.md still contains template evidence text: ${templatePhrase}`, errors);
-  ensure(!/^status:\s*(pending|prepared)\s*$/im.test(verification), `ai/changes/${id}/verification.md must not have pending/prepared status after substantive changes.`, errors);
+  ensure(parsedStatus.fields.length === 1, `ai/changes/${id}/verification.md must contain exactly one top-level Status field.`, errors);
+  ensure(
+    !parsedStatus.unique || !['pending', 'prepared'].includes(parsedStatus.status),
+    `ai/changes/${id}/verification.md must not have pending/prepared status after substantive changes.`,
+    errors
+  );
+  validateNonSuccessProvenanceClaims({
+    text: verification,
+    label: `ai/changes/${id}/verification.md`,
+    errors
+  });
 
   if (substantiveFiles.length === 0) {
     return;
@@ -311,6 +402,9 @@ function validateHandover({ id, changedFiles, handover, label, errors }) {
   ensure(handover.trim().length > 0, `${label} must not be empty.`, errors);
   const templatePhrase = containsTemplateText(handover);
   ensure(!templatePhrase, `${label} still contains template handover text: ${templatePhrase}`, errors);
+  validateControlledHandoverSections({ handover, label, errors });
+  validateNonSuccessProvenanceClaims({ text: handover, label, errors });
+  validateHandoverChangedFiles({ changedFiles, handover, label, errors });
   for (const heading of ['## Impact', '## Verification', '## Risks', '## Next Actions']) {
     const section = sectionText(handover, heading);
     ensure(section.length > 0, `${label} must include non-empty ${heading}.`, errors);
@@ -432,11 +526,12 @@ function validateSemanticCoverage({ id, changedFiles, verification, handover, fi
 
 export function validateChangeHandoffIntegrity({
   id = currentChangeId(),
-  actualFiles = gitChangedFiles(),
-  fileDiffs = gitFileDiffs(actualFiles),
+  actualFiles = null,
+  fileDiffs = null,
   readFile = readText,
   readJsonFile = readJson,
-  exists = fileExists
+  exists = fileExists,
+  validateBaseRevisionFn = validateBaseRevision
 } = {}) {
   const errors = [];
   ensure(Boolean(id), 'No change id provided and ai/changes/CURRENT_CHANGE.json has no current change.', errors);
@@ -449,7 +544,11 @@ export function validateChangeHandoffIntegrity({
   ensure(exists(`${dir}/handover.md`), `${dir}/handover.md is missing.`, errors);
   const changed = readJsonSafe(`${dir}/changed-files.json`, { files: [] }, readJsonFile);
   const impact = readJsonSafe(`${dir}/impact.json`, { mode: '', feature: {} }, readJsonFile);
-  const changedFiles = unique(Array.isArray(changed.files) ? changed.files : []);
+  const changedFiles = validateRawChangedFiles({
+    files: changed.files,
+    label: `${dir}/changed-files.json`,
+    errors
+  });
   ensure(changedFiles.length > 0, `${dir}/changed-files.json files must not be empty.`, errors);
   if (errors.length > 0) {
     return errors;
@@ -457,12 +556,19 @@ export function validateChangeHandoffIntegrity({
 
   const verification = readTextSafe(`${dir}/verification.md`, readFile);
   const changeHandover = readTextSafe(`${dir}/handover.md`, readFile);
-  validateChangedFilesCoverage({ id, changedFiles, actualFiles: unique(actualFiles), errors });
+  errors.push(...validateBaseRevisionFn(impact.baseRevision));
+  const resolvedActualFiles = actualFiles === null
+    ? collectChangedFiles({ baseRevision: impact.baseRevision })
+    : unique(actualFiles);
+  const resolvedFileDiffs = fileDiffs === null
+    ? collectFileDiffs({ files: resolvedActualFiles, baseRevision: impact.baseRevision })
+    : fileDiffs;
+  validateChangedFilesCoverage({ id, changedFiles, actualFiles: resolvedActualFiles, errors });
   validateVerification({ id, changedFiles, verification, errors });
   validateHandover({ id, changedFiles, handover: changeHandover, label: `${dir}/handover.md`, errors });
   validateMemorySync({ id, impact, readFile, readJsonFile, exists, errors });
   validateHandover({ id, changedFiles, handover: readTextSafe('memory/HANDOVER.md', readFile), label: 'memory/HANDOVER.md', errors });
-  validateSemanticCoverage({ id, changedFiles, verification, handover: changeHandover, fileDiffs, errors });
+  validateSemanticCoverage({ id, changedFiles, verification, handover: changeHandover, fileDiffs: resolvedFileDiffs, errors });
   return errors;
 }
 

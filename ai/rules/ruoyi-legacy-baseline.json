@@ -1,0 +1,139 @@
+{
+  "schemaVersion": 1,
+  "adapter": "ruoyi",
+  "hashAlgorithm": "sha256:utf8-no-bom-lf",
+  "componentFiles": [
+    {
+      "id": "system-role-select-user-page-local",
+      "file": "ruoyi-ui/src/views/system/role/selectUser.vue",
+      "checks": [
+        "component",
+        "similarity"
+      ],
+      "sha256": "bc188e04815ea57dd5063155b8b2ee3c53aa872d75ad2dd29324c098dfd2c575",
+      "reason": "RuoYi built-in role-assignment page-local selector; it is not a shared component implementation.",
+      "sourceCommit": "785d1ca725770db503351ced1446d01df750b9fa"
+    },
+    {
+      "id": "tool-build-code-type-dialog-page-local",
+      "file": "ruoyi-ui/src/views/tool/build/CodeTypeDialog.vue",
+      "checks": [
+        "component",
+        "similarity"
+      ],
+      "sha256": "1d701be0cae50b1de7ac79a1d480ca036b76d08ee6a93dab342fd43f5d4dd518",
+      "reason": "RuoYi built-in form-builder dialog owned by the tool page; it is not a shared component implementation.",
+      "sourceCommit": "9f581208ebe51c378c801f92d87f407fb0496c77"
+    },
+    {
+      "id": "tool-build-icons-dialog-page-local",
+      "file": "ruoyi-ui/src/views/tool/build/IconsDialog.vue",
+      "checks": [
+        "component",
+        "similarity"
+      ],
+      "sha256": "526c33d94528f7296d52d2754a82697fa1a30184f4b7a522aa4f3dc216ec3011",
+      "reason": "RuoYi built-in form-builder icon dialog owned by the tool page; it is not a shared component implementation.",
+      "sourceCommit": "9f581208ebe51c378c801f92d87f407fb0496c77"
+    },
+    {
+      "id": "tool-build-tree-node-dialog-page-local",
+      "file": "ruoyi-ui/src/views/tool/build/TreeNodeDialog.vue",
+      "checks": [
+        "component",
+        "similarity"
+      ],
+      "sha256": "4652317924763f4ee01a47aed625cbed380f312d11d9d3da7a05029d06999e74",
+      "reason": "RuoYi built-in form-builder tree dialog owned by the tool page; it is not a shared component implementation.",
+      "sourceCommit": "9f581208ebe51c378c801f92d87f407fb0496c77"
+    },
+    {
+      "id": "tool-gen-basic-info-form-page-local",
+      "file": "ruoyi-ui/src/views/tool/gen/basicInfoForm.vue",
+      "checks": [
+        "component",
+        "similarity"
+      ],
+      "sha256": "05a08983a04b12031d8054cd14b540bba7aea17270b2903cff0b8983f5c6f1cc",
+      "reason": "RuoYi built-in generator edit sub-form; it is page-local and not a shared form implementation.",
+      "sourceCommit": "785d1ca725770db503351ced1446d01df750b9fa"
+    },
+    {
+      "id": "tool-gen-create-table-page-local",
+      "file": "ruoyi-ui/src/views/tool/gen/createTable.vue",
+      "checks": [
+        "component",
+        "similarity"
+      ],
+      "sha256": "0fc920e41f0c082340f1ff5f6f629fb5db1598d7935ac91fa3a2f74354d7253c",
+      "reason": "RuoYi built-in generator create-table page; it is not a reusable shared table implementation.",
+      "sourceCommit": "785d1ca725770db503351ced1446d01df750b9fa"
+    },
+    {
+      "id": "tool-gen-edit-table-page-local",
+      "file": "ruoyi-ui/src/views/tool/gen/editTable.vue",
+      "checks": [
+        "component",
+        "similarity"
+      ],
+      "sha256": "a3f7f881c172836b6b1163a801d23d82bc287b6257317977e8c83a9d259b2eb1",
+      "reason": "RuoYi built-in generator edit route page; it is not a reusable shared table implementation.",
+      "sourceCommit": "785d1ca725770db503351ced1446d01df750b9fa"
+    },
+    {
+      "id": "tool-gen-info-form-page-local",
+      "file": "ruoyi-ui/src/views/tool/gen/genInfoForm.vue",
+      "checks": [
+        "component",
+        "similarity"
+      ],
+      "sha256": "c2ebc42ea028d2ab44b3832a89b6eb545bc9be24ea8f4458ee856334fb47a176",
+      "reason": "RuoYi built-in generator edit sub-form; it is page-local and not a shared form implementation.",
+      "sourceCommit": "785d1ca725770db503351ced1446d01df750b9fa"
+    },
+    {
+      "id": "tool-gen-import-table-page-local",
+      "file": "ruoyi-ui/src/views/tool/gen/importTable.vue",
+      "checks": [
+        "component",
+        "similarity"
+      ],
+      "sha256": "46cbc4721b57a38afc6adb55c7f1ad357cfbce5831aec0b8934b609ccaeac83e",
+      "reason": "RuoYi built-in generator import-table page; it is not a reusable shared table implementation.",
+      "sourceCommit": "785d1ca725770db503351ced1446d01df750b9fa"
+    }
+  ],
+  "boundaryFindings": [
+    {
+      "id": "ruoyi-router-static-system-tool-imports",
+      "file": "ruoyi-ui/src/router/index.js",
+      "expectedTargets": [
+        "system",
+        "tool"
+      ],
+      "sha256": "ba65f0374f3ff1c06cb1a5caa4c6237a5d79fdea8aafed61e97ac295e6903587",
+      "reason": "The imported RuoYi static router is a shell composition file whose reviewed baseline routes reference system and tool pages.",
+      "sourceCommit": "785d1ca725770db503351ced1446d01df750b9fa"
+    },
+    {
+      "id": "tool-gen-edit-table-system-api-import",
+      "file": "ruoyi-ui/src/views/tool/gen/editTable.vue",
+      "expectedTargets": [
+        "system"
+      ],
+      "sha256": "a3f7f881c172836b6b1163a801d23d82bc287b6257317977e8c83a9d259b2eb1",
+      "reason": "The imported RuoYi generator edit page uses the existing system dictionary API client.",
+      "sourceCommit": "785d1ca725770db503351ced1446d01df750b9fa"
+    },
+    {
+      "id": "tool-gen-info-form-system-api-import",
+      "file": "ruoyi-ui/src/views/tool/gen/genInfoForm.vue",
+      "expectedTargets": [
+        "system"
+      ],
+      "sha256": "c2ebc42ea028d2ab44b3832a89b6eb545bc9be24ea8f4458ee856334fb47a176",
+      "reason": "The imported RuoYi generator configuration form uses the existing system menu API client.",
+      "sourceCommit": "785d1ca725770db503351ced1446d01df750b9fa"
+    }
+  ]
+}

@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { finish, formatJson, isCli, projectPath, readText } from '../tools/common.js';
 import { REQUIRED_REVIEW_FILES } from '../tools/review-checker.js';
+import { currentHeadRevision } from '../tools/diff-checker.js';
 
 function timestamp() {
   return new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d{3}Z$/, 'Z');
@@ -39,7 +40,7 @@ function currentContextText() {
   }
 }
 
-function fileMap({ id, request, mode, feature }) {
+function fileMap({ id, request, mode, feature, baseRevision }) {
   const createdAt = new Date().toISOString();
   const baseReview = (title, body) => [
     `# ${title}`,
@@ -58,6 +59,7 @@ function fileMap({ id, request, mode, feature }) {
     request,
     mode,
     feature,
+    baseRevision,
     createdAt,
     status: 'pending-decision',
     decision: {
@@ -110,7 +112,7 @@ export function createReview({ request, feature = 'customer' }) {
   const mode = detectMode(request.trim());
   const id = `RV-${timestamp()}-${slug(request)}`;
   const dir = `ai/reviews/${id}`;
-  const files = fileMap({ id, request: request.trim(), mode, feature });
+  const files = fileMap({ id, request: request.trim(), mode, feature, baseRevision: currentHeadRevision() });
   for (const [name, content] of Object.entries(files)) {
     writeFile(`${dir}/${name}`, content);
   }

@@ -1,12 +1,44 @@
 {
   "schemaVersion": 1,
   "name": "component-policy",
+  "legacyBaseline": {
+    "file": "ai/rules/ruoyi-legacy-baseline.json",
+    "validator": "tools/legacy-baseline.js",
+    "hashAlgorithm": "sha256:utf8-no-bom-lf",
+    "matching": "exact-file-and-check",
+    "requirements": [
+      "Every legacy component entry must name one exact normalized repository file, one or more explicit checks, a canonical SHA256, a non-empty reason, and a full source commit.",
+      "Legacy component exemptions apply only while the exact file hash matches and only to the named component or similarity check.",
+      "Glob paths, directory paths, duplicate findings, missing files, hash drift, and stale component candidates must fail the gate."
+    ]
+  },
+  "currentChangeExceptions": {
+    "file": "ai/changes/<current>/component-exception.md",
+    "changedFiles": "ai/changes/<current>/changed-files.json",
+    "requiredFields": [
+      "file",
+      "check",
+      "reason"
+    ],
+    "allowedChecks": [
+      "component",
+      "similarity"
+    ],
+    "matching": "exact-file-and-check",
+    "requirements": [
+      "The exception file must use structured entries with an exact backticked repository file, one allowed check, and a non-empty reason.",
+      "The named file must be an actual file in the current changed-files.json; historical or untouched files cannot borrow the current change exception.",
+      "allow-all, prose-only path mentions, unstructured path bullets, glob paths, directory paths, duplicate entries, and stale findings are forbidden."
+    ]
+  },
   "rules": [
     "Before creating a frontend component, Codex must read ai/registry/components.json and every active component catalog.",
     "Reusable controls belong in the shared component root and must be exported or registered before use.",
     "Component registry entries should include id, name, aliases, purpose, props, path/exportedFrom, usedBy, and status/lifecycle.",
     "Feature modules may contain feature-specific components only.",
-    "Generic controls such as table, form, modal, drawer, upload, picker, search, pagination, and date range are blocked in module-local components unless ai/changes/<current>/component-exception.md explicitly lists the file.",
+    "Generic controls such as table, form, modal, drawer, upload, picker, search, pagination, and date range are blocked in module-local components unless an exact current-change structured exception names the actual changed file, check, and reason.",
+    "Imported RuoYi legacy component findings must use the central canonical-hash baseline; they must not be copied into each current change record.",
+    "No component exception may use a wildcard, directory scope, allow-all switch, prose substring match, or whole-file bypass.",
     "If an existing component covers the same purpose, Codex must reuse it instead of creating a duplicate."
   ]
 }

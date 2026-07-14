@@ -8,10 +8,12 @@
       "status": "in_progress",
       "owner": "Codex",
       "priority": "high",
-      "statusReason": "CR-20260629T022303Z-change implements R-10J: self-developed business category selectors use config-driven tree select when the target category resource enables treeEnabled, parentEnabled, or treeSelectEnabled; product-category parent and product series/model category selectors are tree selects. The model-config / 工艺型号配置 pre-review correction is recorded as a current change note related to masterdata, not customer implementation.",
-      "nextStep": "Review R-10J diff, verification, and model-config pre-review note, then decide push. Do not create sales-order, formula, field-scheme, technical-decomposition, production, DXF, or model-config runtime until a later review explicitly approves implementation and beforeSalesOrder remains respected.",
+      "statusReason": "CR-20260714T034246Z-repository-wide-governance-gate-evidence-hardeni is repairing repository-wide false-green gates before the verified masterdata stash and remaining system/platform/dependency remediations can be committed and pushed.",
+      "nextStep": "Finish the governance exact-scope and staged review, commit it, restore and reverify the masterdata stash, then complete the separate system notice, production profile/checker, and dependency migration records. Keep beforeSalesOrder blocked and do not release or deploy.",
       "blockedBy": [],
       "verification": [
+        "CR-20260714T034246Z-repository-wide-governance-gate-evidence-hardeni focused regressions cover exact legacy hashes, immutable Git evidence, pre-committed reviews, real context files, Java ownership exceptions, reproducible CI, and immutable Actions",
+        "CR-20260714T034246Z-repository-wide-governance-gate-evidence-hardeni refreshed npm run check passed end to end with 377/377 Node tests after staged/index, legacy divergence, strict provenance/status parsing, root/module ownership, executable matrix binding, nested review-root, and YAML-AST CI repairs; expanded finalization matches 63 recorded and actual paths with zero forbidden business-path hits",
         "CR-20260629T022303Z-change R-10J focused verification passed: node --test tests/masterdata-runtime.test.js 28/28",
         "CR-20260629T022303Z-change model-config pre-review note records that generated feature=customer was context residue; actual pre-review target is proposed feature model-config related to masterdata, decision remains Implementation blocked, and no runtime was created",
         "CR-20260629T022303Z-change model-config pre-review note is kept inside the change record rather than ai/reviews because blocked ai/reviews packages are not implementation approvals during business implementation closeout",
@@ -182,10 +184,10 @@
         "R-10C frontend browser acceptance passed on canonical http://127.0.0.1:5173/business/masterdata with nine tabs and product-category add/edit/disable/delete",
         "R-10C direct http://127.0.0.1:5173/masterdata returned RuoYi 404 and is recorded as non-canonical; no R-10D is opened"
       ],
-      "latestSession": "memory/sessions/2026-06-25-pre-release-breaking-change-policy.md",
+      "latestSession": "memory/sessions/2026-07-14-governance-gate-evidence-hardening.md",
       "handoverRequired": true,
-      "updatedAt": "2026-06-29",
-      "latestChange": "CR-20260629T022303Z-change"
+      "updatedAt": "2026-07-14",
+      "latestChange": "CR-20260714T034246Z-repository-wide-governance-gate-evidence-hardeni"
     },
     {
       "id": "TASK-CUSTOMER",

@@ -2,7 +2,13 @@ import path from 'node:path';
 import { finish, isCli, readText } from './common.js';
 import { readJsonOrDefault } from './scan-utils.js';
 import { configuredPaths, listFilesUnderRoots } from './project-config.js';
-import { hasComponentException, isModuleComponentCandidate } from './component-checker.js';
+import { isModuleComponentCandidate } from './component-checker.js';
+import {
+  inspectCurrentChangeExceptions,
+  inspectLegacyBaseline,
+  isCurrentComponentException,
+  isLegacyComponentFinding
+} from './legacy-baseline.js';
 
 const GENERIC_HINTS = new Set(['select', 'picker', 'chooser', 'table', 'grid', 'form', 'modal', 'dialog', 'drawer', 'upload', 'button', 'input', 'search', 'tree']);
 
@@ -58,9 +64,19 @@ export function validateComponentSimilarity({
   config = configuredPaths(),
   list = listFilesUnderRoots,
   read = readJsonOrDefault,
-  readTextFile = readText
+  readTextFile = readText,
+  readChangedFiles,
+  legacyState,
+  exceptionState
 } = {}) {
   const errors = [];
+  const projectBaseline = legacyState || inspectLegacyBaseline();
+  const currentExceptions = exceptionState || inspectCurrentChangeExceptions('component', {
+    read,
+    readTextFile,
+    readChangedFiles
+  });
+  errors.push(...projectBaseline.errors, ...currentExceptions.errors);
   const sharedCatalog = read('frontend/src/components/catalog.json', { components: [] });
   const ruoyiCatalog = read('ruoyi-ui/src/components/catalog.json', { components: [] });
   const componentRegistry = read('ai/registry/components.json', { components: [] });
@@ -68,15 +84,33 @@ export function validateComponentSimilarity({
     ...(sharedCatalog.components || []),
     ...(ruoyiCatalog.components || []),
     ...(componentRegistry.components || [])
-  ].map((component) => ({
+  ].filter((component) => component.category !== 'ruoyi-reference').map((component) => ({
     id: component.id,
     name: component.name || component.id,
     purpose: component.purpose || '',
     normalized: normalize(componentSearchText(component))
   }));
 
-  const moduleFiles = list(config.frontendModuleRoots, (file) => isModuleComponentCandidate(file))
-    .filter((file) => !hasComponentException(file, { read, readTextFile }));
+  const candidates = [...new Set(list(config.frontendModuleRoots, (file) => isModuleComponentCandidate(file)))];
+  const candidateSet = new Set(candidates);
+  if (projectBaseline.valid) {
+    for (const entry of projectBaseline.baseline.componentFiles) {
+      if (entry.checks.includes('similarity') && !candidateSet.has(entry.file)) {
+        errors.push(`Legacy similarity baseline entry is stale because the file is no longer a component candidate: ${entry.file}.`);
+      }
+    }
+  }
+  if (currentExceptions.valid) {
+    for (const entry of currentExceptions.entries) {
+      if (entry.check === 'similarity' && !candidateSet.has(entry.file)) {
+        errors.push(`Current similarity exception is stale because the file is no longer a component candidate: ${entry.file}.`);
+      }
+    }
+  }
+  const moduleFiles = candidates.filter((file) => (
+    !isLegacyComponentFinding(projectBaseline, file, 'similarity')
+    && !isCurrentComponentException(currentExceptions, file, 'similarity')
+  ));
   if (known.length === 0 && moduleFiles.length > 0) {
     errors.push('Component similarity cannot be checked because component registry and catalogs are empty while module component files exist.');
     return errors;

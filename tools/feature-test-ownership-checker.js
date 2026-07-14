@@ -1,14 +1,23 @@
+import path from 'node:path';
 import {
+  currentChangeId,
   dictionaryAliases,
   emptyResult,
   issue,
+  isGeneratedPath,
   listFiles,
+  normalizePath,
   parseRootArg,
   pathExists,
   printIssues,
   readJson,
   registeredFeatures
 } from './governance-checker-utils.js';
+import { collectChangedFiles } from './diff-checker.js';
+
+const EXCEPTION_REGISTRY = 'ai/registry/test-ownership-exceptions.json';
+const JAVA_MAIN_SOURCE_ROOT = 'src/main/java';
+const JAVA_TEST_SOURCE_ROOT = 'src/test/java';
 
 const VALID_EXCEPTION_TYPES = new Set([
   'governance-test',
@@ -37,6 +46,84 @@ function aliasMatches(file, alias) {
   return normalizedFile.includes(normalizedAlias);
 }
 
+function compactPackageToken(value) {
+  return normalize(value).replace(/[^a-z0-9]/g, '');
+}
+
+function javaSourceRootPosition(file, sourceRoot) {
+  const normalizedFile = normalizePath(file).toLowerCase().replace(/^\.\/+/, '');
+  if (normalizedFile === sourceRoot || normalizedFile.startsWith(`${sourceRoot}/`)) {
+    return 0;
+  }
+  const marker = `/${sourceRoot}`;
+  let markerIndex = normalizedFile.indexOf(marker);
+  while (markerIndex !== -1) {
+    const sourceRootIndex = markerIndex + 1;
+    const boundaryIndex = sourceRootIndex + sourceRoot.length;
+    if (boundaryIndex === normalizedFile.length || normalizedFile[boundaryIndex] === '/') {
+      return sourceRootIndex;
+    }
+    markerIndex = normalizedFile.indexOf(marker, markerIndex + marker.length);
+  }
+  return -1;
+}
+
+function javaTestRelativePath(file) {
+  const normalizedFile = normalizePath(file).toLowerCase().replace(/^\.\/+/, '');
+  const sourceRootIndex = javaSourceRootPosition(normalizedFile, JAVA_TEST_SOURCE_ROOT);
+  if (sourceRootIndex === -1) {
+    return null;
+  }
+  return normalizedFile.slice(sourceRootIndex + JAVA_TEST_SOURCE_ROOT.length).replace(/^\/+/, '');
+}
+
+function javaTestPackageSegments(file) {
+  const relativePath = javaTestRelativePath(file);
+  if (relativePath === null) {
+    return [];
+  }
+  return relativePath.split('/').slice(0, -1);
+}
+
+function javaTestRoot(backendRoot) {
+  const normalizedRoot = normalizePath(backendRoot).toLowerCase().replace(/\/+$/, '');
+  const mainRootIndex = javaSourceRootPosition(normalizedRoot, JAVA_MAIN_SOURCE_ROOT);
+  if (mainRootIndex !== -1) {
+    return `${normalizedRoot.slice(0, mainRootIndex)}${JAVA_TEST_SOURCE_ROOT}${normalizedRoot.slice(mainRootIndex + JAVA_MAIN_SOURCE_ROOT.length)}`;
+  }
+  return javaSourceRootPosition(normalizedRoot, JAVA_TEST_SOURCE_ROOT) !== -1 ? normalizedRoot : '';
+}
+
+function featureOwnsJavaTestPackage(file, feature, aliases) {
+  if (!isJavaTest(file)) {
+    return false;
+  }
+  const normalizedFile = normalizePath(file).toLowerCase();
+  const registeredRoots = [
+    ...(feature.backendModules || []),
+    ...(feature.ownership?.backend || [])
+  ].map(javaTestRoot).filter(Boolean);
+  if (registeredRoots.some((root) => normalizedFile === root || normalizedFile.startsWith(`${root}/`))) {
+    return true;
+  }
+  const compactTokens = [feature.id, ...(aliases || [])]
+    .map(compactPackageToken)
+    .filter(Boolean);
+  return javaTestPackageSegments(file)
+    .map(compactPackageToken)
+    .some((segment) => compactTokens.includes(segment));
+}
+
+function matchedFeatureIds(file, features, aliasesByFeature) {
+  return features
+    .filter((feature) => {
+      const aliases = aliasesByFeature.get(feature.id) || [];
+      return aliases.some((alias) => aliasMatches(file, alias))
+        || featureOwnsJavaTestPackage(file, feature, aliases);
+    })
+    .map((feature) => feature.id);
+}
+
 function featureAliases(root, features) {
   const dictionary = dictionaryAliases(root);
   return new Map(features.map((feature) => [
@@ -49,8 +136,44 @@ function featureAliases(root, features) {
   ]));
 }
 
-function readExceptions(root, result) {
-  const file = 'ai/registry/test-ownership-exceptions.json';
+function isJavaTest(file) {
+  const normalized = normalizePath(file).toLowerCase();
+  return javaTestRelativePath(normalized) !== null && normalized.endsWith('.java');
+}
+
+function isNodeTest(file) {
+  return file.startsWith('tests/') && file.endsWith('.test.js');
+}
+
+function isInsideTestSourceRoot(file) {
+  const normalized = normalizePath(file);
+  return normalized === 'tests'
+    || normalized.startsWith('tests/')
+    || javaTestRelativePath(normalized) !== null;
+}
+
+function shouldTraverseTestDirectory(file) {
+  return isInsideTestSourceRoot(file) || !isGeneratedPath(file);
+}
+
+function exactTestPath(value) {
+  const file = String(value || '');
+  const normalized = normalizePath(file);
+  if (
+    !file
+    || normalized !== file
+    || /^[A-Za-z]:/.test(file)
+    || file.split('/').includes('..')
+    || /[*?\[\]{}!]/.test(file)
+    || file.endsWith('/')
+  ) {
+    return '';
+  }
+  return isNodeTest(file) || isJavaTest(file) ? file : '';
+}
+
+function readExceptions(root, result, features, aliasesByFeature) {
+  const file = EXCEPTION_REGISTRY;
   if (!pathExists(root, file)) {
     return new Map();
   }
@@ -61,33 +184,146 @@ function readExceptions(root, result) {
     result.failures.push(issue({ file, code: 'invalid-json', message: error.message }));
     return new Map();
   }
-  if (!Array.isArray(data.exceptions)) {
+  const schemaValid = data?.schemaVersion === 1;
+  if (!schemaValid) {
+    result.failures.push(issue({ file, code: 'invalid-schema-version', message: 'schemaVersion must be 1' }));
+  }
+  if (!Array.isArray(data?.exceptions)) {
     result.failures.push(issue({ file, code: 'invalid-schema', message: 'exceptions must be an array' }));
     return new Map();
   }
   const byFile = new Map();
+  const seenFiles = new Set();
+  const featureIds = new Set(features.map((feature) => feature.id));
   for (const [index, entry] of data.exceptions.entries()) {
     const location = `${file}`;
     const entryFile = entry?.file;
-    if (!entryFile) {
+    let valid = schemaValid;
+    const fail = ({ file: issueFile = entryFile || location, code, message }) => {
+      valid = false;
+      result.failures.push(issue({ file: issueFile, code, message }));
+    };
+    if (!entry || typeof entry !== 'object' || Array.isArray(entry)) {
+      fail({ file: location, code: 'invalid-exception-entry', message: `exceptions[${index}] must be an object` });
+      continue;
+    }
+    if (typeof entryFile !== 'string' || !entryFile.trim()) {
       result.failures.push(issue({ file: location, code: 'exception-file-required', message: `exceptions[${index}] missing file` }));
       continue;
     }
+    const exactFile = exactTestPath(entryFile);
+    if (!exactFile) {
+      fail({ code: 'exception-file-invalid', message: 'exception file must be one exact normalized tests/*.test.js or src/test/java/*.java path without glob or parent syntax' });
+    }
+    if (seenFiles.has(entryFile)) {
+      fail({ code: 'duplicate-exception-file', message: 'test ownership exception file is duplicated' });
+    }
+    seenFiles.add(entryFile);
     if (!VALID_EXCEPTION_TYPES.has(entry.type)) {
-      result.failures.push(issue({ file: entryFile, code: 'invalid-exception-type', message: `invalid exception type: ${entry.type || ''}` }));
+      fail({ code: 'invalid-exception-type', message: `invalid exception type: ${entry.type || ''}` });
     }
     if (!String(entry.reason || '').trim()) {
-      result.failures.push(issue({ file: entryFile, code: 'exception-reason-required', message: 'test ownership exception requires reason' }));
+      fail({ code: 'exception-reason-required', message: 'test ownership exception requires reason' });
     }
-    if (!String(entry.owner || '').trim()) {
-      result.failures.push(issue({ file: entryFile, code: 'exception-owner-required', message: 'test ownership exception requires owner' }));
+    const owner = String(entry.owner || '').trim();
+    if (!owner) {
+      fail({ code: 'exception-owner-required', message: 'test ownership exception requires owner' });
+    } else if (owner !== 'governance' && !featureIds.has(owner)) {
+      fail({ code: 'exception-owner-invalid', message: `test ownership exception owner must be governance or a registered feature id: ${owner}` });
     }
-    if (!pathExists(root, entryFile)) {
-      result.failures.push(issue({ file: entryFile, code: 'exception-file-missing', message: 'exception file does not exist' }));
+    if (exactFile && !pathExists(root, exactFile)) {
+      fail({ code: 'exception-file-missing', message: 'exception file does not exist' });
     }
-    byFile.set(entryFile.replace(/\\/g, '/'), entry);
+
+    let relatedFeatures = [];
+    if (entry.relatedFeatures !== undefined) {
+      if (!Array.isArray(entry.relatedFeatures)) {
+        fail({ code: 'related-features-array-required', message: 'relatedFeatures must be an array of registered feature ids' });
+      } else {
+        relatedFeatures = entry.relatedFeatures.map((feature) => String(feature || '').trim());
+        if (relatedFeatures.some((feature) => !feature)) {
+          fail({ code: 'related-feature-empty', message: 'relatedFeatures must not contain empty feature ids' });
+        }
+        if (new Set(relatedFeatures).size !== relatedFeatures.length) {
+          fail({ code: 'duplicate-related-feature', message: 'relatedFeatures must contain unique feature ids' });
+        }
+        for (const feature of relatedFeatures) {
+          if (feature && !featureIds.has(feature)) {
+            fail({ code: 'unknown-related-feature', message: `relatedFeatures references unknown or inactive feature: ${feature}` });
+          }
+        }
+      }
+    }
+    const matchedOwners = exactFile ? matchedFeatureIds(entryFile, features, aliasesByFeature) : [];
+    if (entry.type === 'cross-feature-contract-test') {
+      if (relatedFeatures.length < 2) {
+        fail({ code: 'cross-feature-related-features-required', message: 'cross-feature-contract-test requires at least two unique registered relatedFeatures' });
+      }
+      if (matchedOwners.length < 2) {
+        fail({
+          code: 'cross-feature-multiple-matched-owners-required',
+          message: 'cross-feature-contract-test path must independently match at least two registered features'
+        });
+      }
+      const missingOwners = matchedOwners.filter((feature) => !relatedFeatures.includes(feature));
+      if (missingOwners.length > 0) {
+        fail({
+          code: 'cross-feature-matched-owner-required',
+          message: `cross-feature-contract-test relatedFeatures must include every feature matched by the test path: ${missingOwners.join(', ')}`
+        });
+      }
+      if (owner && owner !== 'governance' && !relatedFeatures.includes(owner)) {
+        fail({
+          code: 'cross-feature-owner-related',
+          message: 'cross-feature-contract-test owner must be governance or one of relatedFeatures'
+        });
+      }
+    }
+    if (entry.type === 'governance-test' && !(entryFile.startsWith('tests/') && /governance/i.test(entryFile))) {
+      fail({ code: 'governance-test-scope-invalid', message: 'governance-test exceptions are limited to governance test files under tests/' });
+    }
+    if (entry.type === 'governance-test' && owner !== 'governance') {
+      fail({ code: 'governance-test-owner-invalid', message: 'governance-test exceptions must be owned by governance' });
+    }
+    if (entry.type === 'governance-test' && matchedOwners.length > 0) {
+      fail({ code: 'governance-test-feature-local', message: 'business-feature-matched tests must use explicit feature ownership and cannot use governance-test' });
+    }
+    if (entry.type === 'shared-test' && matchedOwners.length > 0) {
+      fail({ code: 'shared-test-feature-local', message: 'business-feature-matched tests must use explicit feature ownership and cannot use shared-test' });
+    }
+    if (valid) {
+      byFile.set(entryFile, entry);
+    }
   }
   return byFile;
+}
+
+function activeImpact(root) {
+  const changeId = currentChangeId(root);
+  if (!changeId) return null;
+  try {
+    return readJson(root, `ai/changes/${changeId}/impact.json`);
+  } catch {
+    return null;
+  }
+}
+
+function actualFilesForRoot(root, actualChangedFiles) {
+  if (Array.isArray(actualChangedFiles)) {
+    return actualChangedFiles.map(normalizePath);
+  }
+  return path.resolve(root) === path.resolve(process.cwd()) ? collectChangedFiles() : [];
+}
+
+function validateExceptionRegistryChange({ root, actualChangedFiles, impact, result }) {
+  const files = actualFilesForRoot(root, actualChangedFiles);
+  if (files.includes(EXCEPTION_REGISTRY) && impact?.mode !== 'rule-change') {
+    result.failures.push(issue({
+      file: EXCEPTION_REGISTRY,
+      code: 'exception-registry-rule-change-required',
+      message: 'test ownership exception registry changes require an active rule-change impact'
+    }));
+  }
 }
 
 function registeredTestMap(features, key) {
@@ -106,12 +342,24 @@ function registeredTestMap(features, key) {
   return owners;
 }
 
-export function validateFeatureTestOwnership({ root = process.cwd() } = {}) {
+export function validateFeatureTestOwnership({
+  root = process.cwd(),
+  actualChangedFiles,
+  impact = activeImpact(root)
+} = {}) {
   const result = emptyResult();
   const features = registeredFeatures(root);
   const aliasesByFeature = featureAliases(root, features);
-  const exceptions = readExceptions(root, result);
-  const testFiles = listFiles(root, 'tests', (file) => file.endsWith('.test.js'));
+  validateExceptionRegistryChange({ root, actualChangedFiles, impact, result });
+  const exceptions = readExceptions(root, result, features, aliasesByFeature);
+  const testFiles = [...new Set([
+    ...listFiles(root, 'tests', (file) => file.endsWith('.test.js'), {
+      shouldTraverseDirectory: shouldTraverseTestDirectory
+    }),
+    ...listFiles(root, '.', isJavaTest, {
+      shouldTraverseDirectory: shouldTraverseTestDirectory
+    })
+  ])].sort((left, right) => left.localeCompare(right));
   const existingTests = new Set(testFiles);
   const featureTests = registeredTestMap(features, 'tests');
   const ownershipTests = registeredTestMap(features, 'ownership.tests');
@@ -137,10 +385,15 @@ export function validateFeatureTestOwnership({ root = process.cwd() } = {}) {
       }));
       continue;
     }
-    const matched = features
-      .filter((feature) => (aliasesByFeature.get(feature.id) || []).some((alias) => aliasMatches(file, alias)))
-      .map((feature) => feature.id);
+    const matched = matchedFeatureIds(file, features, aliasesByFeature);
     if (matched.length === 0) {
+      if (isJavaTest(file)) {
+        result.failures.push(issue({
+          file,
+          code: 'unowned-java-test',
+          message: 'Java tests must match one feature or use a documented test ownership exception'
+        }));
+      }
       continue;
     }
     if (matched.length > 1) {

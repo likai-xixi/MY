@@ -18,3 +18,17 @@ test('rule-change mode may edit protected governance files', () => {
   });
   assert.deepEqual(errors, []);
 });
+
+test('test ownership exception registry requires exact rule-change mode', () => {
+  const file = 'ai/registry/test-ownership-exceptions.json';
+  for (const mode of ['update', 'governance', 'baseline', 'profile']) {
+    const errors = validateRuleChangeGuard({ files: [file], impact: { mode } });
+    assert.equal(errors.length, 1, mode);
+    assert.match(errors[0], /requires an active rule-change record/, mode);
+  }
+
+  assert.deepEqual(validateRuleChangeGuard({
+    files: [file],
+    impact: { mode: 'rule-change' }
+  }), []);
+});
