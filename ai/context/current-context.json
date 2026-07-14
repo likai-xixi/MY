@@ -2,47 +2,63 @@
   "schemaVersion": 1,
   "generatedBy": "scripts/context-build.js",
   "generatedAt": "stable",
-  "currentFeature": "platform",
-  "currentChange": "CR-20260714T034246Z-repository-wide-governance-gate-evidence-hardeni",
+  "currentFeature": "masterdata",
+  "currentChange": "CR-20260714T022937Z-change",
   "repositoryProfile": {
     "adapter": "ruoyi",
     "locked": true,
     "stack": "RuoYi + Vue3 + Codex Auto Dev OS"
   },
   "allowedEditRoots": [
-    ".github/workflows",
-    ".gitignore",
-    "package.json",
-    "package-lock.json",
-    "ruoyi-ui/package.json",
-    "ruoyi-ui/package-lock.json",
-    "ruoyi-ui/.gitignore",
-    "tools",
-    "scripts",
-    "tests",
+    "features/masterdata.md",
+    "ruoyi-business/src/main/java/com/ruoyi/business/masterdata",
+    "ruoyi-business/src/test/java/com/ruoyi/business/masterdata",
+    "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/masterdata",
+    "ruoyi-ui/src/views/masterdata",
+    "ruoyi-ui/src/api/masterdata.contract.md",
+    "ruoyi-ui/src/api/masterdata.js",
+    "tests/masterdata-runtime.test.js",
+    "ai/contracts/masterdata.api.md",
+    "ai/contracts/masterdata.db.md",
+    "ai/contracts/masterdata.delete-ownership.md",
+    "ai/contracts/masterdata.permission.md",
+    "ai/contracts/masterdata.r10-contract-test-matrix.md",
+    "ai/contracts/masterdata.r10-implementation-boundary.md",
+    "ai/contracts/masterdata.ui.md",
+    "graph/api-graph.json",
+    "graph/ui-graph.json",
+    "memory/API_CATALOG.md",
+    "ruoyi-ui/src/views/masterdata/README.md",
+    "ruoyi-ui/src/views/masterdata/screen.md",
+    "sql/masterdata.ownership.md",
+    "sql/migrations/V20260628_005_masterdata_r10_schema.sql",
+    "sql/migrations/V20260628_006_masterdata_r10_menu_permission.sql",
+    "sql/validation/masterdata_runtime_validation.sql",
+    "ruoyi-business/src/main/resources/mapper/masterdata/MasterDataMapper.xml",
+    "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/masterdata/MasterDataController.java",
+    "ruoyi-ui/src/views/masterdata/index.vue",
+    "ai/registry/features.json",
+    "ai/registry/modules.json",
     "ai/changes",
     "ai/context",
-    "ai/governance",
-    "ai/rules",
-    "ai/registry",
-    "ai/reviews/RV-20260714T012241Z-review",
-    "ai/roadmap",
-    "ai/rule-proposals",
-    "docs",
-    "README.md",
-    "memory"
+    "ai/generated",
+    "graph",
+    "memory",
+    "features",
+    "tests"
   ],
   "forbiddenEditRoots": [
-    "ruoyi-business/src/main/java",
-    "ruoyi-business/src/main/resources",
-    "ruoyi-admin/src/main/java",
-    "ruoyi-admin/src/main/resources/application-prod.yml",
-    "ruoyi-ui/src/views",
+    "tools",
+    "scripts",
+    ".github",
+    "package.json",
+    "ruoyi-business/src/main/java/com/ruoyi/business/customer",
+    "ruoyi-business/src/main/java/com/ruoyi/business/sales-order",
+    "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/sales-order",
+    "ruoyi-ui/src/views/sales-order",
+    "ruoyi-system",
     "ruoyi-ui/src/layout/components/HeaderNotice",
-    "ruoyi-ui/src/api",
-    "sql",
-    "graph",
-    "features"
+    "ruoyi-admin/src/main/resources/application-prod.yml"
   ],
   "mustReadFiles": [
     {
@@ -74,8 +90,8 @@
       "reason": "Module ownership roots."
     },
     {
-      "path": "features/platform.md",
-      "reason": "Focused context for platform."
+      "path": "ai/context/features/masterdata.md",
+      "reason": "Focused context for masterdata."
     },
     {
       "path": "ai/roadmap/phase-gates.json",
@@ -90,15 +106,15 @@
       "reason": "Governance backlog and required/deferred evidence."
     },
     {
-      "path": "ai/changes/CR-20260714T034246Z-repository-wide-governance-gate-evidence-hardeni/impact.json",
+      "path": "ai/changes/CR-20260714T022937Z-change/impact.json",
       "reason": "Current change allowed and forbidden edit roots."
     },
     {
-      "path": "ai/changes/CR-20260714T034246Z-repository-wide-governance-gate-evidence-hardeni/plan.md",
+      "path": "ai/changes/CR-20260714T022937Z-change/plan.md",
       "reason": "Current change execution plan."
     },
     {
-      "path": "ai/changes/CR-20260714T034246Z-repository-wide-governance-gate-evidence-hardeni/verification.md",
+      "path": "ai/changes/CR-20260714T022937Z-change/verification.md",
       "reason": "Current change verification evidence."
     }
   ],
@@ -303,16 +319,9 @@
     }
   ],
   "verificationCommands": [
-    "npm run resume",
-    "npm run rule:preflight -- before-sales-order-phase-gate",
-    "targeted governance tests",
-    "npm test",
-    "npm run check",
-    "npm run finalize:change",
-    "npm run check:change",
+    "npm run scan:all",
     "npm run close:change",
-    "git diff --check",
-    "forbidden business-path audit"
+    "npm run check"
   ],
   "nextSteps": [
     "Keep edits inside the active impact boundary.",

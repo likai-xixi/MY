@@ -140,6 +140,12 @@
       "source": "create-table"
     },
     {
+      "name": "masterdata_product_category",
+      "module": "masterdata",
+      "file": "sql/migrations/V20260628_005_masterdata_r10_schema.sql",
+      "source": "sql-reference"
+    },
+    {
       "name": "sys_menu",
       "module": "masterdata",
       "file": "sql/migrations/V20260628_006_masterdata_r10_menu_permission.sql",
@@ -470,6 +476,18 @@
       "source": "sql-reference"
     },
     {
+      "name": "one",
+      "module": "masterdata",
+      "file": "sql/validation/masterdata_runtime_validation.sql",
+      "source": "sql-reference"
+    },
+    {
+      "name": "active_product_category_tree",
+      "module": "masterdata",
+      "file": "sql/validation/masterdata_runtime_validation.sql",
+      "source": "sql-reference"
+    },
+    {
       "name": "masterdata_product_series",
       "module": "masterdata",
       "file": "sql/validation/masterdata_runtime_validation.sql",
@@ -575,6 +593,12 @@
       "name": "sample_rebate_record",
       "module": "customer",
       "file": "ruoyi-business/src/main/resources/mapper/customer/CustomerMapper.xml",
+      "source": "sql-reference"
+    },
+    {
+      "name": "masterdata_product_category",
+      "module": "masterdata",
+      "file": "ruoyi-business/src/main/resources/mapper/masterdata/MasterDataMapper.xml",
       "source": "sql-reference"
     },
     {

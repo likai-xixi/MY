@@ -1,5 +1,16 @@
 # Changelog
 
+## 2026-07-14 - masterdata/reference-integrity-and-hierarchy-concurrency
+
+- Change: `ai/changes/CR-20260714T022937Z-change`.
+- Rebound the restored masterdata batch to governance commit `d659a09531813b9e7591fda2058baddf2af4291c` and approved review `RV-20260714T012241Z-review` without restoring stale governance metadata.
+- Locks referenced parents and delete targets deterministically, protects all seven owned-reference deletion edges, and requires exact mutation counts.
+- Serializes product-category hierarchy writes through the permanent hidden mutex and complete active tree; detects pre-existing cycles with visited-node fail-closed behavior and validates root reachability/depth; protects series/model category consistency.
+- Registers the Java unit and MySQL integration tests as masterdata-owned evidence and rebuilds scans/context on the new governance baseline.
+- [local] Focused verification passed: Node 34/34, Maven unit 58/58 including masterdata 21/21, MySQL 8.0.36 Testcontainers IT 1/1, and eight-module backend compile; the corruption fixture reported two cycle nodes and one four-level node, released the mutex after rejection, and returned clean after repair.
+- [local] The complete project gate passed with 381/381 Node tests and finalization matches exactly 29 recorded and actual paths.
+- [not-run] Exact staging, staged review, commit, push, and GitHub Actions remain pending; no release or deployment is authorized.
+
 ## 2026-07-14 - governance/repository-wide-gate-evidence-hardening
 
 - Change: `ai/changes/CR-20260714T034246Z-repository-wide-governance-gate-evidence-hardeni`.
@@ -689,4 +700,10 @@
 - Feature: `platform`.## 2026-07-14 — rule-change
 - Change: `ai/changes/CR-20260714T034246Z-repository-wide-governance-gate-evidence-hardeni`.
 - Updated change record, registry, graph, generated scans, memory, and handover.
-- Feature: `platform`.
+- Feature: `platform`.## 2026-07-14 — update
+- Change: `ai/changes/CR-20260714T022937Z-change`.
+- Harden masterdata reference, hierarchy, cycle detection, and series-model consistency with real transactional evidence
+- Feature: `masterdata`.## 2026-07-14 — update
+- Change: `ai/changes/CR-20260714T022937Z-change`.
+- Harden masterdata reference, hierarchy, cycle detection, and validation evidence with real transactional tests
+- Feature: `masterdata`.

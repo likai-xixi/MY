@@ -2,111 +2,80 @@
 
 ## Summary
 
-The active record is `ai/changes/CR-20260714T034246Z-repository-wide-governance-gate-evidence-hardeni`. It is a governance-only repair for repository-wide false greens found while reviewing customer, masterdata, system notice, production configuration, dependencies, and release evidence. No release or deployment is authorized.
+Active change `CR-20260714T022937Z-change` restores and revalidates the masterdata reference-integrity batch on top of governance commit `d659a09531813b9e7591fda2058baddf2af4291c`. It is approved by `RV-20260714T012241Z-review`, remains unreleased, and does not publish or deploy.
 
 ## Impact
 
-This batch replaces copied RuoYi exceptions with exact canonical hashes; binds changed-files to an immutable Git range; requires pre-committed review approval for all RuoYi runtime modules; validates real context files and approved feature overrides; makes Java test exceptions rule-change-only; and requires immutable GitHub Actions, lockfile installs, real Node/Maven tests, frontend audit, and production build. Business runtime and `application-prod.yml` remain outside this change. `beforeSalesOrder` remains blocked.
+The change hardens masterdata parent/reference locks, seven deletion guards, exact affected-row checks, category hierarchy serialization, and series/model category consistency. Scope remains masterdata-only plus required evidence, generated scan/context, registry, and memory files. `beforeSalesOrder` remains blocked.
 
 ## Changed Files
 
-- `.github/workflows/ci.yml`
-- `ai/changes/CR-20260714T034246Z-repository-wide-governance-gate-evidence-hardeni/changed-files.json`
-- `ai/changes/CR-20260714T034246Z-repository-wide-governance-gate-evidence-hardeni/handover.md`
-- `ai/changes/CR-20260714T034246Z-repository-wide-governance-gate-evidence-hardeni/impact.json`
-- `ai/changes/CR-20260714T034246Z-repository-wide-governance-gate-evidence-hardeni/plan.md`
-- `ai/changes/CR-20260714T034246Z-repository-wide-governance-gate-evidence-hardeni/request.md`
-- `ai/changes/CR-20260714T034246Z-repository-wide-governance-gate-evidence-hardeni/rule-preflight.md`
-- `ai/changes/CR-20260714T034246Z-repository-wide-governance-gate-evidence-hardeni/verification.md`
+- `ai/changes/CR-20260714T022937Z-change/changed-files.json`
+- `ai/changes/CR-20260714T022937Z-change/handover.md`
+- `ai/changes/CR-20260714T022937Z-change/impact.json`
+- `ai/changes/CR-20260714T022937Z-change/plan.md`
+- `ai/changes/CR-20260714T022937Z-change/request.md`
+- `ai/changes/CR-20260714T022937Z-change/verification.md`
 - `ai/changes/CURRENT_CHANGE.json`
 - `ai/context/current-context.json`
 - `ai/context/current-context.md`
-- `ai/governance/false-green-regression-matrix.json`
+- `ai/contracts/masterdata.api.md`
+- `ai/contracts/masterdata.db.md`
+- `ai/contracts/masterdata.delete-ownership.md`
+- `ai/generated/db-schema.json`
 - `ai/registry/features.json`
-- `ai/registry/test-ownership-exceptions.json`
-- `ai/rule-proposals/2026-07-14-repository-wide-governance-gate-and-evidence-hardening.json`
-- `ai/rules/component-policy.json`
-- `ai/rules/module-boundary.json`
-- `ai/rules/ruoyi-legacy-baseline.json`
+- `features/masterdata.md`
 - `memory/CHANGELOG.md`
 - `memory/HANDOVER.md`
 - `memory/PROJECT_STATE.md`
 - `memory/TASKS.json`
-- `memory/sessions/2026-07-14-governance-gate-evidence-hardening.md`
-- `package-lock.json`
-- `package.json`
-- `ruoyi-ui/.gitignore`
-- `ruoyi-ui/package-lock.json`
-- `ruoyi-ui/package.json`
-- `scripts/chat-feature.js`
-- `scripts/context-build.js`
-- `scripts/finalize-change.js`
-- `scripts/review-feature.js`
-- `scripts/start-change.js`
-- `tests/boundary-lint.test.js`
-- `tests/change-handoff-integrity-checker.test.js`
-- `tests/ci-coverage-hardening.test.js`
-- `tests/component-checker.test.js`
-- `tests/component-similarity-checker.test.js`
-- `tests/diff-checker.test.js`
-- `tests/false-green-matrix-checker.test.js`
-- `tests/governance-gates.test.js`
-- `tests/governance-sales-order-handoff-gate.test.js`
-- `tests/legacy-baseline.test.js`
-- `tests/package-scripts.test.js`
-- `tests/production-safety.test.js`
-- `tests/rule-change-guard.test.js`
-- `tests/runtime-checker.test.js`
-- `tools/boundary-lint.js`
-- `tools/change-handoff-integrity-checker.js`
-- `tools/ci-coverage-declaration-checker.js`
-- `tools/component-checker.js`
-- `tools/component-similarity-checker.js`
-- `tools/context-pack-checker.js`
-- `tools/diff-checker.js`
-- `tools/false-green-matrix-checker.js`
-- `tools/feature-test-ownership-checker.js`
-- `tools/governance-checker-utils.js`
-- `tools/legacy-baseline.js`
-- `tools/phase-gate-checker.js`
-- `tools/review-checker.js`
-- `tools/rule-change-guard.js`
-- `tools/runtime-checker.js`
-- `tools/verification-provenance-checker.js`
+- `memory/sessions/2026-07-14-masterdata-reference-integrity.md`
+- `ruoyi-business/src/main/java/com/ruoyi/business/masterdata/mapper/MasterDataMapper.java`
+- `ruoyi-business/src/main/java/com/ruoyi/business/masterdata/service/impl/MasterDataServiceImpl.java`
+- `ruoyi-business/src/main/resources/mapper/masterdata/MasterDataMapper.xml`
+- `ruoyi-business/src/test/java/com/ruoyi/business/masterdata/service/MasterDataReferenceMySqlIT.java`
+- `ruoyi-business/src/test/java/com/ruoyi/business/masterdata/service/MasterDataServiceTest.java`
+- `sql/masterdata.ownership.md`
+- `sql/migrations/V20260628_005_masterdata_r10_schema.sql`
+- `sql/validation/masterdata_runtime_validation.sql`
+- `tests/masterdata-runtime.test.js`
 
 ## Commands
 
 - `[local] npm run resume`
-- `[local] npm run rule:preflight -- before-sales-order-phase-gate`
-- `[local] npm run scan:all:check`
-- `[local] npm test`
-- `[local] npm ci`
-- `[local] npm --prefix ruoyi-ui ci`
-- `[local] npm --prefix ruoyi-ui audit --audit-level=high`
-- `[local] npm --prefix ruoyi-ui run build:prod`
-- `[local] mvn -pl ruoyi-business -am -Pintegration-test verify`
-- `[local] npm run finalize:change`
-- `[local] npm run check:change`
-- `[local] npm run close:change`
-- `[local] npm run check`
+- `[local] npm run impact -- masterdata`
+- `[local] node --test tests/masterdata-runtime.test.js`
+- `[local] configured Maven 3.9.9 -pl ruoyi-business -am test`
+- `[local] configured Maven 3.9.9 -pl ruoyi-business -am -Pintegration-test -Dit.test=MasterDataReferenceMySqlIT -Dsurefire.failIfNoSpecifiedTests=false verify`
+- `[local] configured Maven 3.9.9 -pl ruoyi-admin -am -DskipTests compile`
+- `[local] npm run scan:all`
+- `[local] npm run context:build -- masterdata`
+- `[local] npm run check:feature-test-ownership`
+- `[local] npm run check:review`
+- `[local] npm run check:context-pack`
 - `[local] git diff --check`
+- `[local] npm run finalize:change`
+- `[local] npm run check`
+- `[local] npm run close:change`
 
 ## Verification
 
-- [local] The refreshed all-up `npm run check` passed end to end with 377/377 Node tests after staged/index cancellation, index/worktree legacy divergence, invalid UTF-8 evidence, contradictory non-success provenance, canonical/unique file evidence, indented duplicate sections, structured top-level status, root/module Java test discovery, executable matrix gates, real test-call binding, YAML-AST CI, shell-control, and exact-handover probes were repaired; all focused gates pass at their recorded checkpoints.
-- [local] Root/UI locked installs, the high-severity dependency audit, the 2556-module production build, 37 Maven unit tests, and 1 MySQL/Testcontainers integration test passed.
-- [local] `scan:all:check`, legacy baseline, review, context, phase gate, test ownership, CI declaration, false-green matrix, rule-lock, change integrity, and close gate passed at their recorded checkpoints.
-- [local] The first full main gate exposed a finalizer-generated handover without provenance. The repaired generator now preserves rich plan/handover evidence and tags generated commands as not-run; its preservation regression and the final all-up gate pass.
+- [local] Node masterdata suite passed 34/34.
+- [local] Maven unit suite passed 58/58, including focused masterdata service tests at 21/21.
+- [local] MySQL 8.0.36 Testcontainers integration passed 1/1 and observed a real wait on the permanent hierarchy mutex before both concurrent first-root inserts committed.
+- [local] Direct SQL cycle/depth corruption produced two cycle-node and one over-depth violation; the service failed closed within the timeout, released locks for a new transaction, and validation returned clean after repair.
+- [local] Backend reactor compile, regenerated scans/context, review binding, impact scope, and Java/Node test ownership checks pass.
+- [local] The complete project gate passed with 381/381 Node tests; finalization matches exactly 29 recorded and actual paths.
 
 ## Risks
 
-- Four moderate UI dependency findings remain: ECharts 5 and the legacy SVG/PostCSS 5 build chain. A separate breaking dependency migration will remove them and raise the audit threshold only through a later governance change.
-- Production Druid property coverage requires an ordered platform config change plus packaged startup proof, followed by a separate checker-hardening rule-change.
-- The verified masterdata repair remains protected in the stash named `codex/masterdata-reference-integrity-before-governance` (currently `stash@{1}`) until this governance commit is complete.
+- Existing databases need the updated V005 migration followed by the complete `sql/validation/masterdata_runtime_validation.sql` before future runtime acceptance or deployment; mutex, category root-reachability/cycle/depth, seven orphan, and model/series consistency checks must all pass.
+- Direct database writers remain outside the service locking protocol and must execute that complete validation script after every direct write.
+- Product-category hierarchy writes intentionally serialize for integrity.
+- Testcontainers `mysql` 1.21.3 resolves transitive `jdbc`/core 1.21.4; align the Maven dependency versions in a separate governance/dependency record because POM files are outside the masterdata business scope.
 
 ## Next Actions
 
-- Stage the exact 63-file set, perform the final independent review, then commit the active governance record.
-- Restore the stash named `codex/masterdata-reference-integrity-before-governance`, rebind it to the governance commit, register its Java tests, and repeat its business verification before committing.
-- Complete the separate system notice XSS, production profile, production-checker, and dependency migration records.
-- Push the reviewed commit series to `origin/master`, confirm GitHub Actions, and stop without release or deployment.
+- Finalize, run the complete project gate, stage exactly, independently review, and commit the masterdata batch.
+- Complete the separate system notice, production profile/checker, Testcontainers alignment, and frontend dependency migration batches.
+- Push the reviewed commit series only after the final repository gate; do not release or deploy.

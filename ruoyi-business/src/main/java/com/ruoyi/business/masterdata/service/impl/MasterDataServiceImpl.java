@@ -2,11 +2,13 @@ package com.ruoyi.business.masterdata.service.impl;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Pattern;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +35,13 @@ public class MasterDataServiceImpl implements IMasterDataService
     private static final int CODE_RETRY_LIMIT = 8;
     private static final int PRODUCT_CATEGORY_MAX_DEPTH = 3;
     private static final Pattern CODE_PATTERN = Pattern.compile("^[A-Z0-9_]+$");
+    private static final Comparator<LockKey> LOCK_ORDER = Comparator
+        .comparingInt((LockKey key) -> key.resource().ordinal())
+        .thenComparing(LockKey::id);
+
+    private record LockKey(MasterDataResource resource, Long id)
+    {
+    }
 
     @Autowired
     private MasterDataMapper masterDataMapper;
@@ -83,9 +92,16 @@ public class MasterDataServiceImpl implements IMasterDataService
         {
             record.setSortOrder(0);
         }
-        validateReferences(target, record);
-        validateProductCategoryHierarchy(target, record);
-        return insertRecordWithGeneratedCode(target, record);
+        List<MasterDataRecord> lockedHierarchy = lockProductCategoryHierarchy(target);
+        Map<LockKey, MasterDataRecord> lockedRecords = lockRecords(referenceLockKeys(target, record));
+        validateReferences(target, record, lockedRecords);
+        validateProductCategoryHierarchy(target, record, lockedHierarchy);
+        int rows = insertRecordWithGeneratedCode(target, record);
+        if (rows != 1)
+        {
+            throw new ServiceException(target.getDisplayName() + "新增失败，请刷新后重试");
+        }
+        return rows;
     }
 
     @Override
@@ -97,12 +113,22 @@ public class MasterDataServiceImpl implements IMasterDataService
         {
             throw new ServiceException("主数据ID不能为空");
         }
-        MasterDataRecord existing = requiredRecord(target, record.getId());
+        List<MasterDataRecord> lockedHierarchy = lockProductCategoryHierarchy(target);
+        List<LockKey> lockKeys = new ArrayList<>(referenceLockKeys(target, record));
+        lockKeys.addAll(targetLockKeys(target, List.of(record.getId())));
+        Map<LockKey, MasterDataRecord> lockedRecords = lockRecords(lockKeys);
+        MasterDataRecord existing = requiredLockedRecord(lockedRecords, target, record.getId());
         record.setItemCode(existing.getItemCode());
         normalizeForSave(target, record, false);
-        validateReferences(target, record);
-        validateProductCategoryHierarchy(target, record);
-        return masterDataMapper.updateRecord(target, record);
+        validateReferences(target, record, lockedRecords);
+        validateProductSeriesCategoryChange(target, record, existing);
+        validateProductCategoryHierarchy(target, record, lockedHierarchy);
+        int rows = masterDataMapper.updateRecord(target, record);
+        if (rows != 1)
+        {
+            throw new ServiceException(target.getDisplayName() + "更新失败，请刷新后重试");
+        }
+        return rows;
     }
 
     @Override
@@ -115,8 +141,13 @@ public class MasterDataServiceImpl implements IMasterDataService
             throw new ServiceException("主数据ID不能为空");
         }
         assertStatus(record.getStatus());
-        requiredRecord(target, record.getId());
-        return masterDataMapper.updateRecordStatus(target, record);
+        lockRecords(targetLockKeys(target, List.of(record.getId())));
+        int rows = masterDataMapper.updateRecordStatus(target, record);
+        if (rows != 1)
+        {
+            throw new ServiceException(target.getDisplayName() + "状态更新失败，请刷新后重试");
+        }
+        return rows;
     }
 
     @Override
@@ -124,16 +155,15 @@ public class MasterDataServiceImpl implements IMasterDataService
     public int deleteRecordByIds(String resource, Long[] ids, String updateBy)
     {
         MasterDataResource target = resolve(resource);
-        if (ids == null || ids.length == 0)
+        List<Long> normalizedIds = normalizeIds(ids);
+        lockRecords(targetLockKeys(target, normalizedIds));
+        assertNoActiveReferences(target, normalizedIds);
+        int rows = masterDataMapper.deleteRecordByIds(target, normalizedIds, updateBy);
+        if (rows != normalizedIds.size())
         {
-            throw new ServiceException("请选择要删除的主数据");
+            throw new ServiceException(target.getDisplayName() + "删除结果已变化，请刷新后重试");
         }
-        for (Long id : ids)
-        {
-            requiredRecord(target, id);
-        }
-        assertNoProductCategoryChildren(target, ids);
-        return masterDataMapper.deleteRecordByIds(target, ids, updateBy);
+        return rows;
     }
 
     private MasterDataResource resolve(String resource)
@@ -148,14 +178,110 @@ public class MasterDataServiceImpl implements IMasterDataService
         }
     }
 
-    private MasterDataRecord requiredRecord(MasterDataResource resource, Long id)
+    private Map<LockKey, MasterDataRecord> lockRecords(List<LockKey> requestedKeys)
     {
-        MasterDataRecord existing = masterDataMapper.selectRecordById(resource, id);
+        Set<LockKey> uniqueKeys = new HashSet<>();
+        for (LockKey key : requestedKeys)
+        {
+            if (key != null && key.resource() != null && key.id() != null)
+            {
+                uniqueKeys.add(key);
+            }
+        }
+        List<LockKey> orderedKeys = new ArrayList<>(uniqueKeys);
+        orderedKeys.sort(LOCK_ORDER);
+
+        Map<LockKey, MasterDataRecord> lockedRecords = new HashMap<>();
+        for (LockKey key : orderedKeys)
+        {
+            MasterDataRecord locked = masterDataMapper.selectRecordByIdForUpdate(key.resource(), key.id());
+            if (locked == null)
+            {
+                throw new ServiceException(key.resource().getDisplayName() + "不存在或已删除");
+            }
+            lockedRecords.put(key, locked);
+        }
+        return lockedRecords;
+    }
+
+    private List<MasterDataRecord> lockProductCategoryHierarchy(MasterDataResource resource)
+    {
+        if (resource != MasterDataResource.PRODUCT_CATEGORY)
+        {
+            return List.of();
+        }
+        Long mutexId = masterDataMapper.selectProductCategoryHierarchyMutexForUpdate();
+        if (mutexId == null)
+        {
+            throw new ServiceException("产品分类层级互斥记录缺失，请先执行主数据迁移");
+        }
+        return masterDataMapper.selectActiveRecordsForUpdate(MasterDataResource.PRODUCT_CATEGORY);
+    }
+
+    private List<LockKey> referenceLockKeys(MasterDataResource resource, MasterDataRecord record)
+    {
+        List<LockKey> keys = new ArrayList<>();
+        if (resource.isParentScoped())
+        {
+            Long parentId = normalizeParentId(record.getParentId());
+            if (parentId != null)
+            {
+                keys.add(new LockKey(resource, parentId));
+            }
+        }
+        if (resource.isCategoryScoped() && record.getCategoryId() != null)
+        {
+            keys.add(new LockKey(resource.categoryResource(), record.getCategoryId()));
+        }
+        if (resource.isSeriesScoped() && record.getSeriesId() != null)
+        {
+            keys.add(new LockKey(MasterDataResource.PRODUCT_SERIES, record.getSeriesId()));
+        }
+        return keys;
+    }
+
+    private List<LockKey> targetLockKeys(MasterDataResource resource, List<Long> ids)
+    {
+        List<LockKey> keys = new ArrayList<>();
+        for (Long id : ids)
+        {
+            keys.add(new LockKey(resource, id));
+        }
+        return keys;
+    }
+
+    private MasterDataRecord requiredLockedRecord(Map<LockKey, MasterDataRecord> lockedRecords,
+                                                   MasterDataResource resource, Long id)
+    {
+        MasterDataRecord existing = lockedRecords.get(new LockKey(resource, id));
         if (existing == null)
         {
             throw new ServiceException(resource.getDisplayName() + "不存在或已删除");
         }
         return existing;
+    }
+
+    private List<Long> normalizeIds(Long[] ids)
+    {
+        if (ids == null || ids.length == 0)
+        {
+            throw new ServiceException("请选择要删除的主数据");
+        }
+        Set<Long> uniqueIds = new HashSet<>();
+        for (Long id : ids)
+        {
+            if (id != null)
+            {
+                uniqueIds.add(id);
+            }
+        }
+        List<Long> normalizedIds = new ArrayList<>(uniqueIds);
+        normalizedIds.sort(Long::compareTo);
+        if (normalizedIds.isEmpty())
+        {
+            throw new ServiceException("请选择要删除的主数据");
+        }
+        return normalizedIds;
     }
 
     private void normalizeQuery(MasterDataRecord record)
@@ -241,11 +367,12 @@ public class MasterDataServiceImpl implements IMasterDataService
         };
     }
 
-    private void validateReferences(MasterDataResource resource, MasterDataRecord record)
+    private void validateReferences(MasterDataResource resource, MasterDataRecord record,
+                                    Map<LockKey, MasterDataRecord> lockedRecords)
     {
         if (resource.isParentScoped() && record.getParentId() != null)
         {
-            MasterDataRecord parent = requiredRecord(resource, record.getParentId());
+            MasterDataRecord parent = requiredLockedRecord(lockedRecords, resource, record.getParentId());
             if (record.getId() != null && record.getId().equals(parent.getId()))
             {
                 throw new ServiceException("上级分类不能选择自己");
@@ -254,12 +381,12 @@ public class MasterDataServiceImpl implements IMasterDataService
         if (resource.isCategoryScoped())
         {
             assertRequired(record.getCategoryId(), resource.getDisplayName() + "所属分类不能为空");
-            requiredRecord(resource.categoryResource(), record.getCategoryId());
+            requiredLockedRecord(lockedRecords, resource.categoryResource(), record.getCategoryId());
         }
         if (resource.isSeriesScoped())
         {
             assertRequired(record.getSeriesId(), "产品型号所属系列不能为空");
-            MasterDataRecord series = requiredRecord(MasterDataResource.PRODUCT_SERIES, record.getSeriesId());
+            MasterDataRecord series = requiredLockedRecord(lockedRecords, MasterDataResource.PRODUCT_SERIES, record.getSeriesId());
             if (record.getCategoryId() != null && series.getCategoryId() != null && !record.getCategoryId().equals(series.getCategoryId()))
             {
                 throw new ServiceException("产品型号所属分类必须与所属系列一致");
@@ -267,7 +394,25 @@ public class MasterDataServiceImpl implements IMasterDataService
         }
     }
 
-    private void validateProductCategoryHierarchy(MasterDataResource resource, MasterDataRecord record)
+    private void validateProductSeriesCategoryChange(MasterDataResource resource, MasterDataRecord record,
+                                                     MasterDataRecord existing)
+    {
+        if (resource != MasterDataResource.PRODUCT_SERIES
+            || Objects.equals(existing.getCategoryId(), record.getCategoryId()))
+        {
+            return;
+        }
+        assertNoActiveReference(
+            masterDataMapper.countActiveBySeriesIds(
+                MasterDataResource.PRODUCT_MODEL,
+                List.of(existing.getId())
+            ),
+            "产品系列已被产品型号引用，不能变更所属大类"
+        );
+    }
+
+    private void validateProductCategoryHierarchy(MasterDataResource resource, MasterDataRecord record,
+                                                  List<MasterDataRecord> categories)
     {
         if (resource != MasterDataResource.PRODUCT_CATEGORY)
         {
@@ -281,7 +426,6 @@ public class MasterDataServiceImpl implements IMasterDataService
             throw new ServiceException("产品分类的上级分类不能选择自己");
         }
 
-        List<MasterDataRecord> categories = masterDataMapper.selectRecordList(resource, new MasterDataRecord());
         Map<Long, MasterDataRecord> byId = recordsById(categories);
         Map<Long, List<MasterDataRecord>> childrenByParent = childrenByParent(categories);
         if (id != null && parentId != null && isDescendant(parentId, id, childrenByParent))
@@ -297,25 +441,45 @@ public class MasterDataServiceImpl implements IMasterDataService
         }
     }
 
-    private void assertNoProductCategoryChildren(MasterDataResource resource, Long[] ids)
+    private void assertNoActiveReferences(MasterDataResource resource, List<Long> ids)
     {
-        if (resource != MasterDataResource.PRODUCT_CATEGORY)
+        switch (resource)
         {
-            return;
-        }
-        Set<Long> deletedIds = new HashSet<>();
-        for (Long id : ids)
-        {
-            deletedIds.add(id);
-        }
-        List<MasterDataRecord> categories = masterDataMapper.selectRecordList(resource, new MasterDataRecord());
-        for (MasterDataRecord category : categories)
-        {
-            Long parentId = normalizeParentId(category.getParentId());
-            if (parentId != null && deletedIds.contains(parentId))
+            case PRODUCT_CATEGORY ->
             {
-                throw new ServiceException("产品分类存在子分类，不能删除父分类");
+                assertNoActiveReference(
+                    masterDataMapper.countActiveByParentIds(MasterDataResource.PRODUCT_CATEGORY, ids),
+                    "产品分类存在子分类，不能删除");
+                assertNoActiveReference(
+                    masterDataMapper.countActiveByCategoryIds(MasterDataResource.PRODUCT_SERIES, ids),
+                    "产品大类已被产品系列引用，不能删除");
+                assertNoActiveReference(
+                    masterDataMapper.countActiveByCategoryIds(MasterDataResource.PRODUCT_MODEL, ids),
+                    "产品大类已被工艺型号引用，不能删除");
             }
+            case PRODUCT_SERIES -> assertNoActiveReference(
+                masterDataMapper.countActiveBySeriesIds(MasterDataResource.PRODUCT_MODEL, ids),
+                "产品系列已被工艺型号引用，不能删除");
+            case MATERIAL_CATEGORY -> assertNoActiveReference(
+                masterDataMapper.countActiveByCategoryIds(MasterDataResource.MATERIAL_ITEM, ids),
+                "物料分类已被原材料档案引用，不能删除");
+            case ACCESSORY_CATEGORY -> assertNoActiveReference(
+                masterDataMapper.countActiveByCategoryIds(MasterDataResource.ACCESSORY_ITEM, ids),
+                "配件分类已被配件档案引用，不能删除");
+            case SALES_OPTION_CATEGORY -> assertNoActiveReference(
+                masterDataMapper.countActiveByCategoryIds(MasterDataResource.SALES_OPTION_VALUE, ids),
+                "销售选项分类已被销售选项值引用，不能删除");
+            default ->
+            {
+            }
+        }
+    }
+
+    private void assertNoActiveReference(int referenceCount, String message)
+    {
+        if (referenceCount > 0)
+        {
+            throw new ServiceException(message);
         }
     }
 
@@ -346,10 +510,15 @@ public class MasterDataServiceImpl implements IMasterDataService
     private boolean isDescendant(Long candidateId, Long rootId, Map<Long, List<MasterDataRecord>> childrenByParent)
     {
         ArrayDeque<Long> stack = new ArrayDeque<>();
+        Set<Long> visited = new HashSet<>();
         stack.add(rootId);
         while (!stack.isEmpty())
         {
             Long currentId = stack.removeFirst();
+            if (!visited.add(currentId))
+            {
+                throw new ServiceException("产品分类层级存在循环");
+            }
             for (MasterDataRecord child : childrenByParent.getOrDefault(currentId, List.of()))
             {
                 if (candidateId.equals(child.getId()))

@@ -20,6 +20,29 @@ create table if not exists masterdata_product_category (
   key idx_masterdata_product_category_status (status, del_flag)
 ) engine=innodb default charset=utf8mb4 comment='masterdata product category';
 
+-- Permanent hidden row used only to serialize product-category hierarchy writes.
+-- Keep this row logically deleted so normal business queries and code allocation ignore it.
+insert ignore into masterdata_product_category (
+  category_id, category_code, category_name, parent_id, status, sort_order,
+  del_flag, create_by, create_time, update_by, update_time, remark
+) values (
+  -1, '__MD_PRODUCT_CATEGORY_HIERARCHY_MUTEX__', '__masterdata hierarchy mutex__',
+  null, '1', 0, '2', 'system', now(), 'system', now(),
+  'Permanent hidden row used only to serialize product-category hierarchy writes.'
+);
+
+update masterdata_product_category
+set category_code = '__MD_PRODUCT_CATEGORY_HIERARCHY_MUTEX__',
+  category_name = '__masterdata hierarchy mutex__',
+  parent_id = null,
+  status = '1',
+  sort_order = 0,
+  del_flag = '2',
+  update_by = 'system',
+  update_time = now(),
+  remark = 'Permanent hidden row used only to serialize product-category hierarchy writes.'
+where category_id = -1;
+
 create table if not exists masterdata_product_series (
   series_id bigint not null auto_increment comment 'product series id',
   category_id bigint not null comment 'product category id',

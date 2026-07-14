@@ -202,7 +202,7 @@ test('nine masterdata resources can be added without caller supplied code', () =
   assert.doesNotMatch(record, /@NotBlank\(message = "编码不能为空"\)\s+public String getItemCode/);
   assert.match(controller, /@PostMapping\("\/{resource}"\)/);
   assert.match(service, /record\.setItemCode\(create \? null : upperCode\(record\.getItemCode\(\)\)\)/);
-  assert.match(service, /return insertRecordWithGeneratedCode\(target, record\)/);
+  assert.match(service, /int rows = insertRecordWithGeneratedCode\(target, record\)/);
   assert.doesNotMatch(service, /assertRequired\(record\.getItemCode\(\), "编码不能为空"\);\s+assertRequired\(record\.getItemName/);
 });
 
@@ -238,7 +238,7 @@ test('edit keeps existing code and ignores payload code changes', () => {
   const mapperXml = readText(MAPPER_XML);
   const view = readText(VIEW);
 
-  assert.match(service, /MasterDataRecord existing = requiredRecord\(target, record\.getId\(\)\)/);
+  assert.match(service, /MasterDataRecord existing = requiredLockedRecord\(lockedRecords, target, record\.getId\(\)\)/);
   assert.match(service, /record\.setItemCode\(existing\.getItemCode\(\)\)/);
   assert.doesNotMatch(mapperXml.match(/<update id="updateRecord">[\s\S]*?<\/update>/)?.[0] || '', /\$\{resource\.codeColumn\}/);
   assert.match(view, /<el-form-item v-if="form\.id" label="编码" prop="itemCode">/);
@@ -430,7 +430,7 @@ test('product category maximum depth is three in backend and frontend', () => {
   const view = readText(VIEW);
 
   assert.match(service, /private static final int PRODUCT_CATEGORY_MAX_DEPTH = 3/);
-  assert.match(service, /validateProductCategoryHierarchy\(target, record\);/);
+  assert.match(service, /validateProductCategoryHierarchy\(target, record, lockedHierarchy\);/);
   assert.match(service, /parentDepth \+ subtreeHeight > PRODUCT_CATEGORY_MAX_DEPTH/);
   assert.match(service, /产品分类最多只允许3级/);
   assert.match(view, /const PRODUCT_CATEGORY_MAX_DEPTH = 3/);
@@ -468,13 +468,103 @@ test('editing product category cannot select a descendant as parent', () => {
   assert.match(view, /上级分类不能选择自己的子级或后代/);
 });
 
-test('backend rejects deleting product category when child categories exist', () => {
+test('pre-existing product category cycles fail closed and validation reports invalid trees', () => {
   const service = readText(SERVICE);
+  const validationSql = readText(VALIDATION_SQL);
+  const descendantTraversal = service.match(
+    /private boolean isDescendant[\s\S]*?(?=\n    private int hierarchyDepth)/
+  )?.[0] || '';
 
-  assert.match(service, /assertNoProductCategoryChildren\(target, ids\)/);
-  assert.match(service, /deletedIds\.contains\(parentId\)/);
-  assert.match(service, /产品分类存在子分类，不能删除父分类/);
-  assert.match(service, /masterDataMapper\.deleteRecordByIds\(target, ids, updateBy\)/);
+  assert.match(descendantTraversal, /Set<Long> visited = new HashSet<>\(\)/);
+  assert.match(descendantTraversal, /if \(!visited\.add\(currentId\)\)[\s\S]*?产品分类层级存在循环/);
+  assert.match(validationSql, /with recursive active_product_category_tree/i);
+  assert.match(validationSql, /tree\.hierarchy_depth < 4/i);
+  assert.match(validationSql, /invalid_product_category_hierarchy/i);
+  assert.match(validationSql, /tree\.category_id is null or tree\.hierarchy_depth > 3/i);
+  assert.match(validationSql, /unreachable_or_cycle/i);
+  assert.match(validationSql, /depth_exceeds_3/i);
+});
+
+test('backend locks targets and rejects every active masterdata reference before logical delete', () => {
+  const service = readText(SERVICE);
+  const mapper = readText(MAPPER);
+  const mapperXml = readText(MAPPER_XML);
+
+  assert.match(service, /List<Long> normalizedIds = normalizeIds\(ids\)/);
+  assert.match(service, /lockRecords\(targetLockKeys\(target, normalizedIds\)\)/);
+  assert.match(service, /assertNoActiveReferences\(target, normalizedIds\)/);
+  assert.match(service, /masterDataMapper\.deleteRecordByIds\(target, normalizedIds, updateBy\)/);
+  assert.match(service, /rows != normalizedIds\.size\(\)/);
+
+  assert.match(mapper, /selectRecordByIdForUpdate/);
+  assert.match(mapper, /countActiveByParentIds/);
+  assert.match(mapper, /countActiveByCategoryIds/);
+  assert.match(mapper, /countActiveBySeriesIds/);
+  assert.match(mapperXml, /<select id="selectRecordByIdForUpdate"[\s\S]*?for update[\s\S]*?<\/select>/i);
+  assert.match(mapperXml, /<select id="countActiveByParentIds"[\s\S]*?parent_id[\s\S]*?del_flag = '0'[\s\S]*?<\/select>/i);
+  assert.match(mapperXml, /<select id="countActiveByCategoryIds"[\s\S]*?category_id[\s\S]*?del_flag = '0'[\s\S]*?<\/select>/i);
+  assert.match(mapperXml, /<select id="countActiveBySeriesIds"[\s\S]*?series_id[\s\S]*?del_flag = '0'[\s\S]*?<\/select>/i);
+});
+
+test('masterdata reference matrix covers all seven owned parent-child edges', () => {
+  const service = readText(SERVICE);
+  const validationSql = readText(VALIDATION_SQL);
+  const expectedEdges = [
+    ['PRODUCT_CATEGORY', 'PRODUCT_CATEGORY', 'parent'],
+    ['PRODUCT_CATEGORY', 'PRODUCT_SERIES', 'category'],
+    ['PRODUCT_CATEGORY', 'PRODUCT_MODEL', 'category'],
+    ['PRODUCT_SERIES', 'PRODUCT_MODEL', 'series'],
+    ['MATERIAL_CATEGORY', 'MATERIAL_ITEM', 'category'],
+    ['ACCESSORY_CATEGORY', 'ACCESSORY_ITEM', 'category'],
+    ['SALES_OPTION_CATEGORY', 'SALES_OPTION_VALUE', 'category']
+  ];
+
+  for (const [parent, child, relation] of expectedEdges) {
+    assert.match(service, new RegExp(`${parent}[\\s\\S]*${child}[\\s\\S]*${relation}`, 'i'));
+  }
+  for (const checkName of [
+    'orphan_product_category_parent',
+    'orphan_product_series_category',
+    'orphan_product_model_category',
+    'orphan_product_model_series',
+    'orphan_material_item_category',
+    'orphan_accessory_item_category',
+    'orphan_sales_option_value_category'
+  ]) {
+    assert.match(validationSql, new RegExp(checkName));
+  }
+});
+
+test('product series cannot move categories while active product models still reference it', () => {
+  const service = readText(SERVICE);
+  const validationSql = readText(VALIDATION_SQL);
+
+  assert.match(service, /validateProductSeriesCategoryChange\(target, record, existing\)/);
+  assert.match(service, /MasterDataResource\.PRODUCT_SERIES/);
+  assert.match(service, /countActiveBySeriesIds\(/);
+  assert.match(service, /MasterDataResource\.PRODUCT_MODEL,[\s\S]*?List\.of\(existing\.getId\(\)\)/);
+  assert.match(validationSql, /product_model_series_category_mismatch[\s\S]*child\.category_id\s*<>\s*parent\.category_id/i);
+});
+
+test('masterdata mutations use one deterministic resource-and-id lock order', () => {
+  const service = readText(SERVICE);
+  const mapper = readText(MAPPER);
+  const mapperXml = readText(MAPPER_XML);
+  const schemaSql = readText(SCHEMA_SQL);
+
+  assert.match(service, /record LockKey\(MasterDataResource resource, Long id\)/);
+  assert.match(service, /Comparator\s*\.comparingInt\(\(LockKey key\) -> key\.resource\(\)\.ordinal\(\)\)/);
+  assert.match(service, /thenComparing\(LockKey::id\)/);
+  assert.match(service, /masterDataMapper\.selectRecordByIdForUpdate\(key\.resource\(\), key\.id\(\)\)/);
+  assert.match(service, /referenceLockKeys\(target, record\)/);
+  assert.match(service, /targetLockKeys\(target, List\.of\(record\.getId\(\)\)\)/);
+  assert.match(service, /lockProductCategoryHierarchy\(target\)/);
+  assert.match(service, /selectProductCategoryHierarchyMutexForUpdate\(\)/);
+  assert.match(mapper, /selectActiveRecordsForUpdate/);
+  assert.match(mapper, /selectProductCategoryHierarchyMutexForUpdate/);
+  assert.match(mapperXml, /<select id="selectProductCategoryHierarchyMutexForUpdate"[\s\S]*?category_id\s*=\s*-1[\s\S]*?for update[\s\S]*?<\/select>/i);
+  assert.match(mapperXml, /<select id="selectActiveRecordsForUpdate"[\s\S]*?order by[\s\S]*?for update[\s\S]*?<\/select>/i);
+  assert.match(schemaSql, /category_id\s*,[\s\S]*?-1[\s\S]*?__MD_PRODUCT_CATEGORY_HIERARCHY_MUTEX__/i);
 });
 
 test('masterdata SQL creates exactly the nine MVP tables and permissions', () => {

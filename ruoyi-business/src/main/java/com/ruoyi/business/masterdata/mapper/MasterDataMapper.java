@@ -14,11 +14,23 @@ public interface MasterDataMapper
 
     public MasterDataRecord selectRecordById(@Param("resource") MasterDataResource resource, @Param("id") Long id);
 
+    public MasterDataRecord selectRecordByIdForUpdate(@Param("resource") MasterDataResource resource, @Param("id") Long id);
+
+    public Long selectProductCategoryHierarchyMutexForUpdate();
+
+    public List<MasterDataRecord> selectActiveRecordsForUpdate(@Param("resource") MasterDataResource resource);
+
     public MasterDataRecord selectRecordByCode(@Param("resource") MasterDataResource resource, @Param("code") String code);
 
     public String selectMaxCodeByMonth(@Param("resource") MasterDataResource resource, @Param("monthPrefix") String monthPrefix);
 
     public int countCode(@Param("resource") MasterDataResource resource, @Param("id") Long id, @Param("code") String code);
+
+    public int countActiveByParentIds(@Param("resource") MasterDataResource resource, @Param("ids") List<Long> ids);
+
+    public int countActiveByCategoryIds(@Param("resource") MasterDataResource resource, @Param("ids") List<Long> ids);
+
+    public int countActiveBySeriesIds(@Param("resource") MasterDataResource resource, @Param("ids") List<Long> ids);
 
     public int insertRecord(@Param("resource") MasterDataResource resource, @Param("record") MasterDataRecord record);
 
@@ -26,5 +38,5 @@ public interface MasterDataMapper
 
     public int updateRecordStatus(@Param("resource") MasterDataResource resource, @Param("record") MasterDataRecord record);
 
-    public int deleteRecordByIds(@Param("resource") MasterDataResource resource, @Param("ids") Long[] ids, @Param("updateBy") String updateBy);
+    public int deleteRecordByIds(@Param("resource") MasterDataResource resource, @Param("ids") List<Long> ids, @Param("updateBy") String updateBy);
 }

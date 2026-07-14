@@ -24,7 +24,9 @@ R-10D keeps the existing table structure and unique code keys. Codes are generat
 
 ## Product Category Hierarchy Rule
 
-`masterdata_product_category.parent_id` defines the product category tree. Runtime validation limits product category to three levels, rejects self-parenting and descendant-parent cycles, and does not add level-four compatibility logic.
+`masterdata_product_category.parent_id` defines the product category tree. Runtime validation limits product category to three levels, rejects self-parenting and descendant-parent cycles, and does not add level-four compatibility logic. Every graph traversal tracks visited category ids and fails closed when it encounters a repeated node, including cycles left by an earlier runtime or a direct database write. The same table owns one permanent hidden mutex row (`category_id = -1`, `category_code = '__MD_PRODUCT_CATEGORY_HIERARCHY_MUTEX__'`, `del_flag = '2'`). Product-category create/update locks that row and then the complete active tree in primary-key order before validation, serializing empty-tree first creates and later hierarchy changes while keeping the mutex invisible to business queries.
+
+`masterdata_product_model.category_id` must equal the referenced `masterdata_product_series.category_id`. A series with active models cannot change category; the runtime validation SQL reports any mismatch created by direct database writes.
 
 ## Migration Files
 
@@ -37,7 +39,9 @@ R-10D keeps the existing table structure and unique code keys. Codes are generat
 
 R-10B uses logical delete through `del_flag = '2'`. Future referenced master data must be disabled, archived, unpublished, or superseded rather than physically removed.
 
-R-10F adds immediate child protection for product category: an active product category with active child categories cannot be deleted. Status changes remain non-cascading; child cascade policy is deferred.
+All seven owned parent/reference edges are protected before logical deletion. Target rows and referenced parents use `SELECT ... FOR UPDATE`; locks are acquired by resource ordinal and then ascending id. Reference checks count every row with `del_flag = '0'`, including disabled rows. Delete affects exactly the normalized target count or the transaction fails. Status changes remain non-cascading; no child cascade delete is permitted.
+
+`sql/validation/masterdata_runtime_validation.sql` checks the permanent hierarchy mutex, reports any active category that is unreachable from a root or exceeds three levels, contains read-only orphan queries for all seven edges, and includes the product-model/product-series category-consistency query. In the single-parent category model, an active cycle is necessarily unreachable from a root, so the hierarchy query detects cycles without unbounded recursion. Direct database writes remain outside the service lock protocol and must be followed by those validation queries.
 
 ## Explicit Exclusions
 

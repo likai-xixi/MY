@@ -40,6 +40,10 @@ Feature name: 主数据配置
 
 R-10B uses logical delete through `del_flag = '2'`. Later order, technical, inventory, BOM, production, drawing, shipment, finance, or receipt references must preserve code/name snapshots and must not require physical deletion of master-data rows.
 
+Current owned references are protected in application transactions: referenced parents and delete targets are locked in resource/id order, and deletion is rejected for the seven category/series/item relationships recorded in `ai/contracts/masterdata.delete-ownership.md`. Disabled rows still count as references while `del_flag = '0'`; validation SQL reports any active orphan created by direct database writes.
+
+Product-category hierarchy mutations first lock the permanent hidden `masterdata_product_category` row with `category_id = -1`, then lock the complete active category set before depth/cycle validation. Every category graph traversal fails closed on a repeated id. The migration creates or repairs that logically deleted mutex row idempotently; normal business queries exclude it. Product-series category changes are rejected while active models reference the series, and validation SQL reports a missing mutex, any active category unreachable from a root or deeper than level three, active orphans, and any model whose category differs from its active series category.
+
 ## R-10D Code Generation Rule
 
 R-10D does not add tables or change the SQL schema. Existing unique code keys remain the uniqueness guard while backend service code generates `prefix + yyyyMM + 6 digit monthly sequence` values per resource/month.

@@ -44,7 +44,13 @@ R-10I changes display wording only. `product-category` is shown to users as äº§å
 - Code is immutable after creation; update payload code changes are ignored and the existing code is retained.
 - Product category accepts `parentId` for hierarchy, with backend validation that maximum depth is 3.
 - Product category create/edit rejects self-parenting, selecting a descendant as parent, and any move that would create a level-four category.
-- Product category delete rejects deleting any category that still has active child categories.
+- Product category create/edit first locks the permanent hidden category hierarchy mutex row, then locks the complete active category tree before hierarchy validation. This serializes both empty-tree first creates and later concurrent moves, so they cannot deadlock or jointly create a fourth level.
+- If the hierarchy mutex row is missing, category writes fail closed and require the masterdata migration to be rerun.
+- A product series with active product models cannot move to another product category; rename and other same-category edits remain allowed.
+- Remove locks target rows in stable resource/id order and rejects all seven active-reference edges owned by this feature.
+- Disabled child/reference rows still block parent removal; only rows already marked `del_flag = '2'` do not block.
+- Batch remove deduplicates and sorts IDs, and requires the affected row count to equal the normalized request count.
+- Create and update lock referenced parents before mutation so parent deletion cannot race a child write into an active orphan.
 - Remove is logical delete.
 - Publish permission is reserved; full publish/version flow is deferred.
 

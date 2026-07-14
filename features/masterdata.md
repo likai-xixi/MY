@@ -29,6 +29,8 @@ R-10D code generation format is `prefix + yyyyMM + 6 digit monthly sequence`. Pr
 
 R-10F presents product category as a tree table and limits the product category hierarchy to three levels. The backend rejects level-four categories, self-parenting, descendant-parent cycles, and deletion of a category that still has child categories.
 
+The current integrity hardening protects every owned masterdata reference, not only category children. Create/update locks referenced parents; delete locks normalized target IDs, checks all seven active-reference edges, and requires an exact affected-row count. Disabled references remain protected because they are still active records; logically deleted references do not block. Product-category hierarchy writes lock a permanent hidden mutex row and then the complete active tree before validation, including when no active category exists yet. Category graph traversal tracks visited ids so pre-existing cycles fail closed within bounded time, and validation SQL reports cycles/unreachable nodes and depth greater than three. A product series with active models cannot move to another category.
+
 R-10H keeps the same product-category business rules and improves only tree-table readability in the name column with clearer indentation, branch guidance, smaller L1/L2/L3 level tags, path tooltip hints, and controlled expansion state.
 
 R-10I keeps the grouped menu split and adjusts product-facing display wording: 产品配置 contains 产品大类, 产品系列, and 工艺型号. 工艺型号 is still the existing `product-model` resource and `masterdata_product_model` table; formula, drawing, part template, and route runtime are deferred.
@@ -73,6 +75,10 @@ R-10J bugfix rule: tree selects must allow both parent and child nodes to be sel
 - Product category tree names show clearer hierarchy with smaller level hints, stronger indentation, branch guidance, path tooltip context, and controlled expand/collapse state.
 - Product category initial load and reset search keep child rows collapsed; adding a child expands only the selected parent path; edit/delete refresh preserves current expansion state.
 - Product category add/edit parent selection cannot exceed three levels and cannot select the current category or its descendants.
+- Parent deletion is rejected for product-category children, product series/models, material items, accessory items, and sales-option values according to the seven-edge ownership matrix.
+- Concurrent parent deletion and child create/update cannot leave an active orphan; deterministic row locking and MySQL integration tests prove both transaction orderings.
+- Concurrent first product-category creates on an otherwise empty active tree both succeed after serializing on the permanent hidden hierarchy mutex row.
+- Concurrent product-category moves cannot jointly create a fourth level, and product-model category must remain equal to its series category.
 - API/UI/SQL/permission/test ownership is registered in feature and module registries, graphs, generated scans, memory, and handover.
 - `beforeSalesOrder` remains blocked and no sales-order runtime is created.
 
@@ -82,5 +88,6 @@ R-10J bugfix rule: tree selects must allow both parent and child nodes to be sel
 - `npm run finalize:change`
 - `npm run check`
 - `git diff --check`
-- `mvn -pl ruoyi-admin -am -DskipTests compile`
+- `mvn -pl ruoyi-business -am test`
+- `mvn -pl ruoyi-business -am -Pintegration-test verify`
 - `npm --prefix ruoyi-ui run build:prod`

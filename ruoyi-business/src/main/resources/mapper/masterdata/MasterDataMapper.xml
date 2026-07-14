@@ -87,6 +87,28 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         limit 1
     </select>
 
+    <select id="selectRecordByIdForUpdate" resultMap="MasterDataRecordResult">
+        <include refid="selectRecordVo"/>
+        where ${resource.idColumn} = #{id}
+          and del_flag = '0'
+        limit 1
+        for update
+    </select>
+
+    <select id="selectProductCategoryHierarchyMutexForUpdate" resultType="long">
+        select category_id
+        from masterdata_product_category
+        where category_id = -1
+        for update
+    </select>
+
+    <select id="selectActiveRecordsForUpdate" resultMap="MasterDataRecordResult">
+        <include refid="selectRecordVo"/>
+        where del_flag = '0'
+        order by ${resource.idColumn} asc
+        for update
+    </select>
+
     <select id="selectRecordByCode" resultMap="MasterDataRecordResult">
         <include refid="selectRecordVo"/>
         where ${resource.codeColumn} = #{code}
@@ -110,6 +132,36 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <if test="id != null">
             and ${resource.idColumn} != #{id}
         </if>
+    </select>
+
+    <select id="countActiveByParentIds" resultType="int">
+        select count(1)
+        from ${resource.tableName}
+        where parent_id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+          and del_flag = '0'
+    </select>
+
+    <select id="countActiveByCategoryIds" resultType="int">
+        select count(1)
+        from ${resource.tableName}
+        where category_id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+          and del_flag = '0'
+    </select>
+
+    <select id="countActiveBySeriesIds" resultType="int">
+        select count(1)
+        from ${resource.tableName}
+        where series_id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+          and del_flag = '0'
     </select>
 
     <insert id="insertRecord">
