@@ -1,0 +1,48 @@
+{
+  "id": "RV-20260714T112343Z-svg-spritemap",
+  "request": "功能预审：平台前端依赖、SVG spritemap 与缓存图表生命周期修复",
+  "mode": "pre-review",
+  "feature": "platform",
+  "baseRevision": "428d359827cc5f34441fe1f6b206c6f9a906aed6",
+  "createdAt": "2026-07-14T11:23:43.213Z",
+  "status": "approved",
+  "approvedFeatures": [
+    "platform"
+  ],
+  "approvedEditRoots": [
+    "ruoyi-ui/package.json",
+    "ruoyi-ui/package-lock.json",
+    "ruoyi-ui/vite/plugins",
+    "ruoyi-ui/src/main.js",
+    "ruoyi-ui/src/components/SvgIcon",
+    "ruoyi-ui/src/views/monitor/cache",
+    "ruoyi-ui/src/assets/icons/svg/button.svg",
+    "ruoyi-ui/src/assets/icons/svg/monitor.svg",
+    "ruoyi-ui/src/assets/icons/svg/redis-list.svg",
+    "ruoyi-ui/src/assets/icons/svg/system.svg",
+    "ruoyi-ui/tests",
+    "tests/frontend-dependency-hardening.test.js",
+    "features/platform.md",
+    "ai/registry/features.json",
+    "ai/changes",
+    "ai/context",
+    "memory"
+  ],
+  "approvedEditRootsReason": "Exact UI manifests, build integration, shared icon consumer, four corrected icon sources, cache-monitor lifecycle modules, executable regressions, and their platform registry/change/memory evidence are required. Backend, API, route, permission, database, scanner, rule, workflow, and unrelated business roots remain excluded.",
+  "decision": {
+    "allowImplementation": true,
+    "reason": "Allow Implementation for the bounded platform dependency, spritemap, and cache lifecycle remediation only."
+  },
+  "requiredFiles": [
+    "request.md",
+    "context.md",
+    "product-review.md",
+    "architecture-review.md",
+    "backend-review.md",
+    "frontend-review.md",
+    "qa-review.md",
+    "risk-register.md",
+    "decision.md",
+    "review.json"
+  ]
+}
