@@ -8,8 +8,8 @@
       "status": "in_progress",
       "owner": "Codex",
       "priority": "high",
-      "statusReason": "CR-20260714T225634Z-github-actions-node24-and-cache-warning-cleanup follows successful run 29374274047 by upgrading immutable checkout/setup-node/setup-java pins to verified Node 24 action runtimes and removing only the unused governance Maven cache. Focused tests pass 43/43, CI declaration and immutable-action lint pass, and the complete repository gate passes 481/481. Exact finalization, closeout, push, post-push governance, and warning-free Actions confirmation remain.",
-      "nextStep": "Finalize verified evidence, rerun the close and exact scope gates, commit and push master, confirm all three GitHub Actions jobs with the repaired annotations absent, run post-push governance, keep beforeSalesOrder blocked, preserve both stashes, and do not release or deploy.",
+      "statusReason": "CR-20260714T225634Z-github-actions-node24-and-cache-warning-cleanup follows successful run 29374274047 by upgrading immutable checkout/setup-node/setup-java pins to verified Node 24 action runtimes and removing only the unused governance Maven cache. Focused tests pass 43/43, CI declaration and immutable-action lint pass, the complete repository gate passes 481/481, closeout/diff checks pass, and workflow commit 89e63df is pushed. An evidence-only consistency correction, latest-head Actions confirmation, and post-push governance remain.",
+      "nextStep": "Commit and push the evidence-only correction, confirm all three latest-head GitHub Actions jobs with the repaired annotations absent, run post-push governance, keep beforeSalesOrder blocked, preserve both stashes, and do not release or deploy.",
       "blockedBy": [],
       "verification": [
         "CR-20260714T225634Z-github-actions-node24-and-cache-warning-cleanup focused workflow regression passes 43/43, CI declaration and immutable-action lint pass, and the complete governance gate passes 481/481",

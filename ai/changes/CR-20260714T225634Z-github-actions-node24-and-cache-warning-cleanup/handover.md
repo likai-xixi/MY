@@ -40,9 +40,9 @@
 - [local] `npm run check:ci-coverage-declaration`
 - [local] `npm run lint:codex`
 - [local] `npm run check`
-- [not-run] `npm run finalize:change`
-- [not-run] `npm run close:change`
-- [not-run] `git diff --check`
+- [local] `npm run finalize:change`
+- [local] `npm run close:change`
+- [local] `git diff --check`
 - [ci-planned] GitHub Actions `scaffold-ci` after push
 
 ## Verification
@@ -61,6 +61,6 @@
 
 ## Next Actions
 
-- Run the full governance gate, finalize evidence, and close the change.
-- Commit and push the follow-up, then inspect both run conclusion and annotations.
+- Commit and push the evidence-only consistency correction, then inspect the latest run conclusion and annotations.
+- Run post-push governance only after the latest branch state is published and clean.
 - Do not release or deploy.

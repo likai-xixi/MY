@@ -40,9 +40,9 @@
 - [local] `npm run check:ci-coverage-declaration`
 - [local] `npm run lint:codex`
 - [local] `npm run check`
-- [not-run] `npm run finalize:change`
-- [not-run] `npm run close:change`
-- [not-run] `git diff --check`
+- [local] `npm run finalize:change`
+- [local] `npm run close:change`
+- [local] `git diff --check`
 - [ci-planned] GitHub Actions `scaffold-ci` after the follow-up push
 
 ## Verification
@@ -56,14 +56,14 @@
 
 ## Risks
 
-- The follow-up commit, push, and remote annotation audit are pending.
+- The workflow follow-up commit `89e63df` is pushed; the evidence-only correction and final remote annotation audit are pending.
 - Remote Actions must prove the warning cleanup without regressions in any of the three jobs.
 - Sales-order implementation remains blocked.
 
 ## Next Actions
 
-- Run the full repository/close gates and complete the exact staged-scope audit.
-- Commit and push the narrow follow-up to `master`, confirm all Actions jobs and annotations, then run the post-push check.
+- Commit and push the evidence-only correction to `master`, confirm all latest-head Actions jobs and annotations, then run the post-push check.
+- Do not repeat implementation or broaden the current 17-path governance scope.
 - Preserve `stash@{0}` and `stash@{1}`; do not release or deploy.
 
 ## Recovery Pointer

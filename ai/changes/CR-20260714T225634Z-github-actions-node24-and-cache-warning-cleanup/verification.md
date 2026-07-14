@@ -11,8 +11,8 @@ Status: verified [local]
 - [local] `npm run lint:codex`
 - [local] `npm run finalize:change`
 - [local] `npm run check`
-- [not-run] `npm run close:change`
-- [not-run] `git diff --check`
+- [local] `npm run close:change`
+- [local] `git diff --check`
 - [ci-planned] GitHub Actions `scaffold-ci` after the follow-up push
 
 ## Evidence

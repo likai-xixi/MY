@@ -26,8 +26,8 @@ Remove the deprecated Node.js 20 action-runtime annotations and the unused gover
 - `[local] npm run lint:codex`
 - `[local] npm run finalize:change`
 - `[local] npm run check`
-- `[not-run] npm run close:change`
-- `[not-run] git diff --check`
+- `[local] npm run close:change`
+- `[local] git diff --check`
 - `[ci-planned] GitHub Actions scaffold-ci after push`
 
 ## Verification
@@ -46,4 +46,4 @@ Remove the deprecated Node.js 20 action-runtime annotations and the unused gover
 
 ## Next Entry Point
 
-Rerun the full repository gate, finalize and close the evidence, audit exact staging, commit/push `master`, inspect the new Actions run and annotations, run the post-push check, and do not release or deploy.
+Commit and push the evidence-only consistency correction, inspect the latest-head Actions run and annotations, run the post-push check, preserve both stashes, and do not release or deploy.
