@@ -34,8 +34,9 @@
 ## Release verification
 
 - npm run verify:release is the intended release verification entry
-- it must not be weakened just because plain mvn is unavailable on one local machine
-- if mvn is missing locally, record the failure and use the project configured Maven path for supplementary evidence, but do not claim verify:release passed
+- it runs the fixed governance, production-safety, `ruoyi-business -am -Pintegration-test verify`, frontend test, full moderate audit, and production-build sequence, stopping on the first failure
+- it resolves Maven from `ai/rules/runtime-policy.json` first and falls back to the standard `mvn` command, so the same release contract runs on configured Windows workstations and CI/Linux
+- only Maven executable resolution is configurable; the release goals, order, audit scope, and failure behavior are fixed and must not be weakened
 
 ## Runtime acceptance still required
 

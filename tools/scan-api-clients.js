@@ -46,13 +46,22 @@ function scanTextClientCalls(file, text, features) {
   });
 }
 
-export function buildApiClientScan() {
-  const config = configuredPaths();
-  const features = readFeatureRegistry();
-  const files = listFilesUnderRoots(config.frontendScanRoots, (file) => /\.(ts|tsx|js|jsx|vue)$/.test(file));
-  const calls = files.flatMap((file) => scanTextClientCalls(file, readSafe(file), features));
-  const moduleContracts = listFiles('frontend/src/modules', (file) => file.endsWith('/module.ts'))
-    .map((file) => ({ file, ...parseFrontendModule(readText(file)) }))
+export function isFrontendApiSourceFile(file) {
+  return /\.(ts|tsx|js|jsx|mjs|vue)$/.test(file);
+}
+
+export function buildApiClientScan({
+  config = configuredPaths(),
+  features = readFeatureRegistry(),
+  list = listFilesUnderRoots,
+  listModuleFiles = listFiles,
+  readTextFile = readSafe,
+  readModuleText = readText
+} = {}) {
+  const files = list(config.frontendScanRoots, (file) => isFrontendApiSourceFile(file));
+  const calls = files.flatMap((file) => scanTextClientCalls(file, readTextFile(file), features));
+  const moduleContracts = listModuleFiles('frontend/src/modules', (file) => file.endsWith('/module.ts'))
+    .map((file) => ({ file, ...parseFrontendModule(readModuleText(file)) }))
     .filter((item) => item.id && item.api)
     .map((item) => ({
       module: item.id,

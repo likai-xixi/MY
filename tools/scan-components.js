@@ -3,7 +3,9 @@ import { basenameWithoutExtension, readJsonOrDefault, readSafe, writeGenerated }
 import { configuredPaths, inferFeatureFromPath, listFilesUnderRoots, readFeatureRegistry } from './project-config.js';
 import { isComponentSourceFile, isModuleComponentCandidate } from './component-checker.js';
 
-const COMPONENT_EXTENSIONS = /\.(vue|tsx|jsx|ts|js)$/;
+export function isComponentConsumerSourceFile(file) {
+  return /\.(vue|tsx|jsx|ts|js|mjs)$/.test(file);
+}
 const HTML_TAGS = new Set([
   'a', 'abbr', 'address', 'area', 'article', 'aside', 'audio', 'b', 'base', 'bdi', 'bdo', 'blockquote', 'body',
   'br', 'button', 'canvas', 'caption', 'cite', 'code', 'col', 'colgroup', 'data', 'datalist', 'dd', 'del',
@@ -106,7 +108,7 @@ export function buildComponentScan({
   const sharedCatalogs = config.sharedComponentRoots.map((root) => ({ root, components: readSharedCatalog(root, { exists, read }).components || [] }));
   const sharedFiles = list(config.sharedComponentRoots, (file) => isComponentSourceFile(file));
   const moduleComponentFiles = list(config.frontendModuleRoots, (file) => isModuleComponentCandidate(file));
-  const imports = list(config.frontendScanRoots, (file) => COMPONENT_EXTENSIONS.test(file)).flatMap((file) => {
+  const imports = list(config.frontendScanRoots, (file) => isComponentConsumerSourceFile(file)).flatMap((file) => {
     const text = readTextFile(file);
     const matches = [...text.matchAll(/from\s+["']([^"']*components[^"']*)["']/g)];
     return matches.map((match) => ({ file, module: inferFeatureFromPath(file, features), source: match[1] }));

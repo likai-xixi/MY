@@ -213,13 +213,13 @@
     {
       "id": "github-actions",
       "title": "GitHub Actions",
-      "category": "deferred-automation",
-      "status": "deferred",
+      "category": "quality-gate",
+      "status": "completed",
       "requiredBefore": [],
-      "reason": "CI is useful but explicitly out of this local governance batch.",
-      "guard": "Do not create fake CI that only echoes success.",
-      "evidence": "enhancement-backlog entry",
-      "futureAction": "Add real CI after local gates are stable and approved."
+      "reason": "Repository changes require reproducible remote verification in addition to local gates.",
+      "guard": "GitHub Actions must use locked installs and run real root governance tests, Maven unit and integration verification, explicit frontend tests, a full moderate dependency audit, and the production frontend build without masked failures.",
+      "evidence": ".github/workflows/ci.yml; tools/ci-coverage-declaration-checker.js; tests/ci-coverage-hardening.test.js; CR-20260714T114811Z-frontend-ci-and-esm-scanner-hardening",
+      "futureAction": "Keep CI commands and the machine-checked coverage declaration aligned whenever verification contracts change."
     }
   ]
 }

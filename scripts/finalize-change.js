@@ -20,6 +20,7 @@ function pathIsDirectory(relativePath) {
 }
 
 const TEMPLATE_STATUSES = new Set(['prepared', 'pending']);
+const PROJECT_TIME_ZONE = 'Asia/Shanghai';
 const CONTROLLED_HANDOVER_HEADINGS = [
   '## Summary',
   '## Impact',
@@ -289,21 +290,43 @@ export function buildMemoryHandover({ id, summary, changedFiles, commands, risks
   ].filter((line) => line !== '').join('\n') + '\n';
 }
 
+export function projectCalendarDate(date = new Date(), timeZone = PROJECT_TIME_ZONE) {
+  const value = date instanceof Date ? date : new Date(date);
+  if (Number.isNaN(value.getTime())) {
+    throw new TypeError('projectCalendarDate requires a valid date');
+  }
+  const parts = Object.fromEntries(new Intl.DateTimeFormat('en-US', {
+    timeZone,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit'
+  }).formatToParts(value).map((part) => [part.type, part.value]));
+  return `${parts.year}-${parts.month}-${parts.day}`;
+}
+
+export function buildChangelogEntry({ id, summary, featureId, mode, today = projectCalendarDate() }) {
+  const lines = [
+    `## ${today} - ${mode || 'change'}`,
+    '',
+    `- Change: \`ai/changes/${id}\`.`,
+    `- ${summary || 'Updated change record, registry, graph, generated scans, memory, and handover.'}`
+  ];
+  if (featureId) {
+    lines.push(`- Feature: \`${featureId}\`.`);
+  }
+  return `${lines.join('\n')}\n`;
+}
+
+export function shouldAppendChangelog(currentText = '', id = '') {
+  return Boolean(id) && !String(currentText).includes(`- Change: \`ai/changes/${id}\`.`);
+}
+
 function appendChangelog({ id, summary, featureId, mode }, errors) {
   const file = 'memory/CHANGELOG.md';
   const current = pathExists(file) ? readText(file).trimEnd() : '# Changelog';
-  const today = new Date().toISOString().slice(0, 10);
-  const entry = [
-    '',
-    `## ${today} — ${mode || 'change'}`,
-    '',
-    `- Change: \`ai/changes/${id}\`.`,
-    `- ${summary || 'Updated change record, registry, graph, generated scans, memory, and handover.'}`,
-    featureId ? `- Feature: \`${featureId}\`.` : '',
-    ''
-  ].filter((line) => line !== '').join('\n');
-  if (!current.includes(summary || '__never__')) {
-    writeOrCheck(file, `${current}${entry}\n`, false, errors);
+  if (shouldAppendChangelog(current, id)) {
+    const entry = buildChangelogEntry({ id, summary, featureId, mode });
+    writeOrCheck(file, `${current}\n\n${entry}`, false, errors);
   }
 }
 
@@ -312,7 +335,7 @@ function updateTaskMemory({ featureId, mode }, errors) {
     return;
   }
   const data = readJsonOrDefault('memory/TASKS.json', { schemaVersion: 1, tasks: [] });
-  const now = new Date().toISOString().slice(0, 10);
+  const now = projectCalendarDate();
   const id = currentChangeId();
   for (const task of data.tasks || []) {
     if (!featureId || task.feature === featureId) {

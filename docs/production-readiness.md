@@ -27,8 +27,8 @@ This repository currently has a RuoYi + Vue3 development/default configuration a
 - `npm run check:config-safety` keeps development/default risky values as warnings so local development is not blocked by sample configuration.
 - `npm run check:prod-safety` is the blocking production safety baseline check.
 - Production release verification must start with `npm run verify:release`.
-- `npm run verify:release` explicitly runs governance checks, production safety checks, backend Maven compile, and the frontend production build.
-- Do not weaken `npm run verify:release` just because plain `mvn` is unavailable on one local machine. Record the failure, optionally collect supplementary evidence with the project configured Maven path, and keep the release result inconclusive until `verify:release` itself passes.
+- `npm run verify:release` explicitly runs governance checks, production safety checks, the exact `ruoyi-business -am -Pintegration-test verify` reactor, frontend tests, a full moderate dependency audit including development dependencies, and the frontend production build.
+- The release verifier resolves only the Maven executable from `ai/rules/runtime-policy.json`, then falls back to standard `mvn`; all required goals, arguments, ordering, audit scope, and fail-fast behavior remain fixed.
 - CI passed does not mean runtime acceptance passed.
 - Before a real production launch, the project still needs Java/Spring runtime acceptance, MySQL acceptance, browser/manual acceptance, deployment-secret review, backup/rollback rehearsal, and operator sign-off.
 

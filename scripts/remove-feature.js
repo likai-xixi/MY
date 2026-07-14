@@ -24,6 +24,7 @@ import { runOwnershipSync } from '../tools/ownership-syncer.js';
 const TEXT_EXTENSIONS = new Set([
   '.md',
   '.js',
+  '.mjs',
   '.json',
   '.yml',
   '.yaml',
@@ -98,6 +99,10 @@ function registryOwnedPaths(feature = {}, slug = '') {
 function extensionOf(file) {
   const index = file.lastIndexOf('.');
   return index === -1 ? file : file.slice(index);
+}
+
+export function isRemovalReferenceFile(file) {
+  return TEXT_EXTENSIONS.has(extensionOf(file));
 }
 
 function pathExists(relativePath) {
@@ -225,11 +230,12 @@ function tokenSet({ slug, registryFeature, apiEndpointIds, uiScreenIds, extraTok
 }
 
 export function shouldSkipRemovalDocScanPath(relativePath = '') {
-  return String(relativePath)
+  const segments = String(relativePath)
     .replace(/\\/g, '/')
     .split('/')
-    .filter(Boolean)
-    .some((segment) => DOC_SCAN_IGNORED_DIR_NAMES.has(segment));
+    .filter(Boolean);
+  return segments.some((segment, index) => DOC_SCAN_IGNORED_DIR_NAMES.has(segment)
+    && (segment !== 'build' || !segments.slice(0, index).includes('src')));
 }
 
 function listDocScanFiles(relativeDir = '.') {
@@ -249,7 +255,7 @@ function listDocScanFiles(relativeDir = '.') {
         }
         continue;
       }
-      if (!shouldSkipRemovalDocScanPath(relative) && TEXT_EXTENSIONS.has(extensionOf(relative))) {
+      if (!shouldSkipRemovalDocScanPath(relative) && isRemovalReferenceFile(relative)) {
         files.push(relative);
       }
     }

@@ -359,10 +359,22 @@ function defaultWorkingDirectory(document, node) {
   return yamlString(document, defaultRunPair(document, node, 'working-directory')?.value);
 }
 
+function yamlScalarMap(document, node, key) {
+  const map = yamlMapNode(document, node, key);
+  if (!isMap(map)) {
+    return {};
+  }
+  return Object.fromEntries(map.items.map((pair) => [
+    yamlString(document, pair.key),
+    yamlString(document, pair.value)
+  ]));
+}
+
 function workflowStepRecords(entry) {
   const records = [];
   const workflowDefault = defaultWorkingDirectory(entry.document, entry.document.contents);
   const workflowDefaultShell = defaultRunPair(entry.document, entry.document.contents, 'shell');
+  const workflowEnvironment = yamlScalarMap(entry.document, entry.document.contents, 'env');
   for (const job of workflowJobs(entry)) {
     const steps = yamlMapNode(entry.document, job.node, 'steps');
     if (!isSeq(steps)) {
@@ -373,6 +385,12 @@ function workflowStepRecords(entry) {
     const jobNeeds = yamlMapPair(entry.document, job.node, 'needs');
     const jobDefault = defaultWorkingDirectory(entry.document, job.node) || workflowDefault;
     const jobDefaultShell = defaultRunPair(entry.document, job.node, 'shell') || workflowDefaultShell;
+    const jobContainer = yamlMapNode(entry.document, job.node, 'container');
+    const jobEnvironment = {
+      ...workflowEnvironment,
+      ...yamlScalarMap(entry.document, jobContainer, 'env'),
+      ...yamlScalarMap(entry.document, job.node, 'env')
+    };
     steps.items.forEach((item, stepIndex) => {
       const step = resolveYamlNode(entry.document, item);
       if (!isMap(step)) {
@@ -392,6 +410,10 @@ function workflowStepRecords(entry) {
         workingDirectory: workingDirectory
           ? yamlString(entry.document, workingDirectory.value)
           : jobDefault,
+        environment: {
+          ...jobEnvironment,
+          ...yamlScalarMap(entry.document, step, 'env')
+        },
         conditionSpecified: Boolean(condition),
         condition: yamlString(entry.document, condition?.value),
         jobConditionSpecified: Boolean(jobCondition),
@@ -469,6 +491,7 @@ export function workflowRunSteps(root) {
         line: yamlLine(entry.lineCounter, run.key),
         command,
         workingDirectory: step.workingDirectory,
+        environment: step.environment,
         conditionSpecified: step.conditionSpecified,
         condition: step.condition,
         jobConditionSpecified: step.jobConditionSpecified,

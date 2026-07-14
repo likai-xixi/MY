@@ -4,12 +4,28 @@ import {
   checkAllowedEditRoots,
   checkEditRootPolicy,
   checkForbiddenEditRoots,
+  checkTextHygiene,
   gitChangedEntries,
   gitChangedFiles,
   isAllowedByRoot,
   validateBaseRevision,
   validateRevisionAncestry
 } from '../tools/diff-checker.js';
+
+test('text hygiene scans executable mjs helpers', () => {
+  const file = 'ruoyi-ui/src/views/customer/no-final-newline.mjs';
+  const businessBuildSource = 'ruoyi-ui/src/views/tool/build/CodeTypeDialog.vue';
+  const dependencyBuildOutput = 'ruoyi-ui/node_modules/example/build/generated.mjs';
+  const errors = checkTextHygiene({
+    list: (_root, predicate) => [file, businessBuildSource, dependencyBuildOutput].filter((candidate) => predicate(candidate)),
+    readTextFile: () => 'export const requestGuard = true;'
+  });
+
+  assert.deepEqual(errors, [
+    `${file} must end with a newline.`,
+    `${businessBuildSource} must end with a newline.`
+  ]);
+});
 
 test('allowed root accepts exact file and children', () => {
   assert.equal(isAllowedByRoot('backend/modules/customer/service/a.java', 'backend/modules/customer'), true);

@@ -8,10 +8,15 @@
       "status": "in_progress",
       "owner": "Codex",
       "priority": "high",
-      "statusReason": "CR-20260714T102910Z-frontend-dependency-hardening is fully locally verified: four moderate UI findings are removed, audit is 0, the production sprite preserves 90/90 safe icons, browser cache/icon acceptance passes, UI tests are 7/7, the complete repository gate passes 431/431, closeout passes, and two independent reviewers return GO. Implementation commit, the isolated CI/scanner governance batch, push, and Actions confirmation remain.",
-      "nextStep": "Commit the verified frontend dependency batch, then complete the isolated governance/rule-change for explicit UI tests, moderate audit enforcement, and .mjs scanner completeness. Run the final combined gate, push master, confirm Actions, keep beforeSalesOrder blocked, and do not release or deploy.",
+      "statusReason": "CR-20260714T114811Z-frontend-ci-and-esm-scanner-hardening closes frontend CI, portable release-verification, and executable .mjs governance false-greens. Final focused coverage passes 234/234, CI hardening passes 42/42, portable release coverage passes 94/94, and two independent adversarial reviews report no P0-P3; final verify:release passes with 480/480 Node tests, 60/60 Java tests including two MySQL/Testcontainers integrations, 7/7 UI tests, zero vulnerabilities across 360 dependencies, and a 2601-module production build. Commit, push, post-push governance, and Actions confirmation remain.",
+      "nextStep": "Finalize the evidence, rerun the final repository and close gates, audit exact staging, commit and push master, confirm GitHub Actions and post-push governance, keep beforeSalesOrder blocked, preserve both stashes, and do not release or deploy.",
       "blockedBy": [],
       "verification": [
+        "CR-20260714T114811Z-frontend-ci-and-esm-scanner-hardening portable release-verifier and anti-false-green coverage passes 94/94 across fixed stage order, configured/fallback Maven resolution, no retry after reactor failure, and every fail-fast boundary",
+        "CR-20260714T114811Z-frontend-ci-and-esm-scanner-hardening final verify:release passes with 480/480 Node tests, 60/60 Java tests including two MySQL/Testcontainers integrations, 7/7 UI tests, zero vulnerabilities across 360 dependencies, and a 2601-module production build",
+        "CR-20260714T114811Z-frontend-ci-and-esm-scanner-hardening focused governance/scanner regressions pass 234/234, CI hardening passes 42/42, and two independent adversarial reviews report no P0-P3",
+        "CR-20260714T114811Z-frontend-ci-and-esm-scanner-hardening standalone npm test and complete governance gate pass 480/480; UI tests pass 7/7, moderate full audit reports zero vulnerabilities, and production build transforms 2601 modules",
+        "CR-20260714T114811Z-frontend-ci-and-esm-scanner-hardening scan, registry, ownership, route, boundary, phase, roadmap, diff, false-green, and CI declaration checks pass without business runtime or contract changes",
         "CR-20260714T102910Z-frontend-dependency-hardening root focused tests pass 5/5 and UI tests pass 7/7, including the real Vite spritemap plugin, deferred request behavior, and ten chart mount/dispose cycles",
         "CR-20260714T102910Z-frontend-dependency-hardening audit reports 0 vulnerabilities; ECharts/spritemap/SVGO/PostCSS resolve to 6.1.0/6.0.0/4.0.2/8.5.15 and the legacy SVG chain is absent",
         "CR-20260714T102910Z-frontend-dependency-hardening production build passes after UI prebuild tests and emits one hashed 90/90 safe spritemap; browser acceptance confirms all 90 picker icons, two cache charts, responsive resize, real Redis data, and no console warning/error",
@@ -210,10 +215,10 @@
         "R-10C frontend browser acceptance passed on canonical http://127.0.0.1:5173/business/masterdata with nine tabs and product-category add/edit/disable/delete",
         "R-10C direct http://127.0.0.1:5173/masterdata returned RuoYi 404 and is recorded as non-canonical; no R-10D is opened"
       ],
-      "latestSession": "memory/sessions/2026-07-14-frontend-dependency-hardening.md",
+      "latestSession": "memory/sessions/2026-07-15-frontend-ci-and-esm-scanner-hardening.md",
       "handoverRequired": true,
-      "updatedAt": "2026-07-14",
-      "latestChange": "CR-20260714T102910Z-frontend-dependency-hardening"
+      "updatedAt": "2026-07-15",
+      "latestChange": "CR-20260714T114811Z-frontend-ci-and-esm-scanner-hardening"
     },
     {
       "id": "TASK-CUSTOMER",

@@ -1026,6 +1026,10 @@ test('beforeSalesOrder gate blocks sales-order runtime content in SQL and Vue AP
       text: "export const createSalesOrder = () => request({ url: '/sales/order', method: 'post' })"
     },
     {
+      file: 'ruoyi-ui/src/views/customer/sales-order-helper.mjs',
+      text: "export const createSalesOrder = () => request({ url: '/sales/order', method: 'post' })"
+    },
+    {
       file: 'ruoyi-ui/src/views/customer/index.vue',
       text: "<el-button v-hasPermi=\"['business:sales:order']\">Create</el-button>"
     }

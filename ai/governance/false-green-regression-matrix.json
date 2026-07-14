@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "changeId": "CR-20260714T034246Z-repository-wide-governance-gate-evidence-hardeni",
+  "changeId": "CR-20260714T114811Z-frontend-ci-and-esm-scanner-hardening",
   "items": [
     {
       "id": "package-script-anti-theater",
@@ -487,10 +487,10 @@
       "title": "CI requires immutable actions locked installs real tests audit and production build",
       "gate": "check:ci-coverage-declaration",
       "risk": [
-        "CI can be green after mutable third-party Action resolution, unlocked dependency resolution, compile-only Maven work, skipped tests, missing frontend audit, or a non-production frontend build."
+        "CI can be green after mutable third-party Action resolution, unlocked dependency resolution, compile-only Maven work, skipped tests, an implicit or missing frontend test, a weak or dependency-omitting frontend audit, or a non-production frontend build."
       ],
       "mustFailWhen": [
-        "The workflow uses invalid YAML, a non-SHA third-party Action or reusable-workflow reference, a non-digest Docker image, an escaped YAML key that bypasses semantic parsing, a custom or inherited verification shell, a dependency-skippable needs job, or a shallow checkout while historical baselines exist; counts strategy/matrix data, heredoc/string/function/conditional/subshell text, or any non-dedicated run program as executed coverage; omits root npm ci, npm test, Maven unit and integration verification, ruoyi-ui npm ci, high-severity npm audit, or build:prod; places required coverage behind a job or step condition; masks a required command failure with shell control flow, disabled errexit, an unsafe pipeline, background execution, trailing success, or any non-false continue-on-error value; uses skip-test flags or echo-only commands; or counts root npm commands as frontend coverage."
+        "The workflow uses invalid YAML, a non-SHA third-party Action or reusable-workflow reference, a non-digest Docker image, an escaped YAML key that bypasses semantic parsing, a custom or inherited verification shell, a dependency-skippable needs job, or a shallow checkout while historical baselines exist; mutates GITHUB_ENV or GITHUB_PATH before fixed verification; counts strategy/matrix data, heredoc/string/function/conditional/subshell text, or any non-dedicated run program as executed coverage; omits root npm ci, npm test, Maven unit and integration verification, ruoyi-ui npm ci, an explicit ruoyi-ui test, one literal info/low/moderate audit with development dependencies included, or build:prod; accepts Maven environment variables that add command arguments, dynamic test options, skip flags including maven.test.skip.exec, selectors, or failure masking; accepts high, critical, missing, dynamic, duplicated, conflicting, fix, production-only, or dependency-omitting audit forms; misses an additional frontend audit hidden behind an equivalent working directory, cd/pushd options, npm or process-wrapper chain, YAML or run-block environment-resolved command, unresolved shell or Actions executable expression, dynamic npm subcommand or argument, NPM_CONFIG_PREFIX, normalized prefix, or dynamic frontend path; fails to resolve a declared repository-root environment alias before classification or conflates a known repository-root audit with frontend uniqueness; places required coverage behind a job or step condition; masks a required command failure with shell control flow, disabled errexit, an unsafe pipeline, background execution, trailing success, or any non-false continue-on-error value; uses skip-test flags or echo-only commands; or counts root npm commands as frontend coverage."
       ],
       "coveredByTests": [
         "tests/governance-gates.test.js",
@@ -510,7 +510,70 @@
       ],
       "status": "covered",
       "owner": "governance",
-      "lastVerifiedByChange": "CR-20260714T034246Z-repository-wide-governance-gate-evidence-hardeni"
+      "lastVerifiedByChange": "CR-20260714T114811Z-frontend-ci-and-esm-scanner-hardening"
+    },
+    {
+      "id": "release-verification-portable-fail-fast",
+      "title": "Release verification resolves Maven portably and fails fast",
+      "gate": "verify:release",
+      "risk": [
+        "The release gate can fail before backend integration tests on a machine whose configured Maven is not on PATH, or a wrapper can mask, duplicate, reorder, or weaken required release steps."
+      ],
+      "mustFailWhen": [
+        "verify:release does not use the configured runtime-policy Maven command with standard mvn fallback; omits, duplicates, reorders, masks, or weakens governance, production safety, the exact ruoyi-business integration reactor, frontend tests, the full moderate audit including development dependencies, or the production build; or continues after any failed step."
+      ],
+      "coveredByTests": [
+        "tests/release-verifier-governance.test.js",
+        "tests/production-safety.test.js"
+      ],
+      "sourceFiles": [
+        "package.json",
+        "tools/release-verifier.js",
+        "tools/process-runner.js",
+        "ai/rules/runtime-policy.json"
+      ],
+      "status": "covered",
+      "owner": "governance",
+      "lastVerifiedByChange": "CR-20260714T114811Z-frontend-ci-and-esm-scanner-hardening"
+    },
+    {
+      "id": "frontend-esm-helper-scanner-coverage",
+      "title": "Executable ESM helpers are scanned without becoming route pages",
+      "gate": "test",
+      "risk": [
+        "A .mjs helper can hide API calls, permissions, cross-feature imports, sales-order runtime, feature references, deletion residue, duplicate code, or text hygiene issues while generated checks remain green."
+      ],
+      "mustFailWhen": [
+        "Any non-route code, API, permission, component-consumer, ownership, boundary, phase-gate, impact, orphan, removal, duplicate, file-weight, or text-hygiene traversal omits .mjs; or route/component-page discovery reclassifies a plain .mjs helper as a screen or component candidate."
+      ],
+      "coveredByTests": [
+        "tests/diff-checker.test.js",
+        "tests/frontend-esm-scanner-governance.test.js",
+        "tests/governance-sales-order-handoff-gate.test.js",
+        "tests/ownership-syncer.test.js",
+        "tests/remove-feature.test.js"
+      ],
+      "sourceFiles": [
+        "tools/scan-utils.js",
+        "tools/scan-api-clients.js",
+        "tools/scan-permissions.js",
+        "tools/scan-components.js",
+        "tools/component-checker.js",
+        "tools/scan-frontend-routes.js",
+        "tools/boundary-lint.js",
+        "tools/diff-checker.js",
+        "tools/impact-analyzer.js",
+        "tools/orphan-code-checker.js",
+        "tools/duplicate-scan.js",
+        "tools/ownership-syncer.js",
+        "tools/phase-gate-checker.js",
+        "tools/file-weight-checker.js",
+        "scripts/remove-feature.js",
+        "ai/registry/features.json"
+      ],
+      "status": "covered",
+      "owner": "governance",
+      "lastVerifiedByChange": "CR-20260714T114811Z-frontend-ci-and-esm-scanner-hardening"
     },
     {
       "id": "phase-gate-executable-file-scope",

@@ -24,7 +24,7 @@ const FORBIDDEN_BACKEND_ROOT_LAYERS = [
   'backend/repository'
 ];
 
-const CODE_EXTENSIONS = new Set(['.java', '.js', '.jsx', '.ts', '.tsx', '.vue', '.kt', '.py']);
+const CODE_EXTENSIONS = new Set(['.java', '.js', '.jsx', '.mjs', '.ts', '.tsx', '.vue', '.kt', '.py']);
 const DEFAULT_BACKEND_LAYERS = ['api', 'service', 'domain', 'repository'];
 const DEFAULT_BOUNDARY_POLICY = {
   backend: {
@@ -35,7 +35,7 @@ const DEFAULT_BOUNDARY_POLICY = {
   }
 };
 
-function isCodeFile(file) {
+export function isCodeFile(file) {
   return CODE_EXTENSIONS.has(path.extname(file).toLowerCase());
 }
 

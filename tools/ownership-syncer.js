@@ -2,6 +2,7 @@ import path from 'node:path';
 import { fileExists, finish, formatJson, isCli, listFiles, readJson, writeOrCheck } from './common.js';
 import { readJsonOrDefault, readSafe } from './scan-utils.js';
 import { configuredPaths, inferFeatureFromPath, listFilesUnderRoots, readFeatureRegistry, unique } from './project-config.js';
+import { isComponentSourceFile } from './component-checker.js';
 
 const PERMISSION_REGEX = /\b[a-z][A-Za-z0-9-]*:[a-z][A-Za-z0-9-]*(?::[A-Za-z0-9-*]+)+\b/g;
 
@@ -135,27 +136,35 @@ function isMapperXml(file) {
   return normalized.endsWith('.xml') && (normalized.includes('/mapper/') || /Mapper\.xml$/.test(normalized));
 }
 
-function isFrontendApiFile(file) {
+export function isFrontendApiFile(file) {
   const normalized = normalize(file);
-  return /\.(ts|js)$/.test(normalized) && (
+  return /\.(ts|js|mjs)$/.test(normalized) && (
     normalized.startsWith('ruoyi-ui/src/api/')
     || normalized.includes('/api/')
     || normalized.endsWith('.api.ts')
     || normalized.endsWith('.api.js')
+    || normalized.endsWith('.api.mjs')
   );
+}
+
+export function isFrontendOwnershipSourceFile(file) {
+  return /\.(ts|tsx|js|jsx|mjs|vue)$/.test(file);
 }
 
 function isMenuSql(text) {
   return /sys_menu|menu_name|perms\b|parent_id/i.test(text);
 }
 
-function scanLiveOwnership(features) {
-  const config = configuredPaths();
+export function scanLiveOwnership(features, {
+  config = configuredPaths(),
+  list = listFilesUnderRoots,
+  readTextFile = readSafe
+} = {}) {
   const bucket = {};
 
-  const backendFiles = listFilesUnderRoots(config.backendScanRoots, (file) => /\.(java|kt|xml)$/.test(file));
+  const backendFiles = list(config.backendScanRoots, (file) => /\.(java|kt|xml)$/.test(file));
   for (const file of backendFiles) {
-    const text = readSafe(file);
+    const text = readTextFile(file);
     const featureId = inferFeature(file, text, features);
     if (!featureId) {
       continue;
@@ -169,9 +178,9 @@ function scanLiveOwnership(features) {
     }
   }
 
-  const frontendFiles = listFilesUnderRoots(config.frontendScanRoots, (file) => /\.(ts|tsx|js|jsx|vue)$/.test(file));
+  const frontendFiles = list(config.frontendScanRoots, (file) => isFrontendOwnershipSourceFile(file));
   for (const file of frontendFiles) {
-    const text = readSafe(file);
+    const text = readTextFile(file);
     const featureId = inferFeature(file, text, features);
     if (!featureId) {
       continue;
@@ -179,7 +188,7 @@ function scanLiveOwnership(features) {
     if (isFrontendApiFile(file)) {
       addValue(bucket, featureId, 'apiClients', file);
     }
-    if (file.includes('/components/')) {
+    if (file.includes('/components/') && isComponentSourceFile(file)) {
       addValue(bucket, featureId, 'components', file);
     }
     for (const match of text.matchAll(PERMISSION_REGEX)) {
@@ -191,9 +200,9 @@ function scanLiveOwnership(features) {
     }
   }
 
-  const sqlAndXmlFiles = listFilesUnderRoots(config.dbScanRoots, (file) => /\.(sql|xml)$/.test(file));
+  const sqlAndXmlFiles = list(config.dbScanRoots, (file) => /\.(sql|xml)$/.test(file));
   for (const file of sqlAndXmlFiles) {
-    const text = readSafe(file);
+    const text = readTextFile(file);
     const featureId = inferFeature(file, text, features);
     if (!featureId) {
       continue;

@@ -18,6 +18,26 @@
       ]
     },
     {
+      "file": "tests/frontend-esm-scanner-governance.test.js",
+      "type": "governance-test",
+      "reason": "validates executable ESM helper coverage across non-route governance scanners",
+      "owner": "governance",
+      "relatedFeatures": [
+        "customer",
+        "monitor",
+        "system"
+      ]
+    },
+    {
+      "file": "tests/release-verifier-governance.test.js",
+      "type": "governance-test",
+      "reason": "validates cross-platform release-gate orchestration and fail-fast Maven resolution",
+      "owner": "governance",
+      "relatedFeatures": [
+        "platform"
+      ]
+    },
+    {
       "file": "tests/high-risk-governance.test.js",
       "type": "governance-test",
       "reason": "validates CR-3 high-risk semantic governance framework gates",

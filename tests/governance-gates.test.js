@@ -78,7 +78,8 @@ function completeCiCommands() {
     '- run: npm test',
     '- run: mvn -pl ruoyi-business -am -Pintegration-test verify',
     '- run: npm --prefix ruoyi-ui ci',
-    '- run: npm --prefix ruoyi-ui audit --audit-level=high',
+    '- run: npm --prefix ruoyi-ui test',
+    '- run: npm --prefix ruoyi-ui audit --audit-level=moderate --include=dev',
     '- run: npm --prefix ruoyi-ui run build:prod'
   ].join('\n');
 }
@@ -565,6 +566,7 @@ test('ci-coverage-declaration requires reproducible Node, Maven, and frontend ve
     'maven-unit-ci-missing',
     'maven-integration-ci-missing',
     'frontend-npm-ci-missing',
+    'frontend-npm-test-missing',
     'frontend-audit-ci-missing',
     'frontend-build-ci-missing'
   ]) {
@@ -576,14 +578,14 @@ test('ci-coverage-declaration requires reproducible Node, Maven, and frontend ve
   assert.ok(result.failures.some((failure) => failure.code === 'declared-ci-maven-missing'));
 }));
 
-test('ci-coverage-declaration accepts reproducible Node, Maven unit/integration, audit, and build commands', () => withRoot((root) => {
+test('ci-coverage-declaration accepts reproducible Node, Maven unit/integration, frontend test, audit, and build commands', () => withRoot((root) => {
   writeWorkflow(root, completeCiCommands());
 
   const result = validateCiCoverageDeclaration({ root });
   assert.deepEqual(result.failures, []);
 }));
 
-test('ci-coverage-declaration accepts ruoyi-ui working-directory install, audit, and build', () => withRoot((root) => {
+test('ci-coverage-declaration accepts ruoyi-ui working-directory install, test, audit, and build', () => withRoot((root) => {
   writeWorkflow(root, [
     '- run: npm ci',
     '- run: npm run check',
@@ -591,7 +593,9 @@ test('ci-coverage-declaration accepts ruoyi-ui working-directory install, audit,
     '- run: mvn -pl ruoyi-business -am -Pintegration-test verify',
     '- run: npm ci',
     '  working-directory: ruoyi-ui',
-    '- run: npm audit --audit-level=high',
+    '- run: npm test',
+    '  working-directory: ruoyi-ui',
+    '- run: npm audit --audit-level moderate --include dev',
     '  working-directory: ruoyi-ui',
     '- run: npm run build:prod',
     '  working-directory: ruoyi-ui'
@@ -607,12 +611,13 @@ test('ci-coverage-declaration does not count root npm commands as frontend cover
     '- run: npm run check',
     '- run: npm test',
     '- run: mvn -pl ruoyi-business -am -Pintegration-test verify',
-    '- run: npm audit --audit-level=high',
+    '- run: npm audit --audit-level=moderate --include=dev',
     '- run: npm run build:prod'
   ].join('\n'));
 
   const result = validateCiCoverageDeclaration({ root });
   assert.ok(result.failures.some((failure) => failure.code === 'frontend-npm-ci-missing'));
+  assert.ok(result.failures.some((failure) => failure.code === 'frontend-npm-test-missing'));
   assert.ok(result.failures.some((failure) => failure.code === 'frontend-audit-ci-missing'));
   assert.ok(result.failures.some((failure) => failure.code === 'frontend-build-ci-missing'));
 }));
@@ -626,7 +631,8 @@ test('ci-coverage-declaration rejects skipped tests, echo commands, and continue
     '- run: echo compile passed',
     '  continue-on-error: true',
     '- run: npm --prefix ruoyi-ui install --package-lock=false',
-    '- run: npm --prefix ruoyi-ui audit --audit-level=high',
+    '- run: npm --prefix ruoyi-ui test',
+    '- run: npm --prefix ruoyi-ui audit --audit-level=moderate --include=dev',
     '- run: npm --prefix ruoyi-ui run build:prod'
   ].join('\n'));
   write(root, 'memory/HANDOVER.md', [

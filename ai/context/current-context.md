@@ -1,70 +1,77 @@
 # Current Context
 
 Current feature: `platform`
-Current change: `CR-20260714T102910Z-frontend-dependency-hardening`
+Current change: `CR-20260714T114811Z-frontend-ci-and-esm-scanner-hardening`
 Repository: RuoYi + Vue3 + Codex Auto Dev OS
 Profile: adapter `ruoyi`, locked `true`
 
 ## Allowed Edit Roots
 
-- `ruoyi-ui/package.json`
-- `ruoyi-ui/package-lock.json`
-- `ruoyi-ui/vite/plugins/svg-icon.js`
-- `ruoyi-ui/vite/plugins/index.js`
-- `ruoyi-ui/src/main.js`
-- `ruoyi-ui/src/components/SvgIcon/index.vue`
-- `ruoyi-ui/src/views/monitor/cache/index.vue`
-- `ruoyi-ui/src/views/monitor/cache/cache-request-controller.mjs`
-- `ruoyi-ui/src/views/monitor/cache/chart-lifecycle.mjs`
-- `ruoyi-ui/src/assets/icons/svg/button.svg`
-- `ruoyi-ui/src/assets/icons/svg/monitor.svg`
-- `ruoyi-ui/src/assets/icons/svg/redis-list.svg`
-- `ruoyi-ui/src/assets/icons/svg/system.svg`
-- `ruoyi-ui/tests/spritemap-production.test.js`
-- `ruoyi-ui/tests/cache-request-controller.test.js`
-- `ruoyi-ui/tests/cache-chart-lifecycle.test.js`
-- `tests/frontend-dependency-hardening.test.js`
-- `ai/registry/features.json`
-- `features/platform.md`
-- `ai/changes/CR-20260714T102910Z-frontend-dependency-hardening`
+- `.github/workflows/ci.yml`
+- `package.json`
+- `tools/governance-checker-utils.js`
+- `tools/ci-coverage-declaration-checker.js`
+- `tools/release-verifier.js`
+- `docs/runtime-verification-boundary.md`
+- `docs/production-readiness.md`
+- `tools/scan-utils.js`
+- `tools/scan-api-clients.js`
+- `tools/scan-permissions.js`
+- `tools/scan-components.js`
+- `tools/boundary-lint.js`
+- `tools/diff-checker.js`
+- `tools/impact-analyzer.js`
+- `tools/orphan-code-checker.js`
+- `tools/duplicate-scan.js`
+- `tools/ownership-syncer.js`
+- `tools/phase-gate-checker.js`
+- `tools/file-weight-checker.js`
+- `scripts/finalize-change.js`
+- `scripts/remove-feature.js`
+- `tests/ci-coverage-hardening.test.js`
+- `tests/diff-checker.test.js`
+- `tests/governance-gates.test.js`
+- `tests/governance-sales-order-handoff-gate.test.js`
+- `tests/ownership-syncer.test.js`
+- `tests/package-scripts.test.js`
+- `tests/production-safety.test.js`
+- `tests/remove-feature.test.js`
+- `tests/frontend-esm-scanner-governance.test.js`
+- `tests/false-green-matrix-checker.test.js`
+- `tests/release-verifier-governance.test.js`
+- `ai/governance/false-green-regression-matrix.json`
+- `ai/roadmap/enhancement-backlog.json`
+- `ai/roadmap/phase-gates.json`
+- `tools/false-green-matrix-checker.js`
+- `ai/registry/test-ownership-exceptions.json`
+- `ai/rule-proposals/2026-07-14-frontend-ci-and-esm-scanner-hardening.json`
+- `ai/changes/CR-20260714T114811Z-frontend-ci-and-esm-scanner-hardening`
 - `ai/changes/CURRENT_CHANGE.json`
 - `ai/context/current-context.json`
 - `ai/context/current-context.md`
+- `memory/CHANGELOG.md`
 - `memory/HANDOVER.md`
 - `memory/PROJECT_STATE.md`
 - `memory/TASKS.json`
-- `memory/CHANGELOG.md`
-- `memory/sessions/2026-07-14-frontend-dependency-hardening.md`
+- `memory/sessions/2026-07-15-frontend-ci-and-esm-scanner-hardening.md`
 
 ## Forbidden Edit Roots
 
-- `.github`
-- `package.json`
 - `package-lock.json`
-- `tools`
-- `scripts`
 - `ai/rules`
-- `ai/rule-proposals`
-- `ai/reviews`
-- `ai/governance`
-- `ai/registry/components.json`
-- `ai/registry/modules.json`
 - `graph`
-- `docs`
-- `sql`
-- `ruoyi-admin`
+- `features`
+- `backend`
+- `frontend`
+- `ruoyi-admin/src/main`
+- `ruoyi-framework/src/main`
 - `ruoyi-business`
+- `ruoyi-system`
 - `ruoyi-common`
-- `ruoyi-framework`
 - `ruoyi-generator`
 - `ruoyi-quartz`
-- `ruoyi-system`
-- `ruoyi-ui/src/api`
-- `ruoyi-ui/src/router`
-- `ruoyi-ui/src/views/customer`
-- `ruoyi-ui/src/views/masterdata`
-- `ruoyi-ui/src/views/system`
-- `ruoyi-ui/src/views/tool`
+- `ruoyi-ui`
+- `sql`
 
 ## Must Read Files
 
@@ -79,9 +86,9 @@ Profile: adapter `ruoyi`, locked `true`
 - `ai/roadmap/phase-gates.json` - beforeSalesOrder gate state.
 - `ai/roadmap/refactor-debt.json` - Known debt affecting sales-order handoff.
 - `ai/roadmap/enhancement-backlog.json` - Governance backlog and required/deferred evidence.
-- `ai/changes/CR-20260714T102910Z-frontend-dependency-hardening/impact.json` - Current change allowed and forbidden edit roots.
-- `ai/changes/CR-20260714T102910Z-frontend-dependency-hardening/plan.md` - Current change execution plan.
-- `ai/changes/CR-20260714T102910Z-frontend-dependency-hardening/verification.md` - Current change verification evidence.
+- `ai/changes/CR-20260714T114811Z-frontend-ci-and-esm-scanner-hardening/impact.json` - Current change allowed and forbidden edit roots.
+- `ai/changes/CR-20260714T114811Z-frontend-ci-and-esm-scanner-hardening/plan.md` - Current change execution plan.
+- `ai/changes/CR-20260714T114811Z-frontend-ci-and-esm-scanner-hardening/verification.md` - Current change verification evidence.
 
 ## Must Not Break
 
@@ -130,7 +137,6 @@ Deferred:
 - module-dependencies: Dependency matrix visualization is deferred until sales-order/delivery/finance boundaries exist.
 - api-integration-test: Requires approved API contracts and runtime fixtures.
 - ui-smoke-test: Requires approved UI screens and browser acceptance path.
-- github-actions: CI is deferred to avoid fake echo-success automation before local gates are stable.
 
 ## Refactor Debt Summary
 
@@ -143,22 +149,21 @@ Deferred:
 ## Planned Verification Commands
 
 - `npm run resume`
-- `npm run impact -- platform`
 - `npm run context:build -- platform`
-- `node --test tests/frontend-dependency-hardening.test.js`
-- `npm --prefix ruoyi-ui ci`
-- `npm --prefix ruoyi-ui test`
-- `npm --prefix ruoyi-ui ls echarts @spiriit/vite-plugin-svg-spritemap svgo vite-plugin-svg-icons svg-baker postcss --all`
-- `npm --prefix ruoyi-ui audit --audit-level=moderate`
-- `npm --prefix ruoyi-ui run build:prod`
-- `browser acceptance for login icons and cache charts`
+- `node --test tests/ci-coverage-hardening.test.js tests/diff-checker.test.js tests/frontend-esm-scanner-governance.test.js tests/false-green-matrix-checker.test.js tests/governance-gates.test.js tests/governance-sales-order-handoff-gate.test.js tests/ownership-syncer.test.js tests/package-scripts.test.js tests/production-safety.test.js tests/release-verifier-governance.test.js tests/remove-feature.test.js`
+- `npm run check:ci-coverage-declaration`
+- `npm run check:false-green-matrix`
 - `npm run scan:all`
+- `npm --prefix ruoyi-ui test`
+- `npm --prefix ruoyi-ui audit --audit-level=moderate --include=dev`
+- `npm --prefix ruoyi-ui run build:prod`
 - `npm test`
+- `npm run verify:release`
 - `npm run finalize:change`
 - `npm run check`
 - `npm run close:change`
 - `git diff --check`
-- `exact allowed/forbidden-path audit`
+- `exact allowed and forbidden root audit`
 
 ## Next Steps
 

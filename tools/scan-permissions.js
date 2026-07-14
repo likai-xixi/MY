@@ -21,13 +21,20 @@ export function inferFeatureFromPermissionCode(code, features) {
   return '';
 }
 
-export function buildPermissionScan() {
-  const config = configuredPaths();
-  const features = readFeatureRegistry();
-  const files = listFilesUnderRoots(config.permissionScanRoots, (file) => /\.(java|kt|ts|tsx|js|jsx|vue|xml|sql|yml|yaml)$/.test(file));
+export function isPermissionSourceFile(file) {
+  return /\.(java|kt|ts|tsx|js|jsx|mjs|vue|xml|sql|yml|yaml)$/.test(file);
+}
+
+export function buildPermissionScan({
+  config = configuredPaths(),
+  features = readFeatureRegistry(),
+  list = listFilesUnderRoots,
+  readTextFile = readSafe
+} = {}) {
+  const files = list(config.permissionScanRoots, (file) => isPermissionSourceFile(file));
   const permissions = [];
   for (const file of files) {
-    const text = readSafe(file);
+    const text = readTextFile(file);
     for (const match of text.matchAll(PERMISSION_REGEX)) {
       const module = inferFeatureFromPermissionCode(match[0], features);
       if (!module) {

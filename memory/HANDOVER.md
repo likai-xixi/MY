@@ -2,92 +2,109 @@
 
 ## Summary
 
-Active platform dependency-maintenance change `CR-20260714T102910Z-frontend-dependency-hardening` is fully verified [local] and ready for its implementation commit. It is bound to the separately committed pre-review `RV-20260714T112343Z-svg-spritemap` at base `752ed0f730fb2f9bd062f5df03bd57e4d08ff079`. No release, deployment, stash restoration, or push has occurred in this batch.
+[local] Active governance change `CR-20260714T114811Z-frontend-ci-and-esm-scanner-hardening` is in final closeout. It explicitly enforces frontend tests and a full moderate audit, resolves release Maven portably, rejects required-command, environment, dynamic-program, wrapper-chain, and wrong-reactor false-greens, and governs executable `.mjs` helpers without creating fake routes/components.
 
 ## Impact
 
-- Frontend audit findings were reduced from four moderate issues to zero total vulnerabilities by pinning ECharts 6.1.0, the maintained spritemap plugin 6.0.0, and SVGO 4.0.2 while removing the legacy SVG/PostCSS 5 chain.
-- The shared icon contract is now `/__spritemap#icon-*`; all 90 repository icons remain present and safe in the production sprite.
-- Cache-monitor request and chart lifecycle behavior is isolated in feature-local `.mjs` controllers with latest-response wins, unmount invalidation, stable resize, instance reuse, and idempotent cleanup.
-- The production frontend build runs the full UI suite after UI dependencies are installed. The clean root gate reaches the dependency-free controller tests.
-- Backend, APIs, routes, permissions, SQL, database contracts, customer/masterdata/system/tool business behavior, and sales-order runtime are unchanged. `beforeSalesOrder` remains blocked.
+- CI coverage is exact and failure-propagating: root install/check/test, `ruoyi-business -am` integration verification, frontend install/test, exactly one full audit, and production build.
+- Local release verification resolves only the Maven executable from runtime policy with standard fallback; its six required stages remain fixed and fail fast.
+- `.mjs` is covered across non-route scanners; nested dependencies are excluded and legitimate `src/**/build` source remains visible.
+- The roadmap now records GitHub Actions as completed, while `beforeSalesOrder` remains blocked.
+- Business runtime, UI runtime, APIs, routes, permissions, SQL, database, graph, dependencies, lockfiles, release, and deployment are unchanged.
 
 ## Changed Files
 
-- `ai/changes/CR-20260714T102910Z-frontend-dependency-hardening/changed-files.json`
-- `ai/changes/CR-20260714T102910Z-frontend-dependency-hardening/handover.md`
-- `ai/changes/CR-20260714T102910Z-frontend-dependency-hardening/impact.json`
-- `ai/changes/CR-20260714T102910Z-frontend-dependency-hardening/plan.md`
-- `ai/changes/CR-20260714T102910Z-frontend-dependency-hardening/request.md`
-- `ai/changes/CR-20260714T102910Z-frontend-dependency-hardening/verification.md`
+- `.github/workflows/ci.yml`
+- `ai/changes/CR-20260714T114811Z-frontend-ci-and-esm-scanner-hardening/changed-files.json`
+- `ai/changes/CR-20260714T114811Z-frontend-ci-and-esm-scanner-hardening/handover.md`
+- `ai/changes/CR-20260714T114811Z-frontend-ci-and-esm-scanner-hardening/impact.json`
+- `ai/changes/CR-20260714T114811Z-frontend-ci-and-esm-scanner-hardening/plan.md`
+- `ai/changes/CR-20260714T114811Z-frontend-ci-and-esm-scanner-hardening/request.md`
+- `ai/changes/CR-20260714T114811Z-frontend-ci-and-esm-scanner-hardening/verification.md`
 - `ai/changes/CURRENT_CHANGE.json`
 - `ai/context/current-context.json`
 - `ai/context/current-context.md`
-- `ai/registry/features.json`
-- `features/platform.md`
+- `ai/governance/false-green-regression-matrix.json`
+- `ai/registry/test-ownership-exceptions.json`
+- `ai/roadmap/enhancement-backlog.json`
+- `ai/roadmap/phase-gates.json`
+- `ai/rule-proposals/2026-07-14-frontend-ci-and-esm-scanner-hardening.json`
+- `docs/production-readiness.md`
+- `docs/runtime-verification-boundary.md`
 - `memory/CHANGELOG.md`
 - `memory/HANDOVER.md`
 - `memory/PROJECT_STATE.md`
 - `memory/TASKS.json`
-- `memory/sessions/2026-07-14-frontend-dependency-hardening.md`
-- `ruoyi-ui/package-lock.json`
-- `ruoyi-ui/package.json`
-- `ruoyi-ui/src/assets/icons/svg/button.svg`
-- `ruoyi-ui/src/assets/icons/svg/monitor.svg`
-- `ruoyi-ui/src/assets/icons/svg/redis-list.svg`
-- `ruoyi-ui/src/assets/icons/svg/system.svg`
-- `ruoyi-ui/src/components/SvgIcon/index.vue`
-- `ruoyi-ui/src/main.js`
-- `ruoyi-ui/src/views/monitor/cache/cache-request-controller.mjs`
-- `ruoyi-ui/src/views/monitor/cache/chart-lifecycle.mjs`
-- `ruoyi-ui/src/views/monitor/cache/index.vue`
-- `ruoyi-ui/tests/cache-chart-lifecycle.test.js`
-- `ruoyi-ui/tests/cache-request-controller.test.js`
-- `ruoyi-ui/tests/spritemap-production.test.js`
-- `ruoyi-ui/vite/plugins/index.js`
-- `ruoyi-ui/vite/plugins/svg-icon.js`
-- `tests/frontend-dependency-hardening.test.js`
+- `memory/sessions/2026-07-15-frontend-ci-and-esm-scanner-hardening.md`
+- `package.json`
+- `scripts/finalize-change.js`
+- `scripts/remove-feature.js`
+- `tests/ci-coverage-hardening.test.js`
+- `tests/diff-checker.test.js`
+- `tests/frontend-esm-scanner-governance.test.js`
+- `tests/governance-gates.test.js`
+- `tests/governance-sales-order-handoff-gate.test.js`
+- `tests/ownership-syncer.test.js`
+- `tests/package-scripts.test.js`
+- `tests/production-safety.test.js`
+- `tests/release-verifier-governance.test.js`
+- `tests/remove-feature.test.js`
+- `tools/boundary-lint.js`
+- `tools/ci-coverage-declaration-checker.js`
+- `tools/diff-checker.js`
+- `tools/duplicate-scan.js`
+- `tools/false-green-matrix-checker.js`
+- `tools/file-weight-checker.js`
+- `tools/governance-checker-utils.js`
+- `tools/impact-analyzer.js`
+- `tools/orphan-code-checker.js`
+- `tools/ownership-syncer.js`
+- `tools/phase-gate-checker.js`
+- `tools/release-verifier.js`
+- `tools/scan-api-clients.js`
+- `tools/scan-components.js`
+- `tools/scan-permissions.js`
+- `tools/scan-utils.js`
 
 ## Commands
 
 - [local] `npm run resume`
-- [local] `npm run impact -- platform`
 - [local] `npm run context:build -- platform`
-- [local] `node --test tests/frontend-dependency-hardening.test.js`
-- [local] `npm --prefix ruoyi-ui ci`
-- [local] `npm --prefix ruoyi-ui test`
-- [local] `npm --prefix ruoyi-ui audit --audit-level=moderate --json`
-- [local] `npm --prefix ruoyi-ui run build:prod`
-- [runtime-local] browser acceptance on login, menu icon picker, and cache monitor
+- [local] focused governance/scanner regressions
+- [local] portable release-verifier and anti-false-green regressions
 - [local] `npm run scan:all`
+- [local] `npm run scan:all:check`
+- [local] `npm --prefix ruoyi-ui test`
+- [local] `npm --prefix ruoyi-ui audit --audit-level=moderate --include=dev`
+- [local] `npm --prefix ruoyi-ui run build:prod`
 - [local] `npm test`
-- [local] `npm run finalize:change`
 - [local] `npm run check`
-- [local] `npm run close:change`
+- [local] `npm run verify:release`
 - [local] `git diff --check`
 
 ## Verification
 
-- [local] Root focused tests pass 5/5 and UI tests pass 7/7, including the real Vite plugin, four request/error cases, and ten chart mount/dispose cycles.
-- [local] Audit reports zero vulnerabilities; the old SVG chain is absent and the patched dependency tree is exact.
-- [local] Production build passes after the full UI suite, transforms 2601 modules, and emits one hashed spritemap with 90/90 unique safe symbols and viewBoxes.
-- [runtime-local] Browser acceptance confirms 90 visible icon-picker entries, working login/shell icons, two nonzero cache charts, real Redis data, responsive chart resize, and no console warnings/errors.
-- [local] Scanners find no API, route, permission, database, component-ownership, or graph contract change. Full `npm run check` passes with 431/431 root tests and `close:change` passes.
-- [local] Two independent final reviewers return GO with no P0-P3 finding.
+- [local] Final focused governance/scanner coverage passed 234/234; CI hardening passed 42/42 across dynamic commands, local assignments, process wrappers, Maven environments, and known-root controls.
+- [local] Two independent adversarial reviews returned GO with no P0-P3; root tests and the complete repository governance gate passed 480/480.
+- [local] UI tests passed 7/7; the audit reported zero vulnerabilities across 360 dependencies; the production build passed with 2601 modules transformed.
+- [local] Generated scans, registry, ownership, boundaries, roadmap, phase gate, diff, false-green matrix, and CI declaration checks pass.
+- [local] Portable release-verifier coverage passed 94/94 across exact stage order, Maven resolution, invalid-policy closure, no retry after reactor failure, inherited environment, and every fail-fast boundary.
+- [local] The pre-fix all-up release run reached Maven after the root and production-safety gates passed, then stopped on the bare-`mvn` PATH defect.
+- [local] The final all-up release run passed with 480/480 Node tests, 60/60 Java tests including two MySQL/Testcontainers integrations, 7/7 UI tests, zero vulnerabilities across 360 audited dependencies, and the 2601-module production build.
+- [local] The initial release-verification run stopped only at the expected empty `changed-files.json` pre-finalization boundary.
 
 ## Risks
 
-- Sprite delivery currently follows the existing Vite `base=/` contract; any future subpath/CDN deployment must repeat URL, MIME, CSP, and visual acceptance.
-- The `.mjs` helpers avoid false route generation but expose a governance scanner-completeness gap. They contain no route/API/permission/cross-feature behavior; a separate rule-change will make ESM scanner coverage explicit.
-- Current CI audit declaration is still `high`; exact versions and audit=0 make this implementation safe, while the next isolated governance change will enforce `moderate` and an explicit UI-test step.
+- Commit, push, and remote GitHub Actions confirmation are pending.
+- Existing development/default production-safety warnings remain informational; production-profile validation passes.
+- Sales-order implementation remains blocked.
 
 ## Next Actions
 
-- Stage, exact-scope review, and commit the current frontend implementation batch.
-- Open and close a separate governance/rule-change for explicit UI tests, moderate audit enforcement, and `.mjs` scanner completeness.
-- Run the complete repository gate again, push `master`, confirm GitHub Actions, then run `npm run check:after-push`.
-- Do not release or deploy.
+- Finalize the post-verification evidence, rerun the final repository/close gates, and complete the staged-scope audit.
+- Commit and push `master`, confirm Actions, then run the post-push check.
+- Preserve `stash@{0}` and `stash@{1}`; do not release or deploy.
 
 ## Recovery Pointer
 
-New Codex windows should read `AGENTS.md`, `ai/context/current-context.md`, and this handover first. Preserve `stash@{0}` and `stash@{1}`; both are superseded historical snapshots and must not be applied or dropped during this closeout.
+Read `AGENTS.md`, `ai/context/current-context.md`, this handover, and `ai/changes/CR-20260714T114811Z-frontend-ci-and-esm-scanner-hardening/verification.md`. The two stashes are superseded historical snapshots and must not be applied, popped, or dropped during closeout.

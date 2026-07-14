@@ -27,6 +27,7 @@ const COMPLETE_STATUSES = new Set(['complete', 'completed', 'done', 'passed', 'v
 const RUNTIME_EXTENSIONS = new Set([
   '.java',
   '.js',
+  '.mjs',
   '.kt',
   '.properties',
   '.sql',
@@ -112,7 +113,7 @@ function hasSalesOrderName(relativePath) {
     || keys.some((key, index) => key === 'sales' && keys[index + 1]?.startsWith('order'));
 }
 
-function hasRuntimeExtension(file) {
+export function isRuntimeSourceFile(file) {
   const normalized = String(file || '').toLowerCase();
   const index = normalized.lastIndexOf('.');
   return index !== -1 && RUNTIME_EXTENSIONS.has(normalized.slice(index));
@@ -120,7 +121,7 @@ function hasRuntimeExtension(file) {
 
 export function isSalesOrderImplementationPath(file) {
   const normalized = String(file).replace(/\\/g, '/').replace(/^\.\/+/, '');
-  if (!hasRuntimeExtension(normalized)) {
+  if (!isRuntimeSourceFile(normalized)) {
     return false;
   }
   return SALES_ORDER_IMPLEMENTATION_ROOTS.some((root) => {
@@ -133,7 +134,7 @@ export function isSalesOrderImplementationPath(file) {
 
 function isSalesOrderRuntimeTextRoot(file) {
   const normalized = String(file).replace(/\\/g, '/').replace(/^\.\/+/, '');
-  return hasRuntimeExtension(normalized)
+  return isRuntimeSourceFile(normalized)
     && SALES_ORDER_RUNTIME_TEXT_ROOTS.some((root) => normalized.startsWith(root));
 }
 

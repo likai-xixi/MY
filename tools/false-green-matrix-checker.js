@@ -10,6 +10,7 @@ export const MATRIX_PATH = 'ai/governance/false-green-regression-matrix.json';
 
 const LEGACY_VERIFICATION_CHANGE = 'CR-20260627T154818Z-r-09a-4-anti-false-green-minimum-closure';
 const CURRENT_VERIFICATION_CHANGE = 'CR-20260714T034246Z-repository-wide-governance-gate-evidence-hardeni';
+const FRONTEND_GOVERNANCE_VERIFICATION_CHANGE = 'CR-20260714T114811Z-frontend-ci-and-esm-scanner-hardening';
 
 function coverageContract(
   gate,
@@ -151,7 +152,49 @@ export const REQUIRED_FALSE_GREEN_CONTRACTS = Object.freeze({
     'check:ci-coverage-declaration',
     ['tests/ci-coverage-hardening.test.js'],
     ['tools/ci-coverage-declaration-checker.js'],
-    CURRENT_VERIFICATION_CHANGE
+    FRONTEND_GOVERNANCE_VERIFICATION_CHANGE
+  ),
+  'release-verification-portable-fail-fast': coverageContract(
+    'verify:release',
+    ['tests/release-verifier-governance.test.js', 'tests/production-safety.test.js'],
+    ['tools/release-verifier.js'],
+    FRONTEND_GOVERNANCE_VERIFICATION_CHANGE,
+    [
+      'package.json',
+      'tools/release-verifier.js',
+      'tools/process-runner.js',
+      'ai/rules/runtime-policy.json'
+    ]
+  ),
+  'frontend-esm-helper-scanner-coverage': coverageContract(
+    'test',
+    [
+      'tests/diff-checker.test.js',
+      'tests/frontend-esm-scanner-governance.test.js',
+      'tests/governance-sales-order-handoff-gate.test.js',
+      'tests/ownership-syncer.test.js',
+      'tests/remove-feature.test.js'
+    ],
+    [],
+    FRONTEND_GOVERNANCE_VERIFICATION_CHANGE,
+    [
+      'tools/scan-utils.js',
+      'tools/scan-api-clients.js',
+      'tools/scan-permissions.js',
+      'tools/scan-components.js',
+      'tools/component-checker.js',
+      'tools/scan-frontend-routes.js',
+      'tools/boundary-lint.js',
+      'tools/diff-checker.js',
+      'tools/impact-analyzer.js',
+      'tools/orphan-code-checker.js',
+      'tools/duplicate-scan.js',
+      'tools/ownership-syncer.js',
+      'tools/phase-gate-checker.js',
+      'tools/file-weight-checker.js',
+      'scripts/remove-feature.js',
+      'ai/registry/features.json'
+    ]
   ),
   'phase-gate-executable-file-scope': coverageContract(
     'check:phase-gate',

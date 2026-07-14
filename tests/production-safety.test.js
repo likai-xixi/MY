@@ -6,6 +6,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { readJson } from '../tools/common.js';
 import { validateConfigSafety } from '../tools/config-safety-checker.js';
+import { MAVEN_INTEGRATION_ARGS, RELEASE_NPM_STEPS } from '../tools/release-verifier.js';
 
 const DRUID_PROPERTY_VALUES = Object.freeze({
   initialSize: '5',
@@ -510,19 +511,20 @@ test('package scripts expose production safety and release verification', () => 
   assert.equal(pkg.scripts['check:config-safety'], 'node tools/config-safety-checker.js');
   assert.equal(pkg.scripts['check:prod-safety'], 'node tools/config-safety-checker.js --prod');
   assert.ok(pkg.scripts.check.split(/\s*&&\s*/).includes('npm run check:config-safety'));
-  assert.equal(
-    pkg.scripts['verify:release'],
-    'npm run check && npm run check:prod-safety && mvn -pl ruoyi-business -am -Pintegration-test verify && npm --prefix ruoyi-ui audit --audit-level=high && npm --prefix ruoyi-ui run build:prod'
-  );
+  assert.equal(pkg.scripts['verify:release'], 'node tools/release-verifier.js');
 });
 
 test('verify:release is explicit and not only check:runtime execution', () => {
   const script = readJson('package.json').scripts['verify:release'];
-  assert.ok(script.includes('npm run check'));
-  assert.ok(script.includes('npm run check:prod-safety'));
-  assert.ok(script.includes('mvn -pl ruoyi-business -am -Pintegration-test verify'));
-  assert.ok(script.includes('npm --prefix ruoyi-ui audit --audit-level=high'));
-  assert.ok(script.includes('npm --prefix ruoyi-ui run build:prod'));
-  assert.equal(/-DskipTests|-DskipITs|-Dmaven\.test\.skip/.test(script), false);
+  assert.equal(script, 'node tools/release-verifier.js');
+  assert.deepEqual(RELEASE_NPM_STEPS, [
+    ['run', 'check'],
+    ['run', 'check:prod-safety'],
+    ['--prefix', 'ruoyi-ui', 'test'],
+    ['--prefix', 'ruoyi-ui', 'audit', '--audit-level=moderate', '--include=dev'],
+    ['--prefix', 'ruoyi-ui', 'run', 'build:prod']
+  ]);
+  assert.deepEqual(MAVEN_INTEGRATION_ARGS, ['-pl', 'ruoyi-business', '-am', '-Pintegration-test', 'verify']);
+  assert.equal(/-DskipTests|-DskipITs|-Dmaven\.test\.skip/.test(MAVEN_INTEGRATION_ARGS.join(' ')), false);
   assert.equal(/check:runtime\s+--execute/.test(script), false);
 });

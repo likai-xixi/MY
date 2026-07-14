@@ -249,6 +249,18 @@ test('feature removal doc scan skips nested dependency and build output director
     assert.equal(shouldSkipRemovalDocScanPath(file), true, file);
   }
   assert.equal(shouldSkipRemovalDocScanPath('features/system.md'), false);
+  assert.equal(shouldSkipRemovalDocScanPath('ruoyi-ui/src/views/tool/build/CodeTypeDialog.vue'), false);
+});
+
+test('feature removal dry-run reports external mjs references', () => {
+  const tempRoot = copyProjectFixture();
+  const { featureId } = addRemovalFixture(tempRoot);
+  const consumer = `ruoyi-ui/src/views/tool/build/${featureId}-consumer.mjs`;
+  writeTempText(tempRoot, consumer, `export const feature = '${featureId}';\n`);
+
+  const dryRun = runNode(tempRoot, ['scripts/remove-feature.js', featureId, '--dry-run', '--json']);
+  assertCommandOk(dryRun);
+  assert.match(dryRun.stdout, new RegExp(consumer.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
 });
 
 

@@ -5,6 +5,7 @@ import { fileExists, finish, isCli, listFiles, readJson, readText } from './comm
 const TEXT_EXTENSIONS = new Set([
   '.md',
   '.js',
+  '.mjs',
   '.json',
   '.yml',
   '.yaml',
@@ -28,6 +29,10 @@ function extensionOf(file) {
   return index === -1 ? file : file.slice(index);
 }
 
+export function isTextHygieneFile(file) {
+  return TEXT_EXTENSIONS.has(extensionOf(file));
+}
+
 const GENERATED_DIRS = new Set([
   '.git',
   '.vite',
@@ -47,7 +52,9 @@ const SUPPORTED_GIT_MODES = new Set(['000000', ...REGULAR_BLOB_MODES, ...PROHIBI
 const SUPPORTED_RAW_STATUSES = new Set(['A', 'D', 'M', 'T']);
 
 function isGeneratedPath(file) {
-  return file.replace(/\\/g, '/').split('/').some((part) => GENERATED_DIRS.has(part));
+  const segments = file.replace(/\\/g, '/').split('/');
+  return segments.some((part, index) => GENERATED_DIRS.has(part)
+    && (part !== 'build' || !segments.slice(0, index).includes('src')));
 }
 
 function normalizeFile(file) {
@@ -606,19 +613,22 @@ export function checkBaseRevision({ changedFiles = collectChangedFiles(), impact
   return validateBaseRevision(impact?.baseRevision);
 }
 
-export function checkTextHygiene() {
+export function checkTextHygiene({
+  list = listFiles,
+  readTextFile = readText
+} = {}) {
   const errors = [];
   const files = [
-    ...listFiles('.', (file) => {
+    ...list('.', (file) => {
       if (isGeneratedPath(file)) {
         return false;
       }
-      return TEXT_EXTENSIONS.has(extensionOf(file));
+      return isTextHygieneFile(file);
     })
   ];
 
   for (const file of files) {
-    const text = readText(file);
+    const text = readTextFile(file);
     if (text.length > 0 && !text.endsWith('\n')) {
       errors.push(`${file} must end with a newline.`);
     }

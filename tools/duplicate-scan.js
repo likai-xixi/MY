@@ -12,21 +12,32 @@ const GENERATED_DIRS = new Set([
 ]);
 
 function isGeneratedPath(file) {
-  return file.replace(/\\/g, '/').split('/').some((part) => GENERATED_DIRS.has(part));
+  const segments = file.replace(/\\/g, '/').split('/');
+  return segments.some((part, index) => GENERATED_DIRS.has(part)
+    && (part !== 'build' || !segments.slice(0, index).includes('src')));
 }
 
-export function scanDuplicates() {
+export function isDuplicateCandidateFile(file) {
+  return /\.(md|js|jsx|mjs|json|ya?ml|ts|tsx|vue|java|sh|css|scss)$/.test(file)
+    || file === '.gitattributes'
+    || file === '.editorconfig';
+}
+
+export function scanDuplicates({
+  list = listFiles,
+  readTextFile = readText
+} = {}) {
   const errors = [];
-  const files = listFiles('.', (file) => {
+  const files = list('.', (file) => {
     if (isGeneratedPath(file)) {
       return false;
     }
-    return /\.(md|js|jsx|json|ya?ml|ts|tsx|vue|java|sh|css|scss)$/.test(file) || file === '.gitattributes' || file === '.editorconfig';
+    return isDuplicateCandidateFile(file);
   });
 
   const byContent = new Map();
   for (const file of files) {
-    const normalized = readText(file).trim();
+    const normalized = readTextFile(file).trim();
     if (normalized.length < 40) {
       continue;
     }

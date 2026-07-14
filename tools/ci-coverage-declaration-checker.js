@@ -68,17 +68,83 @@ function skipsMavenTests(line) {
   return /(?:^|\s)-(?:D)?(?:skipTests|skipITs|maven\.test\.skip)(?:=true)?(?:\s|$)/i.test(line);
 }
 
-function isMavenUnitCommand(command) {
+const MAVEN_UNIT_ARGS = ['test'];
+const MAVEN_INTEGRATION_ARGS = ['-pl', 'ruoyi-business', '-am', '-Pintegration-test', 'verify'];
+const MAVEN_JVM_OPTION_ENV = new Set(['MAVEN_OPTS', 'JAVA_TOOL_OPTIONS', 'JDK_JAVA_OPTIONS', '_JAVA_OPTIONS']);
+const MAVEN_TEST_WEAKENING_PROPERTY = /-D(?:skipTests|skipITs|skipExec|maven\.test\.skip(?:\.exec)?|maven\.test\.failure\.ignore|test|it\.test|groups|excludedGroups|surefire\.[^=\s]*|failsafe\.[^=\s]*|failIfNoTests|failIfNoSpecifiedTests)(?:=|\s|$)/i;
+
+function mavenVerificationArgs(line) {
+  if (!isMavenLine(line)) {
+    return null;
+  }
+  const command = String(line || '').replace(/\s+\|\s+tee\s+\S+\s*$/i, '').trim();
+  const tokens = command.split(/\s+/);
+  let args = tokens.slice(1);
+  if (args[0] === '-V') {
+    args = args.slice(1);
+  }
+  return args;
+}
+
+function hasExactArgs(actual, expected) {
+  return Array.isArray(actual)
+    && actual.length === expected.length
+    && actual.every((value, index) => value === expected[index]);
+}
+
+function hasDynamicSyntax(value) {
+  return /(?:\$|`|%[^%]+%|[*?{}[\]])/.test(String(value || ''));
+}
+
+function mavenEnvironmentWeakeningReasons(step) {
+  const reasons = [];
+  for (const [rawKey, rawValue] of Object.entries(step.environment || {})) {
+    const key = String(rawKey || '').toUpperCase();
+    const value = String(rawValue || '').trim();
+    if (!value) {
+      continue;
+    }
+    if (key === 'MAVEN_ARGS') {
+      reasons.push(`${key}:command-arguments`);
+    } else if (MAVEN_JVM_OPTION_ENV.has(key)
+      && (hasDynamicSyntax(value) || MAVEN_TEST_WEAKENING_PROPERTY.test(value))) {
+      reasons.push(`${key}:test-selection-or-dynamic`);
+    }
+  }
+  return reasons;
+}
+
+function isMavenUnitCommand(step) {
+  if (mavenEnvironmentWeakeningReasons(step).length > 0) {
+    return false;
+  }
+  return commandParts(step.command).some((line) => {
+    const args = mavenVerificationArgs(line);
+    return hasExactArgs(args, MAVEN_UNIT_ARGS)
+      || hasExactArgs(args, MAVEN_INTEGRATION_ARGS);
+  });
+}
+
+function isMavenIntegrationCommand(step) {
+  if (mavenEnvironmentWeakeningReasons(step).length > 0) {
+    return false;
+  }
+  return commandParts(step.command).some((line) => (
+    hasExactArgs(mavenVerificationArgs(line), MAVEN_INTEGRATION_ARGS)
+  ));
+}
+
+function isMavenVerificationAttempt(command) {
   return commandParts(command).some((line) => isMavenLine(line)
-    && !skipsMavenTests(line)
     && /(?:^|\s)(?:test|verify)(?:\s|$)/i.test(line));
 }
 
-function isMavenIntegrationCommand(command) {
-  return commandParts(command).some((line) => isMavenLine(line)
-    && !skipsMavenTests(line)
-    && /(?:^|\s)-P(?:\s*)integration-test(?:\s|$)/i.test(line)
-    && /(?:^|\s)verify(?:\s|$)/i.test(line));
+function isRootNpmCommand(step, pattern) {
+  return isRootStep(step) && commandParts(step.command).some((line) => pattern.test(line));
+}
+
+function isRootNpmAttempt(step) {
+  return isRootNpmCommand(step, /^npm\s+(?:ci|run\s+check|(?:run\s+)?test)(?:\s|$)/i);
 }
 
 function isFrontendNpmCommand(step, localPattern, prefixPattern) {
@@ -92,9 +158,602 @@ function isFrontendNpmCommand(step, localPattern, prefixPattern) {
 function isFrontendBuildCommand(step) {
   return isFrontendNpmCommand(
     step,
+    /^npm\s+run\s+build:prod$/i,
+    /^npm\s+--prefix\s+ruoyi-ui\s+run\s+build:prod$/i
+  );
+}
+
+function isFrontendBuildAttempt(step) {
+  return isFrontendNpmCommand(
+    step,
     /^npm\s+run\s+build:prod(?:\s|$)/i,
     /^npm\s+--prefix\s+ruoyi-ui\s+run\s+build:prod(?:\s|$)/i
   );
+}
+
+function isFrontendCiCommand(step) {
+  return isFrontendNpmCommand(step, /^npm\s+ci$/i, /^npm\s+--prefix\s+ruoyi-ui\s+ci$/i);
+}
+
+function isFrontendCiAttempt(step) {
+  return isFrontendNpmCommand(step, /^npm\s+ci(?:\s|$)/i, /^npm\s+--prefix\s+ruoyi-ui\s+ci(?:\s|$)/i);
+}
+
+function isFrontendTestCommand(step) {
+  return isFrontendNpmCommand(
+    step,
+    /^npm\s+(?:run\s+)?test$/i,
+    /^npm\s+--prefix\s+ruoyi-ui\s+(?:run\s+)?test$/i
+  );
+}
+
+function isFrontendTestAttempt(step) {
+  return isFrontendNpmCommand(
+    step,
+    /^npm\s+(?:run\s+)?test(?:\s|$)/i,
+    /^npm\s+--prefix\s+ruoyi-ui\s+(?:run\s+)?test(?:\s|$)/i
+  );
+}
+
+function frontendAuditLines(step) {
+  const frontendDirectory = resolvesToFrontend(step.workingDirectory);
+  return commandParts(step.command).filter((line) => (
+    /^npm\s+--prefix\s+ruoyi-ui\s+audit(?:\s|$)/i.test(line)
+    || (frontendDirectory && /^npm\s+audit(?:\s|$)/i.test(line))
+  ));
+}
+
+function shellWordTokens(line) {
+  return (String(line || '').match(/"[^"]*"|'[^']*'|[^\s]+/g) || []).map((token) => {
+    const quoted = token.match(/^(?:"([^"]*)"|'([^']*)')$/);
+    return quoted ? (quoted[1] ?? quoted[2] ?? '') : token.replace(/["']/g, '');
+  });
+}
+
+function normalizeAuditPath(value) {
+  let text = String(value || '').trim();
+  const quoted = text.match(/^(?:"([^"]*)"|'([^']*)')$/);
+  if (quoted) {
+    text = quoted[1] ?? quoted[2] ?? '';
+  }
+  const normalizedParts = [];
+  for (const part of text.replace(/\\/g, '/').split('/')) {
+    if (!part || part === '.') {
+      continue;
+    }
+    if (part === '..') {
+      if (normalizedParts.length > 0 && normalizedParts.at(-1) !== '..') {
+        normalizedParts.pop();
+      } else {
+        normalizedParts.push(part);
+      }
+      continue;
+    }
+    normalizedParts.push(part);
+  }
+  return normalizedParts.join('/');
+}
+
+const WORKSPACE_PATH_MARKER = '__github_workspace__';
+
+function auditPathFacts(value, { baseFrontend = false } = {}) {
+  let target = String(value || '').trim();
+  const quoted = target.match(/^(?:"([^"]*)"|'([^']*)')$/);
+  if (quoted) {
+    target = quoted[1] ?? quoted[2] ?? '';
+  }
+  const basePath = `/${WORKSPACE_PATH_MARKER}${baseFrontend ? '/ruoyi-ui' : ''}`;
+  target = target
+    .replace(/\$\{\{\s*github\.workspace\s*\}\}/gi, `/${WORKSPACE_PATH_MARKER}`)
+    .replace(/\$\{GITHUB_WORKSPACE\}|\$GITHUB_WORKSPACE(?![A-Za-z0-9_])|%GITHUB_WORKSPACE%/gi, `/${WORKSPACE_PATH_MARKER}`)
+    .replace(/\$\{PWD\}|\$PWD(?![A-Za-z0-9_])|%CD%/gi, basePath);
+  if (hasDynamicSyntax(target)) {
+    return { couldFrontend: true, resolvedFrontend: false };
+  }
+  const absolute = /^(?:\/|[A-Za-z]:[\\/])/.test(target);
+  const normalized = normalizeAuditPath(absolute ? target : `${basePath}/${target}`).toLowerCase();
+  const resolvedFrontend = normalized === 'ruoyi-ui' || normalized.endsWith('/ruoyi-ui');
+  return { couldFrontend: resolvedFrontend, resolvedFrontend };
+}
+
+function canResolveToFrontend(value, options) {
+  return auditPathFacts(value, options).couldFrontend;
+}
+
+function resolvesToFrontend(value, options) {
+  return auditPathFacts(value, options).resolvedFrontend;
+}
+
+function commandWord(token) {
+  return String(token || '')
+    .replace(/^[('"{}]+/, '')
+    .replace(/[)'"{}]+$/, '');
+}
+
+function auditPrefixTargets(tokens) {
+  const prefixes = [];
+  for (let index = 1; index < tokens.length; index += 1) {
+    const token = commandWord(tokens[index]);
+    if (token.toLowerCase() === '--prefix') {
+      prefixes.push(tokens[index + 1] || '');
+      index += 1;
+    } else if (token.toLowerCase().startsWith('--prefix=')) {
+      prefixes.push(token.slice(token.indexOf('=') + 1));
+    }
+  }
+  return prefixes;
+}
+
+function npmAuditInvocations(line) {
+  const text = String(line || '');
+  const starts = [];
+  const executable = /(?:^|[\s'"({;|&`])((?:(?:[A-Za-z]:)?[^\s'"();|&`]*[\\/])?npm(?:\.cmd|\.ps1)?)(?=[\s)'"};|&`]|$)/gi;
+  for (const match of text.matchAll(executable)) {
+    starts.push((match.index || 0) + match[0].lastIndexOf(match[1]));
+  }
+  const invocations = [];
+  for (const start of [...new Set(starts)]) {
+    const tokens = shellWordTokens(text.slice(start));
+    if (!tokens.slice(1).some((token) => commandWord(token).toLowerCase() === 'audit')) {
+      continue;
+    }
+    invocations.push({ prefixes: auditPrefixTargets(tokens) });
+  }
+  if (invocations.length === 0 && /\bnpm\b/i.test(text)) {
+    const tokens = shellWordTokens(text);
+    if (tokens.some((token) => commandWord(token).toLowerCase() === 'audit')) {
+      invocations.push({ prefixes: auditPrefixTargets(['npm', ...tokens]) });
+    }
+  }
+  return invocations;
+}
+
+function directoryCommandTarget(line) {
+  const tokens = shellWordTokens(line);
+  for (let index = 0; index < tokens.length - 1; index += 1) {
+    if (new Set(['cd', 'pushd']).has(commandWord(tokens[index]).toLowerCase())) {
+      let targetIndex = index + 1;
+      while (targetIndex < tokens.length) {
+        const candidate = commandWord(tokens[targetIndex]);
+        if (candidate === '--') {
+          targetIndex += 1;
+          break;
+        }
+        if (/^-(?:[LPe@]+)$/.test(candidate)) {
+          targetIndex += 1;
+          continue;
+        }
+        break;
+      }
+      return tokens[targetIndex] ?? null;
+    }
+  }
+  return null;
+}
+
+function normalizeEnvironmentReferences(value) {
+  return String(value || '')
+    .replace(
+      /\$\{\{\s*env\s*(?:\.\s*([A-Za-z_][A-Za-z0-9_]*)|\[\s*(['"])([A-Za-z_][A-Za-z0-9_-]*)\2\s*\])\s*\}\}/gi,
+      (_match, propertyKey, _quote, bracketKey) => '${' + (propertyKey || bracketKey) + '}'
+    )
+    .replace(
+      /\$\{\s*env:([A-Za-z_][A-Za-z0-9_]*)\s*\}/gi,
+      (_match, key) => '${' + key + '}'
+    )
+    .replace(
+      /\$\(\s*printenv\s+([A-Za-z_][A-Za-z0-9_]*)\s*\)/gi,
+      (_match, key) => '${' + key + '}'
+    )
+    .replace(
+      /`\s*printenv\s+([A-Za-z_][A-Za-z0-9_]*)\s*`/gi,
+      (_match, key) => '${' + key + '}'
+    );
+}
+
+function environmentExecutableIndex(tokens) {
+  const executableBaseName = (token) => commandWord(token)
+    .replace(/\\/g, '/')
+    .split('/')
+    .at(-1)
+    .toLowerCase();
+  let index = 0;
+  while (index < tokens.length && /^[A-Za-z_][A-Za-z0-9_]*=/.test(tokens[index])) {
+    index += 1;
+  }
+  if (executableBaseName(tokens[index]) === 'env') {
+    index += 1;
+    while (index < tokens.length && (/^-/.test(tokens[index]) || /^[A-Za-z_][A-Za-z0-9_]*=/.test(tokens[index]))) {
+      index += 1;
+    }
+  }
+  while (index < tokens.length) {
+    const wrapper = executableBaseName(tokens[index]);
+    if (wrapper === '&') {
+      index += 1;
+      continue;
+    }
+    if (new Set(['command', 'exec', 'builtin', 'nohup']).has(wrapper)) {
+      index += 1;
+      while (index < tokens.length && /^-/.test(tokens[index])) {
+        index += 1;
+      }
+      continue;
+    }
+    if (wrapper === 'time') {
+      index += 1;
+      while (index < tokens.length && /^-/.test(tokens[index])) {
+        const option = commandWord(tokens[index]).toLowerCase();
+        index += 1;
+        if (new Set(['-f', '--format', '-o', '--output']).has(option) && index < tokens.length) {
+          index += 1;
+        }
+      }
+      continue;
+    }
+    const processWrapperOptions = new Map([
+      ['timeout', new Set(['-k', '--kill-after', '-s', '--signal'])],
+      ['nice', new Set(['-n', '--adjustment'])],
+      ['stdbuf', new Set(['-i', '--input', '-o', '--output', '-e', '--error'])],
+      ['chrt', new Set(['-T', '--sched-runtime', '-P', '--sched-period', '-D', '--sched-deadline'])],
+      ['ionice', new Set(['-c', '--class', '-n', '--classdata'])]
+    ]);
+    if (processWrapperOptions.has(wrapper)) {
+      const optionsWithValues = processWrapperOptions.get(wrapper);
+      index += 1;
+      while (index < tokens.length && /^-/.test(tokens[index])) {
+        const option = commandWord(tokens[index]);
+        index += 1;
+        if (optionsWithValues.has(option) && index < tokens.length) {
+          index += 1;
+        }
+      }
+      if (wrapper === 'timeout' && index < tokens.length) {
+        index += 1;
+      } else if (wrapper === 'chrt' && /^\d+$/.test(commandWord(tokens[index]))) {
+        index += 1;
+      }
+      continue;
+    }
+    break;
+  }
+  return index;
+}
+
+function environmentExecutableKey(line, environment) {
+  const normalizedLine = normalizeEnvironmentReferences(line);
+  const tokens = shellWordTokens(normalizedLine);
+  const index = environmentExecutableIndex(tokens);
+  const executable = String(tokens[index] || '')
+    .replace(/^[('\"]+/, '')
+    .replace(/[)'\"]+$/, '');
+  for (const key of Object.keys(environment || {})) {
+    const candidates = [
+      `$${key}`,
+      `\${${key}}`,
+      `%${key}%`,
+      `$env:${key}`,
+      `\${{ env.${key} }}`
+    ];
+    if (candidates.some((candidate) => candidate.toLowerCase() === executable.toLowerCase())) {
+      return key;
+    }
+  }
+  return '';
+}
+
+function expandEnvironmentReference(line, key, value) {
+  const escaped = String(key || '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const replacement = () => String(value ?? '');
+  return normalizeEnvironmentReferences(line)
+    .replace(new RegExp(`\\$\\{${escaped}\\}`, 'gi'), replacement)
+    .replace(new RegExp(`\\$${escaped}(?![A-Za-z0-9_])`, 'gi'), replacement)
+    .replace(new RegExp(`%${escaped}%`, 'gi'), replacement)
+    .replace(new RegExp(`\\$env:${escaped}(?![A-Za-z0-9_])`, 'gi'), replacement)
+    .replace(new RegExp(`\\$\\{\\{\\s*env\\.${escaped}\\s*\\}\\}`, 'gi'), replacement);
+}
+
+function expandKnownEnvironmentReferences(value, environment) {
+  let expanded = normalizeEnvironmentReferences(value);
+  const entries = Object.entries(environment || {});
+  const seen = new Set();
+  for (let pass = 0; pass <= entries.length; pass += 1) {
+    if (seen.has(expanded)) {
+      break;
+    }
+    seen.add(expanded);
+    let next = expanded;
+    for (const [key, environmentValue] of entries) {
+      next = expandEnvironmentReference(next, key, environmentValue);
+    }
+    if (next === expanded) {
+      break;
+    }
+    expanded = next;
+  }
+  return expanded.replace(/\$\{\{\s*github\.workspace\s*\}\}/gi, '$GITHUB_WORKSPACE');
+}
+
+function environmentProgramPayloads(line) {
+  const tokens = shellWordTokens(normalizeEnvironmentReferences(line));
+  const index = environmentExecutableIndex(tokens);
+  const executable = commandWord(tokens[index]).toLowerCase();
+  if (new Set(['bash', 'sh', 'zsh', 'dash', 'ksh']).has(executable)) {
+    const commandIndex = tokens.findIndex((token, tokenIndex) => (
+      tokenIndex > index && /^-[A-Za-z]*c[A-Za-z]*$/.test(token)
+    ));
+    return commandIndex >= 0 && tokens[commandIndex + 1] ? [tokens[commandIndex + 1]] : [];
+  }
+  if (new Set(['pwsh', 'powershell', 'powershell.exe']).has(executable)) {
+    const commandIndex = tokens.findIndex((token, tokenIndex) => (
+      tokenIndex > index && /^-(?:c|command)$/i.test(token)
+    ));
+    return commandIndex >= 0 && tokens[commandIndex + 1] ? [tokens[commandIndex + 1]] : [];
+  }
+  if (new Set(['cmd', 'cmd.exe']).has(executable)) {
+    const commandIndex = tokens.findIndex((token, tokenIndex) => tokenIndex > index && /^\/c$/i.test(token));
+    return commandIndex >= 0 && tokens[commandIndex + 1] ? [tokens[commandIndex + 1]] : [];
+  }
+  if (executable === 'eval') {
+    return tokens.length > index + 1 ? [tokens.slice(index + 1).join(' ')] : [];
+  }
+  return [];
+}
+
+function lineCouldAuditFrontend(line, frontendDirectory) {
+  const tokens = shellWordTokens(line);
+  if (!tokens.some((token) => commandWord(token).toLowerCase() === 'audit')) {
+    return false;
+  }
+  const prefixes = auditPrefixTargets(['npm', ...tokens]);
+  return prefixes.length > 0
+    ? prefixes.some((target) => canResolveToFrontend(target, { baseFrontend: frontendDirectory }))
+    : frontendDirectory;
+}
+
+function isNpmExecutableToken(token) {
+  const executable = commandWord(token).replace(/\\/g, '/').split('/').at(-1).toLowerCase();
+  return new Set(['npm', 'npm.cmd', 'npm.ps1']).has(executable);
+}
+
+function npmSubcommandToken(tokens, npmIndex) {
+  const optionsWithValues = new Set([
+    '--cache', '--prefix', '--registry', '--scope', '--userconfig', '--workspace', '-w'
+  ]);
+  for (let index = npmIndex + 1; index < tokens.length; index += 1) {
+    const token = commandWord(tokens[index]);
+    const lower = token.toLowerCase();
+    if (lower === '--') {
+      return tokens[index + 1] || '';
+    }
+    if (optionsWithValues.has(lower)) {
+      index += 1;
+      continue;
+    }
+    if (lower.startsWith('--prefix=') || /^-/.test(lower)) {
+      continue;
+    }
+    return tokens[index];
+  }
+  return '';
+}
+
+function npmEnvironmentCouldTargetFrontend(environment, frontendDirectory) {
+  const prefixEntry = Object.entries(environment || {}).find(([key]) => (
+    String(key).toLowerCase() === 'npm_config_prefix'
+  ));
+  return prefixEntry
+    ? canResolveToFrontend(
+      expandKnownEnvironmentReferences(prefixEntry[1], environment),
+      { baseFrontend: frontendDirectory }
+    )
+    : false;
+}
+
+function unresolvedDynamicNpmAuditAttempt(line, environment, frontendDirectory) {
+  const tokens = shellWordTokens(line);
+  for (let index = 0; index < tokens.length; index += 1) {
+    if (!isNpmExecutableToken(tokens[index])) {
+      continue;
+    }
+    const invocationTokens = tokens.slice(index);
+    const prefixes = auditPrefixTargets(invocationTokens);
+    const couldTargetFrontend = prefixes.length > 0
+      ? prefixes.some((target) => canResolveToFrontend(target, { baseFrontend: frontendDirectory }))
+      : frontendDirectory || npmEnvironmentCouldTargetFrontend(environment, frontendDirectory);
+    if (couldTargetFrontend && hasDynamicSyntax(npmSubcommandToken(tokens, index))) {
+      return true;
+    }
+  }
+  return false;
+}
+
+function unresolvedDynamicExecutableMayHideAudit(line) {
+  const tokens = shellWordTokens(line);
+  if (tokens.some((token) => commandWord(token).toLowerCase() === 'audit')) {
+    return false;
+  }
+  const index = environmentExecutableIndex(tokens);
+  return hasDynamicSyntax(tokens[index] || '');
+}
+
+function unquoteAssignmentValue(value) {
+  const text = String(value || '').trim();
+  const quoted = text.match(/^(?:"([\s\S]*)"|'([\s\S]*)')$/);
+  return quoted ? (quoted[1] ?? quoted[2] ?? '') : text;
+}
+
+function localEnvironmentAssignment(line) {
+  const text = String(line || '').trim();
+  const shell = text.match(/^(?:export\s+)?([A-Za-z_][A-Za-z0-9_]*)\s*=\s*((?:"[^"]*"|'[^']*'|[^\s]+))$/);
+  if (shell) {
+    return { key: shell[1], value: unquoteAssignmentValue(shell[2]) };
+  }
+  const powershell = text.match(/^\$(?:env:)?([A-Za-z_][A-Za-z0-9_]*)\s*=\s*((?:"[^"]*"|'[^']*'|[^\s]+))$/i);
+  if (powershell) {
+    return { key: powershell[1], value: unquoteAssignmentValue(powershell[2]) };
+  }
+  const cmd = text.match(/^set\s+(?:"([A-Za-z_][A-Za-z0-9_]*)=([\s\S]*)"|([A-Za-z_][A-Za-z0-9_]*)=([^\s]+))$/i);
+  if (cmd) {
+    return { key: cmd[1] || cmd[3], value: cmd[2] ?? cmd[4] ?? '' };
+  }
+  return null;
+}
+
+function environmentReferencePattern(key) {
+  const escaped = String(key || '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  return new RegExp(
+    `(?:\\$\\{${escaped}\\}|\\$${escaped}(?![A-Za-z0-9_])|%${escaped}%|\\$env:${escaped}(?![A-Za-z0-9_])|\\$\\{\\{\\s*env\\.${escaped}\\s*\\}\\}|\\bprintenv\\s+${escaped}(?![A-Za-z0-9_]))`,
+    'i'
+  );
+}
+
+function executesEnvironmentProgram(line) {
+  return /(?:^|\s)(?:(?:bash|sh|zsh|dash|ksh)\s+-c\b|(?:pwsh|powershell)(?:\.exe)?\s+-(?:c|command)\b|cmd(?:\.exe)?\s+\/c\b|eval(?:\s|$))/i.test(line);
+}
+
+function auditAttemptsInProgram(command, environment, initialFrontendDirectory, visitedKeys = new Set()) {
+  const attempts = [];
+  let frontendDirectory = initialFrontendDirectory;
+  const localEnvironment = { ...(environment || {}) };
+  for (const line of commandParts(command)) {
+    const assignment = localEnvironmentAssignment(line);
+    if (assignment) {
+      localEnvironment[assignment.key] = expandKnownEnvironmentReferences(assignment.value, localEnvironment);
+      continue;
+    }
+    const expandedLine = expandKnownEnvironmentReferences(line, localEnvironment);
+    const directoryTarget = directoryCommandTarget(expandedLine);
+    if (directoryTarget !== null) {
+      frontendDirectory = canResolveToFrontend(directoryTarget, { baseFrontend: frontendDirectory });
+      continue;
+    }
+    let invocations = npmAuditInvocations(expandedLine);
+    const executableKey = environmentExecutableKey(line, localEnvironment);
+    let expandedEnvironmentCommand = '';
+    if (invocations.length === 0 && executableKey) {
+      expandedEnvironmentCommand = expandEnvironmentReference(line, executableKey, localEnvironment[executableKey]);
+      invocations = npmAuditInvocations(expandedEnvironmentCommand);
+    }
+    for (const invocation of invocations) {
+      const isFrontend = invocation.prefixes.length > 0
+        ? invocation.prefixes.some((target) => canResolveToFrontend(target, { baseFrontend: frontendDirectory }))
+        : frontendDirectory || npmEnvironmentCouldTargetFrontend(localEnvironment, frontendDirectory);
+      if (isFrontend) {
+        attempts.push(line);
+      }
+    }
+    let countedUnresolvedAttempt = false;
+    if (invocations.length === 0 && expandedEnvironmentCommand
+      && lineCouldAuditFrontend(expandedEnvironmentCommand, frontendDirectory)) {
+      attempts.push(`environment:${executableKey}:audit-program`);
+      countedUnresolvedAttempt = true;
+    }
+    if (invocations.length === 0 && !countedUnresolvedAttempt
+      && (lineCouldAuditFrontend(expandedLine, frontendDirectory)
+        || unresolvedDynamicNpmAuditAttempt(expandedLine, localEnvironment, frontendDirectory)
+        || unresolvedDynamicExecutableMayHideAudit(expandedLine))) {
+      attempts.push('unresolved-dynamic-frontend-audit-program');
+      countedUnresolvedAttempt = true;
+    }
+    if (invocations.length === 0 && !countedUnresolvedAttempt) {
+      for (const payload of environmentProgramPayloads(expandedLine)) {
+        attempts.push(...auditAttemptsInProgram(payload, localEnvironment, frontendDirectory, visitedKeys));
+      }
+    }
+    if (!executesEnvironmentProgram(line)) {
+      continue;
+    }
+    for (const [key, value] of Object.entries(localEnvironment)) {
+      if (visitedKeys.has(key) || !environmentReferencePattern(key).test(normalizeEnvironmentReferences(line))) {
+        continue;
+      }
+      const nestedVisited = new Set(visitedKeys).add(key);
+      const nestedAttempts = auditAttemptsInProgram(value, environment, frontendDirectory, nestedVisited);
+      if (nestedAttempts.length > 0) {
+        attempts.push(...nestedAttempts);
+      } else if (hasDynamicSyntax(value)) {
+        attempts.push(`environment:${key}:dynamic-program`);
+      }
+    }
+  }
+  return attempts;
+}
+
+function auditAttemptLines(step) {
+  return auditAttemptsInProgram(
+    step.command,
+    step.environment,
+    canResolveToFrontend(expandKnownEnvironmentReferences(step.workingDirectory, step.environment))
+  );
+}
+
+function isFrontendAuditAttempt(step) {
+  return auditAttemptLines(step).length > 0;
+}
+
+function optionOccurrences(line, option) {
+  const pattern = new RegExp(`(?:^|\\s)--${option}(?==|\\s|$)`, 'gi');
+  return [...String(line || '').matchAll(pattern)];
+}
+
+function singleLiteralOptionValue(line, option) {
+  if (optionOccurrences(line, option).length !== 1) {
+    return '';
+  }
+  const pattern = new RegExp(`(?:^|\\s)--${option}(?:=([^\\s]+)|\\s+([^\\s]+))`, 'i');
+  const match = String(line || '').match(pattern);
+  return (match?.[1] || match?.[2] || '').toLowerCase();
+}
+
+function includesDevelopmentDependencies(line) {
+  const values = [];
+  const pattern = /(?:^|\s)--include(?:=([^\s]+)|\s+([^\s]+))/gi;
+  for (const match of String(line || '').matchAll(pattern)) {
+    values.push(...String(match[1] || match[2] || '').toLowerCase().split(',').filter(Boolean));
+  }
+  return values.includes('dev');
+}
+
+function isAcceptedFrontendAuditCommand(step) {
+  const lines = frontendAuditLines(step);
+  if (lines.length !== 1) {
+    return false;
+  }
+  const line = lines[0];
+  const argumentText = line
+    .replace(/^npm\s+--prefix\s+ruoyi-ui\s+audit\b/i, '')
+    .replace(/^npm\s+audit\b/i, '')
+    .trim();
+  const tokens = argumentText ? argumentText.split(/\s+/) : [];
+  const allowedTokens = [];
+  for (let index = 0; index < tokens.length; index += 1) {
+    const token = tokens[index];
+    if (/^--(?:audit-level|include)=\S+$/i.test(token)) {
+      allowedTokens.push(token);
+      continue;
+    }
+    if (/^--(?:audit-level|include)$/i.test(token) && tokens[index + 1]) {
+      allowedTokens.push(token, tokens[index + 1]);
+      index += 1;
+      continue;
+    }
+    return false;
+  }
+  if (allowedTokens.length !== tokens.length || optionOccurrences(line, 'include').length !== 1) {
+    return false;
+  }
+  const level = singleLiteralOptionValue(line, 'audit-level');
+  if (!new Set(['info', 'low', 'moderate']).has(level)) {
+    return false;
+  }
+  if (!includesDevelopmentDependencies(line) || singleLiteralOptionValue(line, 'include') !== 'dev') {
+    return false;
+  }
+  if (/\baudit\s+fix(?:\s|$)/i.test(line)) {
+    return false;
+  }
+  return !/(?:^|\s)--omit(?==|\s|$)|(?:^|\s)--production(?==|\s|$)|(?:^|\s)--only(?:=|\s+)(?:prod|production)(?:\s|$)/i.test(line);
 }
 
 function isUnconditional(step) {
@@ -113,25 +772,12 @@ function unsafeControlReasons(step) {
 }
 
 function isRequiredVerificationStep(step) {
-  const rootCommand = isRootStep(step) && commandParts(step.command).some((line) => (
-    /^npm\s+ci(?:\s|$)/i.test(line)
-    || /^npm\s+run\s+check(?:\s|$)/i.test(line)
-    || /^npm\s+(?:run\s+)?test(?:\s|$)/i.test(line)
-  ));
-  return rootCommand
-    || isMavenUnitCommand(step.command)
-    || isMavenIntegrationCommand(step.command)
-    || isFrontendNpmCommand(
-      step,
-      /^npm\s+ci(?:\s|$)/i,
-      /^npm\s+--prefix\s+ruoyi-ui\s+ci(?:\s|$)/i
-    )
-    || isFrontendNpmCommand(
-      step,
-      /^npm\s+audit\b(?=.*(?:^|\s)--audit-level(?:=|\s+)high(?:\s|$))/i,
-      /^npm\s+--prefix\s+ruoyi-ui\s+audit\b(?=.*(?:^|\s)--audit-level(?:=|\s+)high(?:\s|$))/i
-    )
-    || isFrontendBuildCommand(step);
+  return isRootNpmAttempt(step)
+    || isMavenVerificationAttempt(step.command)
+    || isFrontendCiAttempt(step)
+    || isFrontendTestAttempt(step)
+    || isFrontendAuditAttempt(step)
+    || isFrontendBuildAttempt(step);
 }
 
 function shellSegments(command) {
@@ -297,28 +943,27 @@ function workflowFacts(root) {
   const checkoutWithoutFullHistory = fullHistoryRequired
     ? checkoutUses.filter((use) => use.inputs['fetch-depth'] !== '0')
     : [];
+  const persistentEnvironmentMutationSteps = stepFacts.filter((step) => (
+    /(?:GITHUB_ENV|GITHUB_PATH|::set-env\b|::add-path\b)/i.test(stripHereDocBodies(step.command))
+  ));
+  const frontendAuditAttemptCount = stepFacts.reduce((count, step) => count + auditAttemptLines(step).length, 0);
   return {
     steps,
-    hasCheck: coverageSteps.some((step) => isRootStep(step)
-      && commandParts(step.command).some((line) => /^npm\s+run\s+check(?:\s|$)/i.test(line))),
-    hasRootCi: coverageSteps.some((step) => isRootStep(step)
-      && commandParts(step.command).some((line) => /^npm\s+ci(?:\s|$)/i.test(line))),
-    hasRootTest: coverageSteps.some((step) => isRootStep(step)
-      && commandParts(step.command).some((line) => /^npm\s+(?:run\s+)?test(?:\s|$)/i.test(line))),
-    hasMavenUnit: coverageSteps.some((step) => isMavenUnitCommand(step.command)),
-    hasMavenIntegration: coverageSteps.some((step) => isMavenIntegrationCommand(step.command)),
-    hasFrontendCi: coverageSteps.some((step) => isFrontendNpmCommand(
-      step,
-      /^npm\s+ci(?:\s|$)/i,
-      /^npm\s+--prefix\s+ruoyi-ui\s+ci(?:\s|$)/i
-    )),
-    hasFrontendAudit: coverageSteps.some((step) => isFrontendNpmCommand(
-      step,
-      /^npm\s+audit\b(?=.*(?:^|\s)--audit-level(?:=|\s+)high(?:\s|$))/i,
-      /^npm\s+--prefix\s+ruoyi-ui\s+audit\b(?=.*(?:^|\s)--audit-level(?:=|\s+)high(?:\s|$))/i
-    )),
+    hasCheck: coverageSteps.some((step) => isRootNpmCommand(step, /^npm\s+run\s+check$/i)),
+    hasRootCi: coverageSteps.some((step) => isRootNpmCommand(step, /^npm\s+ci$/i)),
+    hasRootTest: coverageSteps.some((step) => isRootNpmCommand(step, /^npm\s+(?:run\s+)?test$/i)),
+    hasMavenUnit: coverageSteps.some((step) => isMavenUnitCommand(step)),
+    hasMavenIntegration: coverageSteps.some((step) => isMavenIntegrationCommand(step)),
+    hasFrontendCi: coverageSteps.some((step) => isFrontendCiCommand(step)),
+    hasFrontendTest: coverageSteps.some((step) => isFrontendTestCommand(step)),
+    hasFrontendAudit: frontendAuditAttemptCount === 1
+      && coverageSteps.some((step) => isAcceptedFrontendAuditCommand(step)),
     hasFrontendBuild: coverageSteps.some((step) => isFrontendBuildCommand(step)),
     skippedMaven: steps.some((step) => commandParts(step.command).some((line) => isMavenLine(line) && skipsMavenTests(line))),
+    weakenedMavenEnvironmentSteps: stepFacts.filter((step) => (
+      isMavenVerificationAttempt(step.command) && mavenEnvironmentWeakeningReasons(step).length > 0
+    )).map((step) => ({ ...step, mavenEnvironmentReasons: mavenEnvironmentWeakeningReasons(step) })),
+    persistentEnvironmentMutationSteps,
     npmInstall: steps.some((step) => commandParts(step.command).some((line) => /^npm(?:\s+--prefix\s+ruoyi-ui)?\s+install(?:\s|$)/i.test(line))),
     echo: steps.some((step) => commandParts(step.command).some((line) => /^echo(?:\s|$)/i.test(line))),
     invalidContinueOnError,
@@ -388,7 +1033,7 @@ export function validateCiCoverageDeclaration({ root = process.cwd() } = {}) {
   const workflows = workflowFiles(root);
   const facts = workflowFacts(root);
   const hasMaven = facts.hasMavenUnit && facts.hasMavenIntegration;
-  const hasFrontend = facts.hasFrontendCi && facts.hasFrontendAudit && facts.hasFrontendBuild;
+  const hasFrontend = facts.hasFrontendCi && facts.hasFrontendTest && facts.hasFrontendAudit && facts.hasFrontendBuild;
 
   if (workflows.length === 0 || !facts.hasCheck) {
     result.failures.push(issue({
@@ -402,7 +1047,8 @@ export function validateCiCoverageDeclaration({ root = process.cwd() } = {}) {
   pushMissing(result, facts.hasMavenUnit, 'maven-unit-ci-missing', 'GitHub Actions must run Maven unit tests without skip flags');
   pushMissing(result, facts.hasMavenIntegration, 'maven-integration-ci-missing', 'GitHub Actions must run the integration-test Maven profile through verify');
   pushMissing(result, facts.hasFrontendCi, 'frontend-npm-ci-missing', 'GitHub Actions must install ruoyi-ui dependencies with npm ci');
-  pushMissing(result, facts.hasFrontendAudit, 'frontend-audit-ci-missing', 'GitHub Actions must run ruoyi-ui npm audit --audit-level=high');
+  pushMissing(result, facts.hasFrontendTest, 'frontend-npm-test-missing', 'GitHub Actions must run the ruoyi-ui npm test suite explicitly');
+  pushMissing(result, facts.hasFrontendAudit, 'frontend-audit-ci-missing', 'GitHub Actions must run one literal ruoyi-ui npm audit at info, low, or moderate with development dependencies included');
   pushMissing(result, facts.hasFrontendBuild, 'frontend-build-ci-missing', 'GitHub Actions must run ruoyi-ui build:prod');
 
   if (facts.skippedMaven) {
@@ -410,6 +1056,22 @@ export function validateCiCoverageDeclaration({ root = process.cwd() } = {}) {
       file: '.github/workflows',
       code: 'maven-tests-skipped',
       message: 'GitHub Actions Maven commands must not use skipTests, skipITs, or maven.test.skip'
+    }));
+  }
+  for (const step of facts.weakenedMavenEnvironmentSteps) {
+    result.failures.push(issue({
+      file: step.file,
+      line: step.line,
+      code: 'maven-verification-environment-unsafe',
+      message: `Maven verification environment must not add dynamic or test-weakening options: ${step.mavenEnvironmentReasons.join(', ')}`
+    }));
+  }
+  for (const step of facts.persistentEnvironmentMutationSteps) {
+    result.failures.push(issue({
+      file: step.file,
+      line: step.line,
+      code: 'ci-persistent-environment-mutation',
+      message: 'GitHub Actions run steps must not mutate GITHUB_ENV or GITHUB_PATH before fixed verification commands'
     }));
   }
   if (facts.npmInstall) {

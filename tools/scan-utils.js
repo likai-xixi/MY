@@ -11,6 +11,7 @@ import {
 export const CODE_EXTENSIONS = new Set([
   '.js',
   '.jsx',
+  '.mjs',
   '.ts',
   '.tsx',
   '.vue',

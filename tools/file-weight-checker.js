@@ -123,12 +123,16 @@ export function validateFileWeight({
       const lines = lineCount(text);
       ensure(lines <= threshold.maxLines || justified, `${file} is a changed ${threshold.name} with ${lines} lines; add ai/changes/${id}/split-plan.md or weight-exception.md.`, errors);
     }
-    if (/\.(java|js|ts|vue)$/.test(file)) {
+    if (isMethodWeightSourceFile(file)) {
       warnings.push(...methodLengthWarnings(file, text));
     }
   }
 
   return { errors, warnings };
+}
+
+export function isMethodWeightSourceFile(file) {
+  return /\.(java|js|mjs|ts|vue)$/.test(file);
 }
 
 if (isCli(import.meta.url)) {

@@ -1,5 +1,19 @@
 # Changelog
 
+## 2026-07-15 - governance/frontend-ci-and-esm-scanner-hardening
+
+- Change: `ai/changes/CR-20260714T114811Z-frontend-ci-and-esm-scanner-hardening`.
+- Makes UI tests, the exact `ruoyi-business -am` integration reactor, one full moderate audit, and the production frontend build explicit and machine-checked in CI/release verification.
+- Rejects help/version/dry-run/if-present/test-selection/wrong-module, failure-masking, and duplicate/extra audit false-greens.
+- Makes local release verification cross-platform by resolving only the Maven executable through runtime policy with standard fallback while keeping the exact six-stage release contract fixed and fail-fast.
+- Extends every non-route governance scanner to executable `.mjs` helpers while preserving helper-as-non-route/non-component semantics, nested dependency exclusion, and real `src/**/build` source coverage.
+- Updates the anti-false-green matrix and records GitHub Actions as completed without opening `beforeSalesOrder`.
+- [local] Final focused coverage passes 234/234 and CI hardening passes 42/42; two independent adversarial reviews return GO with no P0-P3; scanner and scope gates pass.
+- [local] Portable release-verifier and anti-false-green coverage passes 94/94, including invalid-policy closure; the pre-fix all-up attempt exposed the bare-`mvn` PATH defect after root and production-safety gates.
+- [local] Final `verify:release` passes end to end with 480/480 Node tests, 60/60 Java tests including two MySQL/Testcontainers integrations, 7/7 UI tests, zero vulnerabilities across 360 audited dependencies, and the 2601-module production build.
+- [not-run] Commit, push, post-push governance, and GitHub Actions confirmation remain pending at this evidence point.
+- No business/UI runtime, API, route, permission, SQL, database, graph, dependency, lockfile, release, or deployment change is included.
+
 ## 2026-07-14 - platform/Testcontainers dependency alignment
 
 - Change: `ai/changes/CR-20260714T100059Z-testcontainers-dependency-alignment`.

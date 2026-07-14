@@ -1,6 +1,15 @@
 import { finish, isCli, listFiles, readJson, readText } from './common.js';
 
-const TEXT_EXTENSIONS = /\.(md|js|jsx|json|ya?ml|ts|tsx|vue|java|kt|sql|xml|sh|css|scss)$/;
+const TEXT_EXTENSIONS = /\.(md|js|jsx|mjs|json|ya?ml|ts|tsx|vue|java|kt|sql|xml|sh|css|scss)$/;
+const IGNORED_REFERENCE_DIRS = new Set(['.git', 'node_modules']);
+
+export function isOrphanReferenceFile(file) {
+  return TEXT_EXTENSIONS.test(file);
+}
+
+export function isIgnoredOrphanReferencePath(file) {
+  return String(file || '').replace(/\\/g, '/').split('/').some((segment) => IGNORED_REFERENCE_DIRS.has(segment));
+}
 const DEFAULT_ALLOWED_PREFIXES = [
   'ai/changes/',
   'ai/deletions/',
@@ -33,23 +42,30 @@ function featureTokens(value) {
 }
 
 function shouldSkip(file, allowedPrefixes = DEFAULT_ALLOWED_PREFIXES, allowedFiles = []) {
-  return file.startsWith('node_modules/')
-    || file.startsWith('.git/')
+  return isIgnoredOrphanReferencePath(file)
     || allowedFiles.includes(file)
     || allowedPrefixes.some((prefix) => file === prefix || file.startsWith(prefix));
 }
 
-export function scanOrphans({ feature = '', tokens = featureTokens(feature), allowedPrefixes = DEFAULT_ALLOWED_PREFIXES, allowedFiles = [] } = {}) {
+export function scanOrphans({
+  feature = '',
+  tokens = featureTokens(feature),
+  allowedPrefixes = DEFAULT_ALLOWED_PREFIXES,
+  allowedFiles = [],
+  list = listFiles,
+  readTextFile = readText,
+  readIgnoreConfigFile = readIgnoreConfig
+} = {}) {
   const errors = [];
   if (tokens.length === 0) {
     return errors;
   }
-  const ignore = readIgnoreConfig();
+  const ignore = readIgnoreConfigFile();
   const prefixes = [...new Set([...allowedPrefixes, ...ignore.prefixes])];
   const filesToIgnore = [...new Set([...allowedFiles, ...ignore.files])];
-  const files = listFiles('.', (file) => TEXT_EXTENSIONS.test(file) && !shouldSkip(file, prefixes, filesToIgnore));
+  const files = list('.', (file) => isOrphanReferenceFile(file) && !shouldSkip(file, prefixes, filesToIgnore));
   for (const file of files) {
-    const text = readText(file);
+    const text = readTextFile(file);
     for (const token of tokens) {
       if (text.includes(token)) {
         errors.push(`${file} still contains removed feature token ${token}.`);

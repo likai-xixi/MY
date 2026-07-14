@@ -1,0 +1,76 @@
+{
+  "schemaVersion": 1,
+  "id": "2026-07-14-frontend-ci-and-esm-scanner-hardening",
+  "title": "Frontend CI, portable release verification, and ESM scanner hardening",
+  "reason": "The maintained frontend now uses feature-local .mjs helpers, CI and generic scanners do not yet explicitly require UI tests, moderate-or-stricter audit severity, or complete ESM helper coverage, and verify:release directly invokes bare mvn instead of honoring the configured runtime-policy executable path.",
+  "status": "implemented",
+  "acceptedForChange": "CR-20260714T114811Z-frontend-ci-and-esm-scanner-hardening",
+  "requiredChangeMode": "rule-change",
+  "oldRule": "CI accepts a high-only frontend audit and infers UI tests from build behavior; verify:release directly invokes bare mvn and bypasses the configured Maven executable; several generic governance scanners omit executable .mjs helpers and route discovery is the accidental mechanism that keeps helpers out of the UI graph.",
+  "newRule": "CI and verify:release explicitly run the UI test suite and accept only a single literal info, low, or moderate audit threshold with development dependencies included. CI merges workflow, container, job, and step environments before accepting the exact Maven reactor; it recursively expands declared YAML environment aliases and normalizes frontend audit working directories, npm launch wrappers, executable expressions, subcommands, arguments, and prefix paths without conflating known repository-root audits. Unresolved dynamic npm programs that may target the frontend fail closed. Local release verification resolves Maven from runtime policy with a standard-command fallback and preserves fail-fast command semantics. Non-route code scanners include .mjs; route discovery remains explicitly limited to real Vue/page extensions.",
+  "affectedScanners": [
+    "tools/governance-checker-utils.js",
+    "tools/ci-coverage-declaration-checker.js",
+    "tools/release-verifier.js",
+    "tools/scan-utils.js",
+    "tools/scan-api-clients.js",
+    "tools/scan-permissions.js",
+    "tools/scan-components.js",
+    "tools/boundary-lint.js",
+    "tools/diff-checker.js",
+    "tools/impact-analyzer.js",
+    "tools/orphan-code-checker.js",
+    "tools/duplicate-scan.js",
+    "tools/ownership-syncer.js",
+    "tools/phase-gate-checker.js",
+    "tools/file-weight-checker.js",
+    "scripts/finalize-change.js",
+    "scripts/remove-feature.js",
+    "tools/false-green-matrix-checker.js"
+  ],
+  "affectedRegistries": [
+    "ai/governance/false-green-regression-matrix.json",
+    "ai/registry/test-ownership-exceptions.json"
+  ],
+  "affectedRoadmap": [
+    "ai/roadmap/enhancement-backlog.json",
+    "ai/roadmap/phase-gates.json"
+  ],
+  "affectedDocumentation": [
+    "docs/runtime-verification-boundary.md",
+    "docs/production-readiness.md"
+  ],
+  "projectEvidence": [
+    "ruoyi-ui/src/views/monitor/cache/cache-request-controller.mjs",
+    "ruoyi-ui/src/views/monitor/cache/chart-lifecycle.mjs",
+    ".github/workflows/ci.yml",
+    "package.json",
+    "ai/rules/runtime-policy.json"
+  ],
+  "regressionContract": [
+    "Require a dedicated unconditional ruoyi-ui test step in CI.",
+    "Accept only one literal info, low, or moderate audit level with development dependencies included; reject high, critical, missing, dynamic, duplicated, conflicting, fix, production-only, or omitted-dependency forms.",
+    "Treat every frontend audit or test attempt as required verification for failure-mask and unsafe-control analysis, even when its arguments are invalid.",
+    "Merge workflow, container, job, and step environments before accepting Maven coverage; reject MAVEN_ARGS and dynamic or test-weakening Maven/JVM option variables.",
+    "Reject persistent GITHUB_ENV/GITHUB_PATH mutation before fixed verification commands.",
+    "Recursively expand declared YAML environment aliases and simple run-block assignments; normalize literal and known-root frontend working directories, cd/pushd options, npm and process wrappers, shell and Actions executable expressions, dynamic npm subcommands and arguments, environment-resolved commands, NPM_CONFIG_PREFIX, and prefix paths; fail closed on unresolved dynamic frontend audit programs while independent repository-root audits do not count toward frontend uniqueness.",
+    "Make finalize:change append one well-separated changelog entry per exact change id and remain idempotent when rerun without a summary.",
+    "Resolve release-verification Maven through the configured runtime-policy path with a standard mvn fallback, execute the exact integration reactor once, and stop at the first failed release step.",
+    "Include .mjs in code, ownership, dependency, permission, boundary, lifecycle, reference, deletion, duplicate, and text-hygiene scanning.",
+    "Keep .mjs helpers out of generated frontend route/page records.",
+    "Keep plain .mjs helpers visible to ownership scanning without registering them as components.",
+    "Run real UI tests, a moderate audit, production build, release verification, and the complete repository gate."
+  ],
+  "checklist": [
+    "Explain old rule and new rule.",
+    "List affected scanners and registries.",
+    "List sample files proving the project base needs this rule.",
+    "Run npm run check after the rule proposal is accepted."
+  ],
+  "implementedBy": "CR-20260714T114811Z-frontend-ci-and-esm-scanner-hardening",
+  "verification": [
+    "Final focused governance and scanner regressions pass 234/234, including 42/42 CI-hardening tests; portable release-verifier and anti-false-green coverage passes 94/94.",
+    "Final verify:release passes with 480/480 Node tests and 60/60 Java tests including both MySQL/Testcontainers integration tests.",
+    "UI tests pass 7/7, the moderate full dependency audit reports zero vulnerabilities across 360 dependencies, and the production build transforms 2601 modules."
+  ]
+}

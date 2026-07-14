@@ -52,5 +52,6 @@ jobs:
         with:
           node-version: 20
       - run: npm --prefix ruoyi-ui ci
-      - run: npm --prefix ruoyi-ui audit --audit-level=high
+      - run: npm --prefix ruoyi-ui test
+      - run: npm --prefix ruoyi-ui audit --audit-level=moderate --include=dev
       - run: npm --prefix ruoyi-ui run build:prod

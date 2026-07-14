@@ -1,9 +1,12 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
+  buildChangelogEntry,
   buildMemoryHandover,
   controlledSectionDuplicates,
   parseArgs,
+  projectCalendarDate,
+  shouldAppendChangelog,
   shouldReplaceGeneratedText,
   synchronizeChangedFilesSection,
   templatePhrase
@@ -142,6 +145,25 @@ test('finalize:change parses explicit verification status and evidence', () => {
     'node --test tests/resume.test.js',
     'npm run check'
   ]);
+});
+
+test('finalize:change changelog entries are separated and idempotent by change id', () => {
+  const id = 'CR-TEST-IDEMPOTENT';
+  const entry = buildChangelogEntry({
+    id,
+    featureId: 'platform',
+    mode: 'rule-change',
+    today: '2026-07-15'
+  });
+  assert.match(entry, /^## 2026-07-15 - rule-change\n\n- Change:/);
+  assert.match(entry, /\n- Feature: `platform`\.\n$/);
+  assert.equal(shouldAppendChangelog('# Changelog\n', id), true);
+  assert.equal(shouldAppendChangelog(`# Changelog\n\n${entry}`, id), false);
+});
+
+test('finalize:change uses the project calendar date across the UTC boundary', () => {
+  assert.equal(projectCalendarDate(new Date('2026-07-14T15:59:59.999Z')), '2026-07-14');
+  assert.equal(projectCalendarDate(new Date('2026-07-14T16:00:00.000Z')), '2026-07-15');
 });
 
 test('finalize:change detects template verification and preserves real evidence by default', () => {

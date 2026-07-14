@@ -4,7 +4,16 @@ import { normalizeFeatureId, normalizeFeatureNameForMatch, parseFeatureInput, re
 import { readJsonOrDefault } from './scan-utils.js';
 import { featurePaths, inferFeatureFromPath } from './project-config.js';
 
-const TEXT_EXTENSIONS = /\.(md|js|jsx|json|ya?ml|ts|tsx|vue|java|kt|sql|xml|sh|css|scss)$/;
+const TEXT_EXTENSIONS = /\.(md|js|jsx|mjs|json|ya?ml|ts|tsx|vue|java|kt|sql|xml|sh|css|scss)$/;
+const IGNORED_REFERENCE_DIRS = new Set(['.git', 'node_modules']);
+
+export function isImpactReferenceFile(file) {
+  return TEXT_EXTENSIONS.test(file);
+}
+
+export function isIgnoredImpactReferencePath(file) {
+  return String(file || '').replace(/\\/g, '/').split('/').some((segment) => IGNORED_REFERENCE_DIRS.has(segment));
+}
 
 function unique(items) {
   return [...new Set(items.filter(Boolean))];
@@ -26,17 +35,20 @@ function featureTokens(feature) {
   ]);
 }
 
-function findReferences(tokens) {
+export function findReferences(tokens, {
+  list = listFiles,
+  readTextFile = readText
+} = {}) {
   if (tokens.length === 0) {
     return [];
   }
-  return listFiles('.', (file) => {
-    if (file.startsWith('node_modules/') || file.startsWith('.git/')) {
+  return list('.', (file) => {
+    if (isIgnoredImpactReferencePath(file)) {
       return false;
     }
-    return TEXT_EXTENSIONS.test(file);
+    return isImpactReferenceFile(file);
   }).filter((file) => {
-    const text = readText(file);
+    const text = readTextFile(file);
     return tokens.some((token) => token && text.includes(token));
   });
 }

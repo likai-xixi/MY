@@ -87,7 +87,7 @@
     "ai:do": "node scripts/ai-do.js",
     "check:ownership": "node tools/ownership-checker.js",
     "check:runtime": "node tools/runtime-checker.js",
-    "verify:release": "npm run check && npm run check:prod-safety && mvn -pl ruoyi-business -am -Pintegration-test verify && npm --prefix ruoyi-ui audit --audit-level=high && npm --prefix ruoyi-ui run build:prod",
+    "verify:release": "node tools/release-verifier.js",
     "sync:ownership": "node tools/ownership-syncer.js",
     "build": "npm run build:graph",
     "sync:ownership:check": "node tools/ownership-syncer.js --check"
