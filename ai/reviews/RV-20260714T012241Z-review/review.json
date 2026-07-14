@@ -3,6 +3,7 @@
   "request": "功能预审：全项目审查问题修复（客户资金与权限、主数据引用、公告安全、生产配置）",
   "mode": "pre-review",
   "feature": "customer",
+  "baseRevision": "b1f40b22dd11f08943065c6842552141280179a0",
   "createdAt": "2026-07-14T01:22:41.350Z",
   "status": "approved",
   "approvedFeatures": [
@@ -18,9 +19,18 @@
     "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer",
     "ruoyi-ui/src/views/customer",
     "ruoyi-ui/src/api/customer.js",
+    "ruoyi-ui/.gitignore",
+    "ruoyi-ui/package.json",
+    "ruoyi-ui/package-lock.json",
+    "sql/customer.ownership.md",
+    "sql/migrations/V20260625_001_customer_schema.sql",
+    "sql/validation/customer_runtime_validation.sql",
     "ruoyi-business/src/main/java/com/ruoyi/business/masterdata",
     "ruoyi-business/src/main/resources/mapper/masterdata",
     "ruoyi-business/src/test/java/com/ruoyi/business/masterdata",
+    "sql/masterdata.ownership.md",
+    "sql/migrations/V20260628_005_masterdata_r10_schema.sql",
+    "sql/validation/masterdata_runtime_validation.sql",
     "ruoyi-admin/src/main/resources/application-prod.yml",
     "ruoyi-ui/src/layout/components/HeaderNotice",
     "ai/contracts",
@@ -33,6 +43,7 @@
     "ai/generated",
     "ai/registry"
   ],
+  "approvedEditRootsReason": "Each SQL path is explicitly approved because the reviewed customer and masterdata integrity fixes require ownership, executable migration, and runtime validation evidence. The exact ruoyi-ui ignore, manifest, and lockfile paths are approved because the reviewed governance/CI record requires locked frontend dependencies and npm ci. No broader sql or UI root is approved.",
   "decision": {
     "allowImplementation": true,
     "reason": "Allow Implementation for the four explicitly separated remediation records and approved roots only."
