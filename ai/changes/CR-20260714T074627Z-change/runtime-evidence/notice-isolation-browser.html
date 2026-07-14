@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Notice isolation browser verification</title>
+</head>
+<body data-ready="no" data-pwned="no">
+  <h1 id="parent-heading">Parent remains isolated</h1>
+  <output id="parent-state">safe</output>
+
+  <script type="module">
+    import { buildNoticeDocument } from '/ruoyi-ui/src/layout/components/HeaderNotice/notice-rich-text.mjs';
+
+    window.__noticeXss = false;
+    const attackerOrigin = 'http://127.0.0.1:4175';
+    const hostileNotice = [
+      '<h2 id="legitimate-heading">Maintenance window</h2>',
+      '<p id="legitimate-copy"><strong>Window:</strong> 22:00</p>',
+      '<table id="legitimate-table"><tr><td>A</td></tr></table>',
+      '<p id="quill-format" class="ql-align-center ql-indent-2 ql-size-large ql-font-serif">Quill formatting</p>',
+      '<div id="quill-code" class="ql-code-block-container"><div class="ql-code-block">const safe = true</div></div>',
+      '<img id="allowed-image" src="/allowed.png" alt="allowed local image">',
+      '<scr' + 'ipt>document.documentElement.dataset.childScript="executed";parent.__noticeXss=true;parent.document.body.dataset.pwned="script"</scr' + 'ipt>',
+      `<img id="event-payload" src="${attackerOrigin}/tracker.png" onerror="document.documentElement.dataset.childEvent='executed';parent.__noticeXss=true;parent.document.body.dataset.pwned='event'">`,
+      '<a id="javascript-link" href="javascript:document.documentElement.dataset.childJavascript=\'executed\';parent.__noticeXss=true;parent.document.body.dataset.pwned=\'link\'">unsafe link</a>',
+      `<form id="escape-form" action="${attackerOrigin}/collect" target="_top"><button id="escape-submit" type="submit">unsafe submit</button></form>`,
+      `<iframe id="nested-frame" src="${attackerOrigin}/frame"></iframe>`
+    ].join('');
+
+    const frame = document.createElement('iframe');
+    frame.id = 'notice-frame';
+    frame.title = 'notice sandbox';
+    frame.setAttribute('sandbox', '');
+    frame.setAttribute('referrerpolicy', 'no-referrer');
+    frame.srcdoc = buildNoticeDocument(hostileNotice, window.location.origin, { colorScheme: 'dark' });
+    frame.addEventListener('load', () => {
+      document.body.dataset.ready = 'yes';
+    });
+    document.body.append(frame);
+  </script>
+</body>
+</html>

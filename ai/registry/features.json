@@ -1334,7 +1334,9 @@
         "/system/user/{userIds}",
         "/unlockscreen"
       ],
-      "tests": [],
+      "tests": [
+        "tests/system-notice-security.test.js"
+      ],
       "docs": [
         "features/system.md"
       ],
@@ -1693,7 +1695,9 @@
           "ruoyi-ui/src/layout/components/HeaderNotice/index.vue",
           "ruoyi-ui/src/views/system/role/selectUser.vue"
         ],
-        "tests": [],
+        "tests": [
+          "tests/system-notice-security.test.js"
+        ],
         "docs": [
           "features/system.md"
         ],

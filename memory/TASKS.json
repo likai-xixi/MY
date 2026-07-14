@@ -8,10 +8,14 @@
       "status": "in_progress",
       "owner": "Codex",
       "priority": "high",
-      "statusReason": "CR-20260714T022937Z-change is closing the restored masterdata reference-integrity and hierarchy-concurrency batch on committed governance base d659a09531813b9e7591fda2058baddf2af4291c before the remaining system/platform/dependency remediations.",
-      "nextStep": "Complete the masterdata full gate and staged review, commit the exact batch, then continue the separate system notice, production profile/checker, Testcontainers version alignment, and frontend dependency migration records. Keep beforeSalesOrder blocked and do not release or deploy.",
+      "statusReason": "CR-20260714T074627Z-change passed its review-hardened 5/5 focused suite, complete 386/386 repository gate, browser isolation evidence, and close gate on committed masterdata base 395685a31b39552f17f4fe0a6784c6796c9d9429; restaging, independent re-review, and commit remain before the production-profile and dependency remediations.",
+      "nextStep": "Stage and independently review the exact system batch, commit it, then continue the separate production profile/checker, Testcontainers version alignment, and frontend dependency migration records. Keep beforeSalesOrder blocked and do not release or deploy.",
       "blockedBy": [],
       "verification": [
+        "CR-20260714T074627Z-change focused security regression moved from 0/4 RED to 4/4 GREEN and expanded to 5/5 for dark-theme and Quill-format coverage; production frontend build passed with 2557 transformed modules",
+        "CR-20260714T074627Z-change real Chrome evidence reported opaque null origin, absent child execution markers, one allowed same-origin image request, zero reachable attacker image/frame/form requests, correct dark/Quill computed styles, and unchanged parent URL/DOM/state",
+        "CR-20260714T074627Z-change scan, review, context, impact-scope, and system test-ownership checks pass; browser provisioning remains a recorded non-CI boundary",
+        "CR-20260714T074627Z-change complete npm run check passed with 386/386 Node tests after review hardening and npm run close:change passed against the exact finalized record",
         "CR-20260714T022937Z-change is rebound to governance commit d659a09531813b9e7591fda2058baddf2af4291c and approved review RV-20260714T012241Z-review; impact, review, context, and Java/Node ownership gates pass",
         "CR-20260714T022937Z-change focused verification passed Node 34/34, Maven reactor unit 58/58 including masterdata 21/21, MySQL 8.0.36 Testcontainers IT 1/1, and eight-module backend compile; cycle/depth corruption was detected, service rejection released the mutex, and validation returned clean after repair",
         "CR-20260714T022937Z-change complete npm run check passed with 381/381 Node tests and finalization matches exactly 29 recorded and actual paths",
@@ -187,10 +191,10 @@
         "R-10C frontend browser acceptance passed on canonical http://127.0.0.1:5173/business/masterdata with nine tabs and product-category add/edit/disable/delete",
         "R-10C direct http://127.0.0.1:5173/masterdata returned RuoYi 404 and is recorded as non-canonical; no R-10D is opened"
       ],
-      "latestSession": "memory/sessions/2026-07-14-governance-gate-evidence-hardening.md",
+      "latestSession": "memory/sessions/2026-07-14-system-notice-xss.md",
       "handoverRequired": true,
       "updatedAt": "2026-07-14",
-      "latestChange": "CR-20260714T034246Z-repository-wide-governance-gate-evidence-hardeni"
+      "latestChange": "CR-20260714T074627Z-change"
     },
     {
       "id": "TASK-CUSTOMER",

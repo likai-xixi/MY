@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "testedAt": "2026-07-14T08:36:51.174Z",
+  "browser": "Google Chrome 150.0.7871.101",
+  "runner": "Bundled local Playwright 1.61.1 with the system Chrome executable",
+  "harness": "ai/changes/CR-20260714T074627Z-change/runtime-evidence/notice-isolation-browser.html",
+  "sourceUnderTest": "ruoyi-ui/src/layout/components/HeaderNotice/notice-rich-text.mjs",
+  "result": "PASS",
+  "initialLoad": {
+    "sandboxAttribute": "",
+    "serializedChildOrigin": "null",
+    "childScriptMarker": "absent",
+    "childEventMarker": "absent",
+    "childJavascriptMarker": "absent",
+    "parentUrlUnchanged": true,
+    "parentAttackFlag": false,
+    "parentDomMarker": "no",
+    "colorScheme": "dark",
+    "bodyBackground": "rgb(29, 30, 31)",
+    "bodyColor": "rgb(208, 208, 208)",
+    "quillTextAlign": "center",
+    "quillPaddingLeft": "126px",
+    "quillFontSize": "21px",
+    "quillFontFamily": "Georgia, \"Times New Roman\", serif",
+    "codeBackground": "rgb(35, 36, 31)",
+    "codeColor": "rgb(248, 248, 242)",
+    "allowedSameOriginImageNaturalWidth": 1,
+    "blockedAttackerImageNaturalWidth": 0,
+    "legitimateHeading": "Maintenance window",
+    "legitimateStrongText": "Window:",
+    "legitimateTableCell": "A"
+  },
+  "interactionChecks": {
+    "topTargetFormClicked": true,
+    "javascriptLinkClicked": true,
+    "childScriptMarkerAfterClicks": "absent",
+    "childEventMarkerAfterClicks": "absent",
+    "childJavascriptMarkerAfterClicks": "absent",
+    "parentUrlUnchanged": true,
+    "parentAttackFlag": false,
+    "parentDomMarker": "no",
+    "parentState": "safe"
+  },
+  "reachableEndpointRequestCounters": {
+    "allowedSameOriginImage": 1,
+    "blockedAttackerImage": 0,
+    "blockedAttackerFrame": 0,
+    "blockedAttackerForm": 0
+  },
+  "securityConsoleEvidence": [
+    "Chrome blocked script execution because the sandbox has no allow-scripts permission.",
+    "Chrome blocked the reachable 127.0.0.1:4175 image under img-src.",
+    "Chrome blocked the reachable 127.0.0.1:4175 child frame under frame-src none.",
+    "Chrome blocked form submission because the sandbox has no allow-forms permission.",
+    "Chrome blocked the javascript URL under script-src none."
+  ],
+  "csp": "default-src 'none'; base-uri 'none'; script-src 'none'; connect-src 'none'; object-src 'none'; frame-src 'none'; child-src 'none'; form-action 'none'; style-src 'unsafe-inline'; img-src data: blob: http://127.0.0.1:4174; media-src data: blob: http://127.0.0.1:4174",
+  "executionNotes": [
+    "The harness was served only on 127.0.0.1:4174; a separate reachable attacker server was bound to 127.0.0.1:4175; both servers and Chrome were stopped after readback.",
+    "Attack script and event-handler payloads set child-local markers before attempting parent access, so absent markers directly evidence non-execution rather than an opaque-origin parent access exception.",
+    "The allowed same-origin image reached the app server exactly once. The reachable attacker server recorded zero image, frame, and form requests, separating policy blocking from DNS or network failure.",
+    "Computed styles confirm the dark palette and Quill alignment, indentation, size, serif font, and code-block presentation inside the isolated document.",
+    "This targeted browser check uses a local bundled runner and is not wired into CI; the committed Node regression remains the automated repository gate."
+  ]
+}

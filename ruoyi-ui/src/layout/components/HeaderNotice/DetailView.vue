@@ -42,7 +42,14 @@
         </div>
 
         <div class="notice-body">
-          <div v-if="hasContent" class="notice-content" v-html="detail.noticeContent" />
+          <iframe
+            v-if="hasContent"
+            class="notice-content-frame"
+            sandbox=""
+            :srcdoc="noticeDocument"
+            referrerpolicy="no-referrer"
+            title="公告正文"
+          />
           <div v-else class="notice-empty notice-empty--inner">
             <el-icon><Document /></el-icon> 暂无内容
           </div>
@@ -54,10 +61,13 @@
 
 <script setup>
 import { getNotice } from '@/api/system/notice'
+import { buildNoticeDocument } from './notice-rich-text.mjs'
 
 const visible = ref(false)
 const loading = ref(false)
 const detail = ref(null)
+const noticeColorScheme = ref('light')
+let themeObserver
 
 const isStatusNormal = computed(() => {
   const status = detail.value && detail.value.status
@@ -67,6 +77,30 @@ const isStatusNormal = computed(() => {
 const hasContent = computed(() => {
   const content = detail.value && detail.value.noticeContent
   return content != null && String(content).trim() !== ''
+})
+
+const noticeDocument = computed(() => {
+  const content = detail.value && detail.value.noticeContent
+  return buildNoticeDocument(content, window.location.origin, {
+    colorScheme: noticeColorScheme.value
+  })
+})
+
+function syncNoticeColorScheme() {
+  noticeColorScheme.value = document.documentElement.classList.contains('dark') ? 'dark' : 'light'
+}
+
+onMounted(() => {
+  syncNoticeColorScheme()
+  themeObserver = new MutationObserver(syncNoticeColorScheme)
+  themeObserver.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ['class']
+  })
+})
+
+onBeforeUnmount(() => {
+  themeObserver?.disconnect()
 })
 
 function open(payload) {
@@ -223,68 +257,12 @@ defineExpose({
   min-height: 120px;
 }
 
-.notice-content {
-  font-size: 14px;
-  line-height: 1.85;
-  color: var(--notice-content-color, #2d3748);
-  word-break: break-word;
-}
-
-.notice-content :deep(p) { margin: 0 0 1em; }
-
-.notice-content :deep(h1),
-.notice-content :deep(h2),
-.notice-content :deep(h3) {
-  font-weight: 700;
-  color: var(--notice-title-color, #1a202c);
-  margin: 1.4em 0 0.6em;
-}
-
-.notice-content :deep(h1) { font-size: 18px; }
-.notice-content :deep(h2) { font-size: 16px; }
-.notice-content :deep(h3) { font-size: 14px; }
-
-.notice-content :deep(a) {
-  color: #3182ce;
-  text-decoration: underline;
-}
-.notice-content :deep(a:hover) { color: #2b6cb0; }
-
-.notice-content :deep(img) {
-  max-width: 100%;
-  border-radius: 4px;
-  margin: 8px 0;
-}
-
-.notice-content :deep(ul),
-.notice-content :deep(ol) {
-  padding-left: 20px;
-  margin: 0 0 1em;
-}
-.notice-content :deep(li) { margin-bottom: 4px; }
-
-.notice-content :deep(blockquote) {
-  border-left: 3px solid var(--notice-blockquote-border, #cbd5e0);
-  margin: 1em 0;
-  padding: 6px 16px;
-  color: var(--notice-meta-color, #718096);
-  background: var(--notice-blockquote-bg, #f7fafc);
-}
-
-.notice-content :deep(table) {
-  border-collapse: collapse;
+.notice-content-frame {
+  display: block;
   width: 100%;
-  margin: 1em 0;
-  font-size: 13px;
-}
-.notice-content :deep(table th),
-.notice-content :deep(table td) {
-  border: 1px solid var(--notice-table-border, #e2e8f0);
-  padding: 7px 12px;
-}
-.notice-content :deep(table th) {
-  background: var(--notice-table-header-bg, #f7fafc);
-  font-weight: 600;
+  height: clamp(260px, 55vh, 680px);
+  border: 0;
+  background: var(--notice-body-bg, #fff);
 }
 
 .notice-empty {

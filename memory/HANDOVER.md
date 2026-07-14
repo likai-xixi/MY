@@ -2,80 +2,69 @@
 
 ## Summary
 
-Active change `CR-20260714T022937Z-change` restores and revalidates the masterdata reference-integrity batch on top of governance commit `d659a09531813b9e7591fda2058baddf2af4291c`. It is approved by `RV-20260714T012241Z-review`, remains unreleased, and does not publish or deploy.
+Active change `CR-20260714T074627Z-change` fixes the validated P1 stored-XSS path in system-notice rich-text details on base `395685a31b39552f17f4fe0a6784c6796c9d9429`. It is approved by `RV-20260714T012241Z-review`, remains unreleased, and does not publish or deploy.
 
 ## Impact
 
-The change hardens masterdata parent/reference locks, seven deletion guards, exact affected-row checks, category hierarchy serialization, and series/model category consistency. Scope remains masterdata-only plus required evidence, generated scan/context, registry, and memory files. `beforeSalesOrder` remains blocked.
+Stored notice HTML no longer enters the authenticated parent document. The shared detail renderer uses an empty-permission sandbox iframe and a CSP-first isolated document while retaining ordinary rich-text layout and same-origin uploaded images. Scope remains HeaderNotice, the exact system test/docs/registry, and required evidence/context/memory. Backend notice APIs/storage, production configuration, dependency migration, governance rules, and sales-order remain separate; `beforeSalesOrder` stays blocked.
 
 ## Changed Files
 
-- `ai/changes/CR-20260714T022937Z-change/changed-files.json`
-- `ai/changes/CR-20260714T022937Z-change/handover.md`
-- `ai/changes/CR-20260714T022937Z-change/impact.json`
-- `ai/changes/CR-20260714T022937Z-change/plan.md`
-- `ai/changes/CR-20260714T022937Z-change/request.md`
-- `ai/changes/CR-20260714T022937Z-change/verification.md`
+- `ai/changes/CR-20260714T074627Z-change/changed-files.json`
+- `ai/changes/CR-20260714T074627Z-change/handover.md`
+- `ai/changes/CR-20260714T074627Z-change/impact.json`
+- `ai/changes/CR-20260714T074627Z-change/plan.md`
+- `ai/changes/CR-20260714T074627Z-change/request.md`
+- `ai/changes/CR-20260714T074627Z-change/runtime-evidence/notice-isolation-browser-result.json`
+- `ai/changes/CR-20260714T074627Z-change/runtime-evidence/notice-isolation-browser.html`
+- `ai/changes/CR-20260714T074627Z-change/verification.md`
 - `ai/changes/CURRENT_CHANGE.json`
 - `ai/context/current-context.json`
 - `ai/context/current-context.md`
-- `ai/contracts/masterdata.api.md`
-- `ai/contracts/masterdata.db.md`
-- `ai/contracts/masterdata.delete-ownership.md`
-- `ai/generated/db-schema.json`
 - `ai/registry/features.json`
-- `features/masterdata.md`
+- `features/system.md`
 - `memory/CHANGELOG.md`
 - `memory/HANDOVER.md`
 - `memory/PROJECT_STATE.md`
 - `memory/TASKS.json`
-- `memory/sessions/2026-07-14-masterdata-reference-integrity.md`
-- `ruoyi-business/src/main/java/com/ruoyi/business/masterdata/mapper/MasterDataMapper.java`
-- `ruoyi-business/src/main/java/com/ruoyi/business/masterdata/service/impl/MasterDataServiceImpl.java`
-- `ruoyi-business/src/main/resources/mapper/masterdata/MasterDataMapper.xml`
-- `ruoyi-business/src/test/java/com/ruoyi/business/masterdata/service/MasterDataReferenceMySqlIT.java`
-- `ruoyi-business/src/test/java/com/ruoyi/business/masterdata/service/MasterDataServiceTest.java`
-- `sql/masterdata.ownership.md`
-- `sql/migrations/V20260628_005_masterdata_r10_schema.sql`
-- `sql/validation/masterdata_runtime_validation.sql`
-- `tests/masterdata-runtime.test.js`
+- `memory/sessions/2026-07-14-system-notice-xss.md`
+- `ruoyi-ui/src/layout/components/HeaderNotice/DetailView.vue`
+- `ruoyi-ui/src/layout/components/HeaderNotice/notice-rich-text.mjs`
+- `tests/system-notice-security.test.js`
 
 ## Commands
 
 - `[local] npm run resume`
-- `[local] npm run impact -- masterdata`
-- `[local] node --test tests/masterdata-runtime.test.js`
-- `[local] configured Maven 3.9.9 -pl ruoyi-business -am test`
-- `[local] configured Maven 3.9.9 -pl ruoyi-business -am -Pintegration-test -Dit.test=MasterDataReferenceMySqlIT -Dsurefire.failIfNoSpecifiedTests=false verify`
-- `[local] configured Maven 3.9.9 -pl ruoyi-admin -am -DskipTests compile`
+- `[local] npm run ai:do -- "功能迭代：系统管理"`
+- `[local] npm run context:build -- system`
+- `[local] node --test tests/system-notice-security.test.js`
+- `[local] npm --prefix ruoyi-ui run build:prod`
 - `[local] npm run scan:all`
-- `[local] npm run context:build -- masterdata`
 - `[local] npm run check:feature-test-ownership`
 - `[local] npm run check:review`
 - `[local] npm run check:context-pack`
+- `[local] npm run check:diff`
 - `[local] git diff --check`
 - `[local] npm run finalize:change`
 - `[local] npm run check`
 - `[local] npm run close:change`
+- `[local-browser] Chromium notice isolation harness`
 
 ## Verification
 
-- [local] Node masterdata suite passed 34/34.
-- [local] Maven unit suite passed 58/58, including focused masterdata service tests at 21/21.
-- [local] MySQL 8.0.36 Testcontainers integration passed 1/1 and observed a real wait on the permanent hierarchy mutex before both concurrent first-root inserts committed.
-- [local] Direct SQL cycle/depth corruption produced two cycle-node and one over-depth violation; the service failed closed within the timeout, released locks for a new transaction, and validation returned clean after repair.
-- [local] Backend reactor compile, regenerated scans/context, review binding, impact scope, and Java/Node test ownership checks pass.
-- [local] The complete project gate passed with 381/381 Node tests; finalization matches exactly 29 recorded and actual paths.
+- [local] Focused tests moved from 0/4 RED to 4/4 GREEN, then expanded to 5/5 for dark-theme and Quill-format regression coverage; the frontend production build passed with 2557 transformed modules.
+- [local-browser] Child-local execution markers stayed absent and parent URL/DOM/state stayed safe. A same-origin image reached the main server once while a separately reachable attacker server received zero image/frame/form requests; computed styles confirmed dark contrast and Quill formatting.
+- [local] `npm run check:feature-test-ownership`, `npm run check:review`, `npm run check:context-pack`, `npm run check:diff`, scanner checks, and `git diff --check` pass. Exact browser readback and its CI boundary are recorded under the active change.
+- [local] The complete repository gate passed with 386/386 Node tests after review hardening, and `npm run close:change` passed for the exact finalized record.
 
 ## Risks
 
-- Existing databases need the updated V005 migration followed by the complete `sql/validation/masterdata_runtime_validation.sql` before future runtime acceptance or deployment; mutex, category root-reachability/cycle/depth, seven orphan, and model/series consistency checks must all pass.
-- Direct database writers remain outside the service locking protocol and must execute that complete validation script after every direct write.
-- Product-category hierarchy writes intentionally serialize for integrity.
-- Testcontainers `mysql` 1.21.3 resolves transitive `jdbc`/core 1.21.4; align the Maven dependency versions in a separate governance/dependency record because POM files are outside the masterdata business scope.
+- The real-browser harness is reproducible local evidence, not a pinned CI job.
+- Notice external video, arbitrary remote media, popups, forms, and child frames are intentionally blocked. The empty sandbox must not be relaxed.
+- Four moderate UI dependency findings remain for the separate dependency migration batch.
 
 ## Next Actions
 
-- Finalize, run the complete project gate, stage exactly, independently review, and commit the masterdata batch.
-- Complete the separate system notice, production profile/checker, Testcontainers alignment, and frontend dependency migration batches.
-- Push the reviewed commit series only after the final repository gate; do not release or deploy.
+- Stage the exact 21-file system batch, complete independent review, and commit it.
+- Complete the separate production profile/checker and dependency alignment/migration batches.
+- Run final all-project review, push `master`, and confirm GitHub Actions. Do not release or deploy.

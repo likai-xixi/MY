@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "files": [
+    "ai/changes/CR-20260714T074627Z-change/changed-files.json",
+    "ai/changes/CR-20260714T074627Z-change/handover.md",
+    "ai/changes/CR-20260714T074627Z-change/impact.json",
+    "ai/changes/CR-20260714T074627Z-change/plan.md",
+    "ai/changes/CR-20260714T074627Z-change/request.md",
+    "ai/changes/CR-20260714T074627Z-change/runtime-evidence/notice-isolation-browser-result.json",
+    "ai/changes/CR-20260714T074627Z-change/runtime-evidence/notice-isolation-browser.html",
+    "ai/changes/CR-20260714T074627Z-change/verification.md",
+    "ai/changes/CURRENT_CHANGE.json",
+    "ai/context/current-context.json",
+    "ai/context/current-context.md",
+    "ai/registry/features.json",
+    "features/system.md",
+    "memory/CHANGELOG.md",
+    "memory/HANDOVER.md",
+    "memory/PROJECT_STATE.md",
+    "memory/TASKS.json",
+    "memory/sessions/2026-07-14-system-notice-xss.md",
+    "ruoyi-ui/src/layout/components/HeaderNotice/DetailView.vue",
+    "ruoyi-ui/src/layout/components/HeaderNotice/notice-rich-text.mjs",
+    "tests/system-notice-security.test.js"
+  ]
+}

@@ -707,3 +707,10 @@
 - Change: `ai/changes/CR-20260714T022937Z-change`.
 - Harden masterdata reference, hierarchy, cycle detection, and validation evidence with real transactional tests
 - Feature: `masterdata`.
+
+## 2026-07-14 — system notice rich-text isolation
+
+- Change: `ai/changes/CR-20260714T074627Z-change`.
+- Replaced parent-document notice `v-html` with an empty-sandbox, CSP-first `srcdoc` renderer and added a review-hardened 5/5 security, theme, and Quill-format regression.
+- Real Chrome confirmed absent child execution markers, zero reachable attacker endpoint requests, preserved dark/Quill presentation, and unchanged parent state; the complete repository gate passed 386/386 and the close gate passed.
+- Feature: `system`.
