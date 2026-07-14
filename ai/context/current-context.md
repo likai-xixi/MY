@@ -1,21 +1,19 @@
 # Current Context
 
-Current feature: `system`
-Current change: `CR-20260714T074627Z-change`
+Current feature: `platform`
+Current change: `CR-20260714T084732Z-change`
 Repository: RuoYi + Vue3 + Codex Auto Dev OS
 Profile: adapter `ruoyi`, locked `true`
 
 ## Allowed Edit Roots
 
-- `features/system.md`
-- `ruoyi-ui/src/layout/components/HeaderNotice`
-- `ai/registry/features.json`
+- `features/platform.md`
+- `ruoyi-admin/src/main/resources/application-prod.yml`
 - `ai/changes`
 - `ai/context`
 - `ai/generated`
 - `graph`
 - `memory`
-- `tests/system-notice-security.test.js`
 
 ## Forbidden Edit Roots
 
@@ -23,22 +21,16 @@ Profile: adapter `ruoyi`, locked `true`
 - `scripts`
 - `.github`
 - `package.json`
-- `ruoyi-ui/package.json`
-- `ruoyi-ui/package-lock.json`
-- `ruoyi-admin/src/main/resources/application-prod.yml`
-- `ruoyi-admin/src/main/java/com/ruoyi/web/controller/system`
+- `pom.xml`
+- `ruoyi-ui`
+- `ruoyi-framework`
+- `ruoyi-business`
 - `ruoyi-system`
-- `ruoyi-ui/src/views/system`
+- `ruoyi-common`
+- `ruoyi-generator`
+- `ruoyi-quartz`
+- `tests`
 - `sql`
-- `ruoyi-business/src/main/java/com/ruoyi/business/customer`
-- `ruoyi-business/src/main/java/com/ruoyi/business/masterdata`
-- `ruoyi-business/src/main/java/com/ruoyi/business/sales-order`
-- `ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer`
-- `ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/masterdata`
-- `ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/sales-order`
-- `ruoyi-ui/src/views/customer`
-- `ruoyi-ui/src/views/masterdata`
-- `ruoyi-ui/src/views/sales-order`
 
 ## Must Read Files
 
@@ -49,13 +41,13 @@ Profile: adapter `ruoyi`, locked `true`
 - `package.json` - Available workflow and check scripts.
 - `ai/registry/features.json` - Feature ownership and active feature context.
 - `ai/registry/modules.json` - Module ownership roots.
-- `features/system.md` - Focused context for system.
+- `features/platform.md` - Focused context for platform.
 - `ai/roadmap/phase-gates.json` - beforeSalesOrder gate state.
 - `ai/roadmap/refactor-debt.json` - Known debt affecting sales-order handoff.
 - `ai/roadmap/enhancement-backlog.json` - Governance backlog and required/deferred evidence.
-- `ai/changes/CR-20260714T074627Z-change/impact.json` - Current change allowed and forbidden edit roots.
-- `ai/changes/CR-20260714T074627Z-change/plan.md` - Current change execution plan.
-- `ai/changes/CR-20260714T074627Z-change/verification.md` - Current change verification evidence.
+- `ai/changes/CR-20260714T084732Z-change/impact.json` - Current change allowed and forbidden edit roots.
+- `ai/changes/CR-20260714T084732Z-change/plan.md` - Current change execution plan.
+- `ai/changes/CR-20260714T084732Z-change/verification.md` - Current change verification evidence.
 
 ## Must Not Break
 
@@ -116,6 +108,7 @@ Deferred:
 
 ## Planned Verification Commands
 
+- `packaged prod startup probe`
 - `npm run scan:all`
 - `npm run close:change`
 - `npm run check`

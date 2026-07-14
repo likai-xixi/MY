@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-07-14 - platform/production-profile-completeness
+
+- Change: `ai/changes/CR-20260714T084732Z-change`.
+- Added all 13 Druid pool properties required by `DruidProperties` to `application-prod.yml` while preserving environment-only secrets and disabled production consoles.
+- [local] Dynamic Java/YAML extraction moved from 13 missing keys to none; production safety passed; configured Maven packaged all eight modules.
+- [local] The packaged `prod` process contained zero unresolved placeholders and reached the intentionally unreachable MySQL/Druid connection-refused boundary.
+- [local] The complete repository gate passed 386/386 and the exact finalized 17-file record passed `npm run close:change`.
+- Reproducible base-versus-current property and packaged-startup probe commands with sanitized output are persisted under the active change runtime evidence.
+- No API, UI, DB, permission, component, dependency, governance, business-module, sales-order, release, or deployment change is included.
+
 ## 2026-07-14 - masterdata/reference-integrity-and-hierarchy-concurrency
 
 - Change: `ai/changes/CR-20260714T022937Z-change`.

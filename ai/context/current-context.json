@@ -2,45 +2,37 @@
   "schemaVersion": 1,
   "generatedBy": "scripts/context-build.js",
   "generatedAt": "stable",
-  "currentFeature": "system",
-  "currentChange": "CR-20260714T074627Z-change",
+  "currentFeature": "platform",
+  "currentChange": "CR-20260714T084732Z-change",
   "repositoryProfile": {
     "adapter": "ruoyi",
     "locked": true,
     "stack": "RuoYi + Vue3 + Codex Auto Dev OS"
   },
   "allowedEditRoots": [
-    "features/system.md",
-    "ruoyi-ui/src/layout/components/HeaderNotice",
-    "ai/registry/features.json",
+    "features/platform.md",
+    "ruoyi-admin/src/main/resources/application-prod.yml",
     "ai/changes",
     "ai/context",
     "ai/generated",
     "graph",
-    "memory",
-    "tests/system-notice-security.test.js"
+    "memory"
   ],
   "forbiddenEditRoots": [
     "tools",
     "scripts",
     ".github",
     "package.json",
-    "ruoyi-ui/package.json",
-    "ruoyi-ui/package-lock.json",
-    "ruoyi-admin/src/main/resources/application-prod.yml",
-    "ruoyi-admin/src/main/java/com/ruoyi/web/controller/system",
+    "pom.xml",
+    "ruoyi-ui",
+    "ruoyi-framework",
+    "ruoyi-business",
     "ruoyi-system",
-    "ruoyi-ui/src/views/system",
-    "sql",
-    "ruoyi-business/src/main/java/com/ruoyi/business/customer",
-    "ruoyi-business/src/main/java/com/ruoyi/business/masterdata",
-    "ruoyi-business/src/main/java/com/ruoyi/business/sales-order",
-    "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer",
-    "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/masterdata",
-    "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/sales-order",
-    "ruoyi-ui/src/views/customer",
-    "ruoyi-ui/src/views/masterdata",
-    "ruoyi-ui/src/views/sales-order"
+    "ruoyi-common",
+    "ruoyi-generator",
+    "ruoyi-quartz",
+    "tests",
+    "sql"
   ],
   "mustReadFiles": [
     {
@@ -72,8 +64,8 @@
       "reason": "Module ownership roots."
     },
     {
-      "path": "features/system.md",
-      "reason": "Focused context for system."
+      "path": "features/platform.md",
+      "reason": "Focused context for platform."
     },
     {
       "path": "ai/roadmap/phase-gates.json",
@@ -88,15 +80,15 @@
       "reason": "Governance backlog and required/deferred evidence."
     },
     {
-      "path": "ai/changes/CR-20260714T074627Z-change/impact.json",
+      "path": "ai/changes/CR-20260714T084732Z-change/impact.json",
       "reason": "Current change allowed and forbidden edit roots."
     },
     {
-      "path": "ai/changes/CR-20260714T074627Z-change/plan.md",
+      "path": "ai/changes/CR-20260714T084732Z-change/plan.md",
       "reason": "Current change execution plan."
     },
     {
-      "path": "ai/changes/CR-20260714T074627Z-change/verification.md",
+      "path": "ai/changes/CR-20260714T084732Z-change/verification.md",
       "reason": "Current change verification evidence."
     }
   ],
@@ -301,6 +293,7 @@
     }
   ],
   "verificationCommands": [
+    "packaged prod startup probe",
     "npm run scan:all",
     "npm run close:change",
     "npm run check"
