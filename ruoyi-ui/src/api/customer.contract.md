@@ -24,20 +24,20 @@ Runtime API client: `ruoyi-ui/src/api/customer.js`.
 - `changeCustomerStatus`
 - `listSalesmen`
 - `transferOwner`
+- `listOwnerLogs`
 - `listFundAccounts`
 - `listFundFlows`
 - `addFundDeposit`
 - `listDepositBatches`
 - `getSamplePolicy`
 - `saveSamplePolicy`
-- `createSampleRebate`
 - `listSampleRebates`
 
-The customer export endpoint is invoked by the page through RuoYi `proxy.download("business/customer/export", ...)`; there is no runtime `exportCustomer` method in this API client. Owner-change logs are returned in the customer detail aggregation from `getCustomer()` and can also be read from the backend endpoint, but there is no separate runtime `listOwnerLogs` client method in `customer.js`.
+The customer export endpoint is invoked by the page through RuoYi `proxy.download("business/customer/export", ...)`; there is no runtime `exportCustomer` method in this API client. `getCustomer()` returns only the basic customer detail envelope. Owner history, fund accounts, fund flows, deposit batches, sample policy, and sample rebate records are loaded through their dedicated permission-protected endpoints.
 
 ## Fund Boundary
 
-The API client exposes customer-level deposit and sample rebate entry points only. It must not expose direct account-balance update calls.
+The API client exposes customer-level deposit entry and read-only sample rebate history. It must not expose direct account-balance updates or sample rebate creation while no authoritative sample-order source exists.
 
 Customer fund account vocabulary has exactly two active source values:
 
@@ -48,17 +48,18 @@ Customer fund account vocabulary has exactly two active source values:
 - New deposit entries use `CUSTOMER_DEPOSIT`. The frontend may omit `accountType`; the backend defaults deposit entries to `CUSTOMER_DEPOSIT`. If a caller submits `accountType=SAMPLE_REBATE` or any other non-`CUSTOMER_DEPOSIT` value, the backend rejects it before account balance, batch, or flow mutation.
 - This client method is deposit-in only. If `flowType` is omitted or `DEPOSIT_IN`, the backend records an incoming deposit. `DEPOSIT_DEDUCT`, `DEPOSIT_REFUND`, `DEPOSIT_ADJUST`, and `DEPOSIT_REVERSE` are rejected by this endpoint and must wait for a separate fund-processing flow.
 - Current customer management only implements `CUSTOMER_DEPOSIT` incoming deposit. It does not implement deduction, refund, adjustment, or reversal.
-- Sales-order may show `CUSTOMER_DEPOSIT` status at submit time, but must not directly deduct customer funds.
+- Order submission may show `CUSTOMER_DEPOSIT` status, but must not directly deduct customer funds.
 - Delivery / finance contracts must later define `CUSTOMER_DEPOSIT` deduction/refund/adjustment/reversal and `SAMPLE_REBATE` deduction. Every fund mutation must write `customer_fund_flow`.
 - Public customers must not show customer-level deposit entry UI and are rejected by the backend if called directly.
-- Sample rebate remains separate: callers must use `/business/customer/{customerId}/sample-rebate`, which creates `sample_rebate_record` and then writes internal `SAMPLE_REBATE_GENERATE` flow against the `SAMPLE_REBATE` account.
+- `POST /business/customer/{customerId}/sample-rebate` is fail-closed until an approved authoritative sample-order source is integrated. The default backend authority rejects the request before policy lookup, idempotency, or mutation; the Vue page and API client expose no creation action. Existing rebate records remain readable through `listSampleRebates`.
+- A future approved authority must return the canonical order id, order number, customer id, and sample amount. Only then may the internal path create `sample_rebate_record` and write `SAMPLE_REBATE_GENERATE`; database uniqueness on order id and customer/order number remains mandatory.
 
 ## Address Fields
 
 Customer create/update/detail/list calls carry `customerNature` and `publicChannel`.
 
 - `REAL`: real customer with contacts, shipping addresses, owner, customer-level deposit, sample policy, and sample rebate.
-- `PUBLIC`: public customer used only for order classification; actual buyer, phone, shipping address, receiving salesperson, and source channel are reserved for the later sales-order module.
+- `PUBLIC`: public customer used only for order classification; actual buyer, phone, shipping address, receiving salesperson, and source channel are reserved for the later order module.
 
 Customer create/update/detail calls carry both administrative division codes and Chinese names for customer master and shipping addresses:
 

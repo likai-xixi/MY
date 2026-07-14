@@ -2,6 +2,7 @@ package com.ruoyi.business.customer.service;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 import com.ruoyi.business.common.idempotency.domain.IdempotentRequest;
 import com.ruoyi.business.common.idempotency.mapper.IdempotentRequestMapper;
@@ -10,9 +11,12 @@ import com.ruoyi.business.common.idempotency.service.impl.IdempotencyServiceImpl
 import com.ruoyi.business.customer.domain.CustomerFundAccount;
 import com.ruoyi.business.customer.domain.CustomerFundEntry;
 import com.ruoyi.business.customer.domain.CustomerFundFlow;
+import com.ruoyi.business.customer.domain.CustomerOwnerTransfer;
+import com.ruoyi.business.customer.domain.CustomerSamplePolicy;
 import com.ruoyi.business.customer.domain.SampleRebateRecord;
 import com.ruoyi.business.customer.mapper.CustomerMapper;
 import com.ruoyi.business.customer.service.impl.CustomerServiceImpl;
+import com.ruoyi.business.customer.service.impl.UnavailableSampleRebateOrderAuthority;
 import com.ruoyi.common.core.domain.entity.SysRole;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.system.mapper.SysDeptMapper;
@@ -26,10 +30,53 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.springframework.dao.DuplicateKeyException;
 import org.junit.Test;
 
 public class CustomerServiceTest
 {
+    @Test
+    public void customerDetailContainsOnlyQuerySafeCustomerData()
+    {
+        CustomerMapperFake mapper = new CustomerMapperFake();
+        FakeFundService fundService = new FakeFundService();
+        CustomerServiceImpl service = service(
+            mapper,
+            new FakeIdempotencyService(),
+            fundService,
+            userMapper(Collections.emptyList()),
+            roleService(Collections.emptyMap())
+        );
+        Map<String, Object> detail = service.selectCustomerDetail(1L);
+
+        assertEquals(Collections.singleton("customer"), detail.keySet());
+        assertSame(mapper.customer, detail.get("customer"));
+        assertEquals(0, fundService.selectFundAccountsCalls);
+    }
+
+    @Test
+    public void sampleRebateFailsClosedWithoutAuthoritativeOrderSource()
+    {
+        CustomerMapperFake mapper = new CustomerMapperFake();
+        FakeIdempotencyService idempotency = new FakeIdempotencyService();
+        FakeFundService fundService = new FakeFundService();
+        CustomerServiceImpl service = service(
+            mapper,
+            idempotency,
+            fundService,
+            userMapper(Collections.emptyList()),
+            roleService(Collections.emptyMap())
+        );
+        CustomerTestSupport.inject(service, "sampleRebateOrderAuthority", new UnavailableSampleRebateOrderAuthority());
+
+        CustomerTestSupport.assertServiceException("权威样品订单来源尚未接入",
+            () -> service.createSampleRebateRecord(sampleRecord("rebate-key"), 7L, "tester"));
+
+        assertEquals(0, idempotency.beginCalls);
+        assertEquals(0, mapper.insertSampleRebateCalls);
+        assertEquals(0, fundService.recordSampleRebateFlowCalls);
+    }
+
     @Test
     public void sampleRebateRequiresIdempotentKeyBeforeMutation()
     {
@@ -109,6 +156,30 @@ public class CustomerServiceTest
     }
 
     @Test
+    public void sampleRebateRejectsDuplicateAuthoritativeOrderBeforeFundMutation()
+    {
+        CustomerMapperFake mapper = new CustomerMapperFake();
+        mapper.rejectDuplicateSampleOrder = true;
+        FakeIdempotencyService idempotency = new FakeIdempotencyService();
+        FakeFundService fundService = new FakeFundService();
+        CustomerServiceImpl service = service(
+            mapper,
+            idempotency,
+            fundService,
+            userMapper(Collections.emptyList()),
+            roleService(Collections.emptyMap())
+        );
+
+        CustomerTestSupport.assertServiceException("样品订单已生成返现",
+            () -> service.createSampleRebateRecord(sampleRecord("another-key"), 7L, "tester"));
+
+        assertEquals(1, idempotency.beginCalls);
+        assertEquals(1, mapper.insertSampleRebateCalls);
+        assertEquals(0, fundService.recordSampleRebateFlowCalls);
+        assertEquals(0, idempotency.markSuccessCalls);
+    }
+
+    @Test
     public void publicCustomerSampleRebateIsRejectedBeforeIdempotency()
     {
         CustomerMapperFake mapper = new CustomerMapperFake();
@@ -129,6 +200,376 @@ public class CustomerServiceTest
         assertEquals(0, idempotency.beginCalls);
         assertEquals(0, mapper.insertSampleRebateCalls);
         assertEquals(0, fundService.recordSampleRebateFlowCalls);
+    }
+
+    @Test
+    public void sampleRebateRejectsClientPolicyMismatchBeforeIdempotency()
+    {
+        CustomerMapperFake mapper = new CustomerMapperFake();
+        FakeIdempotencyService idempotency = new FakeIdempotencyService();
+        CustomerServiceImpl service = service(
+            mapper,
+            idempotency,
+            new FakeFundService(),
+            userMapper(Collections.emptyList()),
+            roleService(Collections.emptyMap())
+        );
+        SampleRebateRecord record = sampleRecord("rebate-key");
+        record.setTotalSupportRate(new BigDecimal("0.9900"));
+
+        CustomerTestSupport.assertServiceException("服务端样品政策",
+            () -> service.createSampleRebateRecord(record, 7L, "tester"));
+
+        assertEquals(0, idempotency.beginCalls);
+        assertEquals(0, mapper.insertSampleRebateCalls);
+    }
+
+    @Test
+    public void sampleRebateUsesAuthoritativeAmountInsteadOfClientAmount()
+    {
+        CustomerMapperFake mapper = new CustomerMapperFake();
+        FakeIdempotencyService idempotency = new FakeIdempotencyService();
+        CustomerServiceImpl service = service(
+            mapper,
+            idempotency,
+            new FakeFundService(),
+            userMapper(Collections.emptyList()),
+            roleService(Collections.emptyMap())
+        );
+        SampleRebateRecord record = sampleRecord("rebate-key");
+        record.setSampleAmount(new BigDecimal("999999.99"));
+
+        SampleRebateRecord result = service.createSampleRebateRecord(record, 7L, "tester");
+
+        assertEquals(new BigDecimal("100.00"), result.getSampleAmount());
+        assertEquals(1, idempotency.beginCalls);
+    }
+
+    @Test
+    public void sampleRebateRejectsInvalidAuthoritativeOrderBeforeIdempotency()
+    {
+        CustomerMapperFake mapper = new CustomerMapperFake();
+        FakeIdempotencyService idempotency = new FakeIdempotencyService();
+        CustomerServiceImpl service = service(
+            mapper,
+            idempotency,
+            new FakeFundService(),
+            userMapper(Collections.emptyList()),
+            roleService(Collections.emptyMap())
+        );
+        CustomerTestSupport.inject(service, "sampleRebateOrderAuthority",
+            (SampleRebateOrderAuthority) (customerId, orderId, orderNo) ->
+                new SampleRebateOrderAuthority.AuthoritativeSampleOrder(customerId, orderId, orderNo, BigDecimal.ZERO));
+
+        CustomerTestSupport.assertServiceException("权威样品订单数据不完整",
+            () -> service.createSampleRebateRecord(sampleRecord("invalid-authority"), 7L, "tester"));
+
+        assertEquals(0, idempotency.beginCalls);
+        assertEquals(0, mapper.insertSampleRebateCalls);
+    }
+
+    @Test
+    public void sampleRebateRejectsInvalidServerPolicyBeforeIdempotency()
+    {
+        CustomerMapperFake invalidModeMapper = new CustomerMapperFake();
+        invalidModeMapper.policy.setSupportMode("UNKNOWN");
+        FakeIdempotencyService invalidModeIdempotency = new FakeIdempotencyService();
+        CustomerServiceImpl invalidModeService = service(
+            invalidModeMapper,
+            invalidModeIdempotency,
+            new FakeFundService(),
+            userMapper(Collections.emptyList()),
+            roleService(Collections.emptyMap())
+        );
+        CustomerTestSupport.assertServiceException("样品支持模式不合法",
+            () -> invalidModeService.createSampleRebateRecord(sampleRecord("invalid-mode"), 7L, "tester"));
+        assertEquals(0, invalidModeIdempotency.beginCalls);
+
+        CustomerMapperFake invalidRateMapper = new CustomerMapperFake();
+        invalidRateMapper.policy.setTotalSupportRate(new BigDecimal("1.0001"));
+        FakeIdempotencyService invalidRateIdempotency = new FakeIdempotencyService();
+        CustomerServiceImpl invalidRateService = service(
+            invalidRateMapper,
+            invalidRateIdempotency,
+            new FakeFundService(),
+            userMapper(Collections.emptyList()),
+            roleService(Collections.emptyMap())
+        );
+        CustomerTestSupport.assertServiceException("必须在0到1之间",
+            () -> invalidRateService.createSampleRebateRecord(sampleRecord("invalid-rate"), 7L, "tester"));
+        assertEquals(0, invalidRateIdempotency.beginCalls);
+    }
+
+    @Test
+    public void sampleRebateRejectsNegativeDiscountBeforeIdempotency()
+    {
+        CustomerMapperFake mapper = new CustomerMapperFake();
+        FakeIdempotencyService idempotency = new FakeIdempotencyService();
+        CustomerServiceImpl service = service(
+            mapper,
+            idempotency,
+            new FakeFundService(),
+            userMapper(Collections.emptyList()),
+            roleService(Collections.emptyMap())
+        );
+        SampleRebateRecord record = sampleRecord("negative-discount");
+        record.setInstantDiscountAmount(new BigDecimal("-0.01"));
+
+        CustomerTestSupport.assertServiceException("服务端样品政策支持额度",
+            () -> service.createSampleRebateRecord(record, 7L, "tester"));
+        assertEquals(0, idempotency.beginCalls);
+    }
+
+    @Test
+    public void sampleRebateHashCoversOrderIdentityAndEffectiveDiscount()
+    {
+        CustomerMapperFake mapper = new CustomerMapperFake();
+        FakeIdempotencyService firstIdempotency = new FakeIdempotencyService();
+        CustomerServiceImpl firstService = service(
+            mapper,
+            firstIdempotency,
+            new FakeFundService(),
+            userMapper(Collections.emptyList()),
+            roleService(Collections.emptyMap())
+        );
+        SampleRebateRecord first = sampleRecord("rebate-key-1");
+        firstService.createSampleRebateRecord(first, 7L, "tester");
+
+        FakeIdempotencyService changedOrderIdempotency = new FakeIdempotencyService();
+        CustomerServiceImpl changedOrderService = service(
+            new CustomerMapperFake(),
+            changedOrderIdempotency,
+            new FakeFundService(),
+            userMapper(Collections.emptyList()),
+            roleService(Collections.emptyMap())
+        );
+        SampleRebateRecord changedOrder = sampleRecord("rebate-key-2");
+        changedOrder.setSampleOrderId(31L);
+        changedOrderService.createSampleRebateRecord(changedOrder, 7L, "tester");
+
+        FakeIdempotencyService changedDiscountIdempotency = new FakeIdempotencyService();
+        CustomerServiceImpl changedDiscountService = service(
+            new CustomerMapperFake(),
+            changedDiscountIdempotency,
+            new FakeFundService(),
+            userMapper(Collections.emptyList()),
+            roleService(Collections.emptyMap())
+        );
+        SampleRebateRecord changedDiscount = sampleRecord("rebate-key-3");
+        changedDiscount.setInstantDiscountAmount(new BigDecimal("5.00"));
+        changedDiscountService.createSampleRebateRecord(changedDiscount, 7L, "tester");
+
+        assertTrue(!firstIdempotency.lastRequestHash.equals(changedOrderIdempotency.lastRequestHash));
+        assertTrue(!firstIdempotency.lastRequestHash.equals(changedDiscountIdempotency.lastRequestHash));
+    }
+
+    @Test
+    public void sampleRebateImplicitAndEquivalentExplicitDiscountShareHash()
+    {
+        FakeIdempotencyService implicitIdempotency = new FakeIdempotencyService();
+        CustomerServiceImpl implicitService = service(
+            new CustomerMapperFake(),
+            implicitIdempotency,
+            new FakeFundService(),
+            userMapper(Collections.emptyList()),
+            roleService(Collections.emptyMap())
+        );
+        implicitService.createSampleRebateRecord(sampleRecord("implicit"), 7L, "tester");
+
+        FakeIdempotencyService explicitIdempotency = new FakeIdempotencyService();
+        CustomerServiceImpl explicitService = service(
+            new CustomerMapperFake(),
+            explicitIdempotency,
+            new FakeFundService(),
+            userMapper(Collections.emptyList()),
+            roleService(Collections.emptyMap())
+        );
+        SampleRebateRecord explicit = sampleRecord("explicit");
+        explicit.setInstantDiscountAmount(new BigDecimal("10.00"));
+        explicitService.createSampleRebateRecord(explicit, 7L, "tester");
+
+        assertEquals(implicitIdempotency.lastRequestHash, explicitIdempotency.lastRequestHash);
+    }
+
+    @Test
+    public void transferOwnerRejectsUserWithoutAssignedSalesRole()
+    {
+        CustomerMapperFake mapper = new CustomerMapperFake();
+        SysUser candidate = user(8L, "candidate");
+        SysRole unassignedSalesRole = role("sales", "销售");
+        unassignedSalesRole.setFlag(false);
+        Map<Long, List<SysRole>> roles = new HashMap<>();
+        roles.put(8L, Collections.singletonList(unassignedSalesRole));
+        CustomerServiceImpl service = service(
+            mapper,
+            new FakeIdempotencyService(),
+            new FakeFundService(),
+            userMapper(Collections.singletonList(candidate)),
+            roleService(roles)
+        );
+        CustomerOwnerTransfer transfer = new CustomerOwnerTransfer();
+        transfer.setCustomerId(1L);
+        transfer.setTransferMode("ASSIGN_MAINTENANCE");
+        transfer.setNewOwnerUserId(8L);
+        transfer.setChangeReason("test");
+
+        CustomerTestSupport.assertServiceException("销售或业务员角色",
+            () -> service.transferOwner(transfer, 7L, "tester"));
+
+        assertEquals(0, mapper.updateCustomerOwnerCalls);
+        assertEquals(0, mapper.insertOwnerLogCalls);
+    }
+
+    @Test
+    public void transferOwnerRejectsSpoofedSalesRoleDisplayName()
+    {
+        CustomerMapperFake mapper = new CustomerMapperFake();
+        SysUser candidate = user(8L, "candidate");
+        Map<Long, List<SysRole>> roles = new HashMap<>();
+        roles.put(8L, Collections.singletonList(role("common", "销售业务员")));
+        CustomerServiceImpl service = service(
+            mapper,
+            new FakeIdempotencyService(),
+            new FakeFundService(),
+            userMapper(Collections.singletonList(candidate)),
+            roleService(roles)
+        );
+
+        CustomerTestSupport.assertServiceException("销售或业务员角色",
+            () -> service.transferOwner(ownerTransfer(8L), 7L, "tester"));
+
+        assertEquals(0, mapper.updateCustomerOwnerCalls);
+        assertEquals(0, mapper.insertOwnerLogCalls);
+    }
+
+    @Test
+    public void transferOwnerRejectsDisabledOrDeletedUsers()
+    {
+        SysUser disabled = user(8L, "disabled");
+        disabled.setStatus("1");
+        Map<Long, List<SysRole>> disabledRoles = new HashMap<>();
+        disabledRoles.put(8L, Collections.singletonList(role("sales", "销售")));
+        CustomerMapperFake disabledMapper = new CustomerMapperFake();
+        CustomerServiceImpl disabledService = service(
+            disabledMapper,
+            new FakeIdempotencyService(),
+            new FakeFundService(),
+            userMapper(Collections.singletonList(disabled)),
+            roleService(disabledRoles)
+        );
+        CustomerTestSupport.assertServiceException("正常且未删除",
+            () -> disabledService.transferOwner(ownerTransfer(8L), 7L, "tester"));
+        assertEquals(0, disabledMapper.updateCustomerOwnerCalls);
+        assertEquals(0, disabledMapper.insertOwnerLogCalls);
+
+        SysUser deleted = user(9L, "deleted");
+        deleted.setDelFlag("2");
+        Map<Long, List<SysRole>> deletedRoles = new HashMap<>();
+        deletedRoles.put(9L, Collections.singletonList(role("sales", "销售")));
+        CustomerMapperFake deletedMapper = new CustomerMapperFake();
+        CustomerServiceImpl deletedService = service(
+            deletedMapper,
+            new FakeIdempotencyService(),
+            new FakeFundService(),
+            userMapper(Collections.singletonList(deleted)),
+            roleService(deletedRoles)
+        );
+        CustomerTestSupport.assertServiceException("正常且未删除",
+            () -> deletedService.transferOwner(ownerTransfer(9L), 7L, "tester"));
+        assertEquals(0, deletedMapper.updateCustomerOwnerCalls);
+        assertEquals(0, deletedMapper.insertOwnerLogCalls);
+    }
+
+    @Test
+    public void standardCustomerEditCannotChangeOwnerFields()
+    {
+        CustomerMapperFake mapper = new CustomerMapperFake();
+        CustomerServiceImpl service = service(
+            mapper,
+            new FakeIdempotencyService(),
+            new FakeFundService(),
+            userMapper(Collections.emptyList()),
+            roleService(Collections.emptyMap())
+        );
+        com.ruoyi.business.customer.domain.Customer update = CustomerTestSupport.realCustomer(1L);
+        update.setOwnerType("SALESMAN");
+
+        CustomerTestSupport.assertServiceException("归属变更接口", () -> service.updateCustomer(update));
+
+        assertEquals(0, mapper.updateCustomerCalls);
+        assertEquals(0, mapper.updateCustomerOwnerCalls);
+    }
+
+    @Test
+    public void transferOwnerUsesDedicatedMutationAndAuditLog()
+    {
+        CustomerMapperFake mapper = new CustomerMapperFake();
+        SysUser candidate = user(8L, "sales-user");
+        Map<Long, List<SysRole>> roles = new HashMap<>();
+        roles.put(8L, Collections.singletonList(role("sales", "销售")));
+        CustomerServiceImpl service = service(
+            mapper,
+            new FakeIdempotencyService(),
+            new FakeFundService(),
+            userMapper(Collections.singletonList(candidate)),
+            roleService(roles)
+        );
+        CustomerOwnerTransfer transfer = new CustomerOwnerTransfer();
+        transfer.setCustomerId(1L);
+        transfer.setTransferMode("ASSIGN_MAINTENANCE");
+        transfer.setNewOwnerUserId(8L);
+        transfer.setChangeReason("test");
+
+        assertEquals(1, service.transferOwner(transfer, 7L, "tester"));
+        assertEquals(0, mapper.updateCustomerCalls);
+        assertEquals(1, mapper.selectCustomerByIdForUpdateCalls);
+        assertEquals(1, mapper.updateCustomerOwnerCalls);
+        assertEquals(1, mapper.insertOwnerLogCalls);
+    }
+
+    @Test
+    public void transferOwnerDoesNotWriteAuditWhenLockedUpdateMisses()
+    {
+        CustomerMapperFake mapper = new CustomerMapperFake();
+        mapper.updateCustomerOwnerResult = 0;
+        SysUser candidate = user(8L, "sales-user");
+        Map<Long, List<SysRole>> roles = new HashMap<>();
+        roles.put(8L, Collections.singletonList(role("sales", "销售")));
+        CustomerServiceImpl service = service(
+            mapper,
+            new FakeIdempotencyService(),
+            new FakeFundService(),
+            userMapper(Collections.singletonList(candidate)),
+            roleService(roles)
+        );
+
+        CustomerTestSupport.assertServiceException("客户归属更新失败",
+            () -> service.transferOwner(ownerTransfer(8L), 7L, "tester"));
+
+        assertEquals(1, mapper.selectCustomerByIdForUpdateCalls);
+        assertEquals(1, mapper.updateCustomerOwnerCalls);
+        assertEquals(0, mapper.insertOwnerLogCalls);
+    }
+
+    @Test
+    public void sampleRebateCannotExceedServerPolicyBudget()
+    {
+        CustomerMapperFake mapper = new CustomerMapperFake();
+        FakeIdempotencyService idempotency = new FakeIdempotencyService();
+        CustomerServiceImpl service = service(
+            mapper,
+            idempotency,
+            new FakeFundService(),
+            userMapper(Collections.emptyList()),
+            roleService(Collections.emptyMap())
+        );
+        SampleRebateRecord record = sampleRecord("rebate-key");
+        record.setInstantDiscountAmount(new BigDecimal("40.00"));
+
+        CustomerTestSupport.assertServiceException("服务端样品政策支持额度",
+            () -> service.createSampleRebateRecord(record, 7L, "tester"));
+
+        assertEquals(0, idempotency.beginCalls);
     }
 
     @Test
@@ -181,11 +622,22 @@ public class CustomerServiceTest
         CustomerServiceImpl service = new CustomerServiceImpl();
         CustomerTestSupport.inject(service, "customerMapper", mapper.proxy());
         CustomerTestSupport.inject(service, "idempotencyService", idempotencyService);
+        CustomerTestSupport.inject(service, "sampleRebateOrderAuthority", allowingSampleRebateOrderAuthority());
         CustomerTestSupport.inject(service, "customerFundService", fundService);
         CustomerTestSupport.inject(service, "sysUserMapper", sysUserMapper);
         CustomerTestSupport.inject(service, "sysRoleService", sysRoleService);
         CustomerTestSupport.inject(service, "sysDeptMapper", deptMapper());
         return service;
+    }
+
+    private SampleRebateOrderAuthority allowingSampleRebateOrderAuthority()
+    {
+        return (customerId, orderId, orderNo) -> new SampleRebateOrderAuthority.AuthoritativeSampleOrder(
+            customerId,
+            orderId,
+            orderNo == null ? null : orderNo.trim(),
+            new BigDecimal("100.00")
+        );
     }
 
     private SampleRebateRecord sampleRecord(String idempotentKey)
@@ -195,11 +647,21 @@ public class CustomerServiceTest
         record.setSampleOrderId(30L);
         record.setSampleOrderNo(" sample-001 ");
         record.setSampleAmount(new BigDecimal("100.00"));
-        record.setSupportMode("RATE");
+        record.setSupportMode("DISCOUNT_AND_REBATE");
         record.setTotalSupportRate(new BigDecimal("0.3000"));
         record.setInstantDiscountRate(new BigDecimal("0.9000"));
         record.setIdempotentKey(idempotentKey);
         return record;
+    }
+
+    private CustomerOwnerTransfer ownerTransfer(Long ownerUserId)
+    {
+        CustomerOwnerTransfer transfer = new CustomerOwnerTransfer();
+        transfer.setCustomerId(1L);
+        transfer.setTransferMode("ASSIGN_MAINTENANCE");
+        transfer.setNewOwnerUserId(ownerUserId);
+        transfer.setChangeReason("test");
+        return transfer;
     }
 
     private IdempotencyServiceImpl realIdempotencyService(IdempotentRequestMapper mapper)
@@ -226,6 +688,7 @@ public class CustomerServiceTest
         user.setUserId(userId);
         user.setUserName(userName);
         user.setStatus("0");
+        user.setDelFlag("0");
         return user;
     }
 
@@ -234,6 +697,9 @@ public class CustomerServiceTest
         SysRole role = new SysRole();
         role.setRoleKey(roleKey);
         role.setRoleName(roleName);
+        role.setFlag(true);
+        role.setStatus("0");
+        role.setDelFlag("0");
         return role;
     }
 
@@ -243,6 +709,11 @@ public class CustomerServiceTest
             if ("selectUserList".equals(method.getName()))
             {
                 return users;
+            }
+            if ("selectUserById".equals(method.getName()))
+            {
+                Long userId = (Long) args[0];
+                return users.stream().filter(user -> userId.equals(user.getUserId())).findFirst().orElse(null);
             }
             return CustomerTestSupport.defaultValue(method);
         });
@@ -271,11 +742,13 @@ public class CustomerServiceTest
         private int markSuccessCalls;
         private String markSuccessRefType;
         private Long markSuccessRefId;
+        private String lastRequestHash;
 
         @Override
         public IdempotentRequest begin(String bizType, String idempotentKey, Long bizId, String requestHash, String operator)
         {
             beginCalls++;
+            lastRequestHash = requestHash;
             return beginResult;
         }
 
@@ -304,6 +777,7 @@ public class CustomerServiceTest
     private static class FakeFundService implements ICustomerFundService
     {
         private int recordSampleRebateFlowCalls;
+        private int selectFundAccountsCalls;
         private SampleRebateRecord lastRecord;
 
         @Override
@@ -314,6 +788,7 @@ public class CustomerServiceTest
         @Override
         public List<CustomerFundAccount> selectFundAccounts(Long customerId)
         {
+            selectFundAccountsCalls++;
             return Collections.emptyList();
         }
 
@@ -346,9 +821,16 @@ public class CustomerServiceTest
         private com.ruoyi.business.customer.domain.Customer customer = CustomerTestSupport.realCustomer(1L);
         private SampleRebateRecord replayRecord;
         private SampleRebateRecord insertedRecord;
+        private CustomerSamplePolicy policy = activePolicy();
         private int selectCustomerCalls;
         private int insertSampleRebateCalls;
         private int selectSampleRebateRecordByIdCalls;
+        private int updateCustomerOwnerCalls;
+        private int updateCustomerCalls;
+        private int insertOwnerLogCalls;
+        private boolean rejectDuplicateSampleOrder;
+        private int selectCustomerByIdForUpdateCalls;
+        private int updateCustomerOwnerResult = 1;
 
         private CustomerMapper proxy()
         {
@@ -364,11 +846,39 @@ public class CustomerServiceTest
                 selectCustomerCalls++;
                 return customer;
             }
+            if ("selectCustomerByIdForUpdate".equals(name))
+            {
+                selectCustomerByIdForUpdateCalls++;
+                return customer;
+            }
             if ("insertSampleRebateRecord".equals(name))
             {
                 insertSampleRebateCalls++;
+                if (rejectDuplicateSampleOrder)
+                {
+                    throw new DuplicateKeyException("uk_sample_rebate_order_id");
+                }
                 insertedRecord = (SampleRebateRecord) args[0];
                 insertedRecord.setRebateRecordId(700L);
+                return 1;
+            }
+            if ("selectSamplePolicyByCustomerId".equals(name))
+            {
+                return policy;
+            }
+            if ("updateCustomerOwner".equals(name))
+            {
+                updateCustomerOwnerCalls++;
+                return updateCustomerOwnerResult;
+            }
+            if ("updateCustomer".equals(name))
+            {
+                updateCustomerCalls++;
+                return 1;
+            }
+            if ("insertOwnerLog".equals(name))
+            {
+                insertOwnerLogCalls++;
                 return 1;
             }
             if ("selectSampleRebateRecordById".equals(name))
@@ -377,6 +887,17 @@ public class CustomerServiceTest
                 return replayRecord;
             }
             return CustomerTestSupport.defaultValue(method);
+        }
+
+        private static CustomerSamplePolicy activePolicy()
+        {
+            CustomerSamplePolicy policy = new CustomerSamplePolicy();
+            policy.setCustomerId(1L);
+            policy.setSupportMode("DISCOUNT_AND_REBATE");
+            policy.setTotalSupportRate(new BigDecimal("0.3000"));
+            policy.setInstantDiscountRate(new BigDecimal("0.9000"));
+            policy.setStatus("0");
+            return policy;
         }
     }
 

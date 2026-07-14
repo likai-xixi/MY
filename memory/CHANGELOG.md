@@ -633,4 +633,10 @@
 - Feature: `masterdata`.## 2026-06-29 — update
 - Change: `ai/changes/CR-20260629T022303Z-change`.
 - R-10J masterdata tree select and raw-material wording with model-config pre-review note
-- Feature: `masterdata`.
+- Feature: `masterdata`.## 2026-07-14 — update
+- Change: `ai/changes/CR-20260714T013244Z-change`.
+- Harden customer detail permissions, rebate integrity, and audited owner transfer
+- Feature: `customer`.## 2026-07-14 — update
+- Change: `ai/changes/CR-20260714T013244Z-change`.
+- 修复客户详情权限、查询写入、样品返现伪造与重复入账、归属并发审计和角色校验风险
+- Feature: `customer`.

@@ -1,42 +1,44 @@
+# Context
+
 # Current Context
 
 Current feature: `customer`
-Current change: `CR-20260714T013244Z-change`
+Current change: `CR-20260629T022303Z-change`
 Repository: RuoYi + Vue3 + Codex Auto Dev OS
 Profile: adapter `ruoyi`, locked `true`
 
 ## Allowed Edit Roots
 
-- `features/customer.md`
-- `ruoyi-business/src/main/java/com/ruoyi/business/customer`
-- `ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer`
-- `ruoyi-ui/src/views/customer`
-- `ruoyi-ui/src/utils/region-data.js`
-- `ruoyi-ui/src/api/customer.contract.md`
-- `ruoyi-ui/src/api/customer.js`
-- `tests/customer-risk-gate.test.js`
-- `ai/contracts/customer.api.md`
-- `ai/contracts/customer.db.md`
-- `ai/contracts/customer.delete-ownership.md`
-- `ai/contracts/customer.permission.md`
-- `ai/contracts/customer.ui.md`
+- `features/masterdata.md`
+- `ruoyi-business/src/main/java/com/ruoyi/business/masterdata`
+- `ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/masterdata`
+- `ruoyi-ui/src/views/masterdata`
+- `ruoyi-ui/src/api/masterdata.contract.md`
+- `ruoyi-ui/src/api/masterdata.js`
+- `tests/masterdata-runtime.test.js`
+- `ai/contracts/masterdata.api.md`
+- `ai/contracts/masterdata.db.md`
+- `ai/contracts/masterdata.delete-ownership.md`
+- `ai/contracts/masterdata.permission.md`
+- `ai/contracts/masterdata.r10-contract-test-matrix.md`
+- `ai/contracts/masterdata.r10-implementation-boundary.md`
+- `ai/contracts/masterdata.ui.md`
 - `graph/api-graph.json`
 - `graph/ui-graph.json`
 - `memory/API_CATALOG.md`
-- `ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/README.md`
-- `ruoyi-business/src/main/java/com/ruoyi/business/customer/README.md`
-- `ruoyi-ui/src/views/customer/README.md`
-- `sql/customer.ownership.md`
-- `sql/migrations/V20260625_001_customer_schema.sql`
-- `sql/migrations/V20260625_002_customer_seed_public_customer.sql`
-- `sql/migrations/V20260625_003_customer_menu_permission.sql`
-- `sql/validation/customer_runtime_validation.sql`
-- `ruoyi-business/src/main/resources/mapper/customer/CustomerMapper.xml`
-- `ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java`
-- `ruoyi-ui/src/views/customer/index.vue`
+- `ruoyi-ui/src/views/masterdata/README.md`
+- `ruoyi-ui/src/views/masterdata/screen.md`
+- `sql/masterdata.ownership.md`
+- `sql/migrations/V20260628_005_masterdata_r10_schema.sql`
+- `sql/migrations/V20260628_006_masterdata_r10_menu_permission.sql`
+- `sql/validation/masterdata_runtime_validation.sql`
+- `ruoyi-business/src/main/resources/mapper/masterdata/MasterDataMapper.xml`
+- `ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/masterdata/MasterDataController.java`
+- `ruoyi-ui/src/views/masterdata/index.vue`
 - `ai/registry/features.json`
 - `ai/registry/modules.json`
-- `ai/reviews/RV-20260714T012241Z-review`
+- `ai/context/current-context.json`
+- `ai/context/current-context.md`
 - `ai/changes`
 - `ai/generated`
 - `graph`
@@ -46,17 +48,6 @@ Profile: adapter `ruoyi`, locked `true`
 
 ## Forbidden Edit Roots
 
-- `tools`
-- `scripts`
-- `.github`
-- `package.json`
-- `ruoyi-business/src/main/java/com/ruoyi/business/masterdata`
-- `ruoyi-system`
-- `ruoyi-admin/src/main/resources/application-prod.yml`
-- `ruoyi-ui/src/layout/components/HeaderNotice`
-- `ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/sales-order`
-- `ruoyi-business/src/main/java/com/ruoyi/business/sales-order`
-- `ruoyi-ui/src/views/sales-order`
 
 ## Must Read Files
 
@@ -71,9 +62,9 @@ Profile: adapter `ruoyi`, locked `true`
 - `ai/roadmap/phase-gates.json` - beforeSalesOrder gate state.
 - `ai/roadmap/refactor-debt.json` - Known debt affecting sales-order handoff.
 - `ai/roadmap/enhancement-backlog.json` - Governance backlog and required/deferred evidence.
-- `ai/changes/CR-20260714T013244Z-change/impact.json` - Current change allowed and forbidden edit roots.
-- `ai/changes/CR-20260714T013244Z-change/plan.md` - Current change execution plan.
-- `ai/changes/CR-20260714T013244Z-change/verification.md` - Current change verification evidence.
+- `ai/changes/CR-20260629T022303Z-change/impact.json` - Current change allowed and forbidden edit roots.
+- `ai/changes/CR-20260629T022303Z-change/plan.md` - Current change execution plan.
+- `ai/changes/CR-20260629T022303Z-change/verification.md` - Current change verification evidence.
 
 ## Must Not Break
 

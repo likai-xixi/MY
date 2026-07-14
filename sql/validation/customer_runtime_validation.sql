@@ -56,3 +56,29 @@ union all
 select 'legacy_deposit_type_in_fund_flow_related_biz' as check_name, flow_id as row_id, customer_id, related_biz_type as legacy_value
 from customer_fund_flow
 where related_biz_type in ('LONG_TERM_DEPOSIT', 'ROLLING_ORDER_DEPOSIT');
+
+-- Expected: zero rows. Future rebate enablement requires authoritative order identity.
+select 'sample_rebate_missing_order_identity' as check_name, rebate_record_id, customer_id, sample_order_id, sample_order_no
+from sample_rebate_record
+where sample_order_id is null
+   or sample_order_no is null
+   or trim(sample_order_no) = '';
+
+-- Expected: zero rows. One authoritative order can fund at most one rebate record.
+select 'duplicate_sample_rebate_order_id' as check_name, sample_order_id, count(*) as actual_count
+from sample_rebate_record
+where sample_order_id is not null
+group by sample_order_id
+having count(*) > 1;
+
+-- Expected: zero rows. The same customer/order number cannot be replayed under a new idempotency key.
+select 'duplicate_sample_rebate_customer_order_no' as check_name, customer_id, sample_order_no, count(*) as actual_count
+from sample_rebate_record
+where sample_order_no is not null and trim(sample_order_no) <> ''
+group by customer_id, sample_order_no
+having count(*) > 1;
+
+-- Informational: every existing row predates the authoritative-order adapter and must be
+-- reviewed or removed by rebuilding the unreleased development database before future enablement.
+select 'legacy_unverified_sample_rebate_count' as check_name, count(*) as actual_count
+from sample_rebate_record;

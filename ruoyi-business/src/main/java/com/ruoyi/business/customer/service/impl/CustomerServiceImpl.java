@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.regex.Pattern;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,7 @@ import com.ruoyi.business.customer.domain.SampleRebateRecord;
 import com.ruoyi.business.customer.mapper.CustomerMapper;
 import com.ruoyi.business.customer.service.ICustomerFundService;
 import com.ruoyi.business.customer.service.ICustomerService;
+import com.ruoyi.business.customer.service.SampleRebateOrderAuthority;
 import com.ruoyi.common.core.domain.entity.SysDept;
 import com.ruoyi.common.core.domain.entity.SysRole;
 import com.ruoyi.common.core.domain.entity.SysUser;
@@ -75,6 +77,10 @@ public class CustomerServiceImpl implements ICustomerService
     private static final String TRANSFER_CHANGE_SALESMAN = "CHANGE_SALESMAN";
     private static final String SAMPLE_REBATE = "SAMPLE_REBATE";
     private static final String SAMPLE_REBATE_GENERATE = "SAMPLE_REBATE_GENERATE";
+    private static final String SUPPORT_NONE = "NONE";
+    private static final String SUPPORT_INSTANT_DISCOUNT = "INSTANT_DISCOUNT";
+    private static final String SUPPORT_REBATE_ONLY = "REBATE_ONLY";
+    private static final String SUPPORT_DISCOUNT_AND_REBATE = "DISCOUNT_AND_REBATE";
     private static final String BIZ_CUSTOMER_SAMPLE_REBATE = "CUSTOMER_SAMPLE_REBATE";
     private static final String RESULT_SAMPLE_REBATE_RECORD = "SAMPLE_REBATE_RECORD";
     private static final BigDecimal ZERO = BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP);
@@ -92,6 +98,9 @@ public class CustomerServiceImpl implements ICustomerService
 
     @Autowired
     private IdempotencyService idempotencyService;
+
+    @Autowired
+    private SampleRebateOrderAuthority sampleRebateOrderAuthority;
 
     @Autowired
     private SysUserMapper sysUserMapper;
@@ -133,12 +142,6 @@ public class CustomerServiceImpl implements ICustomerService
     {
         Map<String, Object> detail = new HashMap<>();
         detail.put("customer", selectCustomerById(customerId));
-        detail.put("ownerLogs", selectOwnerLogs(customerId));
-        detail.put("fundAccounts", selectFundAccounts(customerId));
-        detail.put("fundFlows", selectFundFlows(flowQuery(customerId)));
-        detail.put("depositBatches", selectDepositBatches(customerId));
-        detail.put("samplePolicy", selectSamplePolicy(customerId));
-        detail.put("sampleRebates", selectSampleRebateRecords(customerId));
         return detail;
     }
 
@@ -203,10 +206,11 @@ public class CustomerServiceImpl implements ICustomerService
         {
             throw new ServiceException("真实客户不允许改为公共客户。");
         }
+        assertOwnerUnchanged(existing, customer);
+        copyOwnerState(existing, customer);
         normalizeCustomerForSave(customer);
         assertNotReservedPublicCode(customer);
         fillDefaultShortName(customer);
-        fillOwnerSnapshot(customer);
         int rows = customerMapper.updateCustomer(customer);
         prepareUpdateDefaultChildren(customer);
         replaceChildren(customer);
@@ -282,7 +286,11 @@ public class CustomerServiceImpl implements ICustomerService
         {
             throw new ServiceException("客户不能为空");
         }
-        Customer current = requiredCustomer(transfer.getCustomerId());
+        Customer current = customerMapper.selectCustomerByIdForUpdate(transfer.getCustomerId());
+        if (current == null)
+        {
+            throw new ServiceException("客户不存在");
+        }
         if (isPublicCustomer(current))
         {
             throw new ServiceException("公共客户不支持归属变更");
@@ -293,7 +301,11 @@ public class CustomerServiceImpl implements ICustomerService
         next.setCustomerId(transfer.getCustomerId());
         next.setUpdateBy(operatorName);
         fillOwnerSnapshot(next);
-        int rows = customerMapper.updateCustomer(next);
+        int rows = customerMapper.updateCustomerOwner(next);
+        if (rows != 1)
+        {
+            throw new ServiceException("客户归属更新失败，请刷新后重试。");
+        }
 
         CustomerSalesmanBindLog log = new CustomerSalesmanBindLog();
         log.setCustomerId(current.getCustomerId());
@@ -384,12 +396,17 @@ public class CustomerServiceImpl implements ICustomerService
     @Transactional
     public int saveSamplePolicy(CustomerSamplePolicy policy)
     {
+        if (policy == null || policy.getCustomerId() == null)
+        {
+            throw new ServiceException("样品政策不能为空");
+        }
         assertRealCustomerFeature(policy.getCustomerId(), "公共客户不启用客户级样品政策。");
-        CustomerSamplePolicy existing = customerMapper.selectSamplePolicyByCustomerId(policy.getCustomerId());
         if (StringUtils.isEmpty(policy.getStatus()))
         {
             policy.setStatus(NORMAL);
         }
+        validateSamplePolicy(policy);
+        CustomerSamplePolicy existing = customerMapper.selectSamplePolicyByCustomerId(policy.getCustomerId());
         return existing == null ? customerMapper.insertSamplePolicy(policy) : customerMapper.updateSamplePolicy(policy);
     }
 
@@ -402,6 +419,9 @@ public class CustomerServiceImpl implements ICustomerService
             throw new ServiceException("样品返现记录不能为空");
         }
         assertRealCustomerFeature(record.getCustomerId(), "公共客户不启用客户级样品返现。");
+        applyAuthoritativeSampleOrder(record);
+        CustomerSamplePolicy policy = customerMapper.selectSamplePolicyByCustomerId(record.getCustomerId());
+        validateSampleRebateRequest(record, policy);
         IdempotentRequest request = idempotencyService.begin(
             BIZ_CUSTOMER_SAMPLE_REBATE,
             record.getIdempotentKey(),
@@ -413,13 +433,18 @@ public class CustomerServiceImpl implements ICustomerService
         {
             return replaySampleRebate(request);
         }
-
-        fillSampleRebateAmounts(record);
         record.setUsedAmount(ZERO);
         record.setRemainingAmount(money(record.getRebateAmount()));
         record.setStatus("AVAILABLE");
         record.setCreateBy(operatorName);
-        customerMapper.insertSampleRebateRecord(record);
+        try
+        {
+            customerMapper.insertSampleRebateRecord(record);
+        }
+        catch (DuplicateKeyException ex)
+        {
+            throw new ServiceException("该样品订单已生成返现，请勿重复提交。");
+        }
 
         customerFundService.recordSampleRebateFlow(record, operatorId, operatorName);
         idempotencyService.markSuccess(request.getRequestId(), RESULT_SAMPLE_REBATE_RECORD, record.getRebateRecordId());
@@ -430,6 +455,21 @@ public class CustomerServiceImpl implements ICustomerService
     public List<SampleRebateRecord> selectSampleRebateRecords(Long customerId)
     {
         return customerMapper.selectSampleRebateRecordsByCustomerId(customerId);
+    }
+
+    private void applyAuthoritativeSampleOrder(SampleRebateRecord record)
+    {
+        SampleRebateOrderAuthority.AuthoritativeSampleOrder order = sampleRebateOrderAuthority.requireEligible(
+            record.getCustomerId(), record.getSampleOrderId(), trimToNull(record.getSampleOrderNo()));
+        if (order == null || !Objects.equals(record.getCustomerId(), order.getCustomerId())
+            || order.getOrderId() == null || StringUtils.isEmpty(trimToNull(order.getOrderNo()))
+            || order.getSampleAmount() == null || order.getSampleAmount().compareTo(BigDecimal.ZERO) <= 0)
+        {
+            throw new ServiceException("权威样品订单数据不完整或与客户不匹配，不能生成返现。");
+        }
+        record.setSampleOrderId(order.getOrderId());
+        record.setSampleOrderNo(trimToNull(order.getOrderNo()));
+        record.setSampleAmount(money(order.getSampleAmount()));
     }
 
     private void replaceChildren(Customer customer)
@@ -733,6 +773,14 @@ public class CustomerServiceImpl implements ICustomerService
         if (user == null)
         {
             throw new ServiceException("归属业务员不存在");
+        }
+        if (!NORMAL.equals(user.getStatus()) || !NORMAL.equals(user.getDelFlag()))
+        {
+            throw new ServiceException("归属业务员必须为正常且未删除的用户");
+        }
+        if (!hasSalesRole(user))
+        {
+            throw new ServiceException("归属业务员必须已分配销售或业务员角色");
         }
         customer.setOwnerUserName(defaultIfEmpty(user.getNickName(), user.getUserName()));
         customer.setOwnerDeptId(user.getDeptId());
@@ -1149,12 +1197,22 @@ public class CustomerServiceImpl implements ICustomerService
 
     private boolean hasSalesRole(SysUser user)
     {
+        if (user == null || !NORMAL.equals(user.getStatus()) || !NORMAL.equals(user.getDelFlag()))
+        {
+            return false;
+        }
         List<SysRole> roles = sysRoleService.selectRolesByUserId(user.getUserId());
+        if (roles == null)
+        {
+            return false;
+        }
         return roles.stream().anyMatch(role -> {
+            if (role == null || !role.isFlag() || !NORMAL.equals(role.getStatus()) || !NORMAL.equals(role.getDelFlag()))
+            {
+                return false;
+            }
             String key = role.getRoleKey();
-            String name = role.getRoleName();
-            return "sales".equals(key) || "salesman".equals(key) || "business".equals(key)
-                || (name != null && (name.contains("销售") || name.contains("业务员")));
+            return "sales".equals(key) || "salesman".equals(key) || "business".equals(key);
         });
     }
 
@@ -1166,17 +1224,151 @@ public class CustomerServiceImpl implements ICustomerService
     private void fillSampleRebateAmounts(SampleRebateRecord record)
     {
         BigDecimal sampleAmount = money(record.getSampleAmount());
-        BigDecimal totalRate = record.getTotalSupportRate() == null ? BigDecimal.ZERO : record.getTotalSupportRate();
-        BigDecimal instantRate = record.getInstantDiscountRate() == null ? BigDecimal.ONE : record.getInstantDiscountRate();
+        BigDecimal totalRate = record.getTotalSupportRate();
+        BigDecimal instantRate = record.getInstantDiscountRate();
         BigDecimal supportAmount = sampleAmount.multiply(totalRate).setScale(2, RoundingMode.HALF_UP);
         BigDecimal instantDiscount = record.getInstantDiscountAmount();
-        if (instantDiscount == null)
+        if (SUPPORT_REBATE_ONLY.equals(record.getSupportMode()))
+        {
+            if (instantDiscount != null && instantDiscount.compareTo(ZERO) != 0)
+            {
+                throw new ServiceException("仅返现政策不允许填写当场优惠金额");
+            }
+            instantDiscount = ZERO;
+        }
+        else if (instantDiscount == null)
         {
             instantDiscount = sampleAmount.multiply(BigDecimal.ONE.subtract(instantRate)).setScale(2, RoundingMode.HALF_UP);
         }
-        BigDecimal rebate = supportAmount.subtract(instantDiscount).max(BigDecimal.ZERO).setScale(2, RoundingMode.HALF_UP);
+        else
+        {
+            instantDiscount = money(instantDiscount);
+        }
+        if (instantDiscount.compareTo(ZERO) < 0 || instantDiscount.compareTo(supportAmount) > 0)
+        {
+            throw new ServiceException("当场优惠金额不能超出服务端样品政策支持额度");
+        }
+        BigDecimal rebate = SUPPORT_INSTANT_DISCOUNT.equals(record.getSupportMode())
+            ? ZERO
+            : supportAmount.subtract(instantDiscount).setScale(2, RoundingMode.HALF_UP);
         record.setInstantDiscountAmount(instantDiscount);
         record.setRebateAmount(rebate);
+    }
+
+    private void validateSampleRebateRequest(SampleRebateRecord record, CustomerSamplePolicy policy)
+    {
+        if (record.getSampleAmount() == null || record.getSampleAmount().compareTo(BigDecimal.ZERO) <= 0)
+        {
+            throw new ServiceException("样品金额必须大于0");
+        }
+        record.setSampleAmount(money(record.getSampleAmount()));
+        record.setSampleOrderNo(trimToNull(record.getSampleOrderNo()));
+        if (StringUtils.isEmpty(record.getSampleOrderNo()))
+        {
+            throw new ServiceException("样品订单号不能为空");
+        }
+        if (policy == null || !NORMAL.equals(policy.getStatus()))
+        {
+            throw new ServiceException("客户没有启用中的服务端样品政策");
+        }
+        validateSamplePolicy(policy);
+        if (SUPPORT_NONE.equals(policy.getSupportMode()))
+        {
+            throw new ServiceException("服务端样品政策不支持返现");
+        }
+        assertPolicySnapshotMatches(record, policy);
+        record.setSupportMode(policy.getSupportMode());
+        record.setTotalSupportRate(policy.getTotalSupportRate());
+        record.setInstantDiscountRate(policy.getInstantDiscountRate());
+        fillSampleRebateAmounts(record);
+    }
+
+    private void assertPolicySnapshotMatches(SampleRebateRecord record, CustomerSamplePolicy policy)
+    {
+        if (StringUtils.isNotEmpty(record.getSupportMode()) && !record.getSupportMode().equals(policy.getSupportMode())
+            || record.getTotalSupportRate() != null && record.getTotalSupportRate().compareTo(policy.getTotalSupportRate()) != 0
+            || record.getInstantDiscountRate() != null && record.getInstantDiscountRate().compareTo(policy.getInstantDiscountRate()) != 0)
+        {
+            throw new ServiceException("请求中的样品政策与服务端样品政策不一致，请刷新后重试");
+        }
+    }
+
+    private void validateSamplePolicy(CustomerSamplePolicy policy)
+    {
+        String mode = policy.getSupportMode();
+        if (!SUPPORT_NONE.equals(mode) && !SUPPORT_INSTANT_DISCOUNT.equals(mode)
+            && !SUPPORT_REBATE_ONLY.equals(mode) && !SUPPORT_DISCOUNT_AND_REBATE.equals(mode))
+        {
+            throw new ServiceException("样品支持模式不合法");
+        }
+        if (!NORMAL.equals(policy.getStatus()) && !"1".equals(policy.getStatus()))
+        {
+            throw new ServiceException("样品政策状态不合法");
+        }
+        if (SUPPORT_NONE.equals(mode))
+        {
+            policy.setTotalSupportRate(BigDecimal.ZERO);
+            policy.setInstantDiscountRate(BigDecimal.ONE);
+        }
+        else
+        {
+            assertRate(policy.getTotalSupportRate(), "总支持比例");
+            assertRate(policy.getInstantDiscountRate(), "当场实收折扣");
+            if (!SUPPORT_REBATE_ONLY.equals(mode)
+                && BigDecimal.ONE.subtract(policy.getInstantDiscountRate()).compareTo(policy.getTotalSupportRate()) > 0)
+            {
+                throw new ServiceException("当场优惠比例不能超过总支持比例");
+            }
+        }
+        if (policy.getDeliveryDeductRate() != null)
+        {
+            assertRate(policy.getDeliveryDeductRate(), "发货抵扣比例");
+        }
+        if (policy.getMaxDeductPerDelivery() != null && policy.getMaxDeductPerDelivery().compareTo(BigDecimal.ZERO) < 0)
+        {
+            throw new ServiceException("单次抵扣上限不能小于0");
+        }
+    }
+
+    private void assertRate(BigDecimal rate, String label)
+    {
+        if (rate == null || rate.compareTo(BigDecimal.ZERO) < 0 || rate.compareTo(BigDecimal.ONE) > 0)
+        {
+            throw new ServiceException(label + "必须在0到1之间");
+        }
+    }
+
+    private void assertOwnerUnchanged(Customer existing, Customer update)
+    {
+        boolean changed = suppliedAndDifferent(update.getOwnerType(), existing.getOwnerType())
+            || suppliedAndDifferent(update.getOwnerSource(), existing.getOwnerSource())
+            || suppliedAndDifferent(update.getOwnerProfitMode(), existing.getOwnerProfitMode())
+            || update.getOwnerEffectiveTime() != null && !Objects.equals(update.getOwnerEffectiveTime(), existing.getOwnerEffectiveTime())
+            || update.getOwnerUserId() != null && !Objects.equals(update.getOwnerUserId(), existing.getOwnerUserId())
+            || suppliedAndDifferent(update.getOwnerUserName(), existing.getOwnerUserName())
+            || update.getOwnerDeptId() != null && !Objects.equals(update.getOwnerDeptId(), existing.getOwnerDeptId())
+            || suppliedAndDifferent(update.getOwnerDeptName(), existing.getOwnerDeptName());
+        if (changed)
+        {
+            throw new ServiceException("客户归属只能通过归属变更接口修改");
+        }
+    }
+
+    private boolean suppliedAndDifferent(String supplied, String existing)
+    {
+        return supplied != null && !Objects.equals(supplied, existing);
+    }
+
+    private void copyOwnerState(Customer source, Customer target)
+    {
+        target.setOwnerType(source.getOwnerType());
+        target.setOwnerSource(source.getOwnerSource());
+        target.setOwnerProfitMode(source.getOwnerProfitMode());
+        target.setOwnerEffectiveTime(source.getOwnerEffectiveTime());
+        target.setOwnerUserId(source.getOwnerUserId());
+        target.setOwnerUserName(source.getOwnerUserName());
+        target.setOwnerDeptId(source.getOwnerDeptId());
+        target.setOwnerDeptName(source.getOwnerDeptName());
     }
 
     private SampleRebateRecord replaySampleRebate(IdempotentRequest request)
@@ -1202,10 +1394,12 @@ public class CustomerServiceImpl implements ICustomerService
             "flow_type=" + SAMPLE_REBATE_GENERATE,
             "amount=" + IdempotencyRequestHash.money(record.getSampleAmount()),
             "receipt_no=",
+            "sample_order_id=" + record.getSampleOrderId(),
             "sample_order_no=" + IdempotencyRequestHash.text(record.getSampleOrderNo()),
             "support_mode=" + IdempotencyRequestHash.text(record.getSupportMode()),
             "total_support_rate=" + IdempotencyRequestHash.rate(record.getTotalSupportRate(), BigDecimal.ZERO),
             "instant_discount_rate=" + IdempotencyRequestHash.rate(record.getInstantDiscountRate(), BigDecimal.ONE),
+            "instant_discount_amount=" + IdempotencyRequestHash.money(record.getInstantDiscountAmount()),
             "operator_scope=" + IdempotencyRequestHash.operatorScope(operatorId, operatorName)
         );
         return IdempotencyRequestHash.sha256(canonical);

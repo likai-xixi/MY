@@ -25,6 +25,7 @@ DDL, menu SQL, and permission SQL ownership remains documented in `sql/customer.
 - `customer-runtime-validation` is a blocking read-only SQL validation entry for runtime data invariants.
 - `platform-idempotent-request-baseline` is a blocking executable SQL migration for the platform-level `idempotent_request` table used by customer fund high-risk entry points.
 - `sql/customer.ownership.md` remains the ownership document but is no longer the only baseline DDL source.
+- Because the project is unreleased, this audit updates the final customer baseline directly. Development databases with nullable, duplicate, or otherwise unverified sample rebate rows must be rebuilt or explicitly reviewed before a future order authority is enabled; this change does not invent a reversal flow for historical development credits.
 
 ## Customer Nature
 
@@ -74,7 +75,9 @@ DDL, menu SQL, and permission SQL ownership remains documented in `sql/customer.
 - Later delivery / finance contracts must define `CUSTOMER_DEPOSIT` deduction, refund, adjustment, and reversal.
 - Later delivery / finance contracts must define `SAMPLE_REBATE` deduction.
 - Customer-level deposit entries must also create `customer_deposit_batch` records and set fund-flow `related_biz_type=CUSTOMER_DEPOSIT_BATCH`.
-- Sample rebate generation must create `sample_rebate_record` and matching `SAMPLE_REBATE_GENERATE` flow.
+- Sample rebate generation is disabled by the default fail-closed order authority. Existing `sample_rebate_record` rows remain readable.
+- Future enabled generation must use an authoritative order snapshot, then create `sample_rebate_record` and matching `SAMPLE_REBATE_GENERATE` flow in one transaction.
+- `sample_rebate_record.sample_order_id` and `sample_order_no` are required in the pre-release baseline. Unique keys on `sample_order_id` and `(customer_id, sample_order_no)` prevent a new idempotency key or concurrent request from rebating the same authoritative order twice.
 
 ## Idempotency Rule
 
@@ -82,8 +85,9 @@ DDL, menu SQL, and permission SQL ownership remains documented in `sql/customer.
 - The table stores `PROCESSING`, `SUCCESS`, and `FAILED` status values.
 - The unique key is `(biz_type, idempotent_key)`, not `idempotent_key` alone, so different business domains can use independent keys.
 - Customer deposit entry uses `biz_type=CUSTOMER_FUND_DEPOSIT` and stores the successful result as `CUSTOMER_FUND_FLOW / customer_fund_flow.flow_id`.
-- Sample rebate generation uses `biz_type=CUSTOMER_SAMPLE_REBATE` and stores the successful result as `SAMPLE_REBATE_RECORD / sample_rebate_record.rebate_record_id`.
-- Request hashes must be generated from normalized business fields, not raw JSON strings: `biz_type`, `customer_id`, normalized `account_type`, normalized `flow_type`, amount scaled to 2 decimals, trimmed `receipt_no`, trimmed `sample_order_no`, `support_mode`, normalized `total_support_rate`, normalized `instant_discount_rate`, and operator scope.
+- If a future approved authority enables sample rebate generation, it uses `biz_type=CUSTOMER_SAMPLE_REBATE` and stores the successful result as `SAMPLE_REBATE_RECORD / sample_rebate_record.rebate_record_id`.
+- Request hashes must be generated from normalized business fields, not raw JSON strings: `biz_type`, `customer_id`, normalized `account_type`, normalized `flow_type`, amount scaled to 2 decimals, trimmed `receipt_no`, `sample_order_id`, trimmed `sample_order_no`, server-authoritative `support_mode`, normalized `total_support_rate`, normalized `instant_discount_rate`, effective `instant_discount_amount`, and operator scope.
+- The order id, order number, customer id, and sample amount come from `SampleRebateOrderAuthority`; client values cannot authorize funds. Policy/rate fields come from active server-side `customer_sample_policy`. Client policy fields are only an optional stale-request snapshot; when supplied they must match. Instant discount plus generated rebate cannot exceed the server policy support budget.
 - Idempotency record changes and customer fund mutations run inside the same Spring transaction. For business failures in this R-07 implementation, the transaction rolls back the `PROCESSING` idempotency row together with fund account, flow, deposit batch, and sample rebate changes, so the same request remains safely retryable.
 
 ## Delete Rule
@@ -100,5 +104,6 @@ DDL, menu SQL, and permission SQL ownership remains documented in `sql/customer.
 - `npm run check:high-risk-governance`
 - `node --test tests/high-risk-governance.test.js`
 - `mysql < sql/validation/customer_runtime_validation.sql` when a disposable MySQL test database is available
+- `customer_runtime_validation.sql` reports missing/duplicate sample-order identities as failures and reports the count of legacy unverified rebate rows for explicit development-data disposition.
 - `mvn -pl ruoyi-business -am test` covers R-08 Java service/unit customer fund and idempotency behavior without changing schema.
 - `mvn -pl ruoyi-business -am -Pintegration-test verify` applies the existing customer/idempotency SQL in disposable MySQL and checks concurrent deposit row-lock balance plus unique-key enforcement when Docker/MySQL Testcontainers are available.

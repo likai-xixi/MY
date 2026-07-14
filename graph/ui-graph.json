@@ -16,8 +16,7 @@
         "/business/customer/transferOwner",
         "/business/customer/{customerId}/fund/deposit",
         "/business/customer/{customerId}/sample-policy",
-        "/business/customer/{customerId}/sample-policy:update",
-        "/business/customer/{customerId}/sample-rebate:create"
+        "/business/customer/{customerId}/sample-policy:update"
       ],
       "states": [
         "loading",

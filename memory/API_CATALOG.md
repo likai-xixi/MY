@@ -690,7 +690,7 @@
 - Path: `/business/customer/{customerId}/sample-rebate`
 - Owner: `customer`
 - Module: `customer`
-- Notes: Creates sample rebate records for real customers only and keeps sample rebate in `SAMPLE_REBATE`, separate from customer deposit. The request body must include `idempotentKey`; R-07 stores `(biz_type, idempotent_key)` in `idempotent_request`, hashes normalized customer/sample-policy fields instead of raw JSON, replays the original `sample_rebate_record` on same-key/same-hash `SUCCESS`, rejects same-key/different-hash requests, and rejects same-key/same-hash `PROCESSING` as still processing. This endpoint creates `sample_rebate_record` first, then the internal service path writes the `SAMPLE_REBATE_GENERATE` fund flow; the deposit endpoint cannot be used to write `SAMPLE_REBATE`.
+- Notes: Currently fail-closed. The repository has no authoritative sample-order runtime and `beforeSalesOrder` remains blocked, so `UnavailableSampleRebateOrderAuthority` rejects before policy lookup, idempotency, record insertion, or fund mutation. The Vue page and API client expose no create action. A future approved authority must supply canonical customer/order identity and sample amount; the service then retains policy validation, idempotency, and unique `sample_order_id` plus `(customer_id, sample_order_no)` enforcement before `SAMPLE_REBATE_GENERATE`.
 
 ## /business/customer/{customerId}/sample-rebate
 
@@ -698,6 +698,7 @@
 - Path: `/business/customer/{customerId}/sample-rebate`
 - Owner: `customer`
 - Module: `customer`
+- Notes: Reads existing sample rebate history under `business:customer:fund:view`. This read endpoint remains available while creation is fail-closed and never creates or adjusts fund data.
 
 ## /business/masterdata/{resource}/list
 

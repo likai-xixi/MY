@@ -213,6 +213,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where customer_id = #{customerId} and del_flag = '0'
     </select>
 
+    <select id="selectCustomerByIdForUpdate" parameterType="Long" resultMap="CustomerResult">
+        <include refid="selectCustomerVo"/>
+        where customer_id = #{customerId} and del_flag = '0'
+        for update
+    </select>
+
     <select id="selectCustomerByCode" parameterType="String" resultMap="CustomerResult">
         <include refid="selectCustomerVo"/>
         where customer_code = #{customerCode} and del_flag = '0' limit 1
@@ -284,20 +290,27 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="customerNature != null">district = #{district},</if>
             <if test="customerNature != null">district_code = #{districtCode},</if>
             <if test="customerNature != null">address = #{address},</if>
-            <if test="customerNature != null or ownerType != null">owner_type = #{ownerType},</if>
-            <if test="customerNature != null or ownerType != null">owner_source = #{ownerSource},</if>
-            <if test="customerNature != null or ownerType != null">owner_profit_mode = #{ownerProfitMode},</if>
-            <if test="customerNature != null or ownerType != null">owner_effective_time = #{ownerEffectiveTime},</if>
-            <if test="customerNature != null or ownerType != null">owner_user_id = #{ownerUserId},</if>
-            <if test="customerNature != null or ownerType != null">owner_user_name = #{ownerUserName},</if>
-            <if test="customerNature != null or ownerType != null">owner_dept_id = #{ownerDeptId},</if>
-            <if test="customerNature != null or ownerType != null">owner_dept_name = #{ownerDeptName},</if>
             <if test="status != null">status = #{status},</if>
             <if test="remark != null">remark = #{remark},</if>
             <if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
             update_time = sysdate()
         </set>
         where customer_id = #{customerId}
+    </update>
+
+    <update id="updateCustomerOwner" parameterType="Customer">
+        update customer
+        set owner_type = #{ownerType},
+            owner_source = #{ownerSource},
+            owner_profit_mode = #{ownerProfitMode},
+            owner_effective_time = #{ownerEffectiveTime},
+            owner_user_id = #{ownerUserId},
+            owner_user_name = #{ownerUserName},
+            owner_dept_id = #{ownerDeptId},
+            owner_dept_name = #{ownerDeptName},
+            update_by = #{updateBy},
+            update_time = sysdate()
+        where customer_id = #{customerId} and del_flag = '0'
     </update>
 
     <update id="updateCustomerStatus" parameterType="Customer">

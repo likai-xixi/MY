@@ -25,10 +25,10 @@
       "method": "POST",
       "riskDomain": "customer-fund",
       "backendPermission": "business:customer:sample-rebate:create",
-      "frontendPermission": "business:customer:sample-rebate:create",
+      "frontendPermission": "",
       "menuPermission": "business:customer:sample-rebate:create",
       "registryPermission": "business:customer:sample-rebate:create",
-      "hasFrontendAction": true,
+      "hasFrontendAction": false,
       "tests": [
         "tests/customer-risk-gate.test.js"
       ],

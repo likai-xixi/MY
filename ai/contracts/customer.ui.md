@@ -12,7 +12,7 @@ Feature ID: `customer`
 - File: `ruoyi-ui/src/views/customer/index.vue`
 - Region data: `ruoyi-ui/src/utils/region-data.js`
 
-The screen includes list search/table actions, add/edit dialog, detail drawer, owner-change dialog, fund entry dialog, and sample rebate dialog.
+The screen includes list search/table actions, add/edit dialog, detail drawer, owner-change dialog, and fund entry dialog. Sample rebate history is read-only until an authoritative sample-order source is approved and integrated.
 The route is the RuoYi menu route produced by parent path `business` plus child path `customer`.
 
 ## Display Rules
@@ -60,6 +60,7 @@ The route is the RuoYi menu route produced by parent path `business` plus child 
 - Funds and policy display only `客户级定金账户`, `样品返现账户`, and `资金流水`. The UI must not show deprecated multi-deposit account labels.
 - Deposit entry dialog captures `收款金额`, optional `收款凭证号`, and `备注`; it must not show account-type selection or source-order fields.
 - Deposit entry dialog must submit deposit-in intent only. It must not expose deduction, refund, adjustment, or reversal actions from the customer deposit-entry button.
+- The page and API client must not expose sample rebate creation while the backend uses `UnavailableSampleRebateOrderAuthority`. The history section shows a warning that an authoritative sample-order source is required and continues to display existing records only.
 - The accepted page route is `/business/customer`; `/customer` remains outside the runtime contract.
 
 ## Shared Component Rule

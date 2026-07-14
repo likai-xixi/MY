@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { fileExists, readJson, readText } from '../tools/common.js';
+import { createLatestRequestGuard } from '../ruoyi-ui/src/views/customer/detail-request-guard.mjs';
 
 const CUSTOMER_SERVICE = 'ruoyi-business/src/main/java/com/ruoyi/business/customer/service/impl/CustomerServiceImpl.java';
 const CUSTOMER_SERVICE_INTERFACE = 'ruoyi-business/src/main/java/com/ruoyi/business/customer/service/ICustomerService.java';
@@ -10,6 +11,8 @@ const CUSTOMER_MAPPER = 'ruoyi-business/src/main/java/com/ruoyi/business/custome
 const CUSTOMER_MAPPER_XML = 'ruoyi-business/src/main/resources/mapper/customer/CustomerMapper.xml';
 const CUSTOMER_FUND_ENTRY = 'ruoyi-business/src/main/java/com/ruoyi/business/customer/domain/CustomerFundEntry.java';
 const SAMPLE_REBATE_RECORD = 'ruoyi-business/src/main/java/com/ruoyi/business/customer/domain/SampleRebateRecord.java';
+const SAMPLE_REBATE_AUTHORITY = 'ruoyi-business/src/main/java/com/ruoyi/business/customer/service/SampleRebateOrderAuthority.java';
+const UNAVAILABLE_SAMPLE_REBATE_AUTHORITY = 'ruoyi-business/src/main/java/com/ruoyi/business/customer/service/impl/UnavailableSampleRebateOrderAuthority.java';
 const CUSTOMER_CONTROLLER = 'ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java';
 const CUSTOMER_API = 'ruoyi-ui/src/api/customer.js';
 const CUSTOMER_API_CONTRACT = 'ruoyi-ui/src/api/customer.contract.md';
@@ -18,6 +21,7 @@ const CUSTOMER_UI_CONTRACT = 'ai/contracts/customer.ui.md';
 const CUSTOMER_FEATURE = 'features/customer.md';
 const CUSTOMER_VIEW = 'ruoyi-ui/src/views/customer/index.vue';
 const CUSTOMER_SQL = 'sql/customer.ownership.md';
+const CUSTOMER_SCHEMA = 'sql/migrations/V20260625_001_customer_schema.sql';
 const CUSTOMER_MENU_PERMISSION_SQL = 'sql/migrations/V20260625_003_customer_menu_permission.sql';
 const FEATURES_REGISTRY = 'ai/registry/features.json';
 const HIGH_RISK_PERMISSION_COVERAGE = 'ai/registry/high-risk-permission-coverage.json';
@@ -149,12 +153,28 @@ test('customer deposit endpoint is account-locked to customer deposit', () => {
   assert.match(validateAccountType, /throw new ServiceException\(DEPOSIT_ACCOUNT_ONLY_MESSAGE\)/, 'all non-CUSTOMER_DEPOSIT account types must fail');
 });
 
-test('sample rebate keeps its internal sample-rebate fund flow path', () => {
+test('sample rebate is authority-gated and keeps its internal fund flow path behind the gate', () => {
   const service = readText(CUSTOMER_SERVICE);
   const fundService = readText(CUSTOMER_FUND_SERVICE);
+  const unavailableAuthority = readText(UNAVAILABLE_SAMPLE_REBATE_AUTHORITY);
+  const schema = readText(CUSTOMER_SCHEMA);
   const createSampleRebate = methodBody(service, 'public SampleRebateRecord createSampleRebateRecord');
   const recordSampleRebateFlow = methodBody(fundService, 'public CustomerFundFlow recordSampleRebateFlow');
   const recordFundEntryInternal = methodBody(fundService, 'private CustomerFundFlow recordFundEntryInternal');
+
+  assert.equal(fileExists(SAMPLE_REBATE_AUTHORITY), true);
+  assert.equal(fileExists(UNAVAILABLE_SAMPLE_REBATE_AUTHORITY), true);
+  assert.match(service, /private SampleRebateOrderAuthority sampleRebateOrderAuthority/);
+  assert.match(createSampleRebate, /applyAuthoritativeSampleOrder\(record\)/);
+  assert.ok(
+    createSampleRebate.indexOf('applyAuthoritativeSampleOrder(record)') < createSampleRebate.indexOf('idempotencyService.begin('),
+    'authoritative order resolution must happen before idempotency and mutation'
+  );
+  assert.match(unavailableAuthority, /权威样品订单来源尚未接入，暂不允许生成样品返现/);
+  assert.match(schema, /sample_order_id bigint not null/i);
+  assert.match(schema, /sample_order_no varchar\(64\) not null/i);
+  assert.match(schema, /unique key uk_sample_rebate_order_id \(sample_order_id\)/i);
+  assert.match(schema, /unique key uk_sample_rebate_customer_order_no \(customer_id, sample_order_no\)/i);
 
   assert.match(createSampleRebate, /customerMapper\.insertSampleRebateRecord\(record\)/);
   assert.match(createSampleRebate, /customerFundService\.recordSampleRebateFlow\(record, operatorId, operatorName\)/);
@@ -179,6 +199,8 @@ test('customer fund service owns concurrency-safe fund mutation', () => {
   const fundService = readText(CUSTOMER_FUND_SERVICE);
   const mapper = readText(CUSTOMER_MAPPER);
   const mapperXml = readText(CUSTOMER_MAPPER_XML);
+  const view = readText(CUSTOMER_VIEW);
+  const apiClient = readText(CUSTOMER_API);
   const recordFundEntryInternal = methodBody(fundService, 'private CustomerFundFlow recordFundEntryInternal');
   const ensureForUpdate = methodBody(fundService, 'private CustomerFundAccount ensureFundAccountForUpdate');
   const insertFundFlowWithRetry = methodBody(fundService, 'private void insertFundFlowWithRetry');
@@ -276,7 +298,7 @@ test('customer fund idempotency payload migration and registries are required', 
   assert.ok(migrationEntry.appliesToTables.includes('idempotent_request'));
 });
 
-test('customer high-risk fund APIs use dedicated permissions end to end', () => {
+test('customer high-risk fund APIs keep dedicated backend permissions while unsafe rebate UI is closed', () => {
   const controller = readText(CUSTOMER_CONTROLLER);
   const view = readText(CUSTOMER_VIEW);
   const menuSql = readText(CUSTOMER_MENU_PERMISSION_SQL);
@@ -293,20 +315,19 @@ test('customer high-risk fund APIs use dedicated permissions end to end', () => 
       api: '/business/customer/{customerId}/fund/deposit',
       permission: 'business:customer:fund:deposit',
       annotations: depositAnnotations,
-      button: /@click="handleFundEntry"\s+v-hasPermi="\['business:customer:fund:deposit'\]"/
+      hasFrontendAction: true
     },
     {
       api: '/business/customer/{customerId}/sample-rebate',
       permission: 'business:customer:sample-rebate:create',
       annotations: rebateAnnotations,
-      button: /@click="handleSampleRebate"\s+v-hasPermi="\['business:customer:sample-rebate:create'\]"/
+      hasFrontendAction: false
     }
   ];
 
   for (const item of highRiskApis) {
     assert.match(item.annotations, new RegExp(item.permission.replaceAll(':', ':')));
     assert.doesNotMatch(item.annotations, /business:customer:fund:add/, `${item.api} must not use the legacy shared fund:add permission`);
-    assert.match(view, item.button, `${item.api} frontend action must use its dedicated permission`);
     assert.match(menuSql, new RegExp(item.permission.replaceAll(':', ':')), `${item.permission} must be seeded in customer menu SQL`);
     assert.ok(featurePermissions.has(item.permission), `${item.permission} must be registered on customer feature`);
     assert.ok(ownershipPermissions.has(item.permission), `${item.permission} must be registered in customer ownership permissions`);
@@ -315,11 +336,16 @@ test('customer high-risk fund APIs use dedicated permissions end to end', () => 
     assert.ok(entry, `${item.api} must have high-risk permission coverage`);
     assert.equal(entry.status, 'required');
     assert.equal(entry.backendPermission, item.permission);
-    assert.equal(entry.frontendPermission, item.permission);
+    assert.equal(entry.hasFrontendAction, item.hasFrontendAction);
+    assert.equal(entry.frontendPermission, item.hasFrontendAction ? item.permission : '');
     assert.equal(entry.menuPermission, item.permission);
     assert.equal(entry.registryPermission, item.permission);
     assert.ok(entry.tests.includes('tests/customer-risk-gate.test.js'));
   }
+
+  assert.match(view, /@click="handleFundEntry"\s+v-hasPermi="\['business:customer:fund:deposit'\]"/);
+  assert.doesNotMatch(view, /handleSampleRebate|submitSampleRebate|生成样品返现/);
+  assert.match(view, /样品返现生成暂未开放：必须先接入可校验的权威样品订单来源/);
 
   assert.notEqual(highRiskApis[0].permission, highRiskApis[1].permission, 'deposit and sample rebate must not share one high-risk permission');
   assert.doesNotMatch(menuSql, /business:customer:fund:add/, 'customer menu SQL must not seed fund:add as the high-risk fund entrypoint');
@@ -367,15 +393,13 @@ test('customer runtime idempotency Java tests are registered as idempotency evid
   assert.ok(rebateTests.includes(CUSTOMER_SERVICE_TEST));
 });
 
-test('customer page submits stable idempotentKey for fund entry and sample rebate', () => {
+test('customer page keeps stable deposit idempotency and exposes no unsafe sample-rebate creation client', () => {
   const view = readText(CUSTOMER_VIEW);
   const apiClient = readText(CUSTOMER_API);
   const generateKey = methodBody(view, 'function generateCustomerIdempotentKey');
   const ensureKey = methodBody(view, 'function ensureCustomerIdempotentKey');
   const handleFundEntry = methodBody(view, 'function handleFundEntry');
   const submitFundEntry = methodBody(view, 'function submitFundEntry');
-  const handleSampleRebate = methodBody(view, 'function handleSampleRebate');
-  const submitSampleRebate = methodBody(view, 'function submitSampleRebate');
 
   assert.match(generateKey, /randomUUID/);
   assert.match(generateKey, /return `\$\{scope\}-\$\{token\}`/);
@@ -387,12 +411,10 @@ test('customer page submits stable idempotentKey for fund entry and sample rebat
   assert.match(submitFundEntry, /addFundDeposit\(currentCustomerId\.value, \{[\s\S]*idempotentKey,[\s\S]*amount: fundForm\.value\.amount/);
   assert.equal((submitFundEntry.match(/generateCustomerIdempotentKey/g) || []).length, 0, 'fund submit must reuse the dialog key instead of generating a new key per click');
 
-  assert.match(handleSampleRebate, /idempotentKey: generateCustomerIdempotentKey\("customer-sample-rebate"\)/);
-  assert.match(submitSampleRebate, /idempotentKey: ensureCustomerIdempotentKey\(rebateForm\.value, "customer-sample-rebate"\)/);
-  assert.match(submitSampleRebate, /createSampleRebate\(currentCustomerId\.value, payload\)/);
-  assert.equal((submitSampleRebate.match(/generateCustomerIdempotentKey/g) || []).length, 0, 'sample rebate submit must reuse the dialog key instead of generating a new key per click');
-
   assert.doesNotMatch(apiClient, /idempotentKey/, 'customer API helper should not need path or method changes for idempotentKey payload fields');
+  assert.doesNotMatch(apiClient, /export function createSampleRebate/);
+  assert.doesNotMatch(view, /createSampleRebate|rebateForm|rebateOpen|handleSampleRebate|submitSampleRebate/);
+  assert.doesNotMatch(view, /business:customer:sample-rebate:create/);
 });
 
 test('customer fund idempotency canonical hashes and replay are wired before mutation', () => {
@@ -448,6 +470,68 @@ test('customer fund idempotency canonical hashes and replay are wired before mut
   );
   assert.match(service, /selectSampleRebateRecordById\(request\.getResultRefId\(\)\)/);
   assert.match(fundService, /selectFundFlowById\(request\.getResultRefId\(\)\)/);
+});
+
+test('customer detail, owner mutation, and sample rebate boundaries are fail closed', () => {
+  const service = readText(CUSTOMER_SERVICE);
+  const fundService = readText(CUSTOMER_FUND_SERVICE);
+  const mapper = readText(CUSTOMER_MAPPER);
+  const mapperXml = readText(CUSTOMER_MAPPER_XML);
+  const view = readText(CUSTOMER_VIEW);
+  const apiClient = readText(CUSTOMER_API);
+  const detail = methodBody(service, 'public Map<String, Object> selectCustomerDetail');
+  const selectFundAccounts = methodBody(fundService, 'public List<CustomerFundAccount> selectFundAccounts');
+  const transferOwner = methodBody(service, 'public int transferOwner');
+  const createSampleRebate = methodBody(service, 'public SampleRebateRecord createSampleRebateRecord');
+  const sampleHash = methodBody(service, 'private String sampleRebateRequestHash');
+  const hasSalesRole = methodBody(service, 'private boolean hasSalesRole');
+  const authoritativeOrder = methodBody(service, 'private void applyAuthoritativeSampleOrder');
+  const genericUpdate = mapperXml.match(/<update id="updateCustomer"[\s\S]*?<\/update>/)?.[0] || '';
+
+  assert.doesNotMatch(detail, /ownerLogs|fundAccounts|fundFlows|depositBatches|samplePolicy|sampleRebates/);
+  assert.doesNotMatch(selectFundAccounts, /initFundAccounts/);
+  assert.match(mapper, /int updateCustomerOwner\(Customer customer\)/);
+  assert.match(mapper, /Customer selectCustomerByIdForUpdate\(Long customerId\)/);
+  assert.match(mapperXml, /<update id="updateCustomerOwner"/);
+  assert.match(mapperXml, /<select id="selectCustomerByIdForUpdate"[\s\S]*for update[\s\S]*<\/select>/);
+  assert.match(transferOwner, /customerMapper\.selectCustomerByIdForUpdate\(transfer\.getCustomerId\(\)\)/);
+  assert.match(transferOwner, /customerMapper\.updateCustomerOwner\(next\)/);
+  assert.match(transferOwner, /if \(rows != 1\)[\s\S]*客户归属更新失败/);
+  assert.ok(
+    transferOwner.indexOf('if (rows != 1)') < transferOwner.indexOf('customerMapper.insertOwnerLog(log)'),
+    'owner audit may only be written after exactly one locked owner update'
+  );
+  assert.doesNotMatch(genericUpdate, /owner_type|owner_source|owner_profit_mode|owner_effective_time|owner_user_id|owner_user_name|owner_dept_id|owner_dept_name/);
+  assert.ok(createSampleRebate.indexOf('applyAuthoritativeSampleOrder(record)') < createSampleRebate.indexOf('idempotencyService.begin('));
+  assert.match(authoritativeOrder, /record\.setSampleAmount\(money\(order\.getSampleAmount\(\)\)\)/);
+  assert.match(sampleHash, /sample_order_id=/);
+  assert.match(sampleHash, /instant_discount_amount=/);
+  assert.match(hasSalesRole, /role\.isFlag\(\)/);
+  assert.doesNotMatch(hasSalesRole, /getRoleName|contains\(/, 'display names must not grant the salesman role');
+  assert.match(hasSalesRole, /"sales"\.equals\(key\).*"salesman"\.equals\(key\).*"business"\.equals\(key\)/s);
+  assert.match(apiClient, /export function listOwnerLogs\(customerId\)/);
+  assert.match(view, /canViewFundAccounts/);
+  assert.match(view, /canViewFundFlows/);
+  assert.match(view, /canViewSamplePolicy/);
+  assert.match(view, /canViewOwnerHistory/);
+  assert.match(view, /listOwnerLogs\(customerId\)/);
+  assert.match(view, /delete payload\[field\]/);
+  assert.match(view, /detailRequestGuard\.begin\(customerId\)/);
+  assert.match(view, /if \(!isCurrentRequest\(\)\) return/);
+  assert.doesNotMatch(view, /samplePolicy\.value\.supportMode \|\| "REBATE_ONLY"/);
+  assert.doesNotMatch(view, /createSampleRebate|rebateForm|handleSampleRebate|submitSampleRebate/);
+});
+
+test('customer detail latest-request guard rejects stale customer responses', () => {
+  const guard = createLatestRequestGuard();
+  const customerA = guard.begin(1);
+  assert.equal(guard.isCurrent(customerA, 1), true);
+  const customerB = guard.begin(2);
+  assert.equal(guard.isCurrent(customerA, 1), false);
+  assert.equal(guard.isCurrent(customerB, 1), false);
+  assert.equal(guard.isCurrent(customerB, 2), true);
+  guard.invalidate();
+  assert.equal(guard.isCurrent(customerB, 2), false);
 });
 
 test('customer fund idempotency keeps fund and sales-order boundaries closed', () => {

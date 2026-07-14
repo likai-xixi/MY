@@ -121,8 +121,10 @@
       "services": [
         "ruoyi-business/src/main/java/com/ruoyi/business/customer/service/ICustomerFundService.java",
         "ruoyi-business/src/main/java/com/ruoyi/business/customer/service/ICustomerService.java",
+        "ruoyi-business/src/main/java/com/ruoyi/business/customer/service/SampleRebateOrderAuthority.java",
         "ruoyi-business/src/main/java/com/ruoyi/business/customer/service/impl/CustomerFundServiceImpl.java",
-        "ruoyi-business/src/main/java/com/ruoyi/business/customer/service/impl/CustomerServiceImpl.java"
+        "ruoyi-business/src/main/java/com/ruoyi/business/customer/service/impl/CustomerServiceImpl.java",
+        "ruoyi-business/src/main/java/com/ruoyi/business/customer/service/impl/UnavailableSampleRebateOrderAuthority.java"
       ],
       "mappers": [
         "ruoyi-business/src/main/java/com/ruoyi/business/customer/mapper/CustomerMapper.java"
@@ -274,8 +276,10 @@
         "services": [
           "ruoyi-business/src/main/java/com/ruoyi/business/customer/service/ICustomerFundService.java",
           "ruoyi-business/src/main/java/com/ruoyi/business/customer/service/ICustomerService.java",
+          "ruoyi-business/src/main/java/com/ruoyi/business/customer/service/SampleRebateOrderAuthority.java",
           "ruoyi-business/src/main/java/com/ruoyi/business/customer/service/impl/CustomerFundServiceImpl.java",
-          "ruoyi-business/src/main/java/com/ruoyi/business/customer/service/impl/CustomerServiceImpl.java"
+          "ruoyi-business/src/main/java/com/ruoyi/business/customer/service/impl/CustomerServiceImpl.java",
+          "ruoyi-business/src/main/java/com/ruoyi/business/customer/service/impl/UnavailableSampleRebateOrderAuthority.java"
         ],
         "mappers": [
           "ruoyi-business/src/main/java/com/ruoyi/business/customer/mapper/CustomerMapper.java",

@@ -1,0 +1,52 @@
+{
+  "id": "RV-20260714T012241Z-review",
+  "request": "功能预审：全项目审查问题修复（客户资金与权限、主数据引用、公告安全、生产配置）",
+  "mode": "pre-review",
+  "feature": "customer",
+  "createdAt": "2026-07-14T01:22:41.350Z",
+  "status": "approved",
+  "approvedFeatures": [
+    "customer",
+    "masterdata",
+    "system",
+    "platform"
+  ],
+  "approvedEditRoots": [
+    "ruoyi-business/src/main/java/com/ruoyi/business/customer",
+    "ruoyi-business/src/main/resources/mapper/customer",
+    "ruoyi-business/src/test/java/com/ruoyi/business/customer",
+    "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer",
+    "ruoyi-ui/src/views/customer",
+    "ruoyi-ui/src/api/customer.js",
+    "ruoyi-business/src/main/java/com/ruoyi/business/masterdata",
+    "ruoyi-business/src/main/resources/mapper/masterdata",
+    "ruoyi-business/src/test/java/com/ruoyi/business/masterdata",
+    "ruoyi-admin/src/main/resources/application-prod.yml",
+    "ruoyi-ui/src/layout/components/HeaderNotice",
+    "ai/contracts",
+    "features",
+    "tests",
+    "graph",
+    "memory",
+    "ai/changes",
+    "ai/context",
+    "ai/generated",
+    "ai/registry"
+  ],
+  "decision": {
+    "allowImplementation": true,
+    "reason": "Allow Implementation for the four explicitly separated remediation records and approved roots only."
+  },
+  "requiredFiles": [
+    "request.md",
+    "context.md",
+    "product-review.md",
+    "architecture-review.md",
+    "backend-review.md",
+    "frontend-review.md",
+    "qa-review.md",
+    "risk-register.md",
+    "decision.md",
+    "review.json"
+  ]
+}

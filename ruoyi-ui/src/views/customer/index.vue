@@ -188,7 +188,7 @@
                   </el-select>
                 </el-form-item>
               </el-col>
-              <el-col v-if="!isPublicCustomerForm" :span="12">
+              <el-col v-if="!isPublicCustomerForm && !form.customerId" :span="12">
                 <el-form-item label="归属方式" prop="ownerType" :required="!isPublicCustomerForm">
                   <el-radio-group v-model="form.ownerType" @change="handleOwnerTypeChange">
                     <el-radio-button label="FACTORY">厂内</el-radio-button>
@@ -196,19 +196,19 @@
                   </el-radio-group>
                 </el-form-item>
               </el-col>
-              <el-col v-if="!isPublicCustomerForm && isFactoryOwnerForm" :span="12">
+              <el-col v-if="!isPublicCustomerForm && !form.customerId && isFactoryOwnerForm" :span="12">
                 <el-form-item label="归属业务员">
                   <el-tag type="info">厂内</el-tag>
                 </el-form-item>
               </el-col>
-              <el-col v-if="isSalesmanOwnerForm" :span="12">
+              <el-col v-if="!form.customerId && isSalesmanOwnerForm" :span="12">
                 <el-form-item label="归属业务员" prop="ownerUserId" :required="isSalesmanOwnerForm">
                   <el-select v-model="form.ownerUserId" filterable remote clearable reserve-keyword :remote-method="loadSalesmen" placeholder="请选择业务员" style="width: 100%">
                     <el-option v-for="item in salesmanOptions" :key="item.userId" :label="salesmanLabel(item)" :value="item.userId" />
                   </el-select>
                 </el-form-item>
               </el-col>
-              <el-col v-if="isSalesmanOwnerForm" :span="12">
+              <el-col v-if="!form.customerId && isSalesmanOwnerForm" :span="12">
                 <el-form-item label="归属来源" prop="ownerSource" :required="isSalesmanOwnerForm">
                   <el-radio-group v-model="form.ownerSource" @change="handleOwnerSourceChange">
                     <el-radio-button label="FACTORY_ASSIGNED">厂内分配维护（维护费）</el-radio-button>
@@ -216,10 +216,25 @@
                   </el-radio-group>
                 </el-form-item>
               </el-col>
-              <el-col v-if="isSalesmanOwnerForm" :span="12">
+              <el-col v-if="!form.customerId && isSalesmanOwnerForm" :span="12">
                 <el-form-item label="收益口径">
                   <el-tag>{{ optionLabel(ownerProfitModeOptions, form.ownerProfitMode) }}</el-tag>
                 </el-form-item>
+              </el-col>
+              <el-col v-if="form.customerId && !isPublicCustomerForm" :span="24">
+                <el-alert
+                  title="客户归属不能在普通编辑中修改，请关闭本窗口后使用“归属变更”。"
+                  type="warning"
+                  show-icon
+                  :closable="false"
+                  class="mb8"
+                />
+                <el-descriptions :column="4" border>
+                  <el-descriptions-item label="归属方式">{{ optionLabel(ownerTypeOptions, form.ownerType) }}</el-descriptions-item>
+                  <el-descriptions-item label="归属业务员">{{ ownerUserDisplay(form) }}</el-descriptions-item>
+                  <el-descriptions-item label="归属来源">{{ optionLabel(ownerSourceAllOptions, form.ownerSource) }}</el-descriptions-item>
+                  <el-descriptions-item label="收益口径">{{ optionLabel(ownerProfitModeOptions, form.ownerProfitMode) }}</el-descriptions-item>
+                </el-descriptions>
               </el-col>
               <el-col v-if="!isPublicCustomerForm" :span="12">
                 <el-form-item label="主联系人" prop="contactName" :required="!isPublicCustomerForm">
@@ -362,7 +377,7 @@
       </template>
     </el-dialog>
 
-    <el-drawer v-model="detailOpen" :title="detailTitle" size="78%" append-to-body>
+    <el-drawer v-model="detailOpen" :title="detailTitle" size="78%" append-to-body @closed="handleDetailClosed">
       <el-tabs v-model="detailTab" v-if="detail.customer">
         <el-tab-pane label="基础信息" name="base">
           <el-alert
@@ -416,7 +431,7 @@
             <el-table-column label="物流线路" prop="logisticsLine" />
           </el-table>
         </el-tab-pane>
-        <el-tab-pane label="资金与政策" name="fund">
+        <el-tab-pane v-if="canViewFundSection" label="资金与政策" name="fund">
           <el-alert
             v-if="isPublicDetail"
             title="公共客户不启用客户级定金，订单收款请在销售订单中记录本单定金。"
@@ -425,7 +440,7 @@
             show-icon
           />
           <template v-else>
-          <el-row :gutter="12" class="fund-row">
+          <el-row v-if="canViewFundAccounts" :gutter="12" class="fund-row">
             <el-col :span="8" v-for="account in detail.fundAccounts || []" :key="account.accountType">
               <el-card shadow="never">
                 <template #header>{{ accountTypeLabel(account.accountType) }}</template>
@@ -437,8 +452,8 @@
           </el-row>
           <div class="detail-actions">
             <el-button type="primary" plain icon="Money" @click="handleFundEntry" v-hasPermi="['business:customer:fund:deposit']">录入定金</el-button>
-            <el-button type="success" plain icon="Plus" @click="handleSampleRebate" v-hasPermi="['business:customer:sample-rebate:create']">生成样品返现</el-button>
           </div>
+          <template v-if="canViewSamplePolicy">
           <el-divider content-position="left">样品支持政策</el-divider>
           <el-form :model="samplePolicy" label-width="126px" class="policy-form">
             <el-row>
@@ -485,7 +500,16 @@
             </el-row>
             <el-button type="primary" icon="Check" @click="submitSamplePolicy" v-hasPermi="['business:customer:sample-policy:edit']">保存政策</el-button>
           </el-form>
+          </template>
+          <template v-if="canViewFundAccounts">
           <el-divider content-position="left">样品返现记录</el-divider>
+          <el-alert
+            title="样品返现生成暂未开放：必须先接入可校验的权威样品订单来源；当前仅支持查看历史记录。"
+            type="warning"
+            :closable="false"
+            show-icon
+            class="mb8"
+          />
           <el-table :data="detail.sampleRebates || []">
             <el-table-column label="样品订单号" prop="sampleOrderNo" width="150" />
             <el-table-column label="样品金额" prop="sampleAmount" width="100" />
@@ -498,6 +522,8 @@
             <el-table-column label="创建时间" prop="createTime" width="160" />
             <el-table-column label="备注" prop="remark" min-width="160" />
           </el-table>
+          </template>
+          <template v-if="canViewFundFlows">
           <el-divider content-position="left">资金流水</el-divider>
           <el-table :data="detail.fundFlows || []">
             <el-table-column label="流水号" prop="flowNo" width="180" />
@@ -511,8 +537,9 @@
             <el-table-column label="备注" prop="remark" min-width="160" />
           </el-table>
           </template>
+          </template>
         </el-tab-pane>
-        <el-tab-pane label="操作日志" name="logs">
+        <el-tab-pane v-if="canViewOwnerHistory" label="操作日志" name="logs">
           <el-table :data="detail.ownerLogs || []">
             <el-table-column label="原归属" width="120"><template #default="scope">{{ optionLabel(ownerTypeOptions, scope.row.oldOwnerType) }}</template></el-table-column>
             <el-table-column label="新归属" width="120"><template #default="scope">{{ optionLabel(ownerTypeOptions, scope.row.newOwnerType) }}</template></el-table-column>
@@ -590,29 +617,13 @@
       </template>
     </el-dialog>
 
-    <el-dialog title="生成样品返现" v-model="rebateOpen" width="620px" append-to-body>
-      <el-form :model="rebateForm" label-width="126px">
-        <el-row>
-          <el-col :span="12"><el-form-item label="样品订单号"><el-input v-model="rebateForm.sampleOrderNo" /></el-form-item></el-col>
-          <el-col :span="12"><el-form-item label="样品原价"><el-input-number v-model="rebateForm.sampleAmount" :precision="2" :min="0" /></el-form-item></el-col>
-          <el-col :span="12"><el-form-item label="支持模式"><el-select v-model="rebateForm.supportMode"><el-option v-for="item in supportModeOptions" :key="item.value" :label="item.label" :value="item.value" /></el-select></el-form-item></el-col>
-          <el-col :span="12"><el-form-item label="总支持比例"><el-input-number v-model="rebateForm.totalSupportRate" :precision="4" :step="0.05" :min="0" :max="1" /></el-form-item></el-col>
-          <el-col :span="12"><el-form-item label="当场实收折扣"><el-input-number v-model="rebateForm.instantDiscountRate" :precision="4" :step="0.05" :min="0" :max="1" /></el-form-item></el-col>
-          <el-col :span="12"><el-form-item label="当场优惠金额"><el-input-number v-model="rebateForm.instantDiscountAmount" :precision="2" :min="0" /></el-form-item></el-col>
-          <el-col :span="24"><el-form-item label="备注"><el-input v-model="rebateForm.remark" type="textarea" /></el-form-item></el-col>
-        </el-row>
-      </el-form>
-      <template #footer>
-        <el-button type="primary" @click="submitSampleRebate">确 定</el-button>
-        <el-button @click="rebateOpen = false">取 消</el-button>
-      </template>
-    </el-dialog>
   </div>
 </template>
 
 <script setup name="Customer">
-import { addCustomer, addFundDeposit, changeCustomerStatus, createSampleRebate, delCustomer, duplicateWarning, getCustomer, listCustomer, listSalesmen, saveSamplePolicy, transferOwner, updateCustomer } from "@/api/customer"
+import { addCustomer, addFundDeposit, changeCustomerStatus, delCustomer, duplicateWarning, getCustomer, getSamplePolicy, listCustomer, listDepositBatches, listFundAccounts, listFundFlows, listOwnerLogs, listSalesmen, listSampleRebates, saveSamplePolicy, transferOwner, updateCustomer } from "@/api/customer"
 import { areaCascaderProps, areaOptions, findAreaPathByCode, findAreaPathByName, resolveAreaPathLabels } from "@/utils/region-data"
+import { createLatestRequestGuard } from "./detail-request-guard.mjs"
 
 const { proxy } = getCurrentInstance()
 
@@ -705,9 +716,9 @@ const detailTab = ref("base")
 const detail = ref({})
 const transferOpen = ref(false)
 const fundOpen = ref(false)
-const rebateOpen = ref(false)
 const fundTitle = ref("")
 const currentCustomerId = ref(undefined)
+const detailRequestGuard = createLatestRequestGuard()
 const samplePolicy = ref({})
 
 const data = reactive({
@@ -730,7 +741,6 @@ const data = reactive({
   form: {},
   transferForm: {},
   fundForm: {},
-  rebateForm: {},
   rules: {
     customerName: [{ required: true, message: "客户名称不能为空", trigger: "blur" }],
     customerNature: [{ required: true, message: "客户性质不能为空", trigger: "change" }],
@@ -751,12 +761,20 @@ const data = reactive({
   }
 })
 
-const { queryParams, form, transferForm, fundForm, rebateForm, rules } = toRefs(data)
+const { queryParams, form, transferForm, fundForm, rules } = toRefs(data)
 
 const isPublicCustomerForm = computed(() => form.value.customerNature === "PUBLIC")
 const isSalesmanOwnerForm = computed(() => !isPublicCustomerForm.value && form.value.ownerType === "SALESMAN")
 const isFactoryOwnerForm = computed(() => !isPublicCustomerForm.value && form.value.ownerType !== "SALESMAN")
 const isPublicDetail = computed(() => detail.value.customer?.customerNature === "PUBLIC")
+const canViewFundAccounts = computed(() => proxy.$auth.hasPermi("business:customer:fund:view"))
+const canViewFundFlows = computed(() => proxy.$auth.hasPermi("business:customer:fund:flow"))
+const canViewSamplePolicy = computed(() => proxy.$auth.hasPermi("business:customer:sample-policy:view"))
+const canViewOwnerHistory = computed(() => proxy.$auth.hasPermi("business:customer:owner:history"))
+const canViewFundSection = computed(() => canViewFundAccounts.value
+  || canViewFundFlows.value
+  || canViewSamplePolicy.value
+  || proxy.$auth.hasPermi("business:customer:fund:deposit"))
 const hasPublicSelection = computed(() => selectedRows.value.some(row => isPublicRow(row)))
 const transferProfitModeLabel = computed(() => {
   const option = transferModeOptions.find(item => item.value === transferForm.value.transferMode)
@@ -1251,6 +1269,8 @@ function handleOwnerSourceChange(value) {
 
 function handleView(row) {
   currentCustomerId.value = row.customerId
+  detail.value = {}
+  samplePolicy.value = {}
   loadDetail(row.customerId)
   detailTitle.value = row.customerName
   detailTab.value = "base"
@@ -1258,10 +1278,40 @@ function handleView(row) {
 }
 
 function loadDetail(customerId) {
+  const requestToken = detailRequestGuard.begin(customerId)
+  const isCurrentRequest = () => detailRequestGuard.isCurrent(requestToken, currentCustomerId.value)
   getCustomer(customerId).then(response => {
-    detail.value = response.data || {}
-    samplePolicy.value = detail.value.samplePolicy || {}
+    if (!isCurrentRequest()) return []
+    detail.value = { customer: response.data?.customer }
+    samplePolicy.value = {}
+    const requests = []
+    if (canViewFundAccounts.value) {
+      requests.push(listFundAccounts(customerId).then(result => { if (isCurrentRequest()) detail.value.fundAccounts = result.data || [] }))
+      requests.push(listDepositBatches(customerId).then(result => { if (isCurrentRequest()) detail.value.depositBatches = result.data || [] }))
+      requests.push(listSampleRebates(customerId).then(result => { if (isCurrentRequest()) detail.value.sampleRebates = result.data || [] }))
+    }
+    if (canViewFundFlows.value) {
+      requests.push(listFundFlows(customerId, {}).then(result => { if (isCurrentRequest()) detail.value.fundFlows = result.rows || [] }))
+    }
+    if (canViewSamplePolicy.value) {
+      requests.push(getSamplePolicy(customerId).then(result => {
+        if (!isCurrentRequest()) return
+        samplePolicy.value = result.data || {}
+        detail.value.samplePolicy = samplePolicy.value
+      }))
+    }
+    if (canViewOwnerHistory.value) {
+      requests.push(listOwnerLogs(customerId).then(result => { if (isCurrentRequest()) detail.value.ownerLogs = result.data || [] }))
+    }
+    return Promise.all(requests)
   })
+}
+
+function handleDetailClosed() {
+  detailRequestGuard.invalidate()
+  currentCustomerId.value = undefined
+  detail.value = {}
+  samplePolicy.value = {}
 }
 
 function cancel() {
@@ -1297,7 +1347,13 @@ function submitForm() {
     }).then(response => {
       const warning = response.data || {}
       const save = () => {
-        const action = form.value.customerId ? updateCustomer(form.value) : addCustomer(form.value)
+        const payload = { ...form.value }
+        if (payload.customerId) {
+          for (const field of ["ownerType", "ownerSource", "ownerProfitMode", "ownerEffectiveTime", "ownerUserId", "ownerUserName", "ownerDeptId", "ownerDeptName"]) {
+            delete payload[field]
+          }
+        }
+        const action = payload.customerId ? updateCustomer(payload) : addCustomer(payload)
         action.then(() => {
           proxy.$modal.msgSuccess(form.value.customerId ? "修改成功" : "新增成功")
           open.value = false
@@ -1499,32 +1555,6 @@ function submitFundEntry() {
 function submitSamplePolicy() {
   saveSamplePolicy(currentCustomerId.value, samplePolicy.value).then(() => {
     proxy.$modal.msgSuccess("保存成功")
-    loadDetail(currentCustomerId.value)
-  })
-}
-
-function handleSampleRebate() {
-  rebateForm.value = {
-    idempotentKey: generateCustomerIdempotentKey("customer-sample-rebate"),
-    sampleOrderNo: "",
-    sampleAmount: 0,
-    supportMode: samplePolicy.value.supportMode || "REBATE_ONLY",
-    totalSupportRate: samplePolicy.value.totalSupportRate || 0.5,
-    instantDiscountRate: samplePolicy.value.instantDiscountRate || 0.8,
-    instantDiscountAmount: undefined,
-    remark: ""
-  }
-  rebateOpen.value = true
-}
-
-function submitSampleRebate() {
-  const payload = {
-    ...rebateForm.value,
-    idempotentKey: ensureCustomerIdempotentKey(rebateForm.value, "customer-sample-rebate")
-  }
-  createSampleRebate(currentCustomerId.value, payload).then(() => {
-    proxy.$modal.msgSuccess("生成成功")
-    rebateOpen.value = false
     loadDetail(currentCustomerId.value)
   })
 }

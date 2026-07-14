@@ -419,9 +419,9 @@
         "git diff --check passed for CR-20260626T145150Z-customer-runtime-tests"
       ],
       "latestSession": "memory/sessions/2026-06-25-customer-fund-concurrency.md",
-      "latestChange": "CR-20260628T142217Z-change",
+      "latestChange": "CR-20260714T013244Z-change",
       "handoverRequired": true,
-      "updatedAt": "2026-06-29"
+      "updatedAt": "2026-07-14"
     }
   ]
 }

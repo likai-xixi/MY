@@ -18,11 +18,22 @@ import com.ruoyi.business.customer.service.impl.CustomerFundServiceImpl;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
+import java.util.Collections;
 import org.junit.Test;
 import org.springframework.dao.DuplicateKeyException;
 
 public class CustomerFundServiceTest
 {
+    @Test
+    public void selectingFundAccountsNeverInitializesMissingAccounts()
+    {
+        CustomerMapperFake mapper = new CustomerMapperFake();
+        CustomerFundServiceImpl service = service(mapper, new FakeIdempotencyService());
+
+        assertEquals(Collections.emptyList(), service.selectFundAccounts(1L));
+        assertEquals(0, mapper.insertFundAccountCalls);
+    }
+
     @Test
     public void customerDepositRequiresIdempotentKeyBeforeMutation()
     {
@@ -268,6 +279,7 @@ public class CustomerFundServiceTest
         private int insertDepositBatchAttempts;
         private int insertFundFlowAttempts;
         private int selectFundFlowByIdCalls;
+        private int insertFundAccountCalls;
 
         private CustomerMapper proxy()
         {
@@ -286,6 +298,15 @@ public class CustomerFundServiceTest
             if ("selectFundAccountForUpdate".equals(name))
             {
                 return account;
+            }
+            if ("selectFundAccountsByCustomerId".equals(name))
+            {
+                return Collections.emptyList();
+            }
+            if ("insertFundAccount".equals(name))
+            {
+                insertFundAccountCalls++;
+                return 1;
             }
             if ("updateFundAccountBalance".equals(name))
             {

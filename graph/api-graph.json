@@ -981,9 +981,7 @@
       "owner": "customer",
       "module": "customer",
       "source": "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer/CustomerController.java",
-      "consumers": [
-        "customer:customer"
-      ],
+      "consumers": [],
       "permission": "business:customer:sample-rebate:create",
       "riskDomain": "customer-fund"
     },

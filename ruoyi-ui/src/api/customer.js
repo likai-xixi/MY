@@ -79,6 +79,14 @@ export function transferOwner(data) {
   })
 }
 
+// 客户归属变更历史
+export function listOwnerLogs(customerId) {
+  return request({
+    url: '/business/customer/' + customerId + '/owner-log',
+    method: 'get'
+  })
+}
+
 // 资金账户
 export function listFundAccounts(customerId) {
   return request({
@@ -126,15 +134,6 @@ export function saveSamplePolicy(customerId, data) {
   return request({
     url: '/business/customer/' + customerId + '/sample-policy',
     method: 'put',
-    data: data
-  })
-}
-
-// 生成样品返现
-export function createSampleRebate(customerId, data) {
-  return request({
-    url: '/business/customer/' + customerId + '/sample-rebate',
-    method: 'post',
     data: data
   })
 }

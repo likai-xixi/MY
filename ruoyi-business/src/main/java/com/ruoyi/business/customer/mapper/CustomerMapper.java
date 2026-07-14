@@ -22,6 +22,8 @@ public interface CustomerMapper
 
     public Customer selectCustomerById(Long customerId);
 
+    public Customer selectCustomerByIdForUpdate(Long customerId);
+
     public Customer selectCustomerByCode(String customerCode);
 
     public String selectMaxCustomerCodeByMonth(@Param("monthPrefix") String monthPrefix);
@@ -29,6 +31,8 @@ public interface CustomerMapper
     public int insertCustomer(Customer customer);
 
     public int updateCustomer(Customer customer);
+
+    public int updateCustomerOwner(Customer customer);
 
     public int updateCustomerStatus(Customer customer);
 

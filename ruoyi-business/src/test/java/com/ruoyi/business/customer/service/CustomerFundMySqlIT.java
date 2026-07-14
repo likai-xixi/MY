@@ -70,6 +70,13 @@ public class CustomerFundMySqlIT
                 assertEquals(workers, count(connection, "select count(*) from idempotent_request where biz_type = 'CUSTOMER_FUND_DEPOSIT' and status = 'SUCCESS'"));
                 assertTrue("duplicate idempotent key must be rejected by uk_idempotent_biz_key",
                     duplicateIdempotentKeyRejected(connection));
+                insertSampleRebateRecord(connection, 1001L, "SAMPLE-IT-001");
+                assertTrue("duplicate sample order id must be rejected",
+                    duplicateSampleOrderRejected(connection, 1001L, "SAMPLE-IT-002"));
+                assertTrue("duplicate customer/sample order number must be rejected",
+                    duplicateSampleOrderRejected(connection, 1002L, "SAMPLE-IT-001"));
+                assertTrue("missing authoritative sample order identity must be rejected",
+                    missingSampleOrderIdentityRejected(connection));
             }
         }
     }
@@ -188,6 +195,45 @@ public class CustomerFundMySqlIT
             "insert into idempotent_request(biz_type, idempotent_key, biz_id, request_hash, status, create_by, create_time, update_time) values('CUSTOMER_FUND_DEPOSIT', 'runtime-key-0', 1, 'other-hash', 'PROCESSING', 'it', now(), now())"))
         {
             statement.executeUpdate();
+            return false;
+        }
+        catch (SQLException e)
+        {
+            return e.getSQLState() != null && e.getSQLState().startsWith("23");
+        }
+    }
+
+    private void insertSampleRebateRecord(Connection connection, Long orderId, String orderNo) throws SQLException
+    {
+        try (PreparedStatement statement = connection.prepareStatement(
+            "insert into sample_rebate_record(customer_id, sample_order_id, sample_order_no, sample_amount, support_mode, total_support_rate, instant_discount_rate, instant_discount_amount, rebate_amount, used_amount, remaining_amount, status, create_by, create_time) values(1, ?, ?, 100.00, 'REBATE_ONLY', 0.20, 1.00, 0.00, 20.00, 0.00, 20.00, 'AVAILABLE', 'it', now())"))
+        {
+            statement.setLong(1, orderId);
+            statement.setString(2, orderNo);
+            statement.executeUpdate();
+        }
+    }
+
+    private boolean duplicateSampleOrderRejected(Connection connection, Long orderId, String orderNo) throws SQLException
+    {
+        try
+        {
+            insertSampleRebateRecord(connection, orderId, orderNo);
+            return false;
+        }
+        catch (SQLException e)
+        {
+            return e.getSQLState() != null && e.getSQLState().startsWith("23");
+        }
+    }
+
+    private boolean missingSampleOrderIdentityRejected(Connection connection) throws SQLException
+    {
+        try (Statement statement = connection.createStatement())
+        {
+            statement.executeUpdate(
+                "insert into sample_rebate_record(customer_id, sample_order_id, sample_order_no, sample_amount, status, create_by, create_time) values(1, null, null, 100.00, 'AVAILABLE', 'it', now())"
+            );
             return false;
         }
         catch (SQLException e)

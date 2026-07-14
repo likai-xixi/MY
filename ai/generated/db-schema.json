@@ -440,6 +440,12 @@
       "source": "sql-reference"
     },
     {
+      "name": "sample_rebate_record",
+      "module": "customer",
+      "file": "sql/validation/customer_runtime_validation.sql",
+      "source": "sql-reference"
+    },
+    {
       "name": "idempotent_request",
       "module": "platform",
       "file": "sql/validation/idempotency_runtime_validation.sql",

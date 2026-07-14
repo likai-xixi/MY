@@ -40,7 +40,7 @@ R-06 keeps this file as the customer SQL/menu/permission ownership document, but
 - PUBLIC 公共客户固定为两个系统内置分类客户：
   - `PUB_DIRECT_SALE` / 厂内自销客户 / `PUBLIC` / `DIRECT_SALE`
   - `PUB_SELF_MEDIA` / 自媒体客户 / `PUBLIC` / `SELF_MEDIA`
-- 公共客户只用于订单归类，不代表真实买家；真实购买人、联系电话、收货地址、接待业务员、来源渠道由后续 `sales-order` 模块在订单主表快照字段保存。
+- 公共客户只用于订单归类，不代表真实买家；真实购买人、联系电话、收货地址、接待业务员、来源渠道由后续订单模块在订单主表快照字段保存。
 - 公共客户不展示/不编辑 `customer_type`、`customer_level`；后端仅为技术兼容固定保存 `customer_type = OTHER`、`customer_level = NORMAL`。
 - 公共客户不允许通过普通客户入口新增、编辑、删除、停用或归属变更。
 - 每个 `public_channel` 只能有一个有效 PUBLIC 公共客户。
@@ -55,6 +55,8 @@ R-06 keeps this file as the customer SQL/menu/permission ownership document, but
 - `customer_deposit_batch.deposit_type` 只允许 `CUSTOMER_DEPOSIT`。
 - 定金相关 `customer_fund_flow.flow_type` 只允许 `DEPOSIT_IN`、`DEPOSIT_DEDUCT`、`DEPOSIT_REFUND`、`DEPOSIT_ADJUST`、`DEPOSIT_REVERSE`；当前客户管理“录入定金”接口只实现入金，必须只写 `DEPOSIT_IN`。
 - 所有资金变化必须写入 `customer_fund_flow`；不允许新增 `customer.deposit_balance` 单字段，也不允许手工直接改余额。
+- 样品返现生成当前默认失效关闭：在权威样品订单来源接入前，后端必须在政策、幂等和任何资金写入之前拒绝请求，前端只读展示历史返现记录。
+- 未来接入时，订单 ID、订单号、客户和样品金额必须来自权威订单快照；`sample_order_id` 与 `(customer_id, sample_order_no)` 唯一键共同阻止换幂等键或并发重复返现。
 - 本项目仍处于开发阶段，本文件只保留最终初始化结构，不包含旧数据迁移、旧资金账户兼容或旧前端文案兼容。
 
 ## Permission Codes
@@ -78,7 +80,7 @@ R-06 keeps this file as the customer SQL/menu/permission ownership document, but
 ### Funds
 
 - `business:customer:fund:view`
-- `business:customer:fund:add`
+- `business:customer:fund:deposit`
 - `business:customer:fund:flow`
 - `business:customer:fund:adjust`
 - `business:customer:fund:export`
@@ -87,6 +89,11 @@ R-06 keeps this file as the customer SQL/menu/permission ownership document, but
 
 - `business:customer:sample-policy:view`
 - `business:customer:sample-policy:edit`
+
+### Sample Rebate
+
+- `business:customer:sample-rebate:create`
+- Sample rebate record reads use `business:customer:fund:view`.
 
 ## RuoYi Menu Rows
 
@@ -322,8 +329,8 @@ create table customer_sample_policy (
 create table sample_rebate_record (
   rebate_record_id bigint not null auto_increment,
   customer_id bigint not null,
-  sample_order_id bigint default null,
-  sample_order_no varchar(64) default null,
+  sample_order_id bigint not null,
+  sample_order_no varchar(64) not null,
   sample_amount decimal(18,2) not null,
   support_mode varchar(64) default null,
   total_support_rate decimal(10,4) default 0.0000,
@@ -339,6 +346,8 @@ create table sample_rebate_record (
   update_time datetime default null,
   remark varchar(500) default null,
   primary key (rebate_record_id),
+  unique key uk_sample_rebate_order_id (sample_order_id),
+  unique key uk_sample_rebate_customer_order_no (customer_id, sample_order_no),
   key idx_sample_rebate_customer (customer_id, status)
 ) engine=innodb default charset=utf8mb4 comment='样品返现记录';
 ```

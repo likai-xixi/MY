@@ -214,8 +214,8 @@ create table if not exists customer_sample_policy (
 create table if not exists sample_rebate_record (
   rebate_record_id bigint not null auto_increment,
   customer_id bigint not null,
-  sample_order_id bigint default null,
-  sample_order_no varchar(64) default null,
+  sample_order_id bigint not null,
+  sample_order_no varchar(64) not null,
   sample_amount decimal(18,2) not null,
   support_mode varchar(64) default null,
   total_support_rate decimal(10,4) default 0.0000,
@@ -231,5 +231,7 @@ create table if not exists sample_rebate_record (
   update_time datetime default null,
   remark varchar(500) default null,
   primary key (rebate_record_id),
+  unique key uk_sample_rebate_order_id (sample_order_id),
+  unique key uk_sample_rebate_customer_order_no (customer_id, sample_order_no),
   key idx_sample_rebate_customer (customer_id, status)
 ) engine=innodb default charset=utf8mb4 comment='sample rebate record';

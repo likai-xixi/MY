@@ -802,12 +802,32 @@
       "file": "ruoyi-ui/src/views/customer/index.vue"
     },
     {
-      "code": "business:customer:sample-rebate:create",
+      "code": "business:customer:sample-policy:edit",
       "module": "customer",
       "file": "ruoyi-ui/src/views/customer/index.vue"
     },
     {
-      "code": "business:customer:sample-policy:edit",
+      "code": "business:customer:fund:view",
+      "module": "customer",
+      "file": "ruoyi-ui/src/views/customer/index.vue"
+    },
+    {
+      "code": "business:customer:fund:flow",
+      "module": "customer",
+      "file": "ruoyi-ui/src/views/customer/index.vue"
+    },
+    {
+      "code": "business:customer:sample-policy:view",
+      "module": "customer",
+      "file": "ruoyi-ui/src/views/customer/index.vue"
+    },
+    {
+      "code": "business:customer:owner:history",
+      "module": "customer",
+      "file": "ruoyi-ui/src/views/customer/index.vue"
+    },
+    {
+      "code": "business:customer:fund:deposit",
       "module": "customer",
       "file": "ruoyi-ui/src/views/customer/index.vue"
     },

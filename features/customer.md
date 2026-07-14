@@ -5,8 +5,8 @@
 - ID: `customer`
 - Name: 客户管理
 - Adapter: locked RuoYi adapter
-- Current change: `CR-20260626T145150Z-customer-runtime-tests`
-- Current scope: R-08 customer runtime tests. This change adds Java service/unit tests and an opt-in MySQL/Testcontainers profile for the existing R-07 customer fund idempotency behavior. It does not change customer runtime behavior, sales-order runtime, production safety configuration, the fund model, database business table structure, or deduction/refund/adjustment/reversal runtime.
+- Current change: `CR-20260714T013244Z-change`
+- Current scope: whole-project audit remediation for customer detail permissions, read-only fund queries, owner-transfer integrity, controlled salesman role keys, server-authoritative policy calculation, and fail-closed sample rebate generation until an authoritative sample-order source exists. It does not create sales-order, delivery, or finance runtime.
 - Git/CI state: use Git history and workflow results as the source of truth; this brief does not handwrite current push status.
 
 ## Business Problem
@@ -69,7 +69,7 @@
 - 真实客户多收货地址维护，只允许一个默认收货地址。
 - 真实客户归属方式选择、归属业务员和部门带出、归属来源/收益口径记录、列表筛选、详情展示和归属变更日志。
 - 真实客户资金与政策详情：客户级定金账户、样品返现账户、客户级定金入金、资金流水查看、样品政策配置、样品返现记录生成/查看。
-- 客户资金高风险入口幂等：客户级定金入金和样品返现生成必须提交 `idempotentKey`，服务端按规范化请求摘要防止双击、重试和弱网重放重复入账。
+- 客户级定金入金必须提交 `idempotentKey`，服务端按规范化请求摘要防止重复入账。样品返现当前失效关闭；未来接入权威订单后还必须同时满足幂等和订单唯一约束。
 - 菜单、权限、SQL ownership、API/UI/DB/permission graph 和 registry 登记。
 - 客户编码、字典展示、省市区选择和列表显示体验优化。
 - 新增/编辑弹窗使用完整中国省市区三级行政区划数据源，覆盖省、直辖市、自治区、地级市/州/盟、区/县/县级市，并同时保存行政区划 code 与中文名称。
@@ -198,11 +198,13 @@ Fund-entry concurrency rules:
 - If a fund account does not exist, the service tries to insert it; `DuplicateKeyException` means another concurrent transaction created it, so the service re-reads with `selectFundAccountForUpdate`.
 - `insertFundFlow` and `insertDepositBatch` catch `DuplicateKeyException`, regenerate `flow_no` or `deposit_batch_no`, and retry up to a bounded maximum before throwing a clear service error.
 
-Sample rebate generation remains separate from deposit and is also idempotent: `POST /business/customer/{customerId}/sample-rebate` requires `idempotentKey`, creates `sample_rebate_record`, then the internal service path writes the `SAMPLE_REBATE` account flow with `SAMPLE_REBATE_GENERATE`.
+Sample rebate generation remains separate from deposit but is currently fail-closed. The repository has no approved sample-order runtime and `beforeSalesOrder` remains blocked, so `UnavailableSampleRebateOrderAuthority` rejects `POST /business/customer/{customerId}/sample-rebate` before policy, idempotency, or mutation. The page and API client expose no create action; existing rebate history remains read-only.
+
+A future approved order authority must return canonical customer/order identity and sample amount. The service then overwrites client order/amount fields, applies the active server policy, uses idempotency, and relies on unique keys for `sample_order_id` and `(customer_id, sample_order_no)` before writing `sample_rebate_record` and `SAMPLE_REBATE_GENERATE`.
 
 Sample rebate idempotency rules:
 
-- Missing `idempotentKey` is rejected before mutation.
+- Once an approved order authority is connected, missing `idempotentKey` is rejected before mutation.
 - First key inserts `idempotent_request` as `PROCESSING`, runs sample rebate generation, then marks `SUCCESS` with `result_ref_type=SAMPLE_REBATE_RECORD` and the created `sample_rebate_record.rebate_record_id`.
 - Same key and same normalized request hash with `SUCCESS` returns the original sample rebate record instead of creating another rebate/fund flow.
 - Same key and same normalized request hash with `PROCESSING` is rejected as still processing.
@@ -229,10 +231,11 @@ Sample rebate idempotency rules:
 
 - Basic: `business:customer:list`, `query`, `add`, `edit`, `remove`, `export`
 - Owner: `business:customer:owner:view`, `assign`, `transfer`, `history`
-- Fund: `business:customer:fund:view`, `add`, `flow`, `adjust`, `export`
+- Fund: `business:customer:fund:view`, `deposit`, `flow`, `adjust`, `export`
 - Sample policy: `business:customer:sample-policy:view`, `edit`
+- Sample rebate: `business:customer:sample-rebate:create` (record reads use `business:customer:fund:view`)
 
-普通客户编辑权限不包含资金调整权限。公共客户限制由客户服务层校验，不新增权限码。
+普通客户编辑权限不包含资金调整权限。基本查询不隐式授予归属历史、资金流水或样品政策权限；公共客户限制由客户服务层校验。
 
 ## Acceptance Criteria
 
@@ -252,9 +255,9 @@ Sample rebate idempotency rules:
 - SQL ownership 是最终结构，不写旧数据兼容迁移。
 - Customer schema, PUBLIC seed, customer menu/permission seed, and customer runtime validation have executable R-06 SQL baselines registered as blocking migrations.
 - `idempotent_request` has an executable R-07 migration registered as a blocking platform migration, with a unique key on `(biz_type, idempotent_key)`.
-- Customer deposit entry and sample rebate generation require `idempotentKey` and canonical request hashing; duplicate successful requests replay the original result and mismatched requests are rejected.
-- R-08 service tests cover missing `idempotentKey`, same-key/different-hash rejection, `PROCESSING` duplicate rejection, `SUCCESS` replay, customer deposit `CUSTOMER_DEPOSIT / DEPOSIT_IN` enforcement, sample rebate `SAMPLE_REBATE_GENERATE`, PUBLIC customer fund rejection, and salesman-candidate no-fallback behavior.
-- The customer page generates a hidden stable `idempotentKey` per fund-entry or sample-rebate dialog cycle and submits it without changing `ruoyi-ui/src/api/customer.js` or API paths.
+- Customer deposit requires `idempotentKey` and canonical request hashing. Future sample rebate enablement must retain the same idempotency contract plus authoritative order identity and database uniqueness.
+- Service tests cover fail-closed sample rebate production wiring, authoritative snapshot replacement, duplicate-order rejection before fund mutation, customer deposit enforcement, PUBLIC customer rejection, locked owner transfer/audit, and role-key-only salesman eligibility.
+- The customer page generates a stable hidden `idempotentKey` for each fund-entry dialog cycle. It exposes no sample rebate create helper or dialog while the authoritative order source is unavailable.
 - 不引入 sales-order / delivery / finance 模块代码。
 - API、UI、DB、权限、菜单、registry、graph、memory、handover 和 change record 同步。
 - `npm run scan:all`, `npm run finalize:change -- --summary "客户管理厂内归属与业务员维护口径"`, `npm run check` 完成后方可关闭。

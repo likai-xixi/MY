@@ -70,7 +70,6 @@ public class CustomerFundServiceImpl implements ICustomerFundService
     }
 
     @Override
-    @Transactional
     public List<CustomerFundAccount> selectFundAccounts(Long customerId)
     {
         Customer customer = requiredCustomer(customerId);
@@ -78,7 +77,6 @@ public class CustomerFundServiceImpl implements ICustomerFundService
         {
             return Collections.emptyList();
         }
-        initFundAccounts(customer, null);
         return customerMapper.selectFundAccountsByCustomerId(customerId);
     }
 
