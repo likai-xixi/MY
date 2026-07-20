@@ -1,3 +1,5 @@
+# Context
+
 # Current Context
 
 Current feature: `masterdata`
@@ -8,7 +10,6 @@ Profile: adapter `ruoyi`, locked `true`
 ## Allowed Edit Roots
 
 - `ai/changes/CR-20260720T134007Z-change`
-- `ai/reviews/RV-20260720T134134Z-r-12a-option-set-option-value-masterdata`
 - `ai/context/current-context.md`
 - `ai/context/current-context.json`
 - `ai/contracts/engineering-core.index.md`

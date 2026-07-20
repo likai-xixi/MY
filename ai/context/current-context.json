@@ -2,25 +2,59 @@
   "schemaVersion": 1,
   "generatedBy": "scripts/context-build.js",
   "generatedAt": "stable",
-  "currentFeature": "platform",
-  "currentChange": "CR-20260720T131603Z-r-11-post-push-handover-sync",
+  "currentFeature": "masterdata",
+  "currentChange": "CR-20260720T134007Z-change",
   "repositoryProfile": {
     "adapter": "ruoyi",
     "locked": true,
     "stack": "RuoYi + Vue3 + Codex Auto Dev OS"
   },
   "allowedEditRoots": [
-    "ai/changes/CR-20260720T115859Z-r-11-engineering-core-roadmap-rebaseline/handover.md",
-    "ai/changes/CR-20260720T115859Z-r-11-engineering-core-roadmap-rebaseline/verification.md",
-    "ai/changes/CR-20260720T131603Z-r-11-post-push-handover-sync",
-    "ai/changes/CURRENT_CHANGE.json",
+    "ai/changes/CR-20260720T134007Z-change",
+    "ai/reviews/RV-20260720T134134Z-r-12a-option-set-option-value-masterdata",
     "ai/context/current-context.md",
     "ai/context/current-context.json",
-    "memory/HANDOVER.md",
-    "memory/PROJECT_STATE.md",
-    "memory/CHANGELOG.md",
-    "memory/TASKS.json",
-    "memory/sessions/2026-07-20-r-11-engineering-core-roadmap-rebaseline.md"
+    "ai/contracts/engineering-core.index.md",
+    "ai/contracts/engineering-core.migration-plan.md",
+    "ai/registry/migration-registry.json",
+    "features/masterdata.md",
+    "ruoyi-business/src/main/java/com/ruoyi/business/masterdata",
+    "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/masterdata",
+    "ruoyi-ui/src/views/masterdata",
+    "ruoyi-ui/src/api/masterdata.contract.md",
+    "ruoyi-ui/src/api/masterdata.js",
+    "ruoyi-business/src/test/java/com/ruoyi/business/masterdata/service/MasterDataReferenceMySqlIT.java",
+    "ruoyi-business/src/test/java/com/ruoyi/business/masterdata/service/MasterDataServiceTest.java",
+    "tests/masterdata-runtime.test.js",
+    "ai/contracts/masterdata.api.md",
+    "ai/contracts/masterdata.db.md",
+    "ai/contracts/masterdata.delete-ownership.md",
+    "ai/contracts/masterdata.permission.md",
+    "ai/contracts/masterdata.r10-contract-test-matrix.md",
+    "ai/contracts/masterdata.r10-implementation-boundary.md",
+    "ai/contracts/masterdata.ui.md",
+    "graph/api-graph.json",
+    "graph/ui-graph.json",
+    "memory/API_CATALOG.md",
+    "ruoyi-ui/src/views/masterdata/README.md",
+    "ruoyi-ui/src/views/masterdata/screen.md",
+    "sql/masterdata.ownership.md",
+    "sql/migrations/V20260628_005_masterdata_r10_schema.sql",
+    "sql/migrations/V20260628_006_masterdata_r10_menu_permission.sql",
+    "sql/migrations/V20260720_007_masterdata_option_set_breaking_migration.sql",
+    "sql/validation/masterdata_runtime_validation.sql",
+    "sql/validation/masterdata_option_set_validation.sql",
+    "ruoyi-business/src/main/resources/mapper/masterdata/MasterDataMapper.xml",
+    "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/masterdata/MasterDataController.java",
+    "ruoyi-ui/src/views/masterdata/index.vue",
+    "ai/registry/features.json",
+    "ai/registry/modules.json",
+    "ai/changes",
+    "ai/generated",
+    "graph",
+    "memory",
+    "features",
+    "tests"
   ],
   "forbiddenEditRoots": [
     "package.json",
@@ -28,23 +62,20 @@
     ".github/workflows",
     "scripts",
     "tools",
-    "tests",
-    "ai/contracts",
-    "ai/roadmap",
-    "ai/registry",
+    ".codex/skills",
     "ai/rules",
-    "graph",
-    "backend",
-    "frontend",
-    "ruoyi-admin",
-    "ruoyi-framework",
-    "ruoyi-business",
-    "ruoyi-system",
-    "ruoyi-common",
-    "ruoyi-generator",
-    "ruoyi-quartz",
-    "ruoyi-ui",
-    "sql"
+    "ai/project-profile.json",
+    "ruoyi-business/src/main/java/com/ruoyi/business/customer",
+    "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer",
+    "ruoyi-ui/src/views/customer",
+    "ruoyi-ui/src/api/customer.js",
+    "ruoyi-business/src/main/java/com/ruoyi/business/salesorder",
+    "ruoyi-business/src/main/java/com/ruoyi/business/sales-order",
+    "ruoyi-ui/src/views/salesorder",
+    "ruoyi-ui/src/views/sales-order",
+    "ruoyi-business/src/main/java/com/ruoyi/business/production",
+    "ruoyi-business/src/main/java/com/ruoyi/business/formula",
+    "ruoyi-business/src/main/java/com/ruoyi/business/dxf"
   ],
   "mustReadFiles": [
     {
@@ -76,8 +107,8 @@
       "reason": "Module ownership roots."
     },
     {
-      "path": "features/platform.md",
-      "reason": "Focused context for platform."
+      "path": "ai/context/features/masterdata.md",
+      "reason": "Focused context for masterdata."
     },
     {
       "path": "ai/roadmap/phase-gates.json",
@@ -92,15 +123,15 @@
       "reason": "Governance backlog and required/deferred evidence."
     },
     {
-      "path": "ai/changes/CR-20260720T131603Z-r-11-post-push-handover-sync/impact.json",
+      "path": "ai/changes/CR-20260720T134007Z-change/impact.json",
       "reason": "Current change allowed and forbidden edit roots."
     },
     {
-      "path": "ai/changes/CR-20260720T131603Z-r-11-post-push-handover-sync/plan.md",
+      "path": "ai/changes/CR-20260720T134007Z-change/plan.md",
       "reason": "Current change execution plan."
     },
     {
-      "path": "ai/changes/CR-20260720T131603Z-r-11-post-push-handover-sync/verification.md",
+      "path": "ai/changes/CR-20260720T134007Z-change/verification.md",
       "reason": "Current change verification evidence."
     }
   ],
@@ -339,14 +370,19 @@
   ],
   "verificationCommands": [
     "npm run resume",
-    "npm run check:after-push",
-    "gh run view 29745362302 --json databaseId,workflowName,headSha,status,conclusion,url,jobs",
-    "npm run context:build -- platform",
-    "npm run finalize:change -- --summary \"Sync R-11 post-push handover\"",
-    "npm run check",
+    "npm run impact -- masterdata",
+    "npm run scan:all",
+    "npm run finalize:change",
     "npm run close:change",
+    "npm run check",
     "git diff --check",
-    "exact governance-only and forbidden-runtime root audit"
+    "focused masterdata tests",
+    "Maven compile",
+    "Vue production build",
+    "MySQL migration and validation SQL",
+    "API acceptance",
+    "browser acceptance",
+    "reverse audit"
   ],
   "nextSteps": [
     "Keep edits inside the active impact boundary.",

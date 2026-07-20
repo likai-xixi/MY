@@ -1,0 +1,43 @@
+{
+  "id": "RV-20260720T134134Z-r-12a-option-set-option-value-masterdata",
+  "request": "功能预审：R-12A 破坏式产品目录语义与通用 option-set / option-value 迁移；仅限 masterdata，禁止 field-definition、process-scheme、sales-order、formula、production、DXF 与客户资金变更；要求真实 MySQL/API/浏览器验收。",
+  "mode": "pre-review",
+  "feature": "masterdata",
+  "baseRevision": "09dce9dbd3d008afb517a0099c5a381a0298b19c",
+  "createdAt": "2026-07-20T13:41:34.327Z",
+  "status": "approved",
+  "approvedFeatures": [
+    "masterdata"
+  ],
+  "approvedEditRoots": [
+    "ruoyi-business/src/main/java/com/ruoyi/business/masterdata",
+    "ruoyi-business/src/main/resources/mapper/masterdata",
+    "ruoyi-business/src/test/java/com/ruoyi/business/masterdata",
+    "ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/masterdata",
+    "ruoyi-ui/src/views/masterdata",
+    "ruoyi-ui/src/api/masterdata.js",
+    "ruoyi-ui/src/api/masterdata.contract.md",
+    "sql/masterdata.ownership.md",
+    "sql/migrations/V20260720_007_masterdata_option_set_breaking_migration.sql",
+    "sql/validation/masterdata_runtime_validation.sql",
+    "sql/validation/masterdata_option_set_validation.sql",
+    "tests/masterdata-runtime.test.js"
+  ],
+  "approvedEditRootsReason": "Exact masterdata runtime, test, migration, validation, API-client, and UI roots needed for the reviewed R-12A breaking cutover. Customer, downstream engineering, governance tooling, package, workflow, and broad SQL roots are not approved.",
+  "decision": {
+    "allowImplementation": true,
+    "reason": "Allow Implementation for the bounded R-12A product semantics and option-set/value destructive masterdata cutover only, after the committed-review base prerequisite is satisfied."
+  },
+  "requiredFiles": [
+    "request.md",
+    "context.md",
+    "product-review.md",
+    "architecture-review.md",
+    "backend-review.md",
+    "frontend-review.md",
+    "qa-review.md",
+    "risk-register.md",
+    "decision.md",
+    "review.json"
+  ]
+}

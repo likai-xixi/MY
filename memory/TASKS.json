@@ -465,6 +465,34 @@
       "latestChange": "CR-20260714T013244Z-change",
       "handoverRequired": true,
       "updatedAt": "2026-07-14"
+    },
+    {
+      "id": "TASK-0012",
+      "feature": "masterdata",
+      "title": "Execute R-12A product semantics and option-set migration",
+      "status": "in_progress",
+      "owner": "Codex",
+      "priority": "high",
+      "statusReason": "R-12A has an approved five-role review and deterministic Strategy A, but implementation requires a user-authorized review-only base commit under the repository anti-self-approval gate.",
+      "nextStep": "Wait for explicit review-only commit authorization; then refresh impact.baseRevision and implement only the approved R-12A masterdata slice.",
+      "blockedBy": [
+        "review-only-base-commit-authorization"
+      ],
+      "verification": [
+        "R-11 commit/push/post-push handover and successful scaffold-ci run 29745362302 reconfirmed",
+        "R-12A review RV-20260720T134134Z-r-12a-option-set-option-value-masterdata contains Allow Implementation for the bounded design",
+        "Read-only my_ry_vue_runtime inventory records 4 old sets, 2 old values, and 2 product-model development rows",
+        "Strategy A preserves rows and explicitly maps four old sets to SINGLE",
+        "npm run check:review passed",
+        "npm run check:file-weight passed",
+        "git diff --check passed",
+        "R-12A business runtime and acceptance remain not-run",
+        "[not-run] npm run check for R-12A business implementation closeout"
+      ],
+      "latestSession": "memory/sessions/2026-07-20-r-12a-pre-review.md",
+      "latestChange": "CR-20260720T134007Z-change",
+      "handoverRequired": true,
+      "updatedAt": "2026-07-20"
     }
   ]
 }
