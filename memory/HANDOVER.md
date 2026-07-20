@@ -2,7 +2,7 @@
 
 ## Summary
 
-[local] Current change `CR-20260720T115859Z-r-11-engineering-core-roadmap-rebaseline` replaces the future architecture vocabulary without touching business runtime. The authoritative package is `ai/contracts/engineering-core.*`.
+[local] Current evidence-only change `CR-20260720T131603Z-r-11-post-push-handover-sync` records the completed publication of `CR-20260720T115859Z-r-11-engineering-core-roadmap-rebaseline` without touching business runtime. The authoritative package remains `ai/contracts/engineering-core.*`.
 
 Product model and process plan/version are separate. Sales-option category/value is replaced in the target design by option-set/option-value. Field definitions have one `SALES`/`TECH`/`SYSTEM` owner and schemes have immutable versions. Calculation uses canonical input plus generic decomposition nodes. The trace chain is `OrderVersion -> TechnicalVersion -> CalculationSnapshot -> TechnicalReleasePackage -> ProductionReleaseVersion`.
 
@@ -13,6 +13,16 @@ Product model and process plan/version are separate. Sales-option category/value
 - `engineeringCoreReady`: `blocked`.
 - `engineering-core-ready`: incomplete.
 - `beforeSalesOrder`: `blocked` and now requires `engineering-core-ready`.
+
+## Published Evidence
+
+- [local] R-11 commit `5726bdb8d76cfdd64646ac8fbc16a7cc401d096e`: `governance: rebaseline engineering core roadmap`.
+- [local] Direct push to `origin/master` succeeded.
+- [ci] GitHub Actions workflow `scaffold-ci`, run `29745362302`, completed with overall `success` for head SHA `5726bdb8d76cfdd64646ac8fbc16a7cc401d096e`.
+- [ci] `governance` job `88361869178`: `success`.
+- [ci] `backend-tests` job `88361869291`: `success`; this is the current workflow's backend Maven verification job.
+- [ci] `frontend-build` job `88361869182`: `success`.
+- [local] Clean-worktree `npm run check:after-push`: `pass`.
 
 ## Migration And Golden Baseline
 
@@ -33,68 +43,22 @@ Product model and process plan/version are separate. Sales-option category/value
 
 ## Changed Files
 
-- `ai/changes/CR-20260720T115859Z-r-11-engineering-core-roadmap-rebaseline/changed-files.json`
 - `ai/changes/CR-20260720T115859Z-r-11-engineering-core-roadmap-rebaseline/handover.md`
-- `ai/changes/CR-20260720T115859Z-r-11-engineering-core-roadmap-rebaseline/impact.json`
-- `ai/changes/CR-20260720T115859Z-r-11-engineering-core-roadmap-rebaseline/plan.md`
-- `ai/changes/CR-20260720T115859Z-r-11-engineering-core-roadmap-rebaseline/request.md`
-- `ai/changes/CR-20260720T115859Z-r-11-engineering-core-roadmap-rebaseline/rule-preflight.md`
 - `ai/changes/CR-20260720T115859Z-r-11-engineering-core-roadmap-rebaseline/verification.md`
+- `ai/changes/CR-20260720T131603Z-r-11-post-push-handover-sync/changed-files.json`
+- `ai/changes/CR-20260720T131603Z-r-11-post-push-handover-sync/handover.md`
+- `ai/changes/CR-20260720T131603Z-r-11-post-push-handover-sync/impact.json`
+- `ai/changes/CR-20260720T131603Z-r-11-post-push-handover-sync/plan.md`
+- `ai/changes/CR-20260720T131603Z-r-11-post-push-handover-sync/request.md`
+- `ai/changes/CR-20260720T131603Z-r-11-post-push-handover-sync/verification.md`
 - `ai/changes/CURRENT_CHANGE.json`
 - `ai/context/current-context.json`
 - `ai/context/current-context.md`
-- `ai/contracts/engineering-core.calculation-io.md`
-- `ai/contracts/engineering-core.contract-test-matrix.md`
-- `ai/contracts/engineering-core.domain.md`
-- `ai/contracts/engineering-core.golden-samples.md`
-- `ai/contracts/engineering-core.index.md`
-- `ai/contracts/engineering-core.migration-plan.md`
-- `ai/contracts/engineering-core.version-release.md`
-- `ai/contracts/masterdata.contract-test-matrix.md`
-- `ai/contracts/masterdata.field-library.md`
-- `ai/contracts/masterdata.migration-plan.md`
-- `ai/contracts/masterdata.option-schema.md`
-- `ai/contracts/masterdata.process.md`
-- `ai/contracts/masterdata.product.md`
-- `ai/contracts/masterdata.sales-option.md`
-- `ai/contracts/masterdata.snapshot-versioning.md`
-- `ai/contracts/rule.formula-group.md`
-- `ai/contracts/rule.formula-variable.md`
-- `ai/contracts/rule.glass-rule.md`
-- `ai/contracts/rule.offset-rule.md`
-- `ai/contracts/rule.process-calculation.md`
-- `ai/contracts/tech-review.boundary.md`
-- `ai/contracts/tech.calculation-snapshot.md`
-- `ai/contracts/tech.decomposition-template.md`
-- `ai/contracts/tech.part-template.md`
-- `ai/registry/rule-objects.json`
-- `ai/reviews/RV-20260720T120106Z-r-11-engineering-core-roadmap-rebaseline/architecture-review.md`
-- `ai/reviews/RV-20260720T120106Z-r-11-engineering-core-roadmap-rebaseline/backend-review.md`
-- `ai/reviews/RV-20260720T120106Z-r-11-engineering-core-roadmap-rebaseline/context.md`
-- `ai/reviews/RV-20260720T120106Z-r-11-engineering-core-roadmap-rebaseline/decision.md`
-- `ai/reviews/RV-20260720T120106Z-r-11-engineering-core-roadmap-rebaseline/frontend-review.md`
-- `ai/reviews/RV-20260720T120106Z-r-11-engineering-core-roadmap-rebaseline/product-review.md`
-- `ai/reviews/RV-20260720T120106Z-r-11-engineering-core-roadmap-rebaseline/qa-review.md`
-- `ai/reviews/RV-20260720T120106Z-r-11-engineering-core-roadmap-rebaseline/request.md`
-- `ai/reviews/RV-20260720T120106Z-r-11-engineering-core-roadmap-rebaseline/review.json`
-- `ai/reviews/RV-20260720T120106Z-r-11-engineering-core-roadmap-rebaseline/risk-register.md`
-- `ai/roadmap/BUSINESS_ROADMAP.md`
-- `ai/roadmap/GOVERNANCE_ROADMAP.md`
-- `ai/roadmap/enhancement-backlog.json`
-- `ai/roadmap/module-evolution/engineering-core.md`
-- `ai/roadmap/module-evolution/production.md`
-- `ai/roadmap/module-evolution/sales-order.md`
-- `ai/roadmap/phase-gates.json`
-- `ai/rule-proposals/2026-07-20-r-11-engineering-core-roadmap-rebaseline.json`
-- `features/masterdata.md`
 - `memory/CHANGELOG.md`
 - `memory/HANDOVER.md`
 - `memory/PROJECT_STATE.md`
 - `memory/TASKS.json`
 - `memory/sessions/2026-07-20-r-11-engineering-core-roadmap-rebaseline.md`
-- `tests/engineering-core-roadmap.test.js`
-- `tools/phase-gate-checker.js`
-- `tools/roadmap-checker.js`
 
 ## Commands
 
@@ -107,13 +71,19 @@ Product model and process plan/version are separate. Sales-option category/value
 - [local] focused three-file regression 48/48
 - [local] full `npm run check` 486/486
 - [local] finalization, closeout, `git diff --check`, and exact scope/ledger audit
+- [local] R-11 commit and direct push to `origin/master`
+- [ci] `gh run view 29745362302` confirmed the real successful workflow and all three job conclusions
+- [local] clean-worktree `npm run check:after-push` passed
+- [local] evidence-only sync full check 486/486, closeout, diff, and exact 16-file governance-only audit passed
 
 ## Verification
 
 - [local] Contracts, review, gate dependency, blocker status, rule ownership, and focused tests are verified.
 - [local] Full governance/regression check passes 486/486; exact scope audit reports 62 changed files, zero outside/forbidden roots, and zero ledger mismatch.
+- [ci] Published R-11 SHA `5726bdb8d76cfdd64646ac8fbc16a7cc401d096e` passed `scaffold-ci` run `29745362302`; governance, backend-tests, and frontend-build all succeeded.
+- [local] `CR-20260720T131603Z-r-11-post-push-handover-sync` passes the full governance gate with zero forbidden/runtime path changes.
 - [not-run] Java/Vue/SQL/API/browser/database, formula, calculation engine, DXF, production, sales-order, runtime migration, and signed golden execution.
-- [not-run] No commit, push, release, or deployment was requested or performed.
+- [not-run] No release deployment or business runtime rollout was requested or performed.
 
 ## Traceability
 
@@ -131,4 +101,4 @@ Product model and process plan/version are separate. Sales-option category/value
 
 ## Next Actions
 
-- Finish R-11 evidence only, then stop. R-12A requires a new change and a review already committed at its base revision. Do not start sales-order runtime.
+- Finish and publish only the evidence sync `CR-20260720T131603Z-r-11-post-push-handover-sync`, prove local/remote alignment and a clean worktree, then stop. R-12A requires a separate explicit request, new change, and approved review. Do not start sales-order runtime.

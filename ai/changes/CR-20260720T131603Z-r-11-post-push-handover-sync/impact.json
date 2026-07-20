@@ -1,0 +1,91 @@
+{
+  "schemaVersion": 1,
+  "mode": "rule-change",
+  "changeType": "governance/rule-change",
+  "baseRevision": "5726bdb8d76cfdd64646ac8fbc16a7cc401d096e",
+  "feature": {
+    "id": "platform",
+    "name": "平台底座治理",
+    "status": "active"
+  },
+  "summary": "Record the real R-11 commit, origin/master push, GitHub Actions run 29745362302, and clean-worktree after-push result in the R-11 change evidence, current context, and durable project handover without starting R-12A or editing business runtime.",
+  "affected": {
+    "publishedChangeEvidence": [
+      "ai/changes/CR-20260720T115859Z-r-11-engineering-core-roadmap-rebaseline/handover.md",
+      "ai/changes/CR-20260720T115859Z-r-11-engineering-core-roadmap-rebaseline/verification.md"
+    ],
+    "context": [
+      "ai/context/current-context.md",
+      "ai/context/current-context.json"
+    ],
+    "memory": [
+      "memory/HANDOVER.md",
+      "memory/PROJECT_STATE.md",
+      "memory/CHANGELOG.md",
+      "memory/TASKS.json",
+      "memory/sessions/2026-07-20-r-11-engineering-core-roadmap-rebaseline.md"
+    ],
+    "changeRecord": [
+      "ai/changes/CR-20260720T131603Z-r-11-post-push-handover-sync"
+    ]
+  },
+  "allowedEditRoots": [
+    "ai/changes/CR-20260720T115859Z-r-11-engineering-core-roadmap-rebaseline/handover.md",
+    "ai/changes/CR-20260720T115859Z-r-11-engineering-core-roadmap-rebaseline/verification.md",
+    "ai/changes/CR-20260720T131603Z-r-11-post-push-handover-sync",
+    "ai/changes/CURRENT_CHANGE.json",
+    "ai/context/current-context.md",
+    "ai/context/current-context.json",
+    "memory/HANDOVER.md",
+    "memory/PROJECT_STATE.md",
+    "memory/CHANGELOG.md",
+    "memory/TASKS.json",
+    "memory/sessions/2026-07-20-r-11-engineering-core-roadmap-rebaseline.md"
+  ],
+  "forbiddenEditRoots": [
+    "package.json",
+    "package-lock.json",
+    ".github/workflows",
+    "scripts",
+    "tools",
+    "tests",
+    "ai/contracts",
+    "ai/roadmap",
+    "ai/registry",
+    "ai/rules",
+    "graph",
+    "backend",
+    "frontend",
+    "ruoyi-admin",
+    "ruoyi-framework",
+    "ruoyi-business",
+    "ruoyi-system",
+    "ruoyi-common",
+    "ruoyi-generator",
+    "ruoyi-quartz",
+    "ruoyi-ui",
+    "sql"
+  ],
+  "blockers": [],
+  "nonGoals": [
+    "No R-12A change, design expansion, or implementation.",
+    "No field-definition, process-scheme, sales-order, formula, production, DXF, Java, Vue, API, SQL, route, permission, database, or other business runtime change.",
+    "No change to engineeringCoreReady or beforeSalesOrder blocked state.",
+    "No CI workflow, checker, test, package, rule, roadmap, contract, or graph change."
+  ],
+  "requiredCommands": [
+    "npm run resume",
+    "npm run check:after-push",
+    "gh run view 29745362302 --json databaseId,workflowName,headSha,status,conclusion,url,jobs",
+    "npm run context:build -- platform",
+    "npm run finalize:change -- --summary \"Sync R-11 post-push handover\"",
+    "npm run check",
+    "npm run close:change",
+    "git diff --check",
+    "exact governance-only and forbidden-runtime root audit"
+  ],
+  "noCustomerRuntimeChange": true,
+  "noSalesOrderImplementation": true,
+  "noR12AImplementation": true,
+  "noBusinessDatabaseStructureChange": true
+}

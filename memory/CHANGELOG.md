@@ -781,3 +781,11 @@
 - Added blocked `engineeringCoreReady`; `beforeSalesOrder` now requires incomplete `engineering-core-ready`.
 - Added focused phase/roadmap contract tests without Java, Vue, SQL, API, page, route, permission, database, sales-order, production, formula, calculation-engine, or DXF runtime.
 - Feature: `platform`.
+
+## 2026-07-20 - R-11 post-push handover sync
+
+- Change: `ai/changes/CR-20260720T131603Z-r-11-post-push-handover-sync`.
+- Recorded R-11 commit `5726bdb8d76cfdd64646ac8fbc16a7cc401d096e`, direct `origin/master` push, and GitHub Actions `scaffold-ci` run `29745362302` with overall `success`.
+- Recorded successful `governance`, `backend-tests`, and `frontend-build` jobs plus the clean-worktree `check:after-push` pass.
+- Keeps `engineeringCoreReady` and `beforeSalesOrder` blocked and changes no R-12A, Java, Vue, API, SQL, runtime, contract, roadmap, graph, test, checker, package, or workflow file.
+- Feature: `platform`.

@@ -118,6 +118,17 @@ Review `RV-20260720T120106Z-r-11-engineering-core-roadmap-rebaseline` contains `
 - [local] `git diff --check`
 - [local] exact allowed/forbidden root and changed-file ledger audit
 
+## Published Evidence
+
+- [local] Commit `5726bdb8d76cfdd64646ac8fbc16a7cc401d096e`: `governance: rebaseline engineering core roadmap`.
+- [local] Direct push to `origin/master` succeeded.
+- [ci] GitHub Actions workflow `scaffold-ci`, run `29745362302`, head SHA `5726bdb8d76cfdd64646ac8fbc16a7cc401d096e`, overall conclusion `success`.
+- [ci] `governance` job `88361869178`: `success`.
+- [ci] `backend-tests` job `88361869291`: `success`; this is the current workflow's backend Maven verification job.
+- [ci] `frontend-build` job `88361869182`: `success`.
+- [local] Clean-worktree `npm run check:after-push`: `pass`.
+- [local] Publication evidence synchronized by `CR-20260720T131603Z-r-11-post-push-handover-sync`.
+
 ## Risks
 
 - Current R-10 runtime still uses the old product-model display alias, sales-option resources, and generic CRUD until R-12A executes the destructive cutover.
@@ -126,4 +137,4 @@ Review `RV-20260720T120106Z-r-11-engineering-core-roadmap-rebaseline` contains `
 
 ## Next Actions
 
-Finish R-11 evidence only. The first later runtime slice is R-12A destructive catalog/option migration under a new change and a review package already committed at its base revision. Do not start sales-order runtime.
+R-11 is published and its real CI evidence is synchronized. Stop here. R-12A may start only after a separate explicit request, new change record, and approved review at that change's base revision. Do not start sales-order runtime.

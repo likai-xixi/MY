@@ -1,30 +1,21 @@
 # Current Context
 
 Current feature: `platform`
-Current change: `CR-20260720T115859Z-r-11-engineering-core-roadmap-rebaseline`
+Current change: `CR-20260720T131603Z-r-11-post-push-handover-sync`
 Repository: RuoYi + Vue3 + Codex Auto Dev OS
 Profile: adapter `ruoyi`, locked `true`
 
 ## Allowed Edit Roots
 
-- `ai/contracts`
-- `ai/roadmap`
-- `ai/registry/rule-objects.json`
-- `ai/rule-proposals/2026-07-20-r-11-engineering-core-roadmap-rebaseline.json`
-- `ai/reviews`
-- `tools/phase-gate-checker.js`
-- `tools/roadmap-checker.js`
-- `tests/engineering-core-roadmap.test.js`
-- `tests/governance-sales-order-handoff-gate.test.js`
-- `tests/rule-object-governance.test.js`
-- `features/masterdata.md`
-- `ai/changes/CR-20260720T115859Z-r-11-engineering-core-roadmap-rebaseline`
+- `ai/changes/CR-20260720T115859Z-r-11-engineering-core-roadmap-rebaseline/handover.md`
+- `ai/changes/CR-20260720T115859Z-r-11-engineering-core-roadmap-rebaseline/verification.md`
+- `ai/changes/CR-20260720T131603Z-r-11-post-push-handover-sync`
 - `ai/changes/CURRENT_CHANGE.json`
-- `ai/context/current-context.json`
 - `ai/context/current-context.md`
-- `memory/CHANGELOG.md`
+- `ai/context/current-context.json`
 - `memory/HANDOVER.md`
 - `memory/PROJECT_STATE.md`
+- `memory/CHANGELOG.md`
 - `memory/TASKS.json`
 - `memory/sessions/2026-07-20-r-11-engineering-core-roadmap-rebaseline.md`
 
@@ -34,6 +25,11 @@ Profile: adapter `ruoyi`, locked `true`
 - `package-lock.json`
 - `.github/workflows`
 - `scripts`
+- `tools`
+- `tests`
+- `ai/contracts`
+- `ai/roadmap`
+- `ai/registry`
 - `ai/rules`
 - `graph`
 - `backend`
@@ -61,9 +57,9 @@ Profile: adapter `ruoyi`, locked `true`
 - `ai/roadmap/phase-gates.json` - beforeSalesOrder gate state.
 - `ai/roadmap/refactor-debt.json` - Known debt affecting sales-order handoff.
 - `ai/roadmap/enhancement-backlog.json` - Governance backlog and required/deferred evidence.
-- `ai/changes/CR-20260720T115859Z-r-11-engineering-core-roadmap-rebaseline/impact.json` - Current change allowed and forbidden edit roots.
-- `ai/changes/CR-20260720T115859Z-r-11-engineering-core-roadmap-rebaseline/plan.md` - Current change execution plan.
-- `ai/changes/CR-20260720T115859Z-r-11-engineering-core-roadmap-rebaseline/verification.md` - Current change verification evidence.
+- `ai/changes/CR-20260720T131603Z-r-11-post-push-handover-sync/impact.json` - Current change allowed and forbidden edit roots.
+- `ai/changes/CR-20260720T131603Z-r-11-post-push-handover-sync/plan.md` - Current change execution plan.
+- `ai/changes/CR-20260720T131603Z-r-11-post-push-handover-sync/verification.md` - Current change verification evidence.
 
 ## Must Not Break
 
@@ -126,17 +122,14 @@ Deferred:
 ## Planned Verification Commands
 
 - `npm run resume`
+- `npm run check:after-push`
+- `gh run view 29745362302 --json databaseId,workflowName,headSha,status,conclusion,url,jobs`
 - `npm run context:build -- platform`
-- `npm run review:feature -- <R-11 pre-review request> --feature platform`
-- `npm run rule:preflight -- before-sales-order-phase-gate`
-- `node --test tests/engineering-core-roadmap.test.js tests/governance-sales-order-handoff-gate.test.js tests/rule-object-governance.test.js`
-- `npm run check:phase-gate`
-- `npm run check:roadmap`
-- `npm run finalize:change`
+- `npm run finalize:change -- --summary "Sync R-11 post-push handover"`
 - `npm run check`
 - `npm run close:change`
 - `git diff --check`
-- `exact allowed and forbidden root audit`
+- `exact governance-only and forbidden-runtime root audit`
 
 ## Next Steps
 

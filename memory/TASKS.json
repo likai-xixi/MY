@@ -8,14 +8,18 @@
       "status": "in_progress",
       "owner": "Codex",
       "priority": "high",
-      "statusReason": "R-11 engineering-core roadmap rebaseline has an approved governance-only multi-role review, authoritative product/process/option/field/calculation/version/release contracts, a destructive migration plan, two registered 9CM golden scenarios, and a new engineeringCoreReady dependency. Focused tests and phase/roadmap/rule/review checks pass. Runtime migration and signed golden execution remain unimplemented, so engineeringCoreReady and beforeSalesOrder remain blocked.",
-      "nextStep": "Finish R-11 finalization, full governance, closeout, diff, and forbidden-runtime audits. Then stop. Start R-12A only in a new approved change; do not start sales-order, production, formula, calculation-engine, or DXF runtime.",
+      "statusReason": "R-11 engineering-core roadmap rebaseline is committed, pushed, and verified by real GitHub Actions run 29745362302. Its governance, backend-tests, and frontend-build jobs all succeeded, and the clean-worktree after-push check passed. Runtime migration and signed golden execution remain unimplemented, so engineeringCoreReady and beforeSalesOrder remain blocked.",
+      "nextStep": "Finish and publish only CR-20260720T131603Z-r-11-post-push-handover-sync, prove local master equals origin/master with a clean worktree, then stop. Do not start R-12A until a separate explicit request, new change, and approved review; do not start sales-order, production, formula, calculation-engine, or DXF runtime.",
       "blockedBy": [],
       "verification": [
         "CR-20260720T115859Z-r-11-engineering-core-roadmap-rebaseline review RV-20260720T120106Z-r-11-engineering-core-roadmap-rebaseline allows only governance/contract roots and excludes runtime",
         "R-11 focused engineering-core roadmap tests pass 5/5 after an expected red phase with three gate failures",
         "R-11 rule preflight, check:phase-gate, check:roadmap, check:rule-objects, and check:review pass",
         "R-11 leaves engineeringCoreReady and beforeSalesOrder blocked; runtime migration and signed golden fixtures are not-run",
+        "R-11 commit 5726bdb8d76cfdd64646ac8fbc16a7cc401d096e with message governance: rebaseline engineering core roadmap is published to origin/master",
+        "R-11 GitHub Actions scaffold-ci run 29745362302 completed success; governance job 88361869178, backend-tests job 88361869291, and frontend-build job 88361869182 all concluded success",
+        "R-11 clean-worktree npm run check:after-push returned pass before CR-20260720T131603Z-r-11-post-push-handover-sync was opened",
+        "CR-20260720T131603Z-r-11-post-push-handover-sync full npm run check passes 486/486; close, diff, and exact 16-file governance-only audit pass with zero forbidden/runtime paths",
         "CR-20260714T225634Z-github-actions-node24-and-cache-warning-cleanup focused workflow regression passes 43/43, CI declaration and immutable-action lint pass, and the complete governance gate passes 481/481",
         "CR-20260714T225634Z-github-actions-node24-and-cache-warning-cleanup pins checkout v5.0.1, setup-node v5.0.0, and setup-java v5.5.0 at verified Node 24 runtime SHAs while retaining project Node 20, both JDK 17 setups, backend Maven cache, and all CI commands",
         "CR-20260714T114811Z-frontend-ci-and-esm-scanner-hardening portable release-verifier and anti-false-green coverage passes 94/94 across fixed stage order, configured/fallback Maven resolution, no retry after reactor failure, and every fail-fast boundary",
@@ -224,7 +228,7 @@
       "latestSession": "memory/sessions/2026-07-20-r-11-engineering-core-roadmap-rebaseline.md",
       "handoverRequired": true,
       "updatedAt": "2026-07-20",
-      "latestChange": "CR-20260720T115859Z-r-11-engineering-core-roadmap-rebaseline"
+      "latestChange": "CR-20260720T131603Z-r-11-post-push-handover-sync"
     },
     {
       "id": "TASK-CUSTOMER",

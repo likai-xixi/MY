@@ -6,7 +6,7 @@
 
 ## Status
 
-`verified-local`
+`verified`
 
 ## Goal
 
@@ -36,6 +36,10 @@ Separate product, process, option, field, calculation, version, and release sema
 - [local] `npm run check` 486/486
 - [local] `npm run close:change`
 - [local] `git diff --check` and exact scope/ledger audit
+- [local] commit `5726bdb8d76cfdd64646ac8fbc16a7cc401d096e` with message `governance: rebaseline engineering core roadmap`
+- [local] direct push to `origin/master`
+- [ci] `scaffold-ci` run `29745362302` completed `success`; `governance`, `backend-tests`, and `frontend-build` all concluded `success`
+- [local] clean-worktree `npm run check:after-push` returned `pass`
 
 ## Verification
 
@@ -43,6 +47,7 @@ Separate product, process, option, field, calculation, version, and release sema
 - [local] Focused tests prove the aggregate gate dependency, sales-order blocking, roadmap item requirements, requested contract objects, current migration surfaces, both 9CM scenarios, and formula/DXF reverse assertion.
 - [local] `engineeringCoreReady` and `beforeSalesOrder` remain blocked.
 - [local] Exact audit covers 62 changed files with zero outside/forbidden roots and zero changed-file ledger mismatch.
+- [ci] The published R-11 SHA is verified by real GitHub Actions run `29745362302`.
 - [not-run] Runtime migration, API/browser/database execution, formula/calculation/DXF runtime, production, sales-order, and signed numeric golden fixtures.
 
 ## Risks
@@ -53,4 +58,4 @@ Separate product, process, option, field, calculation, version, and release sema
 
 ## Next Entry Point
 
-Complete R-11 evidence only. After this batch, open a new committed-base-reviewed R-12A change for destructive catalog/option migration. Do not start sales-order runtime.
+Complete and publish only `CR-20260720T131603Z-r-11-post-push-handover-sync`, verify a clean synchronized `master`, then stop. R-12A may start only after a separate explicit request, new change, and approved review. Do not start sales-order runtime.
