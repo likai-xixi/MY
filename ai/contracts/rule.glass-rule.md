@@ -1,5 +1,7 @@
 # Rule Glass Rule Contract
 
+R-11 note: future glass logic is a versioned calculation policy/adapter input. Its results are generic decomposition nodes and keyed values, not fixed order/technical columns.
+
 Change: `R-09 configurable modeling contract package`
 Status: contract-only.
 

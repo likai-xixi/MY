@@ -1,5 +1,7 @@
 # Rule Offset Rule Contract
 
+R-11 note: future offset logic is a versioned calculation policy/adapter input. Its results are captured in calculation trace/output without changing order or technical-version schemas.
+
 Change: `R-09 configurable modeling contract package`
 Status: contract-only.
 

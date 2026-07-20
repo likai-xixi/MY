@@ -1,6 +1,33 @@
 {
   "schemaVersion": 1,
   "gates": {
+    "engineeringCoreReady": {
+      "title": "Engineering core ready for downstream business implementation",
+      "status": "blocked",
+      "allowsGovernanceRuleChange": true,
+      "blocksImplementationOf": ["sales-order", "production"],
+      "required": [
+        "engineering-core-contracts",
+        "engineering-core-runtime-migration",
+        "field-library-ready",
+        "process-plan-ready",
+        "calculation-io-ready",
+        "version-release-ready",
+        "golden-sample-baseline",
+        "engineering-core-reverse-review"
+      ],
+      "deferred": [
+        {
+          "id": "formula-engine-runtime",
+          "reason": "Formula engines are adapters behind the canonical calculation I/O and are not required to freeze the order or technical model."
+        },
+        {
+          "id": "dxf-runtime",
+          "reason": "DXF generation consumes geometry requests from a technical release package and may be implemented after the release interface is stable."
+        }
+      ],
+      "evidence": "R-11 approves only the architecture contracts, destructive migration plan, phase-gate dependency, and first golden-sample scenarios. Runtime migration, calculation execution, release persistence, and signed golden results are still incomplete."
+    },
     "beforeSalesOrder": {
       "title": "Before sales-order implementation",
       "status": "blocked",
@@ -16,6 +43,7 @@
         "roadmap-check",
         "phase-gate-check",
         "refactor-debt-check",
+        "engineering-core-ready",
         "snapshot-contract",
         "state-machine-contract",
         "fund-boundary-contract"
@@ -46,7 +74,7 @@
           "reason": "Requires approved UI screens and browser acceptance path."
         }
       ],
-      "evidence": "Business implementation remains blocked until required contract items are completed. Real GitHub Actions now runs locked Node, Maven, integration, frontend test, dependency audit, and production-build verification; CI coverage is guarded by tools/ci-coverage-declaration-checker.js. The phase-gate checker covers canonical sales-order roots, common sales-order, salesOrder, sales_order, and sales/order naming variants, SQL create table sales_order / sales_order_item, Vue/API/menu/permission sales-order runtime content, and bypass-capable RuoYi runtime roots including ruoyi-system, ruoyi-generator, ruoyi-quartz, ruoyi-admin SQL, ruoyi-ui router, permission.js, and store."
+      "evidence": "Business implementation remains blocked until required contract items are completed, including the aggregate engineering-core-ready item. R-11 does not complete that item. The phase-gate checker covers canonical sales-order roots, common naming variants, SQL table creation, Vue/API/menu/permission content, and bypass-capable RuoYi runtime roots."
     },
     "beforeDelivery": {
       "title": "Before delivery implementation",

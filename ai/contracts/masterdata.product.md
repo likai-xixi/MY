@@ -1,31 +1,13 @@
 # Masterdata Product Contract
 
-Change: `R-09 configurable modeling contract package`
-Status: contract-only. This CR creates no runtime code, SQL migration, sales-order artifact, customer runtime change, idempotency runtime change, security config change, package script change, or tool change.
+Status: superseded for future-state design by `engineering-core.index.md` and `engineering-core.domain.md` in R-11.
 
-## Purpose
+## Current Decision
 
-Product identity must be configurable. The system is not a fixed door-only ERP.
+- Product category, series, and product model remain configurable catalog identities.
+- Product model means what is sold/configured. It must never be displayed or persisted as a process/craft plan.
+- Process differences belong to separate `ProcessPlan` and immutable `ProcessPlanVersion` objects.
+- Product-to-process applicability/default selection is an explicit versioned binding.
+- Future orders snapshot product identity and bind an exact process-plan version through their technical/version chain.
 
-## Hard Rules
-
-- Product category, product series, and product model are user-maintained master data.
-- Product category, product series, and product model are all configured by users. They must not be represented by one Java class, Java enum, Vue fixed branch, SQL table, or scanner rule per product family.
-- `门`, `门匾`, `栅栏`, `护栏`, `钣金件`, `异形件`, and `工程定制` are sample configurable data, not fixed system models.
-- `庭院门`, `入户门`, `玻璃拼接门`, `整拼门`, `铝卡门`, and `型材门` are sample series/model data, not hard-coded enum branches.
-- Preset categories, series, and models may be delivered later as seed/configuration data, but they remain editable configuration data rather than compiled product models.
-- Future order entry and technical review must read product definitions from configuration.
-
-## Future Conceptual Fields
-
-- stable code
-- display name
-- hierarchy parent
-- category / series / model level
-- status
-- sort order
-- remark
-
-## Snapshot Rule
-
-Future orders and technical results must preserve product category, series, and model code/name snapshots so history does not change when master data is renamed.
+The as-is R-10 `masterdata_product_model` table and `product-model` resource are documented in `masterdata.db.md` and `masterdata.api.md` until the destructive migration. The UI alias `工艺型号` is migration debt and must be removed without compatibility.

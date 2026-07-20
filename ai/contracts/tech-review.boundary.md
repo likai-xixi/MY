@@ -1,42 +1,31 @@
-# Tech Review Boundary Contract
+# Technical Review Boundary Contract
 
-Change: `R-09 configurable modeling contract package`
-Status: contract-only.
+Change: `R-11 engineering-core roadmap rebaseline`
+Status: approved boundary; runtime not implemented.
 
-## Purpose
+## Responsibility
 
-技术审核边界用于区分销售记录和工厂技术拆解。
+- Sales records and freezes customer/commercial intent in an `OrderVersion`.
+- Technical work selects an exact `ProcessPlanVersion`, writes `TECH` fields, calculates, reviews, and freezes a `TechnicalVersion`.
+- Calculation creates immutable `CalculationSnapshot` evidence.
+- Approval/release creates a `TechnicalReleasePackage`.
+- Production later consumes a `ProductionReleaseVersion` derived from that package.
 
-## Hard Rules
+Technical work may read `SALES` fields but does not overwrite the frozen order version. A changed customer requirement creates a new order version; a changed engineering decision creates a new technical version.
 
-- 销售订单记录客户要什么。
-- 技术审核决定工厂怎么做。
-- 技术阶段通过技术拆解模板、零件模板、公式组和规则生成零件结果。
-- 技术结果必须保存计算快照。
-- 技术人员可以在未来流程中人工确认或驳回，但不能破坏快照追溯。
+## Roadmap Rebaseline
 
-## Boundary
+1. R-11: architecture/contracts/roadmap/gate rebaseline only.
+2. R-12A: destructive catalog and option-set migration.
+3. R-12B: field library, ownership, scheme/version runtime.
+4. R-12C: process plan/version and product applicability runtime.
+5. R-12D: canonical calculation I/O, snapshot persistence, and signed golden runner.
+6. R-12E: technical/production release artifact command boundaries.
+7. `engineering-core-ready`: all required slices and both 9CM golden samples pass.
+8. Sales-order runtime planning may begin only after `beforeSalesOrder`, which depends on `engineering-core-ready` plus its other business contracts.
 
-- R-09 不创建销售订单 runtime。
-- R-09 不创建技术审核 runtime。
-- R-09 不创建图纸任务 runtime。
-- R-09 只定义未来边界。
-- R-09 不创建 Java service/controller/mapper/domain。
-- R-09 不创建 Vue 页面或 API client。
-- R-09 不创建 SQL migration。
-- R-09 不修改 customer runtime、idempotency runtime、安全配置、`package.json`、`tools/` 或 `.github/workflows`。
+Formula engines and DXF generation are later adapters. Their absence does not permit bypassing calculation/release interfaces, and adding them later must not rewrite order or technical-version models.
 
-## Roadmap Boundary
+## R-11 Guard
 
-- R-10 只做产品/物料/配件/销售选项主数据 MVP。
-- R-11 才做销售配置工艺、字段库、字段方案、版本发布 MVP。
-- R-12 才做公式变量、公式组、工艺计算规则 MVP。
-- R-13 才做技术拆解模板、零件模板、零件计算规则 MVP。
-- R-14 才做销售订单合同包。
-- R-15 才做销售订单 MVP。
-- R-16 才做技术审核和计算快照 MVP。
-- R-17 才做图纸任务和文件归档 MVP。
-
-## Snapshot Rule
-
-未来技术审核通过时，必须保存技术版本和计算快照。
+No sales-order, technical-review, calculation-engine, production, formula, drawing, or DXF runtime is created in R-11.

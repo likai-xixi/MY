@@ -1,0 +1,51 @@
+{
+  "id": "RV-20260720T120106Z-r-11-engineering-core-roadmap-rebaseline",
+  "request": "功能预审：R-11 engineering-core roadmap rebaseline；仅审查治理、架构、合同、迁移和 phase gate，不创建运行时代码",
+  "mode": "pre-review",
+  "feature": "platform",
+  "baseRevision": "bc67c4dcd39e4bc52ed584a49328edd44026f75e",
+  "createdAt": "2026-07-20T12:01:06.180Z",
+  "status": "approved",
+  "decision": {
+    "allowImplementation": true,
+    "reason": "Allow only the R-11 governance and contract rebaseline. Runtime implementation remains outside the approved roots and requires a later committed-base review."
+  },
+  "approvedFeatures": [
+    "platform"
+  ],
+  "approvedEditRoots": [
+    "ai/contracts",
+    "ai/roadmap",
+    "ai/registry/rule-objects.json",
+    "ai/rule-proposals/2026-07-20-r-11-engineering-core-roadmap-rebaseline.json",
+    "ai/reviews/RV-20260720T120106Z-r-11-engineering-core-roadmap-rebaseline",
+    "tools/phase-gate-checker.js",
+    "tools/roadmap-checker.js",
+    "tests/engineering-core-roadmap.test.js",
+    "tests/governance-sales-order-handoff-gate.test.js",
+    "tests/rule-object-governance.test.js",
+    "features/masterdata.md",
+    "ai/changes/CR-20260720T115859Z-r-11-engineering-core-roadmap-rebaseline",
+    "ai/changes/CURRENT_CHANGE.json",
+    "ai/context/current-context.json",
+    "ai/context/current-context.md",
+    "memory/CHANGELOG.md",
+    "memory/HANDOVER.md",
+    "memory/PROJECT_STATE.md",
+    "memory/TASKS.json",
+    "memory/sessions/2026-07-20-r-11-engineering-core-roadmap-rebaseline.md"
+  ],
+  "approvedEditRootsReason": "These roots contain only contracts, roadmap/gate governance, focused gate tests, the R-11 review/change record, and resumable memory evidence. Runtime roots are intentionally excluded.",
+  "requiredFiles": [
+    "request.md",
+    "context.md",
+    "product-review.md",
+    "architecture-review.md",
+    "backend-review.md",
+    "frontend-review.md",
+    "qa-review.md",
+    "risk-register.md",
+    "decision.md",
+    "review.json"
+  ]
+}

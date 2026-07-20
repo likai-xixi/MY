@@ -773,3 +773,11 @@
 - Change: `ai/changes/CR-20260714T225634Z-github-actions-node24-and-cache-warning-cleanup`.
 - Upgrade GitHub Actions to immutable Node 24 runtime pins and remove only the unused governance Maven cache while preserving all CI coverage.
 - Feature: `platform`.
+
+## 2026-07-20 - R-11 engineering-core roadmap rebaseline
+
+- Change: `ai/changes/CR-20260720T115859Z-r-11-engineering-core-roadmap-rebaseline`.
+- Approved a governance-only five-role review and authoritative engineering-core contracts for product/process separation, option sets, field ownership/scheme versions, calculation I/O, version/release artifacts, destructive migration, and two 9CM golden scenarios.
+- Added blocked `engineeringCoreReady`; `beforeSalesOrder` now requires incomplete `engineering-core-ready`.
+- Added focused phase/roadmap contract tests without Java, Vue, SQL, API, page, route, permission, database, sales-order, production, formula, calculation-engine, or DXF runtime.
+- Feature: `platform`.

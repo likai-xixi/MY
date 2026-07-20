@@ -163,17 +163,21 @@
       "objectType": "phase-gate",
       "ownerFeature": "platform",
       "lifecycleStatus": "published",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "blockingMode": "blocking",
       "sourceContracts": [
         "AGENTS.md",
         "ai/contracts/rule-change-governance.md",
+        "ai/contracts/engineering-core.index.md",
+        "ai/contracts/engineering-core.contract-test-matrix.md",
+        "ai/reviews/RV-20260720T120106Z-r-11-engineering-core-roadmap-rebaseline/decision.md",
         "ai/roadmap/phase-gates.json",
         "ai/roadmap/enhancement-backlog.json",
         "ai/roadmap/refactor-debt.json"
       ],
       "ownedFiles": [
         "tools/phase-gate-checker.js",
+        "tools/roadmap-checker.js",
         "ai/roadmap/phase-gates.json",
         "ai/roadmap/enhancement-backlog.json",
         "ai/roadmap/refactor-debt.json"
@@ -182,6 +186,10 @@
         {
           "file": "tools/phase-gate-checker.js",
           "reason": "Platform governance checker file is intentionally outside runtime feature ownership roots."
+        },
+        {
+          "file": "tools/roadmap-checker.js",
+          "reason": "Platform roadmap checker enforces the engineering-core readiness backlog required by the phase gate."
         },
         {
           "file": "ai/roadmap/phase-gates.json",
@@ -197,11 +205,14 @@
         }
       ],
       "tests": [
+        "tests/engineering-core-roadmap.test.js",
         "tests/governance-sales-order-handoff-gate.test.js",
         "tests/rule-object-governance.test.js"
       ],
       "immutableFields": [
         "beforeSalesOrder remains blocked until required items are complete",
+        "beforeSalesOrder requires engineering-core-ready",
+        "engineeringCoreReady remains blocked until migration, version/release, golden sample, and reverse-review items are complete",
         "sales-order runtime paths are blocked before the gate is complete",
         "no parallel check:sales-order-gate script"
       ],
@@ -210,6 +221,7 @@
         "requires": [
           "rule:preflight",
           "phase-gate checker test evidence",
+          "engineering-core contract and reverse-review evidence",
           "no sales-order runtime artifact"
         ]
       },
@@ -219,13 +231,13 @@
       },
       "snapshotPolicy": {
         "strategy": "gate-state-and-backlog",
-        "evidence": "phase-gates, enhancement backlog, refactor debt, and current context must preserve blocked gate state."
+        "evidence": "phase-gates, enhancement backlog, engineering-core contracts, refactor debt, and current context must preserve both blocked aggregate gate states."
       },
       "supersedes": [],
       "supersededBy": [],
       "createdByChange": "CR-20260627T101649Z-r-09a-business-rule-object-governance-core",
-      "updatedByChange": "CR-20260627T101649Z-r-09a-business-rule-object-governance-core",
-      "notes": "R-09A strengthens the existing phase-gate checker and keeps beforeSalesOrder blocked."
+      "updatedByChange": "CR-20260720T115859Z-r-11-engineering-core-roadmap-rebaseline",
+      "notes": "R-11 adds engineeringCoreReady as the aggregate downstream dependency, keeps beforeSalesOrder blocked, and preserves one phase-gate truth source."
     }
   ]
 }

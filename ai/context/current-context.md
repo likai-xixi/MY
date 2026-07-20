@@ -1,16 +1,24 @@
 # Current Context
 
 Current feature: `platform`
-Current change: `CR-20260714T225634Z-github-actions-node24-and-cache-warning-cleanup`
+Current change: `CR-20260720T115859Z-r-11-engineering-core-roadmap-rebaseline`
 Repository: RuoYi + Vue3 + Codex Auto Dev OS
 Profile: adapter `ruoyi`, locked `true`
 
 ## Allowed Edit Roots
 
-- `.github/workflows/ci.yml`
-- `tests/ci-coverage-hardening.test.js`
-- `ai/rule-proposals/2026-07-14-github-actions-node24-and-cache-warning-cleanup.json`
-- `ai/changes/CR-20260714T225634Z-github-actions-node24-and-cache-warning-cleanup`
+- `ai/contracts`
+- `ai/roadmap`
+- `ai/registry/rule-objects.json`
+- `ai/rule-proposals/2026-07-20-r-11-engineering-core-roadmap-rebaseline.json`
+- `ai/reviews`
+- `tools/phase-gate-checker.js`
+- `tools/roadmap-checker.js`
+- `tests/engineering-core-roadmap.test.js`
+- `tests/governance-sales-order-handoff-gate.test.js`
+- `tests/rule-object-governance.test.js`
+- `features/masterdata.md`
+- `ai/changes/CR-20260720T115859Z-r-11-engineering-core-roadmap-rebaseline`
 - `ai/changes/CURRENT_CHANGE.json`
 - `ai/context/current-context.json`
 - `ai/context/current-context.md`
@@ -18,17 +26,16 @@ Profile: adapter `ruoyi`, locked `true`
 - `memory/HANDOVER.md`
 - `memory/PROJECT_STATE.md`
 - `memory/TASKS.json`
-- `memory/sessions/2026-07-15-github-actions-node24-and-cache-warning-cleanup.md`
+- `memory/sessions/2026-07-20-r-11-engineering-core-roadmap-rebaseline.md`
 
 ## Forbidden Edit Roots
 
 - `package.json`
 - `package-lock.json`
-- `tools`
+- `.github/workflows`
 - `scripts`
 - `ai/rules`
 - `graph`
-- `features`
 - `backend`
 - `frontend`
 - `ruoyi-admin`
@@ -54,9 +61,9 @@ Profile: adapter `ruoyi`, locked `true`
 - `ai/roadmap/phase-gates.json` - beforeSalesOrder gate state.
 - `ai/roadmap/refactor-debt.json` - Known debt affecting sales-order handoff.
 - `ai/roadmap/enhancement-backlog.json` - Governance backlog and required/deferred evidence.
-- `ai/changes/CR-20260714T225634Z-github-actions-node24-and-cache-warning-cleanup/impact.json` - Current change allowed and forbidden edit roots.
-- `ai/changes/CR-20260714T225634Z-github-actions-node24-and-cache-warning-cleanup/plan.md` - Current change execution plan.
-- `ai/changes/CR-20260714T225634Z-github-actions-node24-and-cache-warning-cleanup/verification.md` - Current change verification evidence.
+- `ai/changes/CR-20260720T115859Z-r-11-engineering-core-roadmap-rebaseline/impact.json` - Current change allowed and forbidden edit roots.
+- `ai/changes/CR-20260720T115859Z-r-11-engineering-core-roadmap-rebaseline/plan.md` - Current change execution plan.
+- `ai/changes/CR-20260720T115859Z-r-11-engineering-core-roadmap-rebaseline/verification.md` - Current change verification evidence.
 
 ## Must Not Break
 
@@ -76,6 +83,7 @@ Profile: adapter `ruoyi`, locked `true`
 - roadmap-check: in-progress - Keep backlog item evidence and futureAction fields non-empty.
 - phase-gate-check: in-progress - Mark beforeSalesOrder ready only after required items are completed.
 - refactor-debt-check: in-progress - Resolve or explicitly accept debt before dependent sales-order behavior is implemented.
+- engineering-core-ready: required - Mark complete only after every engineeringCoreReady.required item is complete and the gate checker passes.
 - snapshot-contract: required - Draft snapshot contract in the sales-order pre-review batch.
 - state-machine-contract: required - Draft state-machine contract in the sales-order pre-review batch.
 - fund-boundary-contract: required - Draft fund-boundary contract before order fund behavior.
@@ -94,6 +102,7 @@ Required:
 - roadmap-check
 - phase-gate-check
 - refactor-debt-check
+- engineering-core-ready
 - snapshot-contract
 - state-machine-contract
 - fund-boundary-contract
@@ -118,14 +127,16 @@ Deferred:
 
 - `npm run resume`
 - `npm run context:build -- platform`
-- `node --test tests/ci-coverage-hardening.test.js`
-- `npm run check:ci-coverage-declaration`
-- `npm run check`
+- `npm run review:feature -- <R-11 pre-review request> --feature platform`
+- `npm run rule:preflight -- before-sales-order-phase-gate`
+- `node --test tests/engineering-core-roadmap.test.js tests/governance-sales-order-handoff-gate.test.js tests/rule-object-governance.test.js`
+- `npm run check:phase-gate`
+- `npm run check:roadmap`
 - `npm run finalize:change`
+- `npm run check`
 - `npm run close:change`
 - `git diff --check`
 - `exact allowed and forbidden root audit`
-- `GitHub Actions scaffold-ci confirmation after push`
 
 ## Next Steps
 

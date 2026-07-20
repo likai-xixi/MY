@@ -1,30 +1,12 @@
 # Masterdata Sales Option Contract
 
-Change: `R-09 configurable modeling contract package`
-Status: contract-only.
+Status: superseded by the R-11 `OptionSet`/`OptionValue` contract in `engineering-core.domain.md`.
 
-## Purpose
+## Current Decision
 
-Sales options define user-selectable values for future order entry.
-
-## Hard Rules
-
-- `单开`, `对开`, `子母`, `连体子母`, `颜色`, `拉手`, `锁具`, `铰链`, `玻璃`, `表面处理`, `包装方式`, and `材料体系` are configurable option data.
-- `玻璃拼接`, `整拼`, `铝卡`, `型材`, `庭院门`, `入户门`, `发光字`, `铁艺栅栏`, and `钣金折弯` may appear as option or process-related configuration data depending on the future scheme.
-- Future order pages must not hard-code these values.
-- These values must not be encoded as Java enums, Vue fixed option arrays, SQL fixed business models, product-specific routes, or scanner exceptions.
-- Option values must be reusable across products, processes, and field schemes.
-- A product model or field scheme may restrict which option values are selectable, but that restriction must be data-driven.
-
-## Future Conceptual Fields
-
-- option category code/name
-- option value code/name
-- binding to material/accessory when needed
-- status
-- sort order
-- condition expression reference
-
-## Snapshot Rule
-
-Future orders must snapshot selected option code and display label.
+- `OptionSet` represents one reusable customer-selectable dimension and selection cardinality.
+- `OptionValue` belongs to exactly one set and preserves stable code/label snapshots.
+- A `SALES` field may read from an option set through source mode `OPTION`.
+- `TECH` and `SYSTEM` fields are not sales options, even if their values are enumerated.
+- Applicability bindings may constrain choices by product/process context without copying or re-owning values.
+- Current `sales-option-category/value` tables, resource keys, APIs, pages, and labels are replaced destructively by the migration in `engineering-core.migration-plan.md`.

@@ -1,5 +1,7 @@
 # Rule Formula Group Contract
 
+R-11 note: formula groups are future immutable adapter packages behind `engineering-core.calculation-io.md`. They must not own order/technical schemas, and this file does not authorize runtime.
+
 Change: `R-09 configurable modeling contract package`
 Status: contract-only.
 

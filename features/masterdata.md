@@ -4,90 +4,75 @@
 
 - ID: `masterdata`
 - Name: 主数据配置
+- Current runtime baseline: R-10B through R-10J
+- Future architecture authority: R-11 `ai/contracts/engineering-core.*`
 
-## Product Outcome
+## Current Runtime Truth
 
-Operators can maintain the configurable master-data base required before later sales configuration, technical decomposition, production, inventory, and finance work begins.
+The active runtime still exposes nine resources through `/business/masterdata/{resource}` and one shared CRUD implementation:
 
-## MVP Scope
+- product category, series, and model
+- material category/item
+- accessory category/item
+- sales option category/value
 
-R-10B implements only these nine maintenance objects. User-facing product labels are 产品大类, 产品系列, and 工艺型号; internal resource keys remain `product-category`, `product-series`, and `product-model`.
+It owns nine `masterdata_*` tables, the generic `MasterDataResource`/`MasterDataRecord` backend, four grouped menu wrappers, product-category hierarchy/reference/concurrency protections, generated stable codes, logical delete, and the current masterdata tests.
 
-- product category
-- product series
-- product model
-- material category
-- material item
-- accessory category
-- accessory item
-- sales option category
-- sales option value
+This as-is truth remains valid until the R-11 destructive migration is executed. It is not the approved future model.
 
-Each object exposes backend-generated stable code, display name, status, sort order, and remark. Material and accessory items also expose specification and unit. Relationship fields stay data-driven through category/series ids.
+## R-11 Future Outcome
 
-R-10D code generation format is `prefix + yyyyMM + 6 digit monthly sequence`. Prefixes are `PC`, `PS`, `PM`, `MC`, `MI`, `AC`, `AI`, `SOC`, and `SOV` for product category, product series, product model, material category, material item, accessory category, accessory item, sales option category, and sales option value respectively.
+- Product model is a product identity and is never a process/craft plan.
+- Process plan and immutable process-plan versions are separate engineering objects.
+- Sales option category/value is replaced by reusable option-set/option-value semantics.
+- Field definitions have exactly one owner: `SALES`, `TECH`, or `SYSTEM`.
+- Field schemes have immutable published versions.
+- Calculation exchanges canonical input/output documents and produces a generic decomposition node graph.
+- Order version, technical version, calculation snapshot, technical release package, and production release version are distinct artifacts.
+- Formula and DXF remain adapters behind those contracts and do not change order/technical schemas.
 
-R-10F presents product category as a tree table and limits the product category hierarchy to three levels. The backend rejects level-four categories, self-parenting, descendant-parent cycles, and deletion of a category that still has child categories.
+## Breaking Migration
 
-The current integrity hardening protects every owned masterdata reference, not only category children. Create/update locks referenced parents; delete locks normalized target IDs, checks all seven active-reference edges, and requires an exact affected-row count. Disabled references remain protected because they are still active records; logically deleted references do not block. Product-category hierarchy writes lock a permanent hidden mutex row and then the complete active tree before validation, including when no active category exists yet. Category graph traversal tracks visited ids so pre-existing cycles fail closed within bounded time, and validation SQL reports cycles/unreachable nodes and depth greater than three. A product series with active models cannot move to another category.
+The future runtime replaces old table/API/resource/page/test semantics without compatibility aliases or dual writes. Development reset is the default. In particular:
 
-R-10H keeps the same product-category business rules and improves only tree-table readability in the name column with clearer indentation, branch guidance, smaller L1/L2/L3 level tags, path tooltip hints, and controlled expansion state.
+- Remove the `工艺型号` display alias; `product-model` means `产品型号`.
+- Classify ambiguous current product-model rows before import; process-like rows are not auto-migrated as products.
+- Drop sales-option category/value semantics and rebuild them as option sets/values.
+- Retire the generic nine-resource controller/DTO/mapper/page after explicit bounded replacements are green.
+- Preserve equivalent product hierarchy, reference locking, concurrency, exact-row-count, and validation evidence.
 
-R-10I keeps the grouped menu split and adjusts product-facing display wording: 产品配置 contains 产品大类, 产品系列, and 工艺型号. 工艺型号 is still the existing `product-model` resource and `masterdata_product_model` table; formula, drawing, part template, and route runtime are deferred.
+The executable sequence and exact current-surface matrix live in `ai/contracts/engineering-core.migration-plan.md`.
 
-R-10J defines the project-level self-developed business category selection rule. In self-developed business modules, any field named 分类、上级分类、所属分类, or 父级分类 must use a tree select when the target category resource is explicitly marked as hierarchical through `treeEnabled`, `parentEnabled`, or `treeSelectEnabled`. The rule is configuration-driven, not data-driven: current rows with or without non-empty `parentId` must not cause the control type to switch unexpectedly. Tree selects default collapsed, must not use `default-expand-all`, must not configure default all-expanded keys, and show labels as code plus name. Parent-category selection must reject the current row, child rows, and descendants. When a maximum hierarchy depth exists, frontend prompts and backend validation must both remain. This rule applies to self-developed business modules and does not change RuoYi native platform screens such as system management, system departments, or system dictionaries.
+## Golden Baseline
 
-R-10J bugfix rule: tree selects must allow both parent and child nodes to be selected unless an explicit business rule disables that node. A node must not become disabled merely because it has `children`; product category parent selection is disabled only for self, descendants, or selections that would exceed the maximum hierarchy depth.
+The first two scenarios are:
 
-## Non-goals
+- `GS-9CM-SINGLE-001` — 9CM 标准单开
+- `GS-9CM-DOUBLE-GRID-SPLICE-001` — 9CM 对开/分格拼接
 
-- No sales-order runtime.
-- No field scheme or field-scheme binding.
-- No formula variables, formula groups, calculation rules, or process engines.
-- No technical decomposition templates or part templates.
-- No inventory deduction, BOM, cut-list detail, technical calculation output, production route, scanning/reporting, drawing task, shipment, finance, or receipt flow.
-- No hard-coded product-family, product-series, opening-mode, color, hardware, glass, surface-treatment, packaging, or material-system branches.
-- Opening mode, color, handle, lock, hinge, glass, surface treatment, and packaging remain sales option data, not product category hierarchy guidance.
+Both use product model `PM-DOOR-9CM` and different process plans. Numerical inputs/expected results require later business sign-off and are `[not-run]` in R-11.
+
+## Non-goals In R-11
+
+- No sales-order, production, formula, calculation-engine, DXF, or drawing runtime.
+- No Java, Vue, SQL, API client, route, permission, graph, or runtime test change.
+- No old API/table/name/data compatibility.
+- No fixed main-leaf, secondary-leaf, grid, splice, or segment database columns.
+
+## Phase Gate
+
+`engineering-core-ready` remains incomplete until the destructive runtime slices and both signed golden samples pass. `beforeSalesOrder` depends on it and remains blocked.
 
 ## Acceptance Criteria
 
-- MySQL migrations create the nine masterdata tables and RuoYi menu/permission rows.
-- Backend APIs support list, options, detail, add, edit, status change, logical delete, and export under `/business/masterdata/{resource}`.
-- RuoYi menus expose `业务管理 / 主数据配置 / 产品配置`, `物料配置`, `配件配置`, and `销售选项配置` as four grouped pages.
-- 产品配置 shows only 产品大类、产品系列、工艺型号.
-- 物料配置 shows only 物料分类、原材料档案.
-- 配件配置 shows only 配件分类、配件档案.
-- 销售选项配置 shows only 销售选项分类、销售选项值.
-- The frontend reuses the current masterdata page logic through thin grouped route wrappers and keeps `ruoyi-ui/src/api/masterdata.js` unchanged.
-- Add does not require or trust caller-entered code; the backend generates the code and retries bounded duplicate-key collisions.
-- Edit keeps the original code immutable even if the payload contains a different code.
-- The Vue page provides search, list, add without code input, edit with read-only code, status change, delete, and export for the nine resources.
-- Self-developed hierarchical category selections use a tree select by explicit target resource config, default collapsed, without `default-expand-all` or default all-expanded keys, and with code-plus-name labels.
-- Hierarchical tree selects use strict node selection so parent categories and child categories can both be chosen unless an explicit business rule disables the node.
-- 产品大类的上级分类、产品系列的所属产品大类, and 工艺型号的所属产品大类 use tree select because `product-category` is hierarchical.
-- 原材料档案的物料分类、配件档案的配件分类, and 销售选项值的销售选项分类 can remain normal selects while their category targets do not enable hierarchy, but the shared UI switches automatically when those target resources later enable `treeEnabled`, `parentEnabled`, or `treeSelectEnabled`.
-- 原材料档案 only maintains base materials. It must not maintain order-specific cutting dimensions.
-- Order-specific material usage is generated later by BOM, cut-list detail, or technical calculation.
-- Do not create every order's sheet dimensions or profile lengths as 原材料档案 rows.
-- 原材料档案 fields stay simple: 名称、所属分类、规格、单位、排序、状态、备注.
-- 原材料档案的规格 means the material's own specification, such as thickness, cross-section, or whole-sheet specification; it does not mean order cutting size.
-- Product category list displays as a tree table with code, name, sort order, status, remark, create time, and actions; the parent column is hidden because hierarchy is visible in the tree.
-- Product category tree names show clearer hierarchy with smaller level hints, stronger indentation, branch guidance, path tooltip context, and controlled expand/collapse state.
-- Product category initial load and reset search keep child rows collapsed; adding a child expands only the selected parent path; edit/delete refresh preserves current expansion state.
-- Product category add/edit parent selection cannot exceed three levels and cannot select the current category or its descendants.
-- Parent deletion is rejected for product-category children, product series/models, material items, accessory items, and sales-option values according to the seven-edge ownership matrix.
-- Concurrent parent deletion and child create/update cannot leave an active orphan; deterministic row locking and MySQL integration tests prove both transaction orderings.
-- Concurrent first product-category creates on an otherwise empty active tree both succeed after serializing on the permanent hidden hierarchy mutex row.
-- Concurrent product-category moves cannot jointly create a fourth level, and product-model category must remain equal to its series category.
-- API/UI/SQL/permission/test ownership is registered in feature and module registries, graphs, generated scans, memory, and handover.
-- `beforeSalesOrder` remains blocked and no sales-order runtime is created.
+- The R-11 contract index is authoritative over conflicting future-state R-09 concepts while current R-10 ownership docs remain truthful as-is evidence.
+- Product model and process plan/version are separate identities; both 9CM scenarios share one product model and use different process plans.
+- Option sets/values do not own technical fields; every field definition has one `SALES`, `TECH`, or `SYSTEM` owner.
+- Calculation and release contracts use generic documents/nodes plus immutable versions/hashes, without fixed leaf/segment columns or generic release CRUD.
+- `engineeringCoreReady` and `beforeSalesOrder` remain blocked until their required runtime/golden evidence is complete.
+- R-11 changes no Java, Vue, SQL, API client, route, permission, graph, formula, DXF, sales-order, or production runtime.
 
 ## Verification
 
-- `npm run scan:all`
-- `npm run finalize:change`
-- `npm run check`
-- `git diff --check`
-- `mvn -pl ruoyi-business -am test`
-- `mvn -pl ruoyi-business -am -Pintegration-test verify`
-- `npm --prefix ruoyi-ui run build:prod`
+- R-11: contract/review/roadmap/phase-gate tests plus `npm run check`.
+- Future runtime: bounded unit/integration/UI/migration/golden evidence; `npm run check` alone is not runtime proof.

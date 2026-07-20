@@ -4,14 +4,18 @@
     {
       "id": "TASK-0002",
       "feature": "platform",
-      "title": "Track RuoYi + Vue3 base integration and runtime validation",
+      "title": "Track platform governance and engineering-core readiness",
       "status": "in_progress",
       "owner": "Codex",
       "priority": "high",
-      "statusReason": "CR-20260714T225634Z-github-actions-node24-and-cache-warning-cleanup follows successful run 29374274047 by upgrading immutable checkout/setup-node/setup-java pins to verified Node 24 action runtimes and removing only the unused governance Maven cache. Focused tests pass 43/43, CI declaration and immutable-action lint pass, the complete repository gate passes 481/481, closeout/diff checks pass, and workflow commit 89e63df is pushed. An evidence-only consistency correction, latest-head Actions confirmation, and post-push governance remain.",
-      "nextStep": "Commit and push the evidence-only correction, confirm all three latest-head GitHub Actions jobs with the repaired annotations absent, run post-push governance, keep beforeSalesOrder blocked, preserve both stashes, and do not release or deploy.",
+      "statusReason": "R-11 engineering-core roadmap rebaseline has an approved governance-only multi-role review, authoritative product/process/option/field/calculation/version/release contracts, a destructive migration plan, two registered 9CM golden scenarios, and a new engineeringCoreReady dependency. Focused tests and phase/roadmap/rule/review checks pass. Runtime migration and signed golden execution remain unimplemented, so engineeringCoreReady and beforeSalesOrder remain blocked.",
+      "nextStep": "Finish R-11 finalization, full governance, closeout, diff, and forbidden-runtime audits. Then stop. Start R-12A only in a new approved change; do not start sales-order, production, formula, calculation-engine, or DXF runtime.",
       "blockedBy": [],
       "verification": [
+        "CR-20260720T115859Z-r-11-engineering-core-roadmap-rebaseline review RV-20260720T120106Z-r-11-engineering-core-roadmap-rebaseline allows only governance/contract roots and excludes runtime",
+        "R-11 focused engineering-core roadmap tests pass 5/5 after an expected red phase with three gate failures",
+        "R-11 rule preflight, check:phase-gate, check:roadmap, check:rule-objects, and check:review pass",
+        "R-11 leaves engineeringCoreReady and beforeSalesOrder blocked; runtime migration and signed golden fixtures are not-run",
         "CR-20260714T225634Z-github-actions-node24-and-cache-warning-cleanup focused workflow regression passes 43/43, CI declaration and immutable-action lint pass, and the complete governance gate passes 481/481",
         "CR-20260714T225634Z-github-actions-node24-and-cache-warning-cleanup pins checkout v5.0.1, setup-node v5.0.0, and setup-java v5.5.0 at verified Node 24 runtime SHAs while retaining project Node 20, both JDK 17 setups, backend Maven cache, and all CI commands",
         "CR-20260714T114811Z-frontend-ci-and-esm-scanner-hardening portable release-verifier and anti-false-green coverage passes 94/94 across fixed stage order, configured/fallback Maven resolution, no retry after reactor failure, and every fail-fast boundary",
@@ -217,10 +221,10 @@
         "R-10C frontend browser acceptance passed on canonical http://127.0.0.1:5173/business/masterdata with nine tabs and product-category add/edit/disable/delete",
         "R-10C direct http://127.0.0.1:5173/masterdata returned RuoYi 404 and is recorded as non-canonical; no R-10D is opened"
       ],
-      "latestSession": "memory/sessions/2026-07-15-github-actions-node24-and-cache-warning-cleanup.md",
+      "latestSession": "memory/sessions/2026-07-20-r-11-engineering-core-roadmap-rebaseline.md",
       "handoverRequired": true,
-      "updatedAt": "2026-07-15",
-      "latestChange": "CR-20260714T225634Z-github-actions-node24-and-cache-warning-cleanup"
+      "updatedAt": "2026-07-20",
+      "latestChange": "CR-20260720T115859Z-r-11-engineering-core-roadmap-rebaseline"
     },
     {
       "id": "TASK-CUSTOMER",
@@ -230,7 +234,7 @@
       "owner": "workflow",
       "priority": "normal",
       "statusReason": "CR-20260626T145150Z-customer-runtime-tests is R-08: customer runtime idempotency tests now cover missing idempotent keys, same-key/different-hash rejection, PROCESSING duplicate rejection, SUCCESS replay, CUSTOMER_DEPOSIT/DEPOSIT_IN enforcement, PUBLIC customer fund entry rejection, SAMPLE_REBATE_GENERATE stamping, salesman candidate no-fallback behavior, and MySQL/Testcontainers concurrent deposit/idempotent_request uniqueness. Sales-order runtime, production safety config, package/tools, old three-account funds, database business table structure, and deduction/refund/adjustment/reversal runtime remain untouched.",
-      "nextStep": "Do not start sales-order runtime. Wait for the separate later sales-order contract package and beforeSalesOrder approval after the R-09 configurable modeling reconcile and subsequent R-10A master-data work are accepted.",
+      "nextStep": "Do not start sales-order runtime. Wait until the R-12 engineering-core migration/version/calculation/release slices and both signed 9CM golden samples complete engineering-core-ready, then satisfy the remaining beforeSalesOrder contracts and approval.",
       "blockedBy": [],
       "verification": [
         "npm run resume",

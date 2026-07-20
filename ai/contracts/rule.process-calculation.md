@@ -1,5 +1,7 @@
 # Rule Process Calculation Contract
 
+R-11 note: future process calculation implements the canonical calculation adapter. `ProcessPlanVersion` selects versioned calculation policies; product model and order/technical headers remain engine-neutral.
+
 Change: `R-09 configurable modeling contract package`
 Status: contract-only.
 

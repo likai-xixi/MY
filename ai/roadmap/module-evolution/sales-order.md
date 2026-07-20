@@ -6,12 +6,16 @@ Sales order is not implemented.
 
 ## Required Before Implementation
 
-- `beforeSalesOrder` phase gate passes.
-- Multi-role review decision explicitly contains `Allow Implementation`.
-- Snapshot contract is approved.
-- State-machine contract is approved.
-- Fund-boundary contract is approved.
+- `engineering-core-ready` is complete and its phase gate is ready.
+- `beforeSalesOrder` passes.
+- A committed-base sales-order review explicitly allows the runtime roots.
+- Snapshot, state-machine, and fund-boundary contracts are approved.
+- The calculation input and release interfaces are stable so orders do not absorb technical/formula/DXF fields later.
+
+## Intended Boundary
+
+Sales order records commercial/customer intent and freezes `OrderVersion` artifacts. It references a product model and sales fields/options, but it does not own process-plan contents, technical fields, calculation outputs, decomposition parts, formulas, DXF data, or production routes.
 
 ## Guard
 
-No `ruoyi-business/src/main/java/com/ruoyi/business/salesorder/**`, sales-order controller/service/mapper, `ruoyi-ui/src/views/sales-order/**`, sales-order API client, or sales-order table may be created in this governance change.
+No sales-order controller, service, mapper, page, API client, route, permission, SQL table, or runtime test may be created while either gate is incomplete. R-11 creates none.

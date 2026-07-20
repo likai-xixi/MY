@@ -1,5 +1,7 @@
 # Rule Formula Variable Contract
 
+R-11 note: formula variables are future adapter-package concepts behind `engineering-core.calculation-io.md`. They must not add fields to order or technical-version headers, and this file does not authorize runtime.
+
 Change: `R-09 configurable modeling contract package`
 Status: contract-only.
 

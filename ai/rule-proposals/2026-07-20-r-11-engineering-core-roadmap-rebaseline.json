@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "id": "2026-07-20-r-11-engineering-core-roadmap-rebaseline",
+  "title": "R-11 engineering-core roadmap rebaseline",
+  "reason": "The current R-09/R-10 masterdata baseline conflates product models, process semantics, sales options, technical fields, calculation snapshots, and downstream release objects. R-11 must replace the roadmap and beforeSalesOrder dependency with an explicit engineering-core contract before any sales-order runtime work.",
+  "status": "proposed",
+  "requiredChangeMode": "rule-change",
+  "checklist": [
+    "Explain old rule and new rule.",
+    "List affected scanners and registries.",
+    "List sample files proving the project base needs this rule.",
+    "Run npm run check after the rule proposal is accepted."
+  ]
+}

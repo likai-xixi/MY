@@ -2,10 +2,22 @@ import { ensure, finish, isCli, readJson, readText } from './common.js';
 import { collectChangedFiles } from './diff-checker.js';
 
 const REQUIRED_GATES = [
+  'engineeringCoreReady',
   'beforeSalesOrder',
   'beforeDelivery',
   'beforeFinance',
   'beforeProduction'
+];
+
+const REQUIRED_ENGINEERING_CORE = [
+  'engineering-core-contracts',
+  'engineering-core-runtime-migration',
+  'field-library-ready',
+  'process-plan-ready',
+  'calculation-io-ready',
+  'version-release-ready',
+  'golden-sample-baseline',
+  'engineering-core-reverse-review'
 ];
 
 const REQUIRED_BEFORE_SALES_ORDER = [
@@ -18,12 +30,14 @@ const REQUIRED_BEFORE_SALES_ORDER = [
   'roadmap-check',
   'phase-gate-check',
   'refactor-debt-check',
+  'engineering-core-ready',
   'snapshot-contract',
   'state-machine-contract',
   'fund-boundary-contract'
 ];
 
 const COMPLETE_STATUSES = new Set(['complete', 'completed', 'done', 'passed', 'verified']);
+const READY_GATE_STATUSES = new Set(['ready', 'complete', 'completed', 'passed', 'verified']);
 const RUNTIME_EXTENSIONS = new Set([
   '.java',
   '.js',
@@ -209,13 +223,31 @@ export function validatePhaseGates({
   }
 
   const beforeSalesOrder = data.gates.beforeSalesOrder || {};
+  const engineeringCoreReady = data.gates.engineeringCoreReady || {};
+  for (const id of REQUIRED_ENGINEERING_CORE) {
+    ensure((engineeringCoreReady.required || []).includes(id), `${file} engineeringCoreReady.required must include ${id}.`, errors);
+  }
   for (const id of REQUIRED_BEFORE_SALES_ORDER) {
     ensure((beforeSalesOrder.required || []).includes(id), `${file} beforeSalesOrder.required must include ${id}.`, errors);
   }
 
+  const statuses = backlogStatusMap(readJsonFile);
+  for (const id of REQUIRED_ENGINEERING_CORE) {
+    ensure(statuses.has(id), `ai/roadmap/enhancement-backlog.json must include ${id}.`, errors);
+  }
+  ensure(statuses.has('engineering-core-ready'), 'ai/roadmap/enhancement-backlog.json must include engineering-core-ready.', errors);
+
+  if (READY_GATE_STATUSES.has(engineeringCoreReady.status)) {
+    const incomplete = REQUIRED_ENGINEERING_CORE.filter((id) => !COMPLETE_STATUSES.has(statuses.get(id)));
+    ensure(incomplete.length === 0, `engineeringCoreReady cannot be ready until required items are complete: ${incomplete.join(', ')}.`, errors);
+  }
+  if (READY_GATE_STATUSES.has(beforeSalesOrder.status)) {
+    const incomplete = REQUIRED_BEFORE_SALES_ORDER.filter((id) => !COMPLETE_STATUSES.has(statuses.get(id)));
+    ensure(incomplete.length === 0, `beforeSalesOrder cannot be ready until required items are complete: ${incomplete.join(', ')}.`, errors);
+  }
+
   const impact = readCurrentImpact(readJsonFile);
   if (salesOrderAttempted({ impact, changedFiles, readTextFile })) {
-    const statuses = backlogStatusMap(readJsonFile);
     const incomplete = REQUIRED_BEFORE_SALES_ORDER.filter((id) => !COMPLETE_STATUSES.has(statuses.get(id)));
     ensure(incomplete.length === 0, `sales-order implementation is blocked until beforeSalesOrder.required is complete: ${incomplete.join(', ')}.`, errors);
   }

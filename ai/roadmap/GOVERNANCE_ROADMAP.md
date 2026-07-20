@@ -1,33 +1,34 @@
 # Governance Roadmap
 
-## Purpose
-
-This roadmap defines the governance work required before the project starts sales-order implementation. It is intentionally not a sales-order design or implementation plan.
-
 ## Current Position
 
-- Repository profile: RuoYi + Vue3 + Codex Auto Dev OS.
-- Profile state: locked `ruoyi` adapter.
-- Active business context: `customer`.
-- Current governance change: sales-order-before handoff gate.
-- Sales order implementation status: not started.
+- Repository profile: locked RuoYi + Vue3 adapter.
+- Active governance change: R-11 engineering-core roadmap rebaseline.
+- Existing R-10 masterdata runtime: implemented, but its product/option/generic-CRUD semantics are scheduled for destructive replacement.
+- Engineering-core runtime: not started.
+- Sales-order, production, formula-engine, and DXF runtime: not started.
 
 ## Governance Sequence
 
-1. Establish a compact current-context handoff so new Codex windows do not bulk-read all historical changes, reviews, features, or source code.
-2. Require multi-role review before complex add/update work, especially sales order.
-3. Add document-size and read-budget checks to keep handoff files usable.
-4. Add roadmap, phase-gate, and refactor-debt checks so future business work sees blockers before code is created.
-5. Define sales-order snapshot, state-machine, and fund-boundary contracts before any sales-order code or database table appears.
-6. Defer larger automation such as code index, dependency matrix, API integration tests, UI smoke tests, and GitHub Actions until the required handoff gate is stable.
+1. Approve the R-11 engineering-core contracts and five reverse-review assertions.
+2. Register `engineeringCoreReady` and make `beforeSalesOrder` depend on `engineering-core-ready`.
+3. Keep `engineering-core-ready` incomplete until catalog migration, field versions, process plans, calculation I/O, release artifacts, golden samples, and reverse review are complete.
+4. Execute each runtime slice in a separate approved change; no R-11 runtime.
+5. Preserve current-context, provenance, file-weight, review, rule-object, and handover evidence through every slice.
+6. Open sales-order runtime only after both aggregate engineering and sales-order-specific gates pass.
 
-## Non-Goals
+## Single Truth Sources
 
-- Do not create a sales-order module.
-- Do not add sales-order tables.
-- Do not edit customer-management business code.
-- Do not loosen existing profile, diff, handoff, component, boundary, or runtime gates.
+- `ai/contracts/engineering-core.index.md`: architecture precedence.
+- `ai/roadmap/phase-gates.json`: phase status and dependencies.
+- `ai/roadmap/enhancement-backlog.json`: required item status/evidence/action.
+- `tools/phase-gate-checker.js`: machine enforcement.
+- `before-sales-order-phase-gate` rule object: governance ownership and change policy.
 
-## Gate Summary
+Do not add a parallel sales-order or engineering-core gate script. Extend the existing phase-gate chain.
 
-`beforeSalesOrder` is the next business-development gate. It is allowed to block sales-order implementation while still allowing governance/rule-change work that improves the gate itself.
+## R-11 Non-goals
+
+- No business runtime, table, migration, page, endpoint, route, permission, formula, DXF, release, or deployment.
+- No compatibility layer for current masterdata semantics.
+- No claim that contract-ready means engineering-core-ready.

@@ -101,6 +101,105 @@
       "futureAction": "Resolve or explicitly accept debt before dependent sales-order behavior is implemented."
     },
     {
+      "id": "engineering-core-contracts",
+      "title": "Engineering-core architecture contracts",
+      "category": "business-contract",
+      "status": "completed",
+      "requiredBefore": ["engineeringCoreReady"],
+      "reason": "Downstream modules need stable product, option, field, process, calculation, version, and release boundaries before runtime schemas are created.",
+      "guard": "The R-11 contract index is authoritative over conflicting R-09 concepts and explicitly keeps runtime out of scope.",
+      "evidence": "ai/contracts/engineering-core.* and ai/reviews/RV-20260720T120106Z-r-11-engineering-core-roadmap-rebaseline/decision.md",
+      "futureAction": "Keep later runtime changes conformant with the R-11 contract-test matrix."
+    },
+    {
+      "id": "engineering-core-runtime-migration",
+      "title": "Destructive engineering-core runtime migration",
+      "category": "runtime-migration",
+      "status": "required",
+      "requiredBefore": ["engineeringCoreReady"],
+      "reason": "The current nine-resource masterdata runtime still exposes product/process and sales-option semantics that conflict with R-11.",
+      "guard": "No compatibility aliases or dual writes; old tables, resource keys, routes, pages, and exact-nine tests must disappear in one verified cutover.",
+      "evidence": "ai/contracts/engineering-core.migration-plan.md; runtime execution not-run",
+      "futureAction": "Execute R-12A with explicit DDL/API/UI/test ownership, reset/backup evidence, and old-surface negative checks."
+    },
+    {
+      "id": "field-library-ready",
+      "title": "Field library and scheme versions ready",
+      "category": "runtime-contract",
+      "status": "required",
+      "requiredBefore": ["engineeringCoreReady"],
+      "reason": "Sales and technical values need stable types, units, ownership, and immutable scheme versions before downstream records can freeze them.",
+      "guard": "Every field has exactly one SALES/TECH/SYSTEM owner; published ownership and scheme versions cannot change in place.",
+      "evidence": "ai/contracts/engineering-core.domain.md; runtime execution not-run",
+      "futureAction": "Implement and verify R-12B field definitions, scheme versions, publication commands, and ownership tests."
+    },
+    {
+      "id": "process-plan-ready",
+      "title": "Process plan and version runtime ready",
+      "category": "runtime-contract",
+      "status": "required",
+      "requiredBefore": ["engineeringCoreReady"],
+      "reason": "Product identity must bind to explicit immutable engineering recipes instead of remaining a relabeled craft model.",
+      "guard": "Product models and process plans remain separate identities with versioned applicability/default-selection bindings.",
+      "evidence": "ai/contracts/engineering-core.domain.md; runtime execution not-run",
+      "futureAction": "Implement and verify R-12C process-plan publication and product applicability without product-specific branches."
+    },
+    {
+      "id": "calculation-io-ready",
+      "title": "Canonical calculation input and decomposition output ready",
+      "category": "runtime-contract",
+      "status": "required",
+      "requiredBefore": ["engineeringCoreReady"],
+      "reason": "Formula, manual calculation, technical review, and later DXF need one stable engine-neutral boundary.",
+      "guard": "Inputs preserve owner-tagged values and artifact versions; outputs use generic nodes/edges and keyed measurements instead of fixed leaf/segment columns.",
+      "evidence": "ai/contracts/engineering-core.calculation-io.md; runtime execution not-run",
+      "futureAction": "Implement R-12D schema validation, deterministic normalization/hash, snapshot persistence, and trace tests."
+    },
+    {
+      "id": "version-release-ready",
+      "title": "Version and release artifact chain ready",
+      "category": "runtime-contract",
+      "status": "required",
+      "requiredBefore": ["engineeringCoreReady"],
+      "reason": "Order, technical, calculation, technical-release, and production-release meaning must remain independently traceable and immutable.",
+      "guard": "Generic CRUD cannot publish, approve, calculate, release, supersede, revoke, update, or delete historical artifacts.",
+      "evidence": "ai/contracts/engineering-core.version-release.md; runtime execution not-run",
+      "futureAction": "Implement R-12E command APIs, idempotency, hashes, append-only evidence, and authorization tests."
+    },
+    {
+      "id": "golden-sample-baseline",
+      "title": "First engineering-core golden samples",
+      "category": "acceptance-evidence",
+      "status": "required",
+      "requiredBefore": ["engineeringCoreReady"],
+      "reason": "Architecture is not runtime-ready until representative single-open and double/grid-splice cases have signed inputs and expected results.",
+      "guard": "Both samples share PM-DOOR-9CM but use different process plans; numeric truth cannot be invented by Codex.",
+      "evidence": "ai/contracts/engineering-core.golden-samples.md; executable fixtures and business sign-off not-run",
+      "futureAction": "Collect signed dimensions/materials/tolerances/results, create fixtures, and pass the future golden runner for both scenarios."
+    },
+    {
+      "id": "engineering-core-reverse-review",
+      "title": "Engineering-core reverse architecture review",
+      "category": "quality-gate",
+      "status": "required",
+      "requiredBefore": ["engineeringCoreReady"],
+      "reason": "Later implementation can regress into the exact coupling R-11 is intended to remove even when positive tests pass.",
+      "guard": "Reject product/process conflation, technical fields as options, generic release CRUD, fixed leaf/segment columns, and order/technical rewrites for formula or DXF.",
+      "evidence": "ai/contracts/engineering-core.contract-test-matrix.md; runtime reverse review not-run",
+      "futureAction": "Run the five reverse assertions against the complete migrated runtime and record the signed result."
+    },
+    {
+      "id": "engineering-core-ready",
+      "title": "Engineering core ready",
+      "category": "phase-gate",
+      "status": "required",
+      "requiredBefore": ["beforeSalesOrder"],
+      "reason": "Sales-order runtime must not choose unstable product/process/field/calculation/release contracts.",
+      "guard": "tools/phase-gate-checker.js requires this item in beforeSalesOrder and blocks sales-order implementation while it is incomplete.",
+      "evidence": "ai/roadmap/phase-gates.json engineeringCoreReady; R-11 contract-ready only",
+      "futureAction": "Mark complete only after every engineeringCoreReady.required item is complete and the gate checker passes."
+    },
+    {
       "id": "code-index",
       "title": "Code index",
       "category": "deferred-automation",

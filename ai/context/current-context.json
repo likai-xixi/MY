@@ -3,17 +3,25 @@
   "generatedBy": "scripts/context-build.js",
   "generatedAt": "stable",
   "currentFeature": "platform",
-  "currentChange": "CR-20260714T225634Z-github-actions-node24-and-cache-warning-cleanup",
+  "currentChange": "CR-20260720T115859Z-r-11-engineering-core-roadmap-rebaseline",
   "repositoryProfile": {
     "adapter": "ruoyi",
     "locked": true,
     "stack": "RuoYi + Vue3 + Codex Auto Dev OS"
   },
   "allowedEditRoots": [
-    ".github/workflows/ci.yml",
-    "tests/ci-coverage-hardening.test.js",
-    "ai/rule-proposals/2026-07-14-github-actions-node24-and-cache-warning-cleanup.json",
-    "ai/changes/CR-20260714T225634Z-github-actions-node24-and-cache-warning-cleanup",
+    "ai/contracts",
+    "ai/roadmap",
+    "ai/registry/rule-objects.json",
+    "ai/rule-proposals/2026-07-20-r-11-engineering-core-roadmap-rebaseline.json",
+    "ai/reviews",
+    "tools/phase-gate-checker.js",
+    "tools/roadmap-checker.js",
+    "tests/engineering-core-roadmap.test.js",
+    "tests/governance-sales-order-handoff-gate.test.js",
+    "tests/rule-object-governance.test.js",
+    "features/masterdata.md",
+    "ai/changes/CR-20260720T115859Z-r-11-engineering-core-roadmap-rebaseline",
     "ai/changes/CURRENT_CHANGE.json",
     "ai/context/current-context.json",
     "ai/context/current-context.md",
@@ -21,16 +29,15 @@
     "memory/HANDOVER.md",
     "memory/PROJECT_STATE.md",
     "memory/TASKS.json",
-    "memory/sessions/2026-07-15-github-actions-node24-and-cache-warning-cleanup.md"
+    "memory/sessions/2026-07-20-r-11-engineering-core-roadmap-rebaseline.md"
   ],
   "forbiddenEditRoots": [
     "package.json",
     "package-lock.json",
-    "tools",
+    ".github/workflows",
     "scripts",
     "ai/rules",
     "graph",
-    "features",
     "backend",
     "frontend",
     "ruoyi-admin",
@@ -89,15 +96,15 @@
       "reason": "Governance backlog and required/deferred evidence."
     },
     {
-      "path": "ai/changes/CR-20260714T225634Z-github-actions-node24-and-cache-warning-cleanup/impact.json",
+      "path": "ai/changes/CR-20260720T115859Z-r-11-engineering-core-roadmap-rebaseline/impact.json",
       "reason": "Current change allowed and forbidden edit roots."
     },
     {
-      "path": "ai/changes/CR-20260714T225634Z-github-actions-node24-and-cache-warning-cleanup/plan.md",
+      "path": "ai/changes/CR-20260720T115859Z-r-11-engineering-core-roadmap-rebaseline/plan.md",
       "reason": "Current change execution plan."
     },
     {
-      "path": "ai/changes/CR-20260714T225634Z-github-actions-node24-and-cache-warning-cleanup/verification.md",
+      "path": "ai/changes/CR-20260720T115859Z-r-11-engineering-core-roadmap-rebaseline/verification.md",
       "reason": "Current change verification evidence."
     }
   ],
@@ -163,6 +170,12 @@
       "futureAction": "Resolve or explicitly accept debt before dependent sales-order behavior is implemented."
     },
     {
+      "id": "engineering-core-ready",
+      "status": "required",
+      "reason": "Sales-order runtime must not choose unstable product/process/field/calculation/release contracts.",
+      "futureAction": "Mark complete only after every engineeringCoreReady.required item is complete and the gate checker passes."
+    },
+    {
       "id": "snapshot-contract",
       "status": "required",
       "reason": "Sales order must preserve customer/contact/address state even if customer master data changes later.",
@@ -182,6 +195,36 @@
     }
   ],
   "phaseGates": {
+    "engineeringCoreReady": {
+      "title": "Engineering core ready for downstream business implementation",
+      "status": "blocked",
+      "allowsGovernanceRuleChange": true,
+      "blocksImplementationOf": [
+        "sales-order",
+        "production"
+      ],
+      "required": [
+        "engineering-core-contracts",
+        "engineering-core-runtime-migration",
+        "field-library-ready",
+        "process-plan-ready",
+        "calculation-io-ready",
+        "version-release-ready",
+        "golden-sample-baseline",
+        "engineering-core-reverse-review"
+      ],
+      "deferred": [
+        {
+          "id": "formula-engine-runtime",
+          "reason": "Formula engines are adapters behind the canonical calculation I/O and are not required to freeze the order or technical model."
+        },
+        {
+          "id": "dxf-runtime",
+          "reason": "DXF generation consumes geometry requests from a technical release package and may be implemented after the release interface is stable."
+        }
+      ],
+      "evidence": "R-11 approves only the architecture contracts, destructive migration plan, phase-gate dependency, and first golden-sample scenarios. Runtime migration, calculation execution, release persistence, and signed golden results are still incomplete."
+    },
     "beforeSalesOrder": {
       "title": "Before sales-order implementation",
       "status": "blocked",
@@ -199,6 +242,7 @@
         "roadmap-check",
         "phase-gate-check",
         "refactor-debt-check",
+        "engineering-core-ready",
         "snapshot-contract",
         "state-machine-contract",
         "fund-boundary-contract"
@@ -229,7 +273,7 @@
           "reason": "Requires approved UI screens and browser acceptance path."
         }
       ],
-      "evidence": "Business implementation remains blocked until required contract items are completed. Real GitHub Actions now runs locked Node, Maven, integration, frontend test, dependency audit, and production-build verification; CI coverage is guarded by tools/ci-coverage-declaration-checker.js. The phase-gate checker covers canonical sales-order roots, common sales-order, salesOrder, sales_order, and sales/order naming variants, SQL create table sales_order / sales_order_item, Vue/API/menu/permission sales-order runtime content, and bypass-capable RuoYi runtime roots including ruoyi-system, ruoyi-generator, ruoyi-quartz, ruoyi-admin SQL, ruoyi-ui router, permission.js, and store."
+      "evidence": "Business implementation remains blocked until required contract items are completed, including the aggregate engineering-core-ready item. R-11 does not complete that item. The phase-gate checker covers canonical sales-order roots, common naming variants, SQL table creation, Vue/API/menu/permission content, and bypass-capable RuoYi runtime roots."
     },
     "beforeDelivery": {
       "title": "Before delivery implementation",
@@ -300,14 +344,16 @@
   "verificationCommands": [
     "npm run resume",
     "npm run context:build -- platform",
-    "node --test tests/ci-coverage-hardening.test.js",
-    "npm run check:ci-coverage-declaration",
-    "npm run check",
+    "npm run review:feature -- <R-11 pre-review request> --feature platform",
+    "npm run rule:preflight -- before-sales-order-phase-gate",
+    "node --test tests/engineering-core-roadmap.test.js tests/governance-sales-order-handoff-gate.test.js tests/rule-object-governance.test.js",
+    "npm run check:phase-gate",
+    "npm run check:roadmap",
     "npm run finalize:change",
+    "npm run check",
     "npm run close:change",
     "git diff --check",
-    "exact allowed and forbidden root audit",
-    "GitHub Actions scaffold-ci confirmation after push"
+    "exact allowed and forbidden root audit"
   ],
   "nextSteps": [
     "Keep edits inside the active impact boundary.",
