@@ -35,6 +35,13 @@ function versionAtLeast(version, minimum) {
   return true;
 }
 
+function braceExpansionPatchedForGhsa3jxr9vmjr5cp(version) {
+  const [major] = versionTuple(version);
+  if (major === 1) return versionAtLeast(version, '1.1.16');
+  if (major === 2) return versionAtLeast(version, '2.1.2');
+  return major >= 5 && versionAtLeast(version, '5.0.7');
+}
+
 function assertBalancedXmlTags(file, source) {
   const stack = [];
   const tags = source.match(/<\/?[A-Za-z][^>]*>/g) || [];
@@ -78,7 +85,7 @@ test('platform owns the regression and clean CI executes both controller and ful
   );
 });
 
-test('frontend dependency graph removes every vulnerable ECharts and SVG build-chain package', () => {
+test('frontend dependency graph removes known vulnerable visualization, SVG, and brace-expansion packages', () => {
   const pkg = readJson(UI_PACKAGE);
   const lock = readJson(UI_LOCK);
   const packages = lock.packages || {};
@@ -90,6 +97,7 @@ test('frontend dependency graph removes every vulnerable ECharts and SVG build-c
   assert.equal(packages['node_modules/echarts']?.version, '6.1.0');
   assert.equal(packages['node_modules/@spiriit/vite-plugin-svg-spritemap']?.version, '6.0.0');
   assert.equal(packages['node_modules/svgo']?.version, '4.0.2');
+  assert.equal(packages['node_modules/brace-expansion']?.version, '2.1.2');
 
   for (const packagePath of Object.keys(packages)) {
     assert.doesNotMatch(packagePath, /(?:^|\/)node_modules\/(?:vite-plugin-svg-icons|svg-baker)$/);
@@ -98,6 +106,13 @@ test('frontend dependency graph removes every vulnerable ECharts and SVG build-c
         versionAtLeast(packages[packagePath].version, '8.5.10'),
         true,
         `${packagePath} must not resolve a vulnerable PostCSS version`
+      );
+    }
+    if (/(?:^|\/)node_modules\/brace-expansion$/.test(packagePath)) {
+      assert.equal(
+        braceExpansionPatchedForGhsa3jxr9vmjr5cp(packages[packagePath].version),
+        true,
+        `${packagePath} must not resolve a version affected by GHSA-3jxr-9vmj-r5cp`
       );
     }
   }

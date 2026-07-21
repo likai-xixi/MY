@@ -813,3 +813,9 @@
 - Change: `ai/changes/CR-20260720T134007Z-change`.
 - Prepared the independent R-12A five-role review, frozen Strategy A migration contract, and recorded the committed-review-base blocker without changing business runtime.
 - Feature: `masterdata`.
+
+## 2026-07-21 - rule-change
+
+- Change: `ai/changes/CR-20260721T125309Z-ci-fix-01-brace-expansion-audit-remediation`.
+- CI-FIX-01 remediates GHSA-3jxr-9vmj-r5cp with compatible brace-expansion 2.1.2 and focused regression coverage
+- Feature: `platform`.

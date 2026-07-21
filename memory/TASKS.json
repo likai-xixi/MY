@@ -8,8 +8,8 @@
       "status": "in_progress",
       "owner": "Codex",
       "priority": "high",
-      "statusReason": "R-11 is published and CI-verified. Both R-12A source commits are published, but implementation CI run 29792754518 failed the newly published brace-expansion dependency advisory, and field/process/version/release runtime plus signed golden execution remain incomplete; engineeringCoreReady and beforeSalesOrder stay blocked.",
-      "nextStep": "Complete the R-12A evidence-only post-push truth sync, then use a separate approved frontend dependency-security batch before considering R-12B pre-review; do not start sales-order, production, formula, calculation-engine, or DXF runtime.",
+      "statusReason": "R-11 is published and CI-verified. R-12A source is published but remote CI is red. CI-FIX-01 has an independent committed review and locally verified brace-expansion 2.1.2 repair; push, remote CI, and post-push closure are not-run. Field/process/version/release runtime and signed golden execution remain incomplete; both phase gates stay blocked.",
+      "nextStep": "Finish the local CI-FIX-01 implementation commit, then wait for explicit push authorization; after push require a fully successful three-job workflow and post-push handover before considering R-12B pre-review.",
       "blockedBy": [],
       "verification": [
         "CR-20260720T115859Z-r-11-engineering-core-roadmap-rebaseline review RV-20260720T120106Z-r-11-engineering-core-roadmap-rebaseline allows only governance/contract roots and excludes runtime",
@@ -228,10 +228,10 @@
         "R-10C frontend browser acceptance passed on canonical http://127.0.0.1:5173/business/masterdata with nine tabs and product-category add/edit/disable/delete",
         "R-10C direct http://127.0.0.1:5173/masterdata returned RuoYi 404 and is recorded as non-canonical; no R-10D is opened"
       ],
-      "latestSession": "memory/sessions/2026-07-21-r-12a-post-push.md",
+      "latestSession": "memory/sessions/2026-07-21-ci-fix-01.md",
       "handoverRequired": true,
       "updatedAt": "2026-07-21",
-      "latestChange": "CR-20260721T012310Z-r-12a-post-push-handover-sync"
+      "latestChange": "CR-20260721T125309Z-ci-fix-01-brace-expansion-audit-remediation"
     },
     {
       "id": "TASK-CUSTOMER",
@@ -476,8 +476,8 @@
       "status": "in_progress",
       "owner": "Codex",
       "priority": "high",
-      "statusReason": "R-12A review and implementation commits are published and local runtime acceptance is complete, but implementation scaffold-ci run 29792754518 failed the frontend dependency audit for newly disclosed GHSA-3jxr-9vmj-r5cp; R-12A is not CI-green or release-successful.",
-      "nextStep": "Finish the evidence-only post-push sync, then open a separate approved frontend dependency-security baseline repair; do not start R-12B.",
+      "statusReason": "R-12A review and implementation commits are published and local runtime acceptance is complete. CI-FIX-01 locally repairs GHSA-3jxr-9vmj-r5cp with brace-expansion 2.1.2, but that fix is not pushed or remotely verified; R-12A remains not CI-green or release-successful.",
+      "nextStep": "Wait for explicit CI-FIX-01 push authorization, then require governance, backend-tests, and frontend-build success plus post-push handover; do not start R-12B.",
       "blockedBy": [],
       "verification": [
         "R-11 commit/push/post-push handover and successful scaffold-ci run 29745362302 reconfirmed",

@@ -3,7 +3,7 @@
   "mode": "rule-change",
   "changeType": "governance/rule-change",
   "workstream": "governance/dependency-security/ci-fix",
-  "baseRevision": "58478e509d69eb212d5808463b7efeea47bee64e",
+  "baseRevision": "6a9bfd57548160d85e28776f415b5883b6d92836",
   "reviewId": "RV-20260721T130701Z-ci-fix-01-brace-expansion-audit-remediat",
   "feature": {
     "id": "platform",

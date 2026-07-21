@@ -1,6 +1,6 @@
 # Plan
 
-1. Confirm the clean `58478e509...` base, create this independent rule-change record, run platform impact analysis, snapshot the blocked phase-gate rule object, and complete the independent pre-review required for a `ruoyi-ui` lockfile change.
+1. Confirm the clean `58478e509...` intake base, create this independent rule-change record, run platform impact analysis, snapshot the blocked phase-gate rule object, and commit the independent pre-review required for a `ruoyi-ui` lockfile change as `6a9bfd575481...`.
 2. Run the exact clean install, audit JSON, dependency-tree, explain, and source-usage commands before changing any dependency version; persist raw evidence in this change record.
 3. Determine whether `js-beautify` is used in the production bundle or generator flow and whether it accepts untrusted input; test upstream-compatible upgrade/removal options in priority order.
 4. Apply the smallest defensible manifest/lockfile repair using normal npm resolution and add a focused regression assertion that rejects the vulnerable dependency state.

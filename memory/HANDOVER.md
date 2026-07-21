@@ -2,65 +2,60 @@
 
 ## Summary
 
-[local] R-12A review-only commit `f28e3d12358bdc35ac1782fd50be7850f937bc1b` and implementation commit `9cb1f59d89949330cfe796ae2db25728d356038c` are published in that order on `origin/master`; Strategy A migration, API/browser/database acceptance, and rollback rehearsal remain locally verified. [ci] Implementation run `29792754518` failed the required frontend dependency audit, so R-12A is not CI-green or release-successful.
+[local] CI-FIX-01 repairs the frontend audit blocker by resolving the existing transitive `brace-expansion` node from vulnerable `2.1.1` to patched `2.1.2`. The fix has an independent committed review and complete local frontend/backend regression evidence.
+[not-run] Push and remote CI verification; R-12A remains open.
 
 ## Impact
 
-- Current change: `CR-20260721T012310Z-r-12a-post-push-handover-sync`.
-- Published R-12A implementation evidence: `CR-20260720T134007Z-change`.
-- Current review: `RV-20260720T134134Z-r-12a-option-set-option-value-masterdata`; `Decision: Allow Implementation`.
-- The published R-12A implementation `impact.baseRevision` is the review-only commit; its runtime commit contains no review-package self-authorization.
-- Strategy A result: 4 option sets, 2 option values, four `SINGLE` modes, zero old tables, zero orphans, and zero duplicate same-set codes.
-- Current resources are product category/series/model, material category/item, accessory category/item, option set/value. Product model means 产品型号 only.
-- Old sales-option API/resource/table/menu/permission/runtime paths are removed with no compatibility layer.
-- No field/process/order/formula/BOM/production/DXF or customer-fund runtime was added or changed.
-- `engineeringCoreReady = blocked`; `beforeSalesOrder = blocked`.
+- Current change: `CR-20260721T125309Z-ci-fix-01-brace-expansion-audit-remediation`.
+- Approved independent review: `RV-20260721T130701Z-ci-fix-01-brace-expansion-audit-remediat`.
+- Review-only commit/base: `6a9bfd57548160d85e28776f415b5883b6d92836`.
+- Exact advisory: npm `1123896`, `GHSA-3jxr-9vmj-r5cp`, `CVE-2026-13149`, high, affected 2.x `<2.1.2`.
+- One deduplicated node serves `js-beautify -> editorconfig -> minimatch`, `js-beautify -> glob -> minimatch`, and `unplugin-auto-import -> minimatch`.
+- No `package.json`, parent dependency, override, workflow, R-12A business/review, runtime source, migration, route, permission, API, SQL, registry, graph, roadmap, or phase-gate change.
+- `engineeringCoreReady=blocked`; `beforeSalesOrder=blocked`; R-12B has not started.
 
 ## Changed Files
 
-- `ai/changes/CR-20260720T134007Z-change/handover.md`
-- `ai/changes/CR-20260720T134007Z-change/verification.md`
-- `ai/changes/CR-20260721T012310Z-r-12a-post-push-handover-sync/changed-files.json`
-- `ai/changes/CR-20260721T012310Z-r-12a-post-push-handover-sync/handover.md`
-- `ai/changes/CR-20260721T012310Z-r-12a-post-push-handover-sync/impact.json`
-- `ai/changes/CR-20260721T012310Z-r-12a-post-push-handover-sync/plan.md`
-- `ai/changes/CR-20260721T012310Z-r-12a-post-push-handover-sync/request.md`
-- `ai/changes/CR-20260721T012310Z-r-12a-post-push-handover-sync/verification.md`
-- `ai/changes/CURRENT_CHANGE.json`
-- `ai/context/current-context.json`
-- `ai/context/current-context.md`
+- `ai/changes/CR-20260721T125309Z-ci-fix-01-brace-expansion-audit-remediation/changed-files.json`
+- `ai/changes/CR-20260721T125309Z-ci-fix-01-brace-expansion-audit-remediation/dependency-evidence/lockfile-diff.md`
+- `ai/changes/CR-20260721T125309Z-ci-fix-01-brace-expansion-audit-remediation/dependency-evidence/post-fix-audit.json`
+- `ai/changes/CR-20260721T125309Z-ci-fix-01-brace-expansion-audit-remediation/dependency-evidence/post-fix-dependency-tree.txt`
+- `ai/changes/CR-20260721T125309Z-ci-fix-01-brace-expansion-audit-remediation/handover.md`
+- `ai/changes/CR-20260721T125309Z-ci-fix-01-brace-expansion-audit-remediation/impact.json`
+- `ai/changes/CR-20260721T125309Z-ci-fix-01-brace-expansion-audit-remediation/plan.md`
+- `ai/changes/CR-20260721T125309Z-ci-fix-01-brace-expansion-audit-remediation/verification.md`
 - `memory/CHANGELOG.md`
 - `memory/HANDOVER.md`
 - `memory/PROJECT_STATE.md`
 - `memory/TASKS.json`
-- `memory/sessions/2026-07-21-r-12a-post-push.md`
+- `memory/sessions/2026-07-21-ci-fix-01.md`
+- `ruoyi-ui/package-lock.json`
+- `tests/frontend-dependency-hardening.test.js`
 
 ## Commands
 
-- [local] Review-baseline checks, impact/phase gates, focused Node/Java/UI tests, Maven package, Vue production build, scans, `npm run finalize:change`, `npm run check`, `npm run close:change`, and diff audits.
-- [runtime-local] Strategy A migration, dedicated/shared validation, real API/browser/menu/permission acceptance, final clean snapshot restore, and whole-state rollback rehearsal.
-- [local] Direct `git push origin master` published both R-12A commits without rewrite and aligned local/tracking/remote refs at `9cb1f59d89949330cfe796ae2db25728d356038c`.
-- [ci] GitHub Actions run `29792754518` was queried to final completion and the failed `frontend-build` job log was read.
-- [local] Clean-worktree `npm run check:after-push` passed; the dependency-audit failure and transitive dependency chain were reproduced locally.
+- [local] Baseline and post-fix clean installs, audit JSON, dependency tree/explain, usage/attack-path tracing, package compatibility diff, platform/UI builds, R-12A Node/Java/MySQL regressions, scans, review/phase/CI-declaration gates, and diff audits were run.
+- [local] Complete `npm run check` passed every governance gate and 491/491 root Node tests after two evidence-only heading/provenance corrections.
+- [local] Embedded and explicit `npm run close:change` plus `git diff --check` passed; scope audit reports both review diffs, forbidden runtime diff, and R-12B path count as zero.
+- [not-run] Push, GitHub Actions, after-push verification, and post-push handover require explicit authorization.
 
 ## Verification
 
-- [ci] R-11 run `29745362302` remains successful.
-- [local] Focused and build checks pass: Node 39/39, Java unit 65/65, MySQL integration 2/2, UI 7/7, Maven/Vue builds, and scans.
-- [local] Full `npm run check` passes with 491/491 Node tests; `npm run close:change` and `git diff --check` pass.
-- [runtime-local] Migration/validation/API/browser/rollback evidence is persisted under the active change.
-- [local] Review package diff=0; forbidden runtime diff=0; phase gates remain blocked.
-- [local] Both R-12A commits are published; implementation commit `9cb1f59d89949330cfe796ae2db25728d356038c` does not modify the review package or `decision.md`.
-- [ci] Run `29792754518`: `governance=success`, repository backend Maven job `backend-tests=success`, `frontend-build=failure`, overall `failure`.
-- [ci] UI install/tests passed, then audit rejected high-severity `GHSA-3jxr-9vmj-r5cp` in transitive `brace-expansion@2.1.1`; production frontend build was skipped.
-- [local] `engineeringCoreReady=blocked`; `beforeSalesOrder=blocked`; R-12B has not started.
+- [local] Post-fix `npm ci` and full include-dev audit report 0 vulnerabilities and exit code 0.
+- [local] Platform dependency 5/5, UI 7/7, production build 2602 modules, focused R-12A Node 39/39, Java 65/65 including masterdata 28/28, and MySQL integration 2/2 pass.
+- [local] R-12A review package diff=0, R-12A decision diff=0, forbidden runtime diff=0, and no R-12B path changed.
+- [local] Final `npm run check` passed every gate and 491/491 root Node tests.
+- [not-run] GitHub Actions execution for this fix; no remote release evidence exists.
 
 ## Risks
 
-- The generated DB scanner is lexical over migration history and can list historical CREATE tokens; live MySQL validation is the runtime authority.
-- R-12A source is remotely backed up, but its implementation CI is red due to a newly published transitive dependency advisory. A separate dependency-security batch must repair the lockfile and obtain green CI before release success or R-12B pre-review is considered.
+- Remote CI remains the only release blocker addressed by this batch that is still unverified. The real audit, frontend test/build, governance, and backend jobs must all pass after an authorized push.
+- A direct recursive-delete command for `ruoyi-ui/node_modules` was rejected by local execution policy; clean-install proof uses npm's `npm ci` removal/rebuild semantics.
 
 ## Next Actions
 
-- Complete and publish the evidence-only post-push truth sync, then stop.
-- If authorized later, open a separate frontend dependency-security baseline repair for `brace-expansion`; do not modify the R-12A review decision or begin R-12B.
+- Create local implementation commit `fix(ci): remediate frontend dependency audit failure` from this verified tree.
+- Stop before push and wait for explicit authorization.
+- If authorized, push both local commits, inspect the distinct GitHub Actions run and logs, then record post-push handover only after all three jobs succeed.
+- Do not begin R-12B.
