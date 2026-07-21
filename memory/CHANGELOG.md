@@ -1,5 +1,16 @@
 # Changelog
 
+## 2026-07-22 - CI-FIX-01 frontend dependency security recovery
+
+- Change: `ai/changes/CR-20260721T232438Z-ci-fix-01-frontend-dependency-security-post-push`.
+- Published all four independently reviewed dependency-security commits without rewrite, advancing `origin/master` from `58478e509d69eb212d5808463b7efeea47bee64e` to `010688b5928d2bc4385bb8037940f5573587c5ae`.
+- [ci] Recovery workflow `29876893425` concluded success: governance `88789283965`, backend `88789283926`, frontend `88789283934` all succeeded.
+- [ci] Frontend logs report clean install 0 vulnerabilities, UI 7/7, exact include-dev audit 0 vulnerabilities, and successful 2602-module production build.
+- Historical failed runs `29792754518` and `29794081328` remain preserved with the original brace-expansion blocker; the later Immutable finding and both bounded repairs are recorded.
+- [local] Clean `npm run check:after-push` passes; R-12A review/decision diff is zero and both phase gates remain blocked.
+- [local] Evidence-only scan/finalization/context and complete `npm run check` pass with 491/491; handover/current-doc/memory/provenance and embedded close pass.
+- [not-run] The evidence-only handover commit, second push, and that commit's distinct workflow remain at this evidence point; R-12B has not started.
+
 ## 2026-07-22 - CI-FIX-01 Immutable dependency advisory remediation
 
 - Change: `ai/changes/CR-20260721T221950Z-ci-fix-01-immutable-dependency-advisories-remedi`; approved review: `RV-20260721T222047Z-ci-fix-01-immutable-dependency-advisorie`; review-only base: `4ac76926239e3300196c6a548024686ee8440e3d`.

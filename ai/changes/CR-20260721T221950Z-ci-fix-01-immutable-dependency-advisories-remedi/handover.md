@@ -56,3 +56,9 @@
 
 - Stop after local commit `fix(ci): remediate immutable dependency advisories` and wait for explicit push authorization.
 - Do not begin R-12B.
+
+## Published Recovery
+
+- [local] Review commit `4ac76926239e3300196c6a548024686ee8440e3d` and fix commit `010688b5928d2bc4385bb8037940f5573587c5ae` were published without rewrite; local and remote refs aligned at the fix commit.
+- [ci] Workflow `29876893425` concluded `success` with all three jobs green. Frontend logs prove UI 7/7, exact include-dev audit 0 vulnerabilities, and production build success.
+- [local] Clean-worktree `npm run check:after-push` passed. The evidence-only handover commit and its distinct workflow remain a separate closeout step.

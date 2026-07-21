@@ -33,3 +33,10 @@ Status: verified [local]
 - The lockfile's only dependency version delta is `immutable 5.1.6 -> 5.1.8`, with the resolved registry URL and integrity added for that node.
 - The platform-owned regression rejects affected Immutable 5.x releases and retains explicit safe boundaries for supported 4.x/5.x/future-major lines.
 - `engineeringCoreReady=blocked`; `beforeSalesOrder=blocked`; no R-12B implementation exists.
+
+## Published Recovery Verification
+
+- [local] The four dependency-security commits were pushed by fast-forward from `58478e509d69eb212d5808463b7efeea47bee64e` to `010688b5928d2bc4385bb8037940f5573587c5ae`; ahead/behind became `0/0`.
+- [ci] Workflow `29876893425` concluded `success`; `governance`, `backend-tests`, and `frontend-build` all succeeded.
+- [ci] The frontend job executed clean install, UI tests, exact include-dev audit, and production build; audit reported 0 vulnerabilities and the 2602-module build completed in 18.93 seconds.
+- [local] `npm run check:after-push` passed on the clean aligned tree. R-12B and both phase-gate changes remain absent.

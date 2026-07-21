@@ -32,3 +32,9 @@ Status: verified [local]
 - R-12A review package diff=0; R-12A decision diff=0; forbidden runtime diff=0; no R-12B-named changed path.
 - `engineeringCoreReady=blocked`; `beforeSalesOrder=blocked`.
 - Remote CI and R-12A release closure remain `[not-run]`.
+
+## Published Recovery Verification
+
+- [local] The original `[not-run]` line above records the pre-push boundary at implementation commit time; it is not deleted or rewritten.
+- [ci] Later workflow `29876893425` ran against `010688b5928d2bc4385bb8037940f5573587c5ae` and concluded `success`: `governance=success`, `backend-tests=success`, `frontend-build=success`.
+- [ci] The real frontend job logged 0 vulnerabilities for the exact include-dev audit and completed the 2602-module production build.

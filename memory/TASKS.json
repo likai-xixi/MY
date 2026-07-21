@@ -8,8 +8,8 @@
       "status": "in_progress",
       "owner": "Codex",
       "priority": "high",
-      "statusReason": "R-11 is published and CI-verified. R-12A source is published but remote CI is red. CI-FIX-01 has locally verified and committed brace-expansion 2.1.2 and immutable 5.1.8 repairs, each with an independent committed review; push, remote CI, and post-push closure are not-run. Field/process/version/release runtime and signed golden execution remain incomplete; both phase gates stay blocked.",
-      "nextStep": "Stop and wait for explicit push authorization for the complete dependency-security commit stack; do not begin R-12B.",
+      "statusReason": "R-11 remains published and CI-verified. All four CI-FIX-01 dependency-security commits are published through 010688b and recovery workflow 29876893425 is fully green, including frontend audit 0 and production build success. Clean after-push verification passes. The pure evidence handover commit and its independent CI remain; field/process/version/release runtime and signed golden execution remain incomplete, and both phase gates stay blocked.",
+      "nextStep": "Finish and publish only the CI-FIX-01 evidence handover, verify its distinct three-job workflow and final 0/0 alignment, then stop; do not begin R-12B.",
       "blockedBy": [],
       "verification": [
         "CR-20260720T115859Z-r-11-engineering-core-roadmap-rebaseline review RV-20260720T120106Z-r-11-engineering-core-roadmap-rebaseline allows only governance/contract roots and excludes runtime",
@@ -228,10 +228,10 @@
         "R-10C frontend browser acceptance passed on canonical http://127.0.0.1:5173/business/masterdata with nine tabs and product-category add/edit/disable/delete",
         "R-10C direct http://127.0.0.1:5173/masterdata returned RuoYi 404 and is recorded as non-canonical; no R-10D is opened"
       ],
-      "latestSession": "memory/sessions/2026-07-22-ci-fix-01-immutable.md",
+      "latestSession": "memory/sessions/2026-07-22-ci-fix-01-post-push.md",
       "handoverRequired": true,
       "updatedAt": "2026-07-22",
-      "latestChange": "CR-20260721T221950Z-ci-fix-01-immutable-dependency-advisories-remedi"
+      "latestChange": "CR-20260721T232438Z-ci-fix-01-frontend-dependency-security-post-push"
     },
     {
       "id": "TASK-CUSTOMER",
@@ -476,8 +476,8 @@
       "status": "in_progress",
       "owner": "Codex",
       "priority": "high",
-      "statusReason": "R-12A review and implementation commits are published and local runtime acceptance is complete. CI-FIX-01 locally repairs and commits the brace-expansion and Immutable audit blockers under separate committed reviews, but neither dependency repair is pushed or remotely verified; R-12A remains not CI-green or release-successful.",
-      "nextStep": "Wait for explicit CI-FIX-01 push authorization and require governance, backend-tests, and frontend-build success plus post-push handover; do not start R-12B.",
+      "statusReason": "R-12A review and implementation commits remain published and local runtime acceptance is complete. Historical workflows 29792754518 and 29794081328 failed the old dependency audit, but all four independent CI-FIX-01 commits are now published and recovery workflow 29876893425 is fully green. The evidence-only handover commit and its own CI remain before the R-12B pre-review green baseline is complete.",
+      "nextStep": "Publish only the CI-FIX-01 post-push evidence handover, require its independent governance, backend-tests, and frontend-build success, verify final clean 0/0 alignment, then stop; do not start R-12B.",
       "blockedBy": [],
       "verification": [
         "R-11 commit/push/post-push handover and successful scaffold-ci run 29745362302 reconfirmed",
@@ -497,8 +497,8 @@
         "Clean-worktree npm run check:after-push passed after implementation push; review package diff remained zero and both phase gates remained blocked",
         "npm run check"
       ],
-      "latestSession": "memory/sessions/2026-07-21-r-12a-post-push.md",
-      "latestChange": "CR-20260721T012310Z-r-12a-post-push-handover-sync",
+      "latestSession": "memory/sessions/2026-07-22-ci-fix-01-post-push.md",
+      "latestChange": "CR-20260721T232438Z-ci-fix-01-frontend-dependency-security-post-push",
       "handoverRequired": true,
       "updatedAt": "2026-07-22"
     }

@@ -55,3 +55,9 @@
 - Stop before push and wait for explicit authorization.
 - After authorization, push both review-only and implementation commits, inspect real CI logs, then make a separate post-push handover update only if all three jobs succeed.
 - Do not begin R-12B.
+
+## Published Recovery
+
+- [local] Review commit `6a9bfd57548160d85e28776f415b5883b6d92836` and fix commit `84963a0c04ca5482ff10c23efc4689c60febb060` were published without rewrite as part of the four-commit CI-FIX-01 stack.
+- [ci] Recovery workflow `29876893425` for final head `010688b5928d2bc4385bb8037940f5573587c5ae` concluded `success`; all three jobs succeeded and the frontend audit reported 0 vulnerabilities.
+- [local] Clean-worktree `npm run check:after-push` passed. Historical failed runs remain preserved; the evidence-only handover commit and its own workflow are tracked separately.

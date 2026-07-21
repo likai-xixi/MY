@@ -59,3 +59,10 @@
 ## Next Actions
 
 Complete and publish this evidence-only truth sync, verify its distinct CI result, then stop. The next authorized work should be a separate frontend dependency-security baseline repair; do not begin R-12B.
+
+## Later Recovery
+
+- [ci] This record preserves failures `29792754518` and `29794081328`; neither is deleted or relabeled.
+- [local] The separately reviewed CI-FIX-01 dependency-security stack was published through `010688b5928d2bc4385bb8037940f5573587c5ae`.
+- [ci] Recovery workflow `29876893425` concluded `success` with all three jobs green; frontend audit logged 0 vulnerabilities and production build completed.
+- [local] R-12A source now has remote green recovery evidence, while the new evidence-only handover commit and its distinct CI still gate the final R-12B pre-review baseline. R-12B has not started.

@@ -44,3 +44,10 @@ Status: verified [local]
 
 - [local] The generated database scanner is lexical over migration history and may list historical V005/V006 CREATE tokens. Live MySQL and executable validation SQL are the runtime authority; no governance rule was changed in R-12A.
 - [ci] R-12A source commits are published, but the implementation is not CI-green or release-successful because run `29792754518` failed. R-12B remains not started.
+
+## Dependency Security Recovery Verification
+
+- [ci] The failure statement above remains the historical result of run `29792754518`; handover run `29794081328` also failed for the same dependency audit.
+- [ci] Later recovery run `29876893425` completed `success` on final dependency-security head `010688b5928d2bc4385bb8037940f5573587c5ae`: `governance=success`, `backend-tests=success`, `frontend-build=success`.
+- [ci] The real frontend log reports exact include-dev audit 0 vulnerabilities, UI 7/7, and a successful 2602-module production build.
+- [local] Clean-worktree `npm run check:after-push` passed; R-12A review/decision diff remains zero, both phase gates remain blocked, and R-12B remains not started.

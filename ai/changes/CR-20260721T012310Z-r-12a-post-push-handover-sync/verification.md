@@ -27,3 +27,10 @@ Status: verified [local]
 ## Runtime Boundary
 
 - [not-run] No dependency repair, review change, R-12B, field-definition, process-scheme, sales-order, formula, BOM, production, DXF, Java, Vue, API, SQL, route, permission, database, or other runtime work is part of this sync.
+
+## Later Recovery Verification
+
+- [ci] The original run `29792754518` and this handover's run `29794081328` remain recorded as `failure`.
+- [ci] Independent recovery run `29876893425` for `010688b5928d2bc4385bb8037940f5573587c5ae` concluded `success`: governance `88789283965`, backend `88789283926`, frontend `88789283934` all succeeded.
+- [ci] Frontend logs show clean install 0 vulnerabilities, UI 7/7, exact include-dev audit 0 vulnerabilities, and production build 2602 modules / 18.93 seconds.
+- [local] After the green run, clean-worktree `npm run check:after-push` passed; review decisions and both blocked phase gates are unchanged, and no R-12B work exists.

@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "files": [
+    "ai/changes/CR-20260720T134007Z-change/handover.md",
+    "ai/changes/CR-20260720T134007Z-change/verification.md",
+    "ai/changes/CR-20260721T012310Z-r-12a-post-push-handover-sync/handover.md",
+    "ai/changes/CR-20260721T012310Z-r-12a-post-push-handover-sync/verification.md",
+    "ai/changes/CR-20260721T125309Z-ci-fix-01-brace-expansion-audit-remediation/handover.md",
+    "ai/changes/CR-20260721T125309Z-ci-fix-01-brace-expansion-audit-remediation/verification.md",
+    "ai/changes/CR-20260721T221950Z-ci-fix-01-immutable-dependency-advisories-remedi/handover.md",
+    "ai/changes/CR-20260721T221950Z-ci-fix-01-immutable-dependency-advisories-remedi/verification.md",
+    "ai/changes/CR-20260721T232438Z-ci-fix-01-frontend-dependency-security-post-push/changed-files.json",
+    "ai/changes/CR-20260721T232438Z-ci-fix-01-frontend-dependency-security-post-push/ci-evidence/run-29876893425.md",
+    "ai/changes/CR-20260721T232438Z-ci-fix-01-frontend-dependency-security-post-push/handover.md",
+    "ai/changes/CR-20260721T232438Z-ci-fix-01-frontend-dependency-security-post-push/impact.json",
+    "ai/changes/CR-20260721T232438Z-ci-fix-01-frontend-dependency-security-post-push/plan.md",
+    "ai/changes/CR-20260721T232438Z-ci-fix-01-frontend-dependency-security-post-push/request.md",
+    "ai/changes/CR-20260721T232438Z-ci-fix-01-frontend-dependency-security-post-push/verification.md",
+    "ai/changes/CURRENT_CHANGE.json",
+    "ai/context/current-context.json",
+    "ai/context/current-context.md",
+    "memory/CHANGELOG.md",
+    "memory/HANDOVER.md",
+    "memory/PROJECT_STATE.md",
+    "memory/TASKS.json",
+    "memory/sessions/2026-07-22-ci-fix-01-post-push.md"
+  ]
+}

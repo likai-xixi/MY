@@ -96,3 +96,10 @@ R-12A destructive catalog-option migration was implemented and locally accepted 
 
 - Publish the evidence-only post-push truth sync, then open a separate frontend dependency-security baseline repair if authorized.
 - Do not edit the review decision or begin R-12B while the dependency audit and release status remain blocked.
+
+## Dependency Security Recovery
+
+- [ci] Historical R-12A runs `29792754518` and `29794081328` remain failures and are not rewritten.
+- [local] The independent CI-FIX-01 stack published `brace-expansion 2.1.1 -> 2.1.2` and `immutable 5.1.6 -> 5.1.8` without changing this R-12A review or business runtime.
+- [ci] Recovery run `29876893425` for head `010688b5928d2bc4385bb8037940f5573587c5ae` concluded `success`; all three jobs succeeded, frontend audit was 0, and the production build succeeded.
+- [local] R-12A source now has a successful remote CI recovery run. The evidence-only handover commit and its independent workflow remain required before the R-12B pre-review green baseline is complete; both phase gates remain blocked.

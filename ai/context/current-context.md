@@ -1,16 +1,21 @@
 # Current Context
 
 Current feature: `platform`
-Current change: `CR-20260721T221950Z-ci-fix-01-immutable-dependency-advisories-remedi`
+Current change: `CR-20260721T232438Z-ci-fix-01-frontend-dependency-security-post-push`
 Repository: RuoYi + Vue3 + Codex Auto Dev OS
 Profile: adapter `ruoyi`, locked `true`
 
 ## Allowed Edit Roots
 
-- `ruoyi-ui/package-lock.json`
-- `tests/frontend-dependency-hardening.test.js`
-- `ai/reviews/RV-20260721T222047Z-ci-fix-01-immutable-dependency-advisorie`
-- `ai/changes/CR-20260721T221950Z-ci-fix-01-immutable-dependency-advisories-remedi`
+- `ai/changes/CR-20260721T125309Z-ci-fix-01-brace-expansion-audit-remediation/handover.md`
+- `ai/changes/CR-20260721T125309Z-ci-fix-01-brace-expansion-audit-remediation/verification.md`
+- `ai/changes/CR-20260721T221950Z-ci-fix-01-immutable-dependency-advisories-remedi/handover.md`
+- `ai/changes/CR-20260721T221950Z-ci-fix-01-immutable-dependency-advisories-remedi/verification.md`
+- `ai/changes/CR-20260720T134007Z-change/handover.md`
+- `ai/changes/CR-20260720T134007Z-change/verification.md`
+- `ai/changes/CR-20260721T012310Z-r-12a-post-push-handover-sync/handover.md`
+- `ai/changes/CR-20260721T012310Z-r-12a-post-push-handover-sync/verification.md`
+- `ai/changes/CR-20260721T232438Z-ci-fix-01-frontend-dependency-security-post-push`
 - `ai/changes/CURRENT_CHANGE.json`
 - `ai/context/current-context.md`
 - `ai/context/current-context.json`
@@ -18,20 +23,24 @@ Profile: adapter `ruoyi`, locked `true`
 - `memory/PROJECT_STATE.md`
 - `memory/CHANGELOG.md`
 - `memory/TASKS.json`
-- `memory/sessions/2026-07-22-ci-fix-01-immutable.md`
+- `memory/sessions/2026-07-22-ci-fix-01-post-push.md`
 
 ## Forbidden Edit Roots
 
+- `package.json`
+- `package-lock.json`
+- `ruoyi-ui/package.json`
+- `ruoyi-ui/package-lock.json`
 - `.github/workflows`
-- `ai/reviews/RV-20260720T134134Z-r-12a-option-set-option-value-masterdata`
-- `ai/reviews/RV-20260721T130701Z-ci-fix-01-brace-expansion-audit-remediat`
+- `scripts`
+- `tools`
+- `tests`
+- `ai/reviews`
 - `ai/contracts`
 - `ai/roadmap`
 - `ai/registry`
 - `ai/rules`
 - `graph`
-- `scripts`
-- `tools`
 - `ruoyi-admin`
 - `ruoyi-framework`
 - `ruoyi-business`
@@ -39,8 +48,7 @@ Profile: adapter `ruoyi`, locked `true`
 - `ruoyi-common`
 - `ruoyi-generator`
 - `ruoyi-quartz`
-- `ruoyi-ui/package.json`
-- `ruoyi-ui/src`
+- `ruoyi-ui`
 - `sql`
 
 ## Must Read Files
@@ -56,9 +64,9 @@ Profile: adapter `ruoyi`, locked `true`
 - `ai/roadmap/phase-gates.json` - beforeSalesOrder gate state.
 - `ai/roadmap/refactor-debt.json` - Known debt affecting sales-order handoff.
 - `ai/roadmap/enhancement-backlog.json` - Governance backlog and required/deferred evidence.
-- `ai/changes/CR-20260721T221950Z-ci-fix-01-immutable-dependency-advisories-remedi/impact.json` - Current change allowed and forbidden edit roots.
-- `ai/changes/CR-20260721T221950Z-ci-fix-01-immutable-dependency-advisories-remedi/plan.md` - Current change execution plan.
-- `ai/changes/CR-20260721T221950Z-ci-fix-01-immutable-dependency-advisories-remedi/verification.md` - Current change verification evidence.
+- `ai/changes/CR-20260721T232438Z-ci-fix-01-frontend-dependency-security-post-push/impact.json` - Current change allowed and forbidden edit roots.
+- `ai/changes/CR-20260721T232438Z-ci-fix-01-frontend-dependency-security-post-push/plan.md` - Current change execution plan.
+- `ai/changes/CR-20260721T232438Z-ci-fix-01-frontend-dependency-security-post-push/verification.md` - Current change verification evidence.
 
 ## Must Not Break
 
@@ -120,27 +128,21 @@ Deferred:
 
 ## Planned Verification Commands
 
-- `npm run resume`
-- `npm run impact -- platform --mode update --json`
-- `npm run rule:preflight -- before-sales-order-phase-gate`
-- `npm --prefix ruoyi-ui ci`
-- `npm --prefix ruoyi-ui audit --audit-level=moderate --include=dev`
-- `npm --prefix ruoyi-ui audit --json`
-- `npm --prefix ruoyi-ui ls immutable --all`
-- `npm --prefix ruoyi-ui explain immutable`
-- `npm --prefix ruoyi-ui ls sass-embedded --all`
-- `npm --prefix ruoyi-ui explain sass-embedded`
-- `npm --prefix ruoyi-ui test`
-- `npm --prefix ruoyi-ui run build:prod`
-- `node --test tests/masterdata-runtime.test.js`
-- `configured Maven -pl ruoyi-business -am verify`
-- `configured Maven -pl ruoyi-business -am -Pintegration-test verify`
+- `npm run check:after-push`
+- `gh run view 29876893425 --json databaseId,workflowName,headSha,status,conclusion,url,jobs`
+- `gh run view 29876893425 --job 88789283934 --log`
+- `npm run context:build -- platform`
 - `npm run scan:all`
 - `npm run finalize:change`
+- `npm run check:handover-integrity`
+- `npm run check:current-doc-state`
+- `npm run check:memory-quality`
 - `npm run check`
 - `npm run close:change`
 - `git diff --check`
-- `review package and phase-gate scope audits`
+- `exact evidence-only and forbidden-runtime root audit`
+- `git push origin master`
+- `verify the handover commit's distinct GitHub Actions run`
 
 ## Next Steps
 
