@@ -3,16 +3,18 @@
   "generatedBy": "scripts/context-build.js",
   "generatedAt": "stable",
   "currentFeature": "platform",
-  "currentChange": "CR-20260721T012310Z-r-12a-post-push-handover-sync",
+  "currentChange": "CR-20260721T125309Z-ci-fix-01-brace-expansion-audit-remediation",
   "repositoryProfile": {
     "adapter": "ruoyi",
     "locked": true,
     "stack": "RuoYi + Vue3 + Codex Auto Dev OS"
   },
   "allowedEditRoots": [
-    "ai/changes/CR-20260720T134007Z-change/handover.md",
-    "ai/changes/CR-20260720T134007Z-change/verification.md",
-    "ai/changes/CR-20260721T012310Z-r-12a-post-push-handover-sync",
+    "ruoyi-ui/package.json",
+    "ruoyi-ui/package-lock.json",
+    "tests/frontend-dependency-hardening.test.js",
+    "ai/reviews/RV-20260721T130701Z-ci-fix-01-brace-expansion-audit-remediat",
+    "ai/changes/CR-20260721T125309Z-ci-fix-01-brace-expansion-audit-remediation",
     "ai/changes/CURRENT_CHANGE.json",
     "ai/context/current-context.md",
     "ai/context/current-context.json",
@@ -20,25 +22,18 @@
     "memory/PROJECT_STATE.md",
     "memory/CHANGELOG.md",
     "memory/TASKS.json",
-    "memory/sessions/2026-07-21-r-12a-post-push.md"
+    "memory/sessions/2026-07-21-ci-fix-01.md"
   ],
   "forbiddenEditRoots": [
-    "package.json",
-    "package-lock.json",
-    "ruoyi-ui/package.json",
-    "ruoyi-ui/package-lock.json",
     ".github/workflows",
-    "scripts",
-    "tools",
-    "tests",
-    "ai/reviews",
+    "ai/reviews/RV-20260720T134134Z-r-12a-option-set-option-value-masterdata",
     "ai/contracts",
     "ai/roadmap",
     "ai/registry",
     "ai/rules",
     "graph",
-    "backend",
-    "frontend",
+    "scripts",
+    "tools",
     "ruoyi-admin",
     "ruoyi-framework",
     "ruoyi-business",
@@ -46,7 +41,7 @@
     "ruoyi-common",
     "ruoyi-generator",
     "ruoyi-quartz",
-    "ruoyi-ui",
+    "ruoyi-ui/src",
     "sql"
   ],
   "mustReadFiles": [
@@ -95,15 +90,15 @@
       "reason": "Governance backlog and required/deferred evidence."
     },
     {
-      "path": "ai/changes/CR-20260721T012310Z-r-12a-post-push-handover-sync/impact.json",
+      "path": "ai/changes/CR-20260721T125309Z-ci-fix-01-brace-expansion-audit-remediation/impact.json",
       "reason": "Current change allowed and forbidden edit roots."
     },
     {
-      "path": "ai/changes/CR-20260721T012310Z-r-12a-post-push-handover-sync/plan.md",
+      "path": "ai/changes/CR-20260721T125309Z-ci-fix-01-brace-expansion-audit-remediation/plan.md",
       "reason": "Current change execution plan."
     },
     {
-      "path": "ai/changes/CR-20260721T012310Z-r-12a-post-push-handover-sync/verification.md",
+      "path": "ai/changes/CR-20260721T125309Z-ci-fix-01-brace-expansion-audit-remediation/verification.md",
       "reason": "Current change verification evidence."
     }
   ],
@@ -342,21 +337,31 @@
   ],
   "verificationCommands": [
     "npm run resume",
-    "git push origin master",
-    "gh run view 29792754518 --json databaseId,workflowName,headSha,status,conclusion,url,jobs",
-    "gh run view 29792754518 --job 88517815557 --log",
+    "npm run impact -- platform --mode update --json",
+    "npm run rule:preflight -- before-sales-order-phase-gate",
+    "npm --prefix ruoyi-ui ci",
     "npm --prefix ruoyi-ui audit --audit-level=moderate --include=dev",
-    "npm run check:after-push",
-    "npm run context:build -- platform",
+    "npm --prefix ruoyi-ui audit --json",
+    "npm --prefix ruoyi-ui ls brace-expansion --all",
+    "npm --prefix ruoyi-ui explain brace-expansion",
+    "npm --prefix ruoyi-ui ls minimatch --all",
+    "npm --prefix ruoyi-ui explain minimatch",
+    "npm --prefix ruoyi-ui ls glob --all",
+    "npm --prefix ruoyi-ui explain glob",
+    "npm --prefix ruoyi-ui ls js-beautify --all",
+    "git grep js-beautify usage variants",
+    "clean ruoyi-ui node_modules then npm ci",
+    "npm --prefix ruoyi-ui test",
+    "npm --prefix ruoyi-ui run build:prod",
+    "focused R-12A masterdata tests",
+    "mvn -pl ruoyi-business -am -Pintegration-test verify",
     "npm run scan:all",
     "npm run finalize:change",
-    "npm run check:handover-integrity",
-    "npm run check:current-doc-state",
-    "npm run check:memory-quality",
     "npm run check",
     "npm run close:change",
     "git diff --check",
-    "exact evidence-only and forbidden-runtime root audit"
+    "R-12A review package and decision diff audit",
+    "engineeringCoreReady and beforeSalesOrder phase-gate audit"
   ],
   "nextSteps": [
     "Keep edits inside the active impact boundary.",

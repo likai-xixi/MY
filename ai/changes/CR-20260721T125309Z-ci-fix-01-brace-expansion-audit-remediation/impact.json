@@ -1,0 +1,113 @@
+{
+  "schemaVersion": 1,
+  "mode": "rule-change",
+  "changeType": "governance/rule-change",
+  "workstream": "governance/dependency-security/ci-fix",
+  "baseRevision": "58478e509d69eb212d5808463b7efeea47bee64e",
+  "reviewId": "RV-20260721T130701Z-ci-fix-01-brace-expansion-audit-remediat",
+  "feature": {
+    "id": "platform",
+    "name": "平台底座治理",
+    "status": "active"
+  },
+  "summary": "Remediate the brace-expansion audit failure through the smallest compatible frontend dependency change, preserve fail-closed CI, and keep all R-12A business/review and R-12B paths unchanged.",
+  "affected": {
+    "dependencyManifests": [
+      "ruoyi-ui/package.json",
+      "ruoyi-ui/package-lock.json"
+    ],
+    "regressionCoverage": [
+      "tests/frontend-dependency-hardening.test.js"
+    ],
+    "changeRecord": [
+      "ai/changes/CR-20260721T125309Z-ci-fix-01-brace-expansion-audit-remediation"
+    ],
+    "preReview": [
+      "ai/reviews/RV-20260721T130701Z-ci-fix-01-brace-expansion-audit-remediat"
+    ],
+    "contextAndMemory": [
+      "ai/context/current-context.md",
+      "ai/context/current-context.json",
+      "memory/HANDOVER.md",
+      "memory/PROJECT_STATE.md",
+      "memory/CHANGELOG.md",
+      "memory/TASKS.json",
+      "memory/sessions/2026-07-21-ci-fix-01.md"
+    ]
+  },
+  "allowedEditRoots": [
+    "ruoyi-ui/package.json",
+    "ruoyi-ui/package-lock.json",
+    "tests/frontend-dependency-hardening.test.js",
+    "ai/reviews/RV-20260721T130701Z-ci-fix-01-brace-expansion-audit-remediat",
+    "ai/changes/CR-20260721T125309Z-ci-fix-01-brace-expansion-audit-remediation",
+    "ai/changes/CURRENT_CHANGE.json",
+    "ai/context/current-context.md",
+    "ai/context/current-context.json",
+    "memory/HANDOVER.md",
+    "memory/PROJECT_STATE.md",
+    "memory/CHANGELOG.md",
+    "memory/TASKS.json",
+    "memory/sessions/2026-07-21-ci-fix-01.md"
+  ],
+  "forbiddenEditRoots": [
+    ".github/workflows",
+    "ai/reviews/RV-20260720T134134Z-r-12a-option-set-option-value-masterdata",
+    "ai/contracts",
+    "ai/roadmap",
+    "ai/registry",
+    "ai/rules",
+    "graph",
+    "scripts",
+    "tools",
+    "ruoyi-admin",
+    "ruoyi-framework",
+    "ruoyi-business",
+    "ruoyi-system",
+    "ruoyi-common",
+    "ruoyi-generator",
+    "ruoyi-quartz",
+    "ruoyi-ui/src",
+    "sql"
+  ],
+  "blockers": [],
+  "nonGoals": [
+    "No CI audit removal, weakening, allowlist, continue-on-error, force upgrade, package-manager switch, or unrelated dependency migration.",
+    "No R-12A option-set/value behavior, Java business logic, V007 migration, review package, or decision change.",
+    "No customer, customer-fund, field-definition, field-schema, process-scheme, sales-order, formula, BOM, production, DXF, delivery, finance, or R-12B work.",
+    "No engineeringCoreReady or beforeSalesOrder status change.",
+    "No push or remote CI action without later explicit user authorization."
+  ],
+  "requiredCommands": [
+    "npm run resume",
+    "npm run impact -- platform --mode update --json",
+    "npm run rule:preflight -- before-sales-order-phase-gate",
+    "npm --prefix ruoyi-ui ci",
+    "npm --prefix ruoyi-ui audit --audit-level=moderate --include=dev",
+    "npm --prefix ruoyi-ui audit --json",
+    "npm --prefix ruoyi-ui ls brace-expansion --all",
+    "npm --prefix ruoyi-ui explain brace-expansion",
+    "npm --prefix ruoyi-ui ls minimatch --all",
+    "npm --prefix ruoyi-ui explain minimatch",
+    "npm --prefix ruoyi-ui ls glob --all",
+    "npm --prefix ruoyi-ui explain glob",
+    "npm --prefix ruoyi-ui ls js-beautify --all",
+    "git grep js-beautify usage variants",
+    "clean ruoyi-ui node_modules then npm ci",
+    "npm --prefix ruoyi-ui test",
+    "npm --prefix ruoyi-ui run build:prod",
+    "focused R-12A masterdata tests",
+    "mvn -pl ruoyi-business -am -Pintegration-test verify",
+    "npm run scan:all",
+    "npm run finalize:change",
+    "npm run check",
+    "npm run close:change",
+    "git diff --check",
+    "R-12A review package and decision diff audit",
+    "engineeringCoreReady and beforeSalesOrder phase-gate audit"
+  ],
+  "noBusinessRuntimeChange": true,
+  "noR12AReviewChange": true,
+  "noR12BImplementation": true,
+  "noPhaseGateChange": true
+}

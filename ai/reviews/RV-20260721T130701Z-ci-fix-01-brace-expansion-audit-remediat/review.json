@@ -1,0 +1,42 @@
+{
+  "id": "RV-20260721T130701Z-ci-fix-01-brace-expansion-audit-remediat",
+  "request": "功能预审：CI-FIX-01 brace expansion audit remediation",
+  "mode": "pre-review",
+  "feature": "platform",
+  "baseRevision": "58478e509d69eb212d5808463b7efeea47bee64e",
+  "createdAt": "2026-07-21T13:07:01.169Z",
+  "status": "approved",
+  "decision": {
+    "allowImplementation": true,
+    "reason": "Approve only the compatible brace-expansion 2.1.2 lockfile repair and focused dependency regression; push and remote CI remain separately gated."
+  },
+  "approvedFeatures": [
+    "platform"
+  ],
+  "approvedEditRoots": [
+    "ruoyi-ui/package-lock.json",
+    "tests/frontend-dependency-hardening.test.js",
+    "ai/changes/CR-20260721T125309Z-ci-fix-01-brace-expansion-audit-remediation",
+    "ai/reviews/RV-20260721T130701Z-ci-fix-01-brace-expansion-audit-remediat",
+    "ai/context/current-context.md",
+    "ai/context/current-context.json",
+    "memory/HANDOVER.md",
+    "memory/PROJECT_STATE.md",
+    "memory/CHANGELOG.md",
+    "memory/TASKS.json",
+    "memory/sessions/2026-07-21-ci-fix-01.md"
+  ],
+  "approvedEditRootsReason": "Only the exact frontend lockfile, the existing platform dependency regression, this CI-FIX-01 review/change evidence, and resumable context/memory files are approved. Workflow, business runtime, R-12A review, roadmap, registry, graph, and R-12B roots remain excluded.",
+  "requiredFiles": [
+    "request.md",
+    "context.md",
+    "product-review.md",
+    "architecture-review.md",
+    "backend-review.md",
+    "frontend-review.md",
+    "qa-review.md",
+    "risk-register.md",
+    "decision.md",
+    "review.json"
+  ]
+}

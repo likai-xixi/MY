@@ -1,3 +1,5 @@
+# Context
+
 # Current Context
 
 Current feature: `platform`
@@ -10,7 +12,7 @@ Profile: adapter `ruoyi`, locked `true`
 - `ruoyi-ui/package.json`
 - `ruoyi-ui/package-lock.json`
 - `tests/frontend-dependency-hardening.test.js`
-- `ai/reviews/RV-20260721T130701Z-ci-fix-01-brace-expansion-audit-remediat`
+- `ai/reviews/RV-*-ci-fix-01-brace-expansion-audit-remediation`
 - `ai/changes/CR-20260721T125309Z-ci-fix-01-brace-expansion-audit-remediation`
 - `ai/changes/CURRENT_CHANGE.json`
 - `ai/context/current-context.md`
