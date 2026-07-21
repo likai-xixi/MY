@@ -1,0 +1,42 @@
+{
+  "id": "RV-20260721T222047Z-ci-fix-01-immutable-dependency-advisorie",
+  "request": "功能预审：CI-FIX-01 immutable dependency advisories remediation",
+  "mode": "pre-review",
+  "feature": "platform",
+  "baseRevision": "84963a0c04ca5482ff10c23efc4689c60febb060",
+  "createdAt": "2026-07-21T22:20:47.790Z",
+  "status": "approved",
+  "decision": {
+    "allowImplementation": true,
+    "reason": "Approve only the compatible immutable lockfile repair and focused dependency regression; push and remote CI remain separately gated."
+  },
+  "approvedFeatures": [
+    "platform"
+  ],
+  "approvedEditRoots": [
+    "ruoyi-ui/package-lock.json",
+    "tests/frontend-dependency-hardening.test.js",
+    "ai/changes/CR-20260721T221950Z-ci-fix-01-immutable-dependency-advisories-remedi",
+    "ai/reviews/RV-20260721T222047Z-ci-fix-01-immutable-dependency-advisorie",
+    "ai/context/current-context.md",
+    "ai/context/current-context.json",
+    "memory/HANDOVER.md",
+    "memory/PROJECT_STATE.md",
+    "memory/CHANGELOG.md",
+    "memory/TASKS.json",
+    "memory/sessions/2026-07-22-ci-fix-01-immutable.md"
+  ],
+  "approvedEditRootsReason": "Only the exact frontend lockfile, existing platform dependency regression, this immutable review/change evidence, and resumable context/memory files are approved. Package manifest, parent dependencies, workflow, business runtime, both earlier reviews, roadmap, registry, graph, and R-12B roots remain excluded.",
+  "requiredFiles": [
+    "request.md",
+    "context.md",
+    "product-review.md",
+    "architecture-review.md",
+    "backend-review.md",
+    "frontend-review.md",
+    "qa-review.md",
+    "risk-register.md",
+    "decision.md",
+    "review.json"
+  ]
+}

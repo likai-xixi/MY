@@ -1,0 +1,108 @@
+{
+  "schemaVersion": 1,
+  "mode": "rule-change",
+  "changeType": "governance/rule-change",
+  "workstream": "governance/dependency-security/ci-fix",
+  "baseRevision": "84963a0c04ca5482ff10c23efc4689c60febb060",
+  "reviewId": "RV-20260721T222047Z-ci-fix-01-immutable-dependency-advisorie",
+  "feature": {
+    "id": "platform",
+    "name": "平台底座治理",
+    "status": "active"
+  },
+  "summary": "Remediate the newly published immutable advisories through the smallest compatible frontend lockfile update while preserving the existing CI-FIX commits and all business/runtime boundaries.",
+  "affected": {
+    "dependencyManifests": [
+      "ruoyi-ui/package-lock.json"
+    ],
+    "regressionCoverage": [
+      "tests/frontend-dependency-hardening.test.js"
+    ],
+    "changeRecord": [
+      "ai/changes/CR-20260721T221950Z-ci-fix-01-immutable-dependency-advisories-remedi"
+    ],
+    "preReview": [
+      "ai/reviews/RV-20260721T222047Z-ci-fix-01-immutable-dependency-advisorie"
+    ],
+    "contextAndMemory": [
+      "ai/context/current-context.md",
+      "ai/context/current-context.json",
+      "memory/HANDOVER.md",
+      "memory/PROJECT_STATE.md",
+      "memory/CHANGELOG.md",
+      "memory/TASKS.json",
+      "memory/sessions/2026-07-22-ci-fix-01-immutable.md"
+    ]
+  },
+  "allowedEditRoots": [
+    "ruoyi-ui/package-lock.json",
+    "tests/frontend-dependency-hardening.test.js",
+    "ai/reviews/RV-20260721T222047Z-ci-fix-01-immutable-dependency-advisorie",
+    "ai/changes/CR-20260721T221950Z-ci-fix-01-immutable-dependency-advisories-remedi",
+    "ai/changes/CURRENT_CHANGE.json",
+    "ai/context/current-context.md",
+    "ai/context/current-context.json",
+    "memory/HANDOVER.md",
+    "memory/PROJECT_STATE.md",
+    "memory/CHANGELOG.md",
+    "memory/TASKS.json",
+    "memory/sessions/2026-07-22-ci-fix-01-immutable.md"
+  ],
+  "forbiddenEditRoots": [
+    ".github/workflows",
+    "ai/reviews/RV-20260720T134134Z-r-12a-option-set-option-value-masterdata",
+    "ai/reviews/RV-20260721T130701Z-ci-fix-01-brace-expansion-audit-remediat",
+    "ai/contracts",
+    "ai/roadmap",
+    "ai/registry",
+    "ai/rules",
+    "graph",
+    "scripts",
+    "tools",
+    "ruoyi-admin",
+    "ruoyi-framework",
+    "ruoyi-business",
+    "ruoyi-system",
+    "ruoyi-common",
+    "ruoyi-generator",
+    "ruoyi-quartz",
+    "ruoyi-ui/package.json",
+    "ruoyi-ui/src",
+    "sql"
+  ],
+  "blockers": [],
+  "nonGoals": [
+    "No rewrite, amend, rebase, or squash of 6a9bfd57548160d85e28776f415b5883b6d92836 or 84963a0c04ca5482ff10c23efc4689c60febb060.",
+    "No package.json, parent dependency, override, workflow, audit threshold, package manager, or unrelated dependency change.",
+    "No R-12A business/review, Java/Vue runtime, V007, customer, sales-order, formula, production, DXF, delivery, finance, or R-12B work.",
+    "No engineeringCoreReady or beforeSalesOrder status change.",
+    "No push, remote CI, or post-push handover."
+  ],
+  "requiredCommands": [
+    "npm run resume",
+    "npm run impact -- platform --mode update --json",
+    "npm run rule:preflight -- before-sales-order-phase-gate",
+    "npm --prefix ruoyi-ui ci",
+    "npm --prefix ruoyi-ui audit --audit-level=moderate --include=dev",
+    "npm --prefix ruoyi-ui audit --json",
+    "npm --prefix ruoyi-ui ls immutable --all",
+    "npm --prefix ruoyi-ui explain immutable",
+    "npm --prefix ruoyi-ui ls sass-embedded --all",
+    "npm --prefix ruoyi-ui explain sass-embedded",
+    "npm --prefix ruoyi-ui test",
+    "npm --prefix ruoyi-ui run build:prod",
+    "node --test tests/masterdata-runtime.test.js",
+    "configured Maven -pl ruoyi-business -am verify",
+    "configured Maven -pl ruoyi-business -am -Pintegration-test verify",
+    "npm run scan:all",
+    "npm run finalize:change",
+    "npm run check",
+    "npm run close:change",
+    "git diff --check",
+    "review package and phase-gate scope audits"
+  ],
+  "noBusinessRuntimeChange": true,
+  "noR12AReviewChange": true,
+  "noR12BImplementation": true,
+  "noPhaseGateChange": true
+}

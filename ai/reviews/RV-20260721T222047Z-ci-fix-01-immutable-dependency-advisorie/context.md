@@ -1,3 +1,5 @@
+# Context
+
 # Current Context
 
 Current feature: `platform`
@@ -9,7 +11,6 @@ Profile: adapter `ruoyi`, locked `true`
 
 - `ruoyi-ui/package-lock.json`
 - `tests/frontend-dependency-hardening.test.js`
-- `ai/reviews/RV-20260721T222047Z-ci-fix-01-immutable-dependency-advisorie`
 - `ai/changes/CR-20260721T221950Z-ci-fix-01-immutable-dependency-advisories-remedi`
 - `ai/changes/CURRENT_CHANGE.json`
 - `ai/context/current-context.md`
