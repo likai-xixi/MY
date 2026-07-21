@@ -1,83 +1,51 @@
 # Current Context
 
-Current feature: `masterdata`
-Current change: `CR-20260720T134007Z-change`
+Current feature: `platform`
+Current change: `CR-20260721T012310Z-r-12a-post-push-handover-sync`
 Repository: RuoYi + Vue3 + Codex Auto Dev OS
 Profile: adapter `ruoyi`, locked `true`
 
 ## Allowed Edit Roots
 
-- `ai/changes/CR-20260720T134007Z-change`
-- `ai/reviews/RV-20260720T134134Z-r-12a-option-set-option-value-masterdata`
+- `ai/changes/CR-20260720T134007Z-change/handover.md`
+- `ai/changes/CR-20260720T134007Z-change/verification.md`
+- `ai/changes/CR-20260721T012310Z-r-12a-post-push-handover-sync`
+- `ai/changes/CURRENT_CHANGE.json`
 - `ai/context/current-context.md`
 - `ai/context/current-context.json`
-- `ai/context/features/masterdata.md`
-- `ai/contracts/engineering-core.index.md`
-- `ai/contracts/engineering-core.migration-plan.md`
-- `ai/contracts/masterdata.product.md`
-- `ai/contracts/masterdata.sales-option.md`
-- `ai/contracts/masterdata.migration-plan.md`
-- `ai/registry/migration-registry.json`
-- `features/masterdata.md`
-- `ruoyi-business/src/main/java/com/ruoyi/business/masterdata`
-- `ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/masterdata`
-- `ruoyi-ui/src/views/masterdata`
-- `ruoyi-ui/src/api/masterdata.contract.md`
-- `ruoyi-ui/src/api/masterdata.js`
-- `ruoyi-business/src/test/java/com/ruoyi/business/masterdata/service/MasterDataReferenceMySqlIT.java`
-- `ruoyi-business/src/test/java/com/ruoyi/business/masterdata/service/MasterDataServiceTest.java`
-- `tests/masterdata-runtime.test.js`
-- `ai/contracts/masterdata.api.md`
-- `ai/contracts/masterdata.db.md`
-- `ai/contracts/masterdata.delete-ownership.md`
-- `ai/contracts/masterdata.permission.md`
-- `ai/contracts/masterdata.r10-contract-test-matrix.md`
-- `ai/contracts/masterdata.r10-implementation-boundary.md`
-- `ai/contracts/masterdata.ui.md`
-- `graph/api-graph.json`
-- `graph/ui-graph.json`
-- `memory/API_CATALOG.md`
-- `ruoyi-ui/src/views/masterdata/README.md`
-- `ruoyi-ui/src/views/masterdata/screen.md`
-- `sql/masterdata.ownership.md`
-- `sql/migrations/V20260628_005_masterdata_r10_schema.sql`
-- `sql/migrations/V20260628_006_masterdata_r10_menu_permission.sql`
-- `sql/migrations/V20260720_007_masterdata_option_set_breaking_migration.sql`
-- `sql/validation/masterdata_runtime_validation.sql`
-- `sql/validation/masterdata_option_set_validation.sql`
-- `ruoyi-business/src/main/resources/mapper/masterdata/MasterDataMapper.xml`
-- `ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/masterdata/MasterDataController.java`
-- `ruoyi-ui/src/views/masterdata/index.vue`
-- `ai/registry/features.json`
-- `ai/registry/modules.json`
-- `ai/changes`
-- `ai/generated`
-- `graph`
-- `memory`
-- `features`
-- `tests`
+- `memory/HANDOVER.md`
+- `memory/PROJECT_STATE.md`
+- `memory/CHANGELOG.md`
+- `memory/TASKS.json`
+- `memory/sessions/2026-07-21-r-12a-post-push.md`
 
 ## Forbidden Edit Roots
 
 - `package.json`
 - `package-lock.json`
+- `ruoyi-ui/package.json`
+- `ruoyi-ui/package-lock.json`
 - `.github/workflows`
 - `scripts`
 - `tools`
-- `.codex/skills`
+- `tests`
+- `ai/reviews`
+- `ai/contracts`
+- `ai/roadmap`
+- `ai/registry`
 - `ai/rules`
-- `ai/project-profile.json`
-- `ruoyi-business/src/main/java/com/ruoyi/business/customer`
-- `ruoyi-admin/src/main/java/com/ruoyi/web/controller/business/customer`
-- `ruoyi-ui/src/views/customer`
-- `ruoyi-ui/src/api/customer.js`
-- `ruoyi-business/src/main/java/com/ruoyi/business/salesorder`
-- `ruoyi-business/src/main/java/com/ruoyi/business/sales-order`
-- `ruoyi-ui/src/views/salesorder`
-- `ruoyi-ui/src/views/sales-order`
-- `ruoyi-business/src/main/java/com/ruoyi/business/production`
-- `ruoyi-business/src/main/java/com/ruoyi/business/formula`
-- `ruoyi-business/src/main/java/com/ruoyi/business/dxf`
+- `graph`
+- `backend`
+- `frontend`
+- `ruoyi-admin`
+- `ruoyi-framework`
+- `ruoyi-business`
+- `ruoyi-system`
+- `ruoyi-common`
+- `ruoyi-generator`
+- `ruoyi-quartz`
+- `ruoyi-ui`
+- `sql`
 
 ## Must Read Files
 
@@ -88,13 +56,13 @@ Profile: adapter `ruoyi`, locked `true`
 - `package.json` - Available workflow and check scripts.
 - `ai/registry/features.json` - Feature ownership and active feature context.
 - `ai/registry/modules.json` - Module ownership roots.
-- `ai/context/features/masterdata.md` - Focused context for masterdata.
+- `features/platform.md` - Focused context for platform.
 - `ai/roadmap/phase-gates.json` - beforeSalesOrder gate state.
 - `ai/roadmap/refactor-debt.json` - Known debt affecting sales-order handoff.
 - `ai/roadmap/enhancement-backlog.json` - Governance backlog and required/deferred evidence.
-- `ai/changes/CR-20260720T134007Z-change/impact.json` - Current change allowed and forbidden edit roots.
-- `ai/changes/CR-20260720T134007Z-change/plan.md` - Current change execution plan.
-- `ai/changes/CR-20260720T134007Z-change/verification.md` - Current change verification evidence.
+- `ai/changes/CR-20260721T012310Z-r-12a-post-push-handover-sync/impact.json` - Current change allowed and forbidden edit roots.
+- `ai/changes/CR-20260721T012310Z-r-12a-post-push-handover-sync/plan.md` - Current change execution plan.
+- `ai/changes/CR-20260721T012310Z-r-12a-post-push-handover-sync/verification.md` - Current change verification evidence.
 
 ## Must Not Break
 
@@ -157,19 +125,21 @@ Deferred:
 ## Planned Verification Commands
 
 - `npm run resume`
-- `npm run impact -- masterdata`
+- `git push origin master`
+- `gh run view 29792754518 --json databaseId,workflowName,headSha,status,conclusion,url,jobs`
+- `gh run view 29792754518 --job 88517815557 --log`
+- `npm --prefix ruoyi-ui audit --audit-level=moderate --include=dev`
+- `npm run check:after-push`
+- `npm run context:build -- platform`
 - `npm run scan:all`
 - `npm run finalize:change`
-- `npm run close:change`
+- `npm run check:handover-integrity`
+- `npm run check:current-doc-state`
+- `npm run check:memory-quality`
 - `npm run check`
+- `npm run close:change`
 - `git diff --check`
-- `focused masterdata tests`
-- `Maven compile`
-- `Vue production build`
-- `MySQL migration and validation SQL`
-- `API acceptance`
-- `browser acceptance`
-- `reverse audit`
+- `exact evidence-only and forbidden-runtime root audit`
 
 ## Next Steps
 

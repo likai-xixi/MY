@@ -8,8 +8,8 @@
       "status": "in_progress",
       "owner": "Codex",
       "priority": "high",
-      "statusReason": "R-11 is published and CI-verified. R-12A completed the destructive catalog/option slice locally, but field/process/version/release runtime and signed golden execution remain unimplemented, so engineeringCoreReady and beforeSalesOrder remain blocked.",
-      "nextStep": "Wait for user review and explicit commit/push authority for R-12A. Any later engineering-core slice requires its own change and review; do not start sales-order, production, formula, calculation-engine, or DXF runtime.",
+      "statusReason": "R-11 is published and CI-verified. Both R-12A source commits are published, but implementation CI run 29792754518 failed the newly published brace-expansion dependency advisory, and field/process/version/release runtime plus signed golden execution remain incomplete; engineeringCoreReady and beforeSalesOrder stay blocked.",
+      "nextStep": "Complete the R-12A evidence-only post-push truth sync, then use a separate approved frontend dependency-security batch before considering R-12B pre-review; do not start sales-order, production, formula, calculation-engine, or DXF runtime.",
       "blockedBy": [],
       "verification": [
         "CR-20260720T115859Z-r-11-engineering-core-roadmap-rebaseline review RV-20260720T120106Z-r-11-engineering-core-roadmap-rebaseline allows only governance/contract roots and excludes runtime",
@@ -20,6 +20,9 @@
         "R-11 GitHub Actions scaffold-ci run 29745362302 completed success; governance job 88361869178, backend-tests job 88361869291, and frontend-build job 88361869182 all concluded success",
         "R-11 clean-worktree npm run check:after-push returned pass before CR-20260720T131603Z-r-11-post-push-handover-sync was opened",
         "CR-20260720T131603Z-r-11-post-push-handover-sync full npm run check passes 486/486; close, diff, and exact 16-file governance-only audit pass with zero forbidden/runtime paths",
+        "R-12A review-only f28e3d12358bdc35ac1782fd50be7850f937bc1b and implementation 9cb1f59d89949330cfe796ae2db25728d356038c are published to origin/master without rewrite",
+        "R-12A scaffold-ci run 29792754518 completed failure: governance and backend-tests succeeded; frontend-build failed the mandatory audit on newly published GHSA-3jxr-9vmj-r5cp in brace-expansion@2.1.1 and skipped production build",
+        "R-12A clean-worktree npm run check:after-push passed; engineeringCoreReady and beforeSalesOrder remain blocked and R-12B is not started",
         "CR-20260714T225634Z-github-actions-node24-and-cache-warning-cleanup focused workflow regression passes 43/43, CI declaration and immutable-action lint pass, and the complete governance gate passes 481/481",
         "CR-20260714T225634Z-github-actions-node24-and-cache-warning-cleanup pins checkout v5.0.1, setup-node v5.0.0, and setup-java v5.5.0 at verified Node 24 runtime SHAs while retaining project Node 20, both JDK 17 setups, backend Maven cache, and all CI commands",
         "CR-20260714T114811Z-frontend-ci-and-esm-scanner-hardening portable release-verifier and anti-false-green coverage passes 94/94 across fixed stage order, configured/fallback Maven resolution, no retry after reactor failure, and every fail-fast boundary",
@@ -225,10 +228,10 @@
         "R-10C frontend browser acceptance passed on canonical http://127.0.0.1:5173/business/masterdata with nine tabs and product-category add/edit/disable/delete",
         "R-10C direct http://127.0.0.1:5173/masterdata returned RuoYi 404 and is recorded as non-canonical; no R-10D is opened"
       ],
-      "latestSession": "memory/sessions/2026-07-20-r-11-engineering-core-roadmap-rebaseline.md",
+      "latestSession": "memory/sessions/2026-07-21-r-12a-post-push.md",
       "handoverRequired": true,
-      "updatedAt": "2026-07-20",
-      "latestChange": "CR-20260720T131603Z-r-11-post-push-handover-sync"
+      "updatedAt": "2026-07-21",
+      "latestChange": "CR-20260721T012310Z-r-12a-post-push-handover-sync"
     },
     {
       "id": "TASK-CUSTOMER",
@@ -470,11 +473,11 @@
       "id": "TASK-0012",
       "feature": "masterdata",
       "title": "Execute R-12A product semantics and option-set migration",
-      "status": "done",
+      "status": "in_progress",
       "owner": "Codex",
       "priority": "high",
-      "statusReason": "R-12A review is committed as immutable base f28e3d1; the bounded implementation, deterministic Strategy A migration, local API/browser/database acceptance, rollback rehearsal, and governance closeout are complete. The implementation remains intentionally uncommitted and unpushed for user review.",
-      "nextStep": "Wait for explicit user instruction before committing or pushing the R-12A implementation; do not start R-12B.",
+      "statusReason": "R-12A review and implementation commits are published and local runtime acceptance is complete, but implementation scaffold-ci run 29792754518 failed the frontend dependency audit for newly disclosed GHSA-3jxr-9vmj-r5cp; R-12A is not CI-green or release-successful.",
+      "nextStep": "Finish the evidence-only post-push sync, then open a separate approved frontend dependency-security baseline repair; do not start R-12B.",
       "blockedBy": [],
       "verification": [
         "R-11 commit/push/post-push handover and successful scaffold-ci run 29745362302 reconfirmed",
@@ -484,15 +487,18 @@
         "npm run check:review passed",
         "npm run check:file-weight passed",
         "git diff --check passed",
-        "Review-only baseline f28e3d12358bdc35ac1782fd50be7850f937bc1b committed locally without push and bound as impact.baseRevision",
+        "Review-only baseline f28e3d12358bdc35ac1782fd50be7850f937bc1b was committed locally and bound as impact.baseRevision before later publication to origin/master",
         "Strategy A migrated 4 option sets and 2 option values with four SINGLE modes; old tables/menu/permission aliases are absent and validation is clean",
         "Focused Node 39/39, Java unit 65/65, MySQL integration 2/2, UI 7/7, Maven package, Vue production build, API/browser acceptance, and rollback rehearsal passed",
         "Review package diff and forbidden adjacent runtime diff are zero; engineeringCoreReady and beforeSalesOrder remain blocked",
-        "[not-run] R-12A implementation commit, push, and CI",
+        "Review-only commit f28e3d12358bdc35ac1782fd50be7850f937bc1b and implementation commit 9cb1f59d89949330cfe796ae2db25728d356038c published to origin/master without rewrite",
+        "GitHub Actions scaffold-ci run 29792754518 completed failure: governance job 88517815533 success, backend-tests job 88517815541 success, frontend-build job 88517815557 failure",
+        "Frontend-build passed install and UI tests, then the required audit failed on newly published GHSA-3jxr-9vmj-r5cp affecting transitive brace-expansion@2.1.1; production build was skipped",
+        "Clean-worktree npm run check:after-push passed after implementation push; review package diff remained zero and both phase gates remained blocked",
         "npm run check"
       ],
-      "latestSession": "memory/sessions/2026-07-21-r-12a-runtime.md",
-      "latestChange": "CR-20260720T134007Z-change",
+      "latestSession": "memory/sessions/2026-07-21-r-12a-post-push.md",
+      "latestChange": "CR-20260721T012310Z-r-12a-post-push-handover-sync",
       "handoverRequired": true,
       "updatedAt": "2026-07-21"
     }

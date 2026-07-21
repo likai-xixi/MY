@@ -6,7 +6,7 @@ Status: verified [local]
 
 - [local] `npm run resume`; Git status/log and R-11 commit/push/post-push/CI verification.
 - [local] Review-only baseline prechecks: `npm run check:review`, `check:handover-integrity`, `check:memory-quality`, `check:current-doc-state`, `check:file-weight`, and `git diff --check`.
-- [local] Review-only commit `f28e3d12358bdc35ac1782fd50be7850f937bc1b`; no push.
+- [local] Review-only commit `f28e3d12358bdc35ac1782fd50be7850f937bc1b`; later published to `origin/master` before implementation commit `9cb1f59d89949330cfe796ae2db25728d356038c`.
 - [local] `npm run impact -- masterdata`, `npm run check:review`, and `npm run check:phase-gate` after rebasing `impact.baseRevision`.
 - [local] `node --test tests/masterdata-runtime.test.js`.
 - [local] Maven `-pl ruoyi-business -am verify` and `-Pintegration-test verify`.
@@ -16,7 +16,10 @@ Status: verified [local]
 - [runtime-local] Real backend/frontend API and browser acceptance; whole-state rollback rehearsal with review-base code.
 - [local] `npm run scan:all`.
 - [local] Final `npm run finalize:change`, `npm run check` with 491/491 Node tests, `npm run close:change`, and `git diff --check` passed.
-- [not-run] R-12A implementation commit, push, and CI.
+- [local] `git push origin master` published both R-12A commits without rewrite; `HEAD`, `origin/master`, and the remote master ref aligned at `9cb1f59d89949330cfe796ae2db25728d356038c`.
+- [ci] `scaffold-ci` run `29792754518` for implementation SHA `9cb1f59d89949330cfe796ae2db25728d356038c` completed with overall `failure`: `governance` and `backend-tests` succeeded, while `frontend-build` failed.
+- [ci] Frontend install and tests passed; the mandatory audit failed on high-severity `GHSA-3jxr-9vmj-r5cp` in transitive `brace-expansion@2.1.1`, so the production build step was skipped.
+- [local] Clean-worktree `npm run check:after-push` passed; the same frontend audit failure and dependency chain were reproduced locally.
 
 ## Evidence
 
@@ -35,8 +38,9 @@ Status: verified [local]
 - [local] Customer business/fund runtime and all forbidden field/process/order/formula/BOM/production/DXF runtime paths have zero diff.
 - [local] `engineeringCoreReady=blocked` and `beforeSalesOrder=blocked`.
 - [local] Detailed runtime evidence is under `runtime-evidence/`.
+- [local] R-12A did not change `package.json` or lock files; the advisory was published after the previous green baseline and requires a separate dependency-security repair batch.
 
 ## Residual Boundaries
 
 - [local] The generated database scanner is lexical over migration history and may list historical V005/V006 CREATE tokens. Live MySQL and executable validation SQL are the runtime authority; no governance rule was changed in R-12A.
-- [not-run] Implementation commit/push/CI are deliberately pending user review.
+- [ci] R-12A source commits are published, but the implementation is not CI-green or release-successful because run `29792754518` failed. R-12B remains not started.

@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-07-21 - R-12A post-push handover sync
+
+- Change: `ai/changes/CR-20260721T012310Z-r-12a-post-push-handover-sync`.
+- Published review-only commit `f28e3d12358bdc35ac1782fd50be7850f937bc1b` followed by implementation commit `9cb1f59d89949330cfe796ae2db25728d356038c` directly to `origin/master` without history rewrite.
+- [ci] `scaffold-ci` run `29792754518` completed `failure`: `governance` and repository backend Maven job `backend-tests` succeeded; `frontend-build` failed at the mandatory audit and skipped the production build.
+- [ci] The blocker is newly published high-severity `GHSA-3jxr-9vmj-r5cp` in transitive `brace-expansion@2.1.1`; R-12A did not change package or lock files.
+- [local] Clean-worktree `npm run check:after-push` passed. R-12A source is published but is not CI-green or release-successful.
+- `engineeringCoreReady` and `beforeSalesOrder` remain blocked. Dependency repair requires a separate batch; R-12B has not started.
+
 ## 2026-07-21 - masterdata/R-12A destructive catalog-option migration
 
 - Review-only authorization baseline: `f28e3d12358bdc35ac1782fd50be7850f937bc1b`; implementation base was refreshed to that commit and the review package remains unchanged.
@@ -7,7 +16,7 @@
 - Replaced sales-option category/value API resources, tables, menu, route, and contracts with option-set/value and no compatibility path.
 - [runtime-local] Strategy A migrated 4/2 rows with four `SINGLE` modes; old tables/menu/permission aliases are absent, orphans/duplicates are zero, and rollback with matching old code was rehearsed.
 - [local] Focused Node 39/39, Java unit 65/65, MySQL integration 2/2, UI 7/7, Maven package, Vue production build, and scanners pass; full governance closeout is recorded in the active change.
-- `engineeringCoreReady` and `beforeSalesOrder` remain blocked. The implementation diff is uncommitted/unpushed and R-12B has not started.
+- `engineeringCoreReady` and `beforeSalesOrder` remain blocked. The implementation is published at `9cb1f59d89949330cfe796ae2db25728d356038c`, but CI run `29792754518` failed the new dependency advisory and R-12B has not started.
 
 ## 2026-07-15 - governance/frontend-ci-and-esm-scanner-hardening
 
