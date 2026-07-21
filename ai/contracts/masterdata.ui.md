@@ -9,7 +9,7 @@ Feature ID: `masterdata`
 
 ## UI Scope
 
-The screen provides grouped maintenance for the nine R-10B resources only. R-10I adjusts display labels only: `product-category` is shown as 产品大类 and `product-model` is shown as 工艺型号. Internal resource keys, API paths, and database table names remain unchanged. R-10J adds the self-developed business category tree-select rule in this shared UI without changing backend APIs, API clients, or SQL table structure.
+The masterdata screens provide grouped maintenance for exactly nine resources. Product configuration displays `product-category`, `product-series`, and `product-model` as 产品大类、产品系列、产品型号. Option configuration uses `option-set` and `option-value`; old sales-option resource keys and routes are unavailable. R-10J's self-developed category tree-select behavior remains unchanged.
 
 - product category
 - product series
@@ -18,8 +18,8 @@ The screen provides grouped maintenance for the nine R-10B resources only. R-10I
 - material item
 - accessory category
 - accessory item
-- sales option category
-- sales option value
+- option set
+- option value
 
 ## Required UI Capabilities
 
@@ -30,6 +30,8 @@ The screen provides grouped maintenance for the nine R-10B resources only. R-10I
 - status change
 - logical delete
 - export
+- option-set `selectionMode` maintenance with exactly SINGLE/单选 and MULTIPLE/多选
+- option-value ownership through required `optionSetId`
 
 ## Product Category Tree Table
 
@@ -56,8 +58,8 @@ Current masterdata behavior:
 
 - 产品大类的上级分类 uses tree select because `product-category` is hierarchical.
 - 产品系列的所属产品大类 uses tree select because its target `product-category` is hierarchical.
-- 工艺型号的所属产品大类 uses tree select because its target `product-category` is hierarchical.
-- 原材料档案的物料分类、配件档案的配件分类, and 销售选项值的销售选项分类 may remain normal selects until their target category resources explicitly enable hierarchy.
+- 产品型号的所属产品大类 uses tree select because its target `product-category` is hierarchical.
+- 原材料档案的物料分类、配件档案的配件分类, and 选项值的所属选项集 remain normal selects because those targets do not enable hierarchy.
 
 Material wording:
 
@@ -70,4 +72,4 @@ Material wording:
 
 ## Boundary
 
-The UI must not hard-code product-family examples or sales-option examples as branches. Opening mode, color, handle, lock, hinge, glass, surface treatment, and packaging are not product category hierarchy prompts; those concepts may appear only as later sales option configuration rows. This screen does not implement sales-order, field-scheme, formula, technical-decomposition, inventory, BOM, cut-list detail, technical calculation output, production, DXF, scan/report, drawing, shipment, finance, or receipt flows.
+The UI must not hard-code product-family or option examples as branches. Opening mode, color, handle, lock, hinge, glass, surface treatment, and packaging are reusable option-set/value data, not product category hierarchy prompts. This screen does not implement sales-order, field-definition/schema, process-scheme, formula, technical-decomposition, inventory, BOM, cut-list detail, technical calculation output, production, DXF, scan/report, drawing, shipment, finance, or receipt flows.

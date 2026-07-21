@@ -11,13 +11,13 @@
       <el-form-item label="名称" prop="itemName">
         <el-input v-model="queryParams.itemName" placeholder="请输入名称" clearable style="width: 180px" @keyup.enter="handleQuery" />
       </el-form-item>
-      <el-form-item v-if="currentConfig.categoryResource" label="所属分类" prop="categoryId">
+      <el-form-item v-if="currentConfig.categoryResource" :label="categoryFieldLabel" prop="categoryId">
         <el-tree-select v-if="categoryUsesTreeSelect" v-model="queryParams.categoryId" :data="categoryTreeOptions" :props="treeSelectProps" node-key="id" placeholder="请选择" clearable filterable check-strictly style="width: 180px" />
         <el-select v-else v-model="queryParams.categoryId" placeholder="请选择" clearable filterable style="width: 180px">
           <el-option v-for="item in categoryOptions" :key="item.id" :label="optionLabel(item)" :value="item.id" />
         </el-select>
       </el-form-item>
-      <el-form-item v-if="currentConfig.seriesResource" label="所属系列" prop="seriesId">
+      <el-form-item v-if="currentConfig.seriesResource" label="所属产品系列" prop="seriesId">
         <el-select v-model="queryParams.seriesId" placeholder="请选择" clearable filterable style="width: 180px">
           <el-option v-for="item in filteredSeriesOptions" :key="item.id" :label="optionLabel(item)" :value="item.id" />
         </el-select>
@@ -59,19 +59,21 @@
             <div class="product-category-tree-node" :class="productCategoryNodeClass(scope.row)" :style="productCategoryNodeStyle(scope.row)">
               <span class="product-category-branch" aria-hidden="true"></span>
               <el-tag class="product-category-level-tag" :type="productCategoryLevelTagType(scope.row)" size="small" effect="plain">{{ productCategoryLevelLabel(scope.row) }}</el-tag>
-              <el-button class="product-category-name-button" link type="primary" @click="handleUpdate(scope.row)">{{ scope.row.itemName }}</el-button>
+              <el-button v-if="canEdit" class="product-category-name-button" link type="primary" @click="handleUpdate(scope.row)">{{ scope.row.itemName }}</el-button>
+              <span v-else class="product-category-name-button">{{ scope.row.itemName }}</span>
             </div>
           </el-tooltip>
-          <el-button v-else link type="primary" @click="handleUpdate(scope.row)">{{ scope.row.itemName }}</el-button>
+          <el-button v-else-if="canEdit" link type="primary" @click="handleUpdate(scope.row)">{{ scope.row.itemName }}</el-button>
+          <span v-else>{{ scope.row.itemName }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="currentConfig.categoryResource" label="所属分类" align="center" min-width="160" :show-overflow-tooltip="true">
+      <el-table-column v-if="currentConfig.categoryResource" :label="categoryFieldLabel" align="center" min-width="160" :show-overflow-tooltip="true">
         <template #default="scope">{{ relationName(currentConfig.categoryResource, scope.row.categoryId) }}</template>
       </el-table-column>
-      <el-table-column v-if="currentConfig.seriesResource" label="所属系列" align="center" min-width="160" :show-overflow-tooltip="true">
+      <el-table-column v-if="currentConfig.seriesResource" label="所属产品系列" align="center" min-width="160" :show-overflow-tooltip="true">
         <template #default="scope">{{ relationName(currentConfig.seriesResource, scope.row.seriesId) }}</template>
       </el-table-column>
-      <el-table-column v-if="currentConfig.parentEnabled && !isTreeTable" label="上级分类" align="center" min-width="160" :show-overflow-tooltip="true">
+      <el-table-column v-if="currentConfig.parentEnabled && !isTreeTable" label="上级产品大类" align="center" min-width="160" :show-overflow-tooltip="true">
         <template #default="scope">{{ relationName(currentConfig.value, scope.row.parentId) }}</template>
       </el-table-column>
       <el-table-column v-if="currentConfig.specEnabled" label="规格" align="center" prop="spec" min-width="130" :show-overflow-tooltip="true" />
@@ -79,19 +81,20 @@
       <el-table-column label="排序" align="center" prop="sortOrder" width="90" />
       <el-table-column label="状态" align="center" prop="status" width="90">
         <template #default="scope">
-          <el-switch v-model="scope.row.status" active-value="0" inactive-value="1" @change="handleStatusChange(scope.row)" v-hasPermi="['business:masterdata:status']" />
+          <el-switch v-if="canChangeStatus" v-model="scope.row.status" active-value="0" inactive-value="1" @change="handleStatusChange(scope.row)" />
+          <el-tag v-else :type="scope.row.status === '0' ? 'success' : 'info'">{{ scope.row.status === '0' ? '正常' : '停用' }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="备注" align="left" prop="remark" min-width="160" :show-overflow-tooltip="true" />
       <el-table-column label="创建时间" align="center" prop="createTime" width="160">
         <template #default="scope">{{ parseTime(scope.row.createTime) }}</template>
       </el-table-column>
-      <el-table-column label="操作" align="center" width="130" fixed="right" class-name="small-padding fixed-width">
+      <el-table-column v-if="canEdit || canRemove" label="操作" align="center" width="130" fixed="right" class-name="small-padding fixed-width">
         <template #default="scope">
-          <el-tooltip content="修改" placement="top">
+          <el-tooltip v-if="canEdit" content="修改" placement="top">
             <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['business:masterdata:edit']"></el-button>
           </el-tooltip>
-          <el-tooltip content="删除" placement="top">
+          <el-tooltip v-if="canRemove" content="删除" placement="top">
             <el-button link type="primary" icon="Delete" @click="handleDelete(scope.row)" v-hasPermi="['business:masterdata:remove']"></el-button>
           </el-tooltip>
         </template>
@@ -108,19 +111,19 @@
         <el-form-item label="名称" prop="itemName">
           <el-input v-model="form.itemName" placeholder="请输入名称" maxlength="120" />
         </el-form-item>
-        <el-form-item v-if="currentConfig.parentEnabled" label="上级分类" prop="parentId">
+        <el-form-item v-if="currentConfig.parentEnabled" label="上级产品大类" prop="parentId">
           <el-tree-select v-if="parentUsesTreeSelect" v-model="form.parentId" :data="parentTreeOptions" :props="treeSelectProps" node-key="id" placeholder="请选择" clearable filterable check-strictly style="width: 100%" @change="handleParentChange" />
           <el-select v-else v-model="form.parentId" placeholder="请选择" clearable filterable style="width: 100%" @change="handleParentChange">
             <el-option v-for="item in parentOptions" :key="item.id" :label="optionLabel(item)" :value="item.id" :disabled="isParentOptionDisabled(item)" />
           </el-select>
         </el-form-item>
-        <el-form-item v-if="currentConfig.categoryResource" label="所属分类" prop="categoryId">
+        <el-form-item v-if="currentConfig.categoryResource" :label="categoryFieldLabel" prop="categoryId">
           <el-tree-select v-if="categoryUsesTreeSelect" v-model="form.categoryId" :data="categoryTreeOptions" :props="treeSelectProps" node-key="id" placeholder="请选择" filterable check-strictly style="width: 100%" @change="handleFormCategoryChange" />
           <el-select v-else v-model="form.categoryId" placeholder="请选择" filterable style="width: 100%" @change="handleFormCategoryChange">
             <el-option v-for="item in categoryOptions" :key="item.id" :label="optionLabel(item)" :value="item.id" />
           </el-select>
         </el-form-item>
-        <el-form-item v-if="currentConfig.seriesResource" label="所属系列" prop="seriesId">
+        <el-form-item v-if="currentConfig.seriesResource" label="所属产品系列" prop="seriesId">
           <el-select v-model="form.seriesId" placeholder="请选择" filterable style="width: 100%">
             <el-option v-for="item in formSeriesOptions" :key="item.id" :label="optionLabel(item)" :value="item.id" />
           </el-select>
@@ -132,7 +135,7 @@
           <el-input v-model="form.unit" placeholder="请输入单位" maxlength="32" />
         </el-form-item>
         <el-form-item label="排序" prop="sortOrder">
-          <el-input-number v-model="form.sortOrder" :min="0" :max="999999" controls-position="right" style="width: 180px" />
+          <el-input-number :key="`${activeResource}:${formRenderSequence}`" v-model="form.sortOrder" :min="0" :max="999999" controls-position="right" style="width: 180px" />
         </el-form-item>
         <el-form-item label="状态" prop="status">
           <el-radio-group v-model="form.status">
@@ -182,13 +185,11 @@ const route = useRoute()
 const allResourceConfigs = [
   { value: 'product-category', label: '产品大类', parentEnabled: true, treeEnabled: true, treeSelectEnabled: true, maxDepth: PRODUCT_CATEGORY_MAX_DEPTH },
   { value: 'product-series', label: '产品系列', categoryResource: 'product-category' },
-  { value: 'product-model', label: '工艺型号', categoryResource: 'product-category', seriesResource: 'product-series' },
+  { value: 'product-model', label: '产品型号', categoryResource: 'product-category', seriesResource: 'product-series' },
   { value: 'material-category', label: '物料分类' },
   { value: 'material-item', label: '原材料档案', categoryResource: 'material-category', specEnabled: true, unitEnabled: true },
   { value: 'accessory-category', label: '配件分类' },
-  { value: 'accessory-item', label: '配件档案', categoryResource: 'accessory-category', specEnabled: true, unitEnabled: true },
-  { value: 'sales-option-category', label: '销售选项分类' },
-  { value: 'sales-option-value', label: '销售选项值', categoryResource: 'sales-option-category' }
+  { value: 'accessory-item', label: '配件档案', categoryResource: 'accessory-category', specEnabled: true, unitEnabled: true }
 ]
 
 const DEFAULT_RESOURCE_GROUP = 'product'
@@ -204,10 +205,6 @@ const resourceGroups = {
   accessory: {
     label: '配件配置',
     resources: ['accessory-category', 'accessory-item']
-  },
-  'sales-option': {
-    label: '销售选项配置',
-    resources: ['sales-option-category', 'sales-option-value']
   }
 }
 
@@ -238,6 +235,7 @@ const single = ref(true)
 const multiple = ref(true)
 const open = ref(false)
 const title = ref('')
+const formRenderSequence = ref(0)
 const relationOptions = ref({})
 const treeProps = { children: 'children' }
 const treeSelectProps = { value: 'id', label: 'label', children: 'children', disabled: 'disabled' }
@@ -255,6 +253,7 @@ const queryParams = ref({
 const form = ref({})
 
 const currentConfig = computed(() => resourceConfigs.value.find(item => item.value === activeResource.value) || resourceConfigs.value[0] || allResourceConfigs[0])
+const categoryFieldLabel = computed(() => currentConfig.value.categoryResource === 'product-category' ? '所属产品大类' : '所属分类')
 const isTreeTable = computed(() => currentConfig.value.treeEnabled === true)
 const tableRows = computed(() => isTreeTable.value ? buildTreeRows(recordList.value) : recordList.value)
 const categoryOptions = computed(() => relationOptions.value[currentConfig.value.categoryResource] || [])
@@ -277,9 +276,13 @@ const formSeriesOptions = computed(() => {
 
 const rules = computed(() => ({
   itemName: [{ required: true, message: '名称不能为空', trigger: 'blur' }],
-  categoryId: currentConfig.value.categoryResource ? [{ required: true, message: '所属分类不能为空', trigger: 'change' }] : [],
-  seriesId: currentConfig.value.seriesResource ? [{ required: true, message: '所属系列不能为空', trigger: 'change' }] : []
+  categoryId: currentConfig.value.categoryResource ? [{ required: true, message: `${categoryFieldLabel.value}不能为空`, trigger: 'change' }] : [],
+  seriesId: currentConfig.value.seriesResource ? [{ required: true, message: '所属产品系列不能为空', trigger: 'change' }] : []
 }))
+
+const canEdit = computed(() => proxy.$auth.hasPermi('business:masterdata:edit'))
+const canRemove = computed(() => proxy.$auth.hasPermi('business:masterdata:remove'))
+const canChangeStatus = computed(() => proxy.$auth.hasPermi('business:masterdata:status'))
 
 watch(activeResource, () => {
   resetFormState()
@@ -605,11 +608,11 @@ function validateHierarchicalParentSelection() {
   if (!currentConfig.value.parentEnabled || !form.value.parentId) return true
   const resource = currentConfig.value.value
   if (form.value.id && form.value.parentId === form.value.id) {
-    proxy.$modal.msgError('上级分类不能选择自己')
+    proxy.$modal.msgError('上级产品大类不能选择自己')
     return false
   }
   if (resourceDescendantIds(resource, form.value.id).has(form.value.parentId)) {
-    proxy.$modal.msgError('上级分类不能选择自己的子级或后代')
+    proxy.$modal.msgError('上级产品大类不能选择自己的子级或后代')
     return false
   }
   const maxDepth = resourceMaxDepth(resource)
@@ -647,6 +650,7 @@ function resetQueryState() {
 }
 
 function resetFormState() {
+  formRenderSequence.value += 1
   form.value = {
     id: undefined,
     itemCode: undefined,
@@ -726,6 +730,7 @@ function handleAdd() {
 }
 
 function handleUpdate(row) {
+  if (!canEdit.value) return
   resetFormState()
   const target = row || selectedRows.value[0]
   const id = target?.id || ids.value[0]
@@ -747,6 +752,7 @@ function handleFormCategoryChange() {
 }
 
 function handleStatusChange(row) {
+  if (!canChangeStatus.value) return
   const text = row.status === '0' ? '启用' : '停用'
   proxy.$modal.confirm(`确认要${text}"${row.itemName}"吗？`).then(() => {
     return changeMasterDataStatus(activeResource.value, row.id, row.status)
@@ -758,7 +764,8 @@ function handleStatusChange(row) {
 }
 
 function handleDelete(row) {
-  const deleteIds = row.id || ids.value
+  if (!canRemove.value) return
+  const deleteIds = row?.id || ids.value
   proxy.$modal.confirm(`是否确认删除${currentConfig.value.label}编号为"${deleteIds}"的数据项？`).then(() => {
     return delMasterData(activeResource.value, deleteIds)
   }).then(() => {

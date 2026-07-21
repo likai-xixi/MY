@@ -1,11 +1,11 @@
 # Engineering Core Destructive Migration Plan
 
 Change: `R-11 engineering-core roadmap rebaseline`
-Status: approved plan only; no migration executed.
+Status: approved staged plan; R-12A catalog/option cutover executed, later field/process/calculation/release slices not implemented.
 
 ## Policy
 
-The project is pre-release. The target runtime must replace old APIs, tables, resource keys, names, and pages without aliases, dual writes, compatibility views, or old-data readers. Development database reset is the default path. Export/classify/remap is optional evidence for useful development records, not a compatibility guarantee.
+The project is pre-release. The target runtime must replace old APIs, tables, resource keys, names, and pages without aliases, dual writes, compatibility views, or old-data readers. R-12A selected deterministic Strategy A for the catalog/option slice. Later approved slices must declare their own explicit reset or migration strategy; no compatibility guarantee is created.
 
 ## Current Surface Inventory
 
@@ -20,30 +20,30 @@ The project is pre-release. The target runtime must replace old APIs, tables, re
 | `masterdata_material_item` | Move to explicit material-catalog ownership; keep base-material meaning |
 | `masterdata_accessory_category` | Move to explicit accessory/material-catalog ownership |
 | `masterdata_accessory_item` | Move to explicit accessory/material-catalog ownership |
-| `masterdata_sales_option_category` | Drop; replace with `option_set` semantics |
-| `masterdata_sales_option_value` | Drop; replace with `option_value` semantics |
+| `masterdata_sales_option_category` | Dropped by R-12A; replaced with `masterdata_option_set` |
+| `masterdata_sales_option_value` | Dropped by R-12A; replaced with `masterdata_option_value` |
 
 Future runtime also introduces explicit stores for field definitions, field schemes/versions/items, process plans/versions/applicability, calculation snapshots, technical release packages, and production release versions. Exact DDL is deferred to approved runtime CRs.
 
 ### API And Backend
 
-Current `/business/masterdata/{resource}` and `MasterDataResource`/`MasterDataRecord`/generic mapper are retired after bounded replacements are complete.
+R-12A retained the bounded generic `/business/masterdata/{resource}` catalog controller/service/mapper for exactly nine catalog resources. It does not accept field, process, formula, approval, version, or release lifecycle behavior and may be retired only by a later approved bounded replacement.
 
 - Product/material/accessory/option catalogs receive explicit bounded resource contracts.
 - Field and process drafts receive explicit APIs with publish commands.
 - Calculation, approval, technical release, and production release receive command APIs.
-- No old resource aliases for `product-model`, `sales-option-category`, or `sales-option-value` remain after cutover.
+- `product-model` now means catalog product identity only. No `sales-option-category` or `sales-option-value` alias remains after R-12A.
 - Strong reference locking, hierarchy validation, exact affected-row checks, and MySQL concurrency tests must be preserved or replaced by equivalent proofs.
 
 ### Pages And Menus
 
-Retire the shared nine-resource mega-page and four thin group wrappers after target pages exist. Target navigation separates:
+R-12A kept four bounded catalog groups and introduced the dedicated option configuration page. Later approved runtime may further separate:
 
 1. Product catalog.
 2. Material/accessory catalog.
 3. Option sets.
-4. Field library and scheme versions.
-5. Process plans and versions.
+4. Field library and scheme versions. `[not implemented]`
+5. Process plans and versions. `[not implemented]`
 
 Technical review/release and production release are workflow workspaces, not additional generic masterdata tabs. The label `工艺型号` is removed; product identity is displayed as `产品型号`.
 
@@ -66,20 +66,22 @@ Replace them with focused suites for:
 
 ## Cutover Sequence
 
-1. Freeze current masterdata writes and capture schema/data/export evidence.
-2. Classify `product_model` rows as true product models, process-plan candidates, ambiguous, or discardable.
-3. Classify sales-option categories as reusable option sets or reject them as technical/system fields.
-4. Stop old backend/frontend; take a recoverable database backup even though compatibility is not required.
-5. Drop old menus, permissions, endpoints, code paths, tests, and the nine old tables in the approved runtime migration.
-6. Create the target bounded schemas and seed only approved/catalog and golden-reference data.
-7. Import explicitly approved mappings; never infer product/process or field ownership from labels alone.
-8. Run schema, ownership, hierarchy/reference, lifecycle, negative-old-surface, and golden-sample validation.
-9. Start only the new write paths; no dual-write interval.
+1. Freeze catalog writes and capture schema/data/export evidence. `[R-12A complete]`
+2. Confirm current `product_model` rows are catalog product identities; do not infer process plans. `[R-12A complete]`
+3. Map all four inventoried sales-option categories to reusable option sets. `[R-12A complete]`
+4. Stop old runtime and take a recoverable whole-database backup. `[R-12A complete]`
+5. Remove old sales-option menu/resource/API paths and drop only its two old tables. `[R-12A complete]`
+6. Create `masterdata_option_set/value` with approved constraints. `[R-12A complete]`
+7. Import the explicit 4/2 mapping without field/process inference. `[R-12A complete]`
+8. Run schema, ownership, hierarchy/reference, negative-old-surface, API/browser, and rollback validation. `[R-12A complete]`
+9. Start only the new catalog write paths; no dual-write interval. `[R-12A complete]`
+
+Field/process/calculation/release and signed golden-sample steps remain separate future changes.
 
 ## Rollback
 
 Before release, rollback means restore the complete pre-cutover database backup and matching code revision. Partial table rollback or mixed old/new code is forbidden. After production release, a separate executable migration/rollback policy is required; this development reset plan no longer applies.
 
-## R-11 Boundary
+## R-12A Execution Boundary
 
-R-11 creates no SQL, Java, Vue, route, permission, API client, or runtime test. All cutover steps are `[not-run]`.
+R-12A executed only product-catalog semantics and option-set/value migration. It created no field-definition, field-schema, process-scheme, sales-order, formula, calculation snapshot, BOM, production, DXF, workstation, mobile, or customer-fund runtime. `engineeringCoreReady` and `beforeSalesOrder` remain blocked.

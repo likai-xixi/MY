@@ -706,7 +706,7 @@
 - Path: `/business/masterdata/{resource}/list`
 - Owner: `masterdata`
 - Module: `masterdata`
-- Notes: Lists one approved R-10B masterdata resource. `resource` must be one of the nine MVP resources; for `product-category`, rows include `parentId` and the UI renders them as a tree table with no level-four compatibility path. The endpoint does not create sales-order, formula, field-scheme, or technical-decomposition runtime behavior.
+- Notes: Lists one approved masterdata resource. `resource` must be exactly one of `product-category`, `product-series`, `product-model`, `material-category`, `material-item`, `accessory-category`, `accessory-item`, `option-set`, or `option-value`. Old sales-option resource keys are rejected. Product model means 产品型号 only. For `product-category`, rows include `parentId` and the UI renders them as a tree table with no level-four compatibility path.
 
 ## /business/masterdata/{resource}/options
 
@@ -714,7 +714,7 @@
 - Path: `/business/masterdata/{resource}/options`
 - Owner: `masterdata`
 - Module: `masterdata`
-- Notes: Returns enabled option rows for relation selectors in the masterdata page.
+- Notes: Returns enabled rows for relation selectors. `option-value/options` excludes values whose owning option set is disabled or deleted.
 
 ## /business/masterdata/{resource}/export
 
@@ -736,7 +736,7 @@
 - Path: `/business/masterdata/{resource}`
 - Owner: `masterdata`
 - Module: `masterdata`
-- Notes: Creates a row for one approved R-10B masterdata resource. R-10D makes code backend-generated: create does not require `itemCode`, supplied create codes are ignored, and the backend generates `prefix + yyyyMM + 6 digit monthly sequence` using fixed resource prefixes `PC`, `PS`, `PM`, `MC`, `MI`, `AC`, `AI`, `SOC`, and `SOV`. Codes are not generated from Chinese names and remain unique through table unique keys plus bounded duplicate retry. R-10F limits `product-category.parentId` hierarchy to maximum depth 3.
+- Notes: Creates a row for one approved masterdata resource. Code is backend-generated: create does not require `itemCode`, supplied create codes are ignored, and fixed prefixes are `PC`, `PS`, `PM`, `MC`, `MI`, `AC`, `AI`, `OS`, and `OV`. Migrated `SOC`/`SOV` codes are preserved identities but are never generated. `option-set` requires `selectionMode` equal to `SINGLE` or `MULTIPLE`; `option-value` requires `optionSetId`. Product category remains limited to three levels.
 
 ## /business/masterdata/{resource}:update
 
@@ -744,7 +744,7 @@
 - Path: `/business/masterdata/{resource}`
 - Owner: `masterdata`
 - Module: `masterdata`
-- Notes: Updates an existing row for one approved R-10B masterdata resource. The stable code is immutable; R-10D ignores payload code changes and retains the existing code. R-10F rejects `product-category` self-parenting, descendant-parent cycles, and moves that would create a fourth level.
+- Notes: Updates an existing approved row while retaining the immutable code. Product category rejects self-parenting, descendant-parent cycles, and moves that create a fourth level. Option-set mode and option-value ownership remain resource-specific fields.
 
 ## /business/masterdata/{resource}/changeStatus
 
@@ -752,7 +752,7 @@
 - Path: `/business/masterdata/{resource}/changeStatus`
 - Owner: `masterdata`
 - Module: `masterdata`
-- Notes: Changes enabled/disabled status for a masterdata row without publishing a version.
+- Notes: Changes enabled/disabled status without publishing a version. Option-set status changes do not cascade to values; disabled sets make their values unavailable from the business options endpoint.
 
 ## /business/masterdata/{resource}/{ids}
 
@@ -760,4 +760,4 @@
 - Path: `/business/masterdata/{resource}/{ids}`
 - Owner: `masterdata`
 - Module: `masterdata`
-- Notes: Performs logical delete with `del_flag = '2'`. R-10F rejects deleting a `product-category` parent while active child categories exist.
+- Notes: Performs logical delete with `del_flag = '2'`. Product parents with non-deleted references cannot be removed. An option set cannot be removed while any non-deleted option value exists, including disabled values.

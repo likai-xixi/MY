@@ -92,13 +92,169 @@ public class MasterDataServiceTest
     }
 
     @Test
-    public void salesOptionCategoryDeleteRejectsSalesOptionValueReference()
+    public void optionSetDeleteRejectsDisabledOrEnabledOptionValueReference()
     {
         assertDeleteBlocked(
-            MasterDataResource.SALES_OPTION_CATEGORY,
-            "countActiveByCategoryIds",
-            MasterDataResource.SALES_OPTION_VALUE
+            MasterDataResource.OPTION_SET,
+            "countExistingByOptionSetIds",
+            MasterDataResource.OPTION_VALUE
         );
+    }
+
+    @Test
+    public void currentResourceVocabularyRejectsOldSalesOptionPaths()
+    {
+        assertEquals(
+            List.of(
+                "product-category",
+                "product-series",
+                "product-model",
+                "material-category",
+                "material-item",
+                "accessory-category",
+                "accessory-item",
+                "option-set",
+                "option-value"
+            ),
+            MasterDataResource.pathValues()
+        );
+        assertEquals("产品型号", MasterDataResource.PRODUCT_MODEL.getDisplayName());
+
+        MasterDataServiceImpl service = service(new FakeMapper());
+        assertThrows(
+            ServiceException.class,
+            () -> service.selectRecordList("sales-option-category", new MasterDataRecord())
+        );
+        assertThrows(
+            ServiceException.class,
+            () -> service.selectRecordList("sales-option-value", new MasterDataRecord())
+        );
+    }
+
+    @Test
+    public void optionSetRequiresExactSelectionMode()
+    {
+        MasterDataServiceImpl service = service(new FakeMapper());
+
+        MasterDataRecord missing = writableRecord(null, "Missing mode");
+        assertThrows(
+            ServiceException.class,
+            () -> service.insertRecord(MasterDataResource.OPTION_SET.getPathValue(), missing)
+        );
+
+        MasterDataRecord invalid = writableRecord(null, "Invalid mode");
+        invalid.setSelectionMode("single");
+        assertThrows(
+            ServiceException.class,
+            () -> service.insertRecord(MasterDataResource.OPTION_SET.getPathValue(), invalid)
+        );
+
+        MasterDataRecord multiple = writableRecord(null, "Multiple choice");
+        multiple.setSelectionMode("MULTIPLE");
+        assertEquals(1, service.insertRecord(MasterDataResource.OPTION_SET.getPathValue(), multiple));
+        assertTrue(multiple.getItemCode().startsWith("OS"));
+    }
+
+    @Test
+    public void optionValueRequiresAndLocksItsOptionSet()
+    {
+        FakeMapper mapper = new FakeMapper();
+        MasterDataServiceImpl service = service(mapper);
+
+        MasterDataRecord missing = writableRecord(null, "Missing owner");
+        assertThrows(
+            ServiceException.class,
+            () -> service.insertRecord(MasterDataResource.OPTION_VALUE.getPathValue(), missing)
+        );
+        assertTrue(mapper.lockCalls.isEmpty());
+
+        MasterDataRecord value = writableRecord(null, "Glass color");
+        value.setOptionSetId(20L);
+        assertEquals(1, service.insertRecord(MasterDataResource.OPTION_VALUE.getPathValue(), value));
+        assertEquals(
+            List.of(new LockCall(MasterDataResource.OPTION_SET, 20L)),
+            mapper.lockCalls
+        );
+        assertEquals(List.of("lock:OPTION_SET:20", "insert"), mapper.events);
+        assertTrue(value.getItemCode().startsWith("OV"));
+    }
+
+    @Test
+    public void optionValueInsertRejectsMissingOptionSet()
+    {
+        FakeMapper mapper = new FakeMapper();
+        mapper.missing(MasterDataResource.OPTION_SET, 20L);
+        MasterDataRecord value = writableRecord(null, "Orphan value");
+        value.setOptionSetId(20L);
+
+        assertThrows(
+            ServiceException.class,
+            () -> service(mapper).insertRecord(MasterDataResource.OPTION_VALUE.getPathValue(), value)
+        );
+        assertEquals(
+            List.of(new LockCall(MasterDataResource.OPTION_SET, 20L)),
+            mapper.lockCalls
+        );
+        assertTrue(!mapper.events.contains("insert"));
+    }
+
+    @Test
+    public void optionValueOptionsUseParentStatusAwareQuery()
+    {
+        FakeMapper mapper = new FakeMapper();
+        MasterDataRecord value = record(30L, "OV_30", null, null);
+        value.setOptionSetId(20L);
+        mapper.enabledOptionValues = List.of(value);
+
+        List<MasterDataRecord> result = service(mapper)
+            .selectEnabledOptions(MasterDataResource.OPTION_VALUE.getPathValue());
+
+        assertEquals(List.of(value), result);
+        assertEquals(List.of("select-enabled-option-values"), mapper.events);
+    }
+
+    @Test
+    public void optionSetDisableDoesNotCascadeToValues()
+    {
+        FakeMapper mapper = new FakeMapper();
+        MasterDataRecord status = new MasterDataRecord();
+        status.setId(20L);
+        status.setStatus("1");
+
+        assertEquals(
+            1,
+            service(mapper).updateRecordStatus(MasterDataResource.OPTION_SET.getPathValue(), status)
+        );
+        assertEquals(List.of("lock:OPTION_SET:20", "status"), mapper.events);
+        assertTrue(mapper.referenceQueries.isEmpty());
+    }
+
+    @Test
+    public void optionFieldsAreNormalizedByOwningResource()
+    {
+        FakeMapper mapper = new FakeMapper();
+        MasterDataServiceImpl service = service(mapper);
+
+        MasterDataRecord set = writableRecord(null, "Opening direction");
+        set.setSelectionMode("SINGLE");
+        set.setOptionSetId(99L);
+        service.insertRecord(MasterDataResource.OPTION_SET.getPathValue(), set);
+        assertEquals("SINGLE", set.getSelectionMode());
+        assertEquals(null, set.getOptionSetId());
+
+        MasterDataRecord value = writableRecord(null, "Left opening");
+        value.setSelectionMode("MULTIPLE");
+        value.setOptionSetId(20L);
+        service.insertRecord(MasterDataResource.OPTION_VALUE.getPathValue(), value);
+        assertEquals(null, value.getSelectionMode());
+        assertEquals(Long.valueOf(20L), value.getOptionSetId());
+
+        MasterDataRecord material = writableRecord(null, "Aluminium");
+        material.setSelectionMode("SINGLE");
+        material.setOptionSetId(20L);
+        service.insertRecord(MasterDataResource.MATERIAL_CATEGORY.getPathValue(), material);
+        assertEquals(null, material.getSelectionMode());
+        assertEquals(null, material.getOptionSetId());
     }
 
     @Test
@@ -610,6 +766,7 @@ public class MasterDataServiceTest
         private int updateResult = 1;
         private int statusResult = 1;
         private Long hierarchyMutexId = -1L;
+        private List<MasterDataRecord> enabledOptionValues = Collections.emptyList();
 
         private MasterDataMapper proxy()
         {
@@ -654,7 +811,7 @@ public class MasterDataServiceTest
                 }
                 return records.getOrDefault(call, defaultRecord(resource, id));
             }
-            if (name.startsWith("countActiveBy"))
+            if (name.startsWith("countActiveBy") || "countExistingByOptionSetIds".equals(name))
             {
                 MasterDataResource childResource = (MasterDataResource) args[0];
                 List<Long> ids = longIds(args[1]);
@@ -681,6 +838,11 @@ public class MasterDataServiceTest
             if ("selectRecordList".equals(name))
             {
                 return Collections.emptyList();
+            }
+            if ("selectEnabledOptionValues".equals(name))
+            {
+                events.add("select-enabled-option-values");
+                return enabledOptionValues;
             }
             if ("selectMaxCodeByMonth".equals(name))
             {

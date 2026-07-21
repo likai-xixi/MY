@@ -2,63 +2,91 @@
 
 ## Summary
 
-R-12A has an independent approved five-role review and a frozen Strategy A migration contract. Business runtime remains untouched because the repository anti-self-approval gate requires the review package to be committed before implementation, while the user has not authorized any commit.
+R-12A destructive catalog-option migration is implemented and locally accepted from immutable review base `f28e3d12358bdc35ac1782fd50be7850f937bc1b`. The runtime diff is intentionally uncommitted and unpushed.
 
 ## Impact
 
-- Current change: `CR-20260720T134007Z-change`.
-- Review: `RV-20260720T134134Z-r-12a-option-set-option-value-masterdata` with `Decision: Allow Implementation` for R-12A only.
-- Frozen target: product-model means 产品型号; old sales-option resources/tables/menu become option-set/value by deterministic migration.
+- Product catalog now means 产品大类 / 产品系列 / 产品型号 only.
+- `sales-option-category/value`, their old tables, old page/menu, and old resource paths are replaced by `option-set/value` with no compatibility layer.
+- Option sets support `SINGLE/MULTIPLE`; option values require `optionSetId`; effective referenced values protect set deletion.
+- Existing product-category hierarchy, series/model relations, backend code generation, material/accessory catalog, and customer-fund boundary are preserved.
 - `engineeringCoreReady` and `beforeSalesOrder` remain blocked.
-- This pre-review slice changes only change/review/context/memory evidence; no business runtime.
 
 ## Changed Files
 
 - `ai/changes/CR-20260720T134007Z-change/changed-files.json`
 - `ai/changes/CR-20260720T134007Z-change/handover.md`
 - `ai/changes/CR-20260720T134007Z-change/impact.json`
-- `ai/changes/CR-20260720T134007Z-change/migration-strategy.md`
-- `ai/changes/CR-20260720T134007Z-change/plan.md`
-- `ai/changes/CR-20260720T134007Z-change/request.md`
-- `ai/changes/CR-20260720T134007Z-change/split-plan.md`
+- `ai/changes/CR-20260720T134007Z-change/runtime-evidence/api-browser-acceptance.md`
+- `ai/changes/CR-20260720T134007Z-change/runtime-evidence/build-test-results.md`
+- `ai/changes/CR-20260720T134007Z-change/runtime-evidence/database-acceptance.md`
 - `ai/changes/CR-20260720T134007Z-change/verification.md`
-- `ai/changes/CURRENT_CHANGE.json`
 - `ai/context/current-context.json`
 - `ai/context/current-context.md`
-- `ai/reviews/RV-20260720T134134Z-r-12a-option-set-option-value-masterdata/architecture-review.md`
-- `ai/reviews/RV-20260720T134134Z-r-12a-option-set-option-value-masterdata/backend-review.md`
-- `ai/reviews/RV-20260720T134134Z-r-12a-option-set-option-value-masterdata/context.md`
-- `ai/reviews/RV-20260720T134134Z-r-12a-option-set-option-value-masterdata/decision.md`
-- `ai/reviews/RV-20260720T134134Z-r-12a-option-set-option-value-masterdata/frontend-review.md`
-- `ai/reviews/RV-20260720T134134Z-r-12a-option-set-option-value-masterdata/product-review.md`
-- `ai/reviews/RV-20260720T134134Z-r-12a-option-set-option-value-masterdata/qa-review.md`
-- `ai/reviews/RV-20260720T134134Z-r-12a-option-set-option-value-masterdata/request.md`
-- `ai/reviews/RV-20260720T134134Z-r-12a-option-set-option-value-masterdata/review.json`
-- `ai/reviews/RV-20260720T134134Z-r-12a-option-set-option-value-masterdata/risk-register.md`
+- `ai/context/features/masterdata.md`
+- `ai/contracts/engineering-core.index.md`
+- `ai/contracts/engineering-core.migration-plan.md`
+- `ai/contracts/masterdata.api.md`
+- `ai/contracts/masterdata.db.md`
+- `ai/contracts/masterdata.delete-ownership.md`
+- `ai/contracts/masterdata.migration-plan.md`
+- `ai/contracts/masterdata.product.md`
+- `ai/contracts/masterdata.r10-contract-test-matrix.md`
+- `ai/contracts/masterdata.r10-implementation-boundary.md`
+- `ai/contracts/masterdata.sales-option.md`
+- `ai/contracts/masterdata.ui.md`
+- `ai/generated/component-usage.json`
+- `ai/generated/db-schema.json`
+- `ai/generated/frontend-routes.json`
+- `ai/generated/permissions.json`
+- `ai/registry/features.json`
+- `ai/registry/migration-registry.json`
+- `features/masterdata.md`
+- `graph/ui-graph.json`
+- `memory/API_CATALOG.md`
 - `memory/CHANGELOG.md`
 - `memory/HANDOVER.md`
 - `memory/PROJECT_STATE.md`
 - `memory/TASKS.json`
-- `memory/sessions/2026-07-20-r-12a-pre-review.md`
+- `memory/sessions/2026-07-21-r-12a-runtime.md`
+- `ruoyi-business/src/main/java/com/ruoyi/business/masterdata/domain/MasterDataRecord.java`
+- `ruoyi-business/src/main/java/com/ruoyi/business/masterdata/domain/MasterDataResource.java`
+- `ruoyi-business/src/main/java/com/ruoyi/business/masterdata/mapper/MasterDataMapper.java`
+- `ruoyi-business/src/main/java/com/ruoyi/business/masterdata/service/impl/MasterDataServiceImpl.java`
+- `ruoyi-business/src/main/resources/mapper/masterdata/MasterDataMapper.xml`
+- `ruoyi-business/src/test/java/com/ruoyi/business/masterdata/service/MasterDataReferenceMySqlIT.java`
+- `ruoyi-business/src/test/java/com/ruoyi/business/masterdata/service/MasterDataServiceTest.java`
+- `ruoyi-ui/src/api/masterdata.contract.md`
+- `ruoyi-ui/src/views/masterdata/README.md`
+- `ruoyi-ui/src/views/masterdata/index.vue`
+- `ruoyi-ui/src/views/masterdata/option-config.vue`
+- `ruoyi-ui/src/views/masterdata/sales-option-config.vue`
+- `ruoyi-ui/src/views/masterdata/screen.md`
+- `sql/masterdata.ownership.md`
+- `sql/migrations/V20260720_007_masterdata_option_set_breaking_migration.sql`
+- `sql/validation/masterdata_option_set_validation.sql`
+- `sql/validation/masterdata_runtime_validation.sql`
+- `tests/masterdata-runtime.test.js`
 
 ## Commands
 
-- [local] Intake, resume, Git/R-11/CI verification, masterdata impact/context, five-role review, read-only MySQL inventory, review/handover/memory/current-doc/file-weight checks, and diff check.
-- [inconclusive] `git cat-file -e 09dce9dbd3d008afb517a0099c5a381a0298b19c:ai/reviews/RV-20260720T134134Z-r-12a-option-set-option-value-masterdata/decision.md` returned the expected missing-path result.
+- [local] `npm run resume`, `npm run impact -- masterdata`, review/phase gates, focused Node/Java/UI tests, Maven package, Vue build, scans, finalization, full check/close, and `git diff --check`.
+- [runtime-local] V007 migration, dedicated/shared MySQL validation, API/browser/menu/permission acceptance, clean-snapshot restore, and old-code whole-state rollback rehearsal.
 
 ## Verification
 
-- [local] Review, handover-integrity, memory-quality, current-doc-state, file-weight, and diff checks pass.
-- [local] Exact base-diff audit reports 26 evidence files, zero paths outside `impact.allowedEditRoots`, zero runtime files, and zero forbidden-scope paths.
-- [runtime-local] Inventory only; migration has not executed.
-- [not-run] All implementation, runtime acceptance, full closeout, commit, and push evidence.
+- [local] Focused Node 39/39, Java unit 65/65, MySQL integration 2/2, UI 7/7, Maven package, Vue build, and scanner pass.
+- [runtime-local] Strategy A migration and dedicated/shared validation pass at 4 sets / 2 values / 4 SINGLE; old tables/menu/permissions are absent and rollback is rehearsed.
+- [runtime-local] API/browser/menu/permission acceptance passed, including old API/URL absence and delete protection.
+- [local] Final full `npm run check` passed with 491/491 Node tests; `npm run close:change` and `git diff --check` passed.
+- [not-run] Implementation commit, push, and CI.
 
 ## Risks
 
-- Business implementation in the same uncommitted range would fail `check:review` because the review is absent from `impact.baseRevision`.
-- Destructive migration and rollback remain unproved until implementation is authorized.
+- Scanner history can mention dropped legacy tables; use live validation for runtime absence.
+- Local results are not CI, and the implementation diff is not yet immutable.
 
 ## Next Actions
 
-- Wait for explicit user authorization for a review-only base commit.
-- After authorization, commit only the R-12A review/pre-review baseline, refresh `impact.baseRevision`, then implement and verify R-12A without starting R-12B.
+- Preserve the verified uncommitted implementation and stop for user review.
+- Do not commit/push the implementation, edit the review decision, or start R-12B without explicit instruction.

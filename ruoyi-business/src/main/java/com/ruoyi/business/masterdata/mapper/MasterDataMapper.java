@@ -12,6 +12,8 @@ public interface MasterDataMapper
 {
     public List<MasterDataRecord> selectRecordList(@Param("resource") MasterDataResource resource, @Param("record") MasterDataRecord record);
 
+    public List<MasterDataRecord> selectEnabledOptionValues();
+
     public MasterDataRecord selectRecordById(@Param("resource") MasterDataResource resource, @Param("id") Long id);
 
     public MasterDataRecord selectRecordByIdForUpdate(@Param("resource") MasterDataResource resource, @Param("id") Long id);
@@ -31,6 +33,8 @@ public interface MasterDataMapper
     public int countActiveByCategoryIds(@Param("resource") MasterDataResource resource, @Param("ids") List<Long> ids);
 
     public int countActiveBySeriesIds(@Param("resource") MasterDataResource resource, @Param("ids") List<Long> ids);
+
+    public int countExistingByOptionSetIds(@Param("resource") MasterDataResource resource, @Param("ids") List<Long> ids);
 
     public int insertRecord(@Param("resource") MasterDataResource resource, @Param("record") MasterDataRecord record);
 

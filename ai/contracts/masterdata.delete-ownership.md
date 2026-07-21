@@ -16,7 +16,7 @@ The blocking matrix is:
 - product series -> product model (`series_id`)
 - material category -> material item (`category_id`)
 - accessory category -> accessory item (`category_id`)
-- sales option category -> sales option value (`category_id`)
+- option set -> option value (`option_set_id`)
 
 Create and update lock every referenced parent before writing. This serializes child writes with parent deletion: if deletion wins, the child write sees a deleted parent and fails; if the child write wins, deletion sees the committed active reference and fails.
 
@@ -32,7 +32,7 @@ A future feature removal must run deletion dry-run first and account for:
 
 - backend controller, service, domain, mapper, and XML files
 - frontend page and API client
-- nine database tables
+- nine database tables, including `masterdata_option_set` and `masterdata_option_value`
 - SQL migrations and validation SQL
 - RuoYi menu and permission rows
 - feature/module registries

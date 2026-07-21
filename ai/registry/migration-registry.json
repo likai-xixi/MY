@@ -197,6 +197,56 @@
       "blocking": true
     },
     {
+      "migrationId": "masterdata-r12a-option-set-breaking-migration",
+      "featureId": "masterdata",
+      "file": "sql/migrations/V20260720_007_masterdata_option_set_breaking_migration.sql",
+      "type": "executable-sql",
+      "appliesToTables": [
+        "masterdata_option_set",
+        "masterdata_option_value",
+        "sys_menu"
+      ],
+      "status": "required",
+      "phase": "R-12A-catalog-option-migration",
+      "rollbackPlan": "Stop writers and restore the checksum-backed full pre-cutover database backup together with the matching pre-cutover code revision. Partial table recreation, compatibility views, and mixed old/new code are forbidden.",
+      "verification": [
+        "node --test tests/masterdata-runtime.test.js",
+        "Maven masterdata unit and MySQL integration tests",
+        "mysql < sql/migrations/V20260720_007_masterdata_option_set_breaking_migration.sql",
+        "mysql < sql/validation/masterdata_option_set_validation.sql",
+        "mysql < sql/validation/masterdata_runtime_validation.sql"
+      ],
+      "dependsOn": [
+        "masterdata-r10-schema",
+        "masterdata-r10-menu-permission"
+      ],
+      "owner": "masterdata",
+      "blocking": true
+    },
+    {
+      "migrationId": "masterdata-r12a-option-set-validation",
+      "featureId": "masterdata",
+      "file": "sql/validation/masterdata_option_set_validation.sql",
+      "type": "runtime-validation-sql",
+      "appliesToTables": [
+        "masterdata_option_set",
+        "masterdata_option_value",
+        "sys_menu"
+      ],
+      "status": "required",
+      "phase": "R-12A-catalog-option-migration",
+      "rollbackPlan": "Validation SQL is read-only. Any finding blocks acceptance and requires restoring the complete backup or an independently approved corrective migration.",
+      "verification": [
+        "mysql < sql/validation/masterdata_option_set_validation.sql",
+        "zero invalid modes, orphan values, same-set duplicate codes, old tables, old menu, and old route/component rows"
+      ],
+      "dependsOn": [
+        "masterdata-r12a-option-set-breaking-migration"
+      ],
+      "owner": "masterdata",
+      "blocking": true
+    },
+    {
       "migrationId": "masterdata-r10-runtime-validation",
       "featureId": "masterdata",
       "file": "sql/validation/masterdata_runtime_validation.sql",
@@ -209,12 +259,12 @@
         "masterdata_material_item",
         "masterdata_accessory_category",
         "masterdata_accessory_item",
-        "masterdata_sales_option_category",
-        "masterdata_sales_option_value",
+        "masterdata_option_set",
+        "masterdata_option_value",
         "sys_menu"
       ],
       "status": "required",
-      "phase": "R-10B-masterdata-mvp-runtime",
+      "phase": "R-12A-catalog-option-migration",
       "rollbackPlan": "Validation SQL is read-only and has no data rollback. If validation finds rows, use a separate approved cleanup or migration change before claiming runtime acceptance.",
       "verification": [
         "npm run check:high-risk-governance",
@@ -222,8 +272,8 @@
         "mysql < sql/validation/masterdata_runtime_validation.sql when a disposable MySQL test database is available"
       ],
       "dependsOn": [
-        "masterdata-r10-schema",
-        "masterdata-r10-menu-permission"
+        "masterdata-r12a-option-set-breaking-migration",
+        "masterdata-r12a-option-set-validation"
       ],
       "owner": "masterdata",
       "blocking": true

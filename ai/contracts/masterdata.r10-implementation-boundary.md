@@ -1,7 +1,7 @@
-# Masterdata R-10 Implementation Boundary
+# Masterdata Runtime Implementation Boundary
 
 Change: `R-10A masterdata MVP contract package`
-Status: contract/pre-review only.
+Status: R-10 sections below are historical implementation lineage; the final R-12A section is the active boundary.
 
 ## R-10A Boundary
 
@@ -82,6 +82,16 @@ R-10F must not modify product series, product model, material, accessory, sales 
 
 ## R-10I Grouped Menu And Display Label Boundary
 
-`CR-20260628T142217Z-change` keeps the current grouped masterdata menu pages and changes only user-facing display wording for the product group: `product-category` displays as 产品大类 and `product-model` displays as 工艺型号. Internal resource keys, `/business/masterdata/{resource}` API paths, `ruoyi-ui/src/api/masterdata.js`, and the `masterdata_product_model` table remain unchanged.
+`CR-20260628T142217Z-change` historically changed only user-facing display wording for the product group while keeping internal resource keys, `/business/masterdata/{resource}` API paths, `ruoyi-ui/src/api/masterdata.js`, and the `masterdata_product_model` table unchanged. That former alias is not an active R-12A fact.
 
 R-10I must not create sales-order, formula, field-scheme, technical-decomposition, production, DXF, drawing, part-template, process-route, or shop-floor runtime. R-10H product-category tree-table visuals and controlled expansion behavior must remain intact.
+
+## R-12A Active Boundary
+
+R-12A preserves the seven product/material/accessory resources and destructively replaces the two historical sales-option resources with `option-set` and `option-value`.
+
+Allowed runtime work is limited to the approved masterdata Java/domain/service/mapper/controller paths, masterdata Vue/API paths, V007 migration and validation SQL, focused masterdata tests, and synchronized current contracts/registry/graph/memory/handover evidence.
+
+The active runtime must use 产品大类、产品系列、产品型号, `option-set`/`option-value`, `masterdata_option_set`/`masterdata_option_value`, required `selectionMode`, and required `optionSetId`. It must contain no old resource alias, compatibility controller/service/mapper/view, dual read/write, field-definition/schema, process-scheme, sales-order, formula, BOM, production, DXF, or customer-fund change.
+
+The R-12A review package and decision are immutable after review-only commit `f28e3d12358bdc35ac1782fd50be7850f937bc1b`.

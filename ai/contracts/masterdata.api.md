@@ -15,10 +15,12 @@ Feature ID: `masterdata`
 - `material-item`
 - `accessory-category`
 - `accessory-item`
-- `sales-option-category`
-- `sales-option-value`
+- `option-set`
+- `option-value`
 
-R-10I changes display wording only. `product-category` is shown to users as 产品大类 and `product-model` is shown to users as 工艺型号; `/business/masterdata/{resource}` and the resource keys above do not change.
+`product-category`, `product-series`, and `product-model` are displayed as 产品大类、产品系列、产品型号. `product-model` is a sales/catalog identity only and does not own process plans, technical fields, formulas, BOM, production routes, or DXF.
+
+`sales-option-category` and `sales-option-value` are not accepted resource values. There is no compatibility alias or forwarding endpoint.
 
 ## Owned Endpoints
 
@@ -37,7 +39,7 @@ R-10I changes display wording only. `product-category` is shown to users as 产�
 - Create requests do not require `itemCode`; if a caller supplies one, the backend ignores it and generates the code from the resource prefix plus the current month sequence.
 - Codes must never be generated from Chinese display names or item names.
 - Generated format is `prefix + yyyyMM + 6 digit monthly sequence`.
-- Resource prefixes are `PC`, `PS`, `PM`, `MC`, `MI`, `AC`, `AI`, `SOC`, and `SOV` for the nine approved resource values in order.
+- Resource prefixes are `PC`, `PS`, `PM`, `MC`, `MI`, `AC`, `AI`, `OS`, and `OV` for the nine approved resource values in order. Migrated `SOC`/`SOV` codes remain immutable historical row identities but are never generated for new records.
 - `itemName` is the display name and is saved trimmed.
 - Empty name is rejected.
 - Code remains unique through table unique keys and bounded backend retry on generated collisions.
@@ -52,8 +54,13 @@ R-10I changes display wording only. `product-category` is shown to users as 产�
 - Batch remove deduplicates and sorts IDs, and requires the affected row count to equal the normalized request count.
 - Create and update lock referenced parents before mutation so parent deletion cannot race a child write into an active orphan.
 - Remove is logical delete.
+- `option-set.selectionMode` is required and is exactly `SINGLE` or `MULTIPLE`.
+- `option-value.optionSetId` is required and points to one non-deleted `option-set`.
+- Option-value maintenance lists may show rows under a disabled set, but `GET .../option-value/options` returns values only when both the value and owning set are enabled and non-deleted.
+- Disabling an option set does not cascade to its values.
+- An option set with any non-deleted option value cannot be removed; disabled values still block removal.
 - Publish permission is reserved; full publish/version flow is deferred.
 
 ## Explicit Exclusions
 
-This API contract does not own sales-order, field-scheme, formula, technical-decomposition, inventory, BOM, production, scan/report, drawing, shipment, finance, or receipt APIs.
+This API contract does not own sales-order, field-definition/schema, process-scheme, formula, calculation, technical-decomposition, inventory, BOM, production, scan/report, DXF/drawing, shipment, finance, or receipt APIs.

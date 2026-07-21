@@ -1,33 +1,33 @@
-# Masterdata R-10 Contract Test Matrix
+# Masterdata Runtime Contract Test Matrix
 
-Change: `R-10A masterdata MVP contract package`
-Status: contract/pre-review only. This matrix defines future R-10B evidence and does not claim runtime tests exist.
+Current change: `R-12A destructive catalog-option migration`
+Status: active verification contract. Historical R-10 evidence remains in its change records.
 
 | Contract Area | R-10B Must Hold | Future Evidence |
 |---|---|---|
-| Scope | Runtime includes only the nine MVP master-data objects | R-10B changed-files and ownership audit |
-| Product data | Product category, series, and model are configurable rows. R-10I displays them as 产品大类, 产品系列, and 工艺型号 while keeping `product-model` as the internal resource key. | API/UI/DB tests and seed-data audit |
+| Scope | Runtime includes exactly seven retained catalog resources plus `option-set` and `option-value` | R-12A changed-files and ownership audit |
+| Product data | Product category, series, and model are configurable catalog identities displayed as 产品大类、产品系列、产品型号. `product-model` does not own process or manufacturing rules. | API/UI/DB tests and semantic reverse audit |
 | Material data | Material and accessory categories/records are configurable rows | API/UI/DB tests and DB validation |
-| Sales options | Option categories/values are configurable rows, not enums | API/UI tests rejecting hard-coded arrays |
+| Reusable options | Option sets/values are configurable value-domain rows; `selectionMode` is SINGLE/MULTIPLE and values require `optionSetId` | API/UI/DB tests plus old-resource negative checks |
 | Common fields | Every MVP object has backend-generated stable code, display name, status, sort order, and remark | DB/schema/API contract tests |
 | Code generation | Create does not require caller code; backend generates `prefix + yyyyMM + 6 digit sequence`, ignores supplied create code, and does not derive code from Chinese names | R-10D masterdata runtime test |
 | Code immutability | Edit keeps existing code even if payload includes a different code | R-10D masterdata runtime test |
 | Product category hierarchy | Product category is rendered as a tree table, has maximum depth 3, rejects level 4, rejects self/descendant parent choices, and blocks deleting parents with children | R-10F masterdata runtime test |
 | Delete safety | Referenced master data cannot be physically deleted | Service/API tests for reference-protected remove |
 | Snapshot readiness | Future orders and technical results can snapshot code/name | Contract tests for API response fields and DB columns |
-| Migration | SQL is executable MySQL in R-10B, with validation evidence | MySQL migration/validation run or equivalent verified gate |
+| Migration | V007 deterministically preserves 4 sets and 2 values, assigns four explicit SINGLE modes, drops old tables, and updates the menu in place | MySQL migration/validation and backup/restore evidence |
 | Permission | view/add/edit/remove/export/status/publish boundary is preserved | permission scan, SQL menu/permission ownership, controller/UI checks |
 | Ownership | API/UI/SQL/permission/test ownership is synchronized | registry, graph, generated scans, and changed-files audit |
 | Exclusions | No field scheme, formula, technical template, sales order, inventory, BOM, production route, scanning/reporting, or drawing runtime | forbidden-path audit and grep/diff review |
 
-## R-10A Current Evidence
+## Historical R-10 Evidence
 
-R-10A creates only contracts, the R-10A change record, current-context handoff, and memory updates. Runtime tests, SQL execution, browser validation, Maven compile, and frontend build are not required because no runtime file is created.
+R-10 change records retain the evidence for the original masterdata runtime, code generation, tree behavior, and grouped menus. They are historical evidence and are not edited to erase old terminology.
 
-## R-10B Required Closeout
+## R-12A Required Closeout
 
-R-10B must run the active scaffold gates plus runtime-specific evidence created by the implementation. `npm run check` alone is not business-runtime proof.
+R-12A must run focused Java/Node tests, Maven compile, Vue production build, executable MySQL migration and validation, real API/browser/menu/permission acceptance, old-surface reverse audit, and the active scaffold gates. `npm run check` alone is not business-runtime proof.
 
-## R-10B Runtime Evidence Hook
+## Runtime Evidence Hook
 
-`tests/masterdata-runtime.test.js` now guards the R-10B object list, SQL ownership, API/client surface, permission boundary, R-10D backend code generation, R-10F product-category tree/depth/cycle/delete protections, R-10I grouped menu display labels, frontend add/edit code behavior, bounded retry, and explicit exclusions for sales-order, field-scheme, formula, technical-decomposition, production, and DXF runtime.
+`tests/masterdata-runtime.test.js` guards the exact current resource allowlist, OS/OV generation, option ownership/mode/delete/options rules, product-category tree/depth/cycle/delete protections, grouped menu labels/routes, frontend add/edit code behavior, old-surface absence, and explicit exclusions for field/process, sales-order, formula, production, and DXF runtime.

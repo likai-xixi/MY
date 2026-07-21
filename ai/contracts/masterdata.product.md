@@ -1,13 +1,13 @@
 # Masterdata Product Contract
 
-Status: superseded for future-state design by `engineering-core.index.md` and `engineering-core.domain.md` in R-11.
+Status: active R-12A product-catalog contract under the R-11 engineering-core authority.
 
 ## Current Decision
 
 - Product category, series, and product model remain configurable catalog identities.
 - Product model means what is sold/configured. It must never be displayed or persisted as a process/craft plan.
-- Process differences belong to separate `ProcessPlan` and immutable `ProcessPlanVersion` objects.
-- Product-to-process applicability/default selection is an explicit versioned binding.
-- Future orders snapshot product identity and bind an exact process-plan version through their technical/version chain.
+- Process differences belong to later, separate process-plan/version objects; R-12A creates none of them.
+- Product-to-process applicability/default selection is not part of this masterdata runtime.
+- Future orders must snapshot product identity under a separately approved order contract.
 
-The as-is R-10 `masterdata_product_model` table and `product-model` resource are documented in `masterdata.db.md` and `masterdata.api.md` until the destructive migration. The UI alias `工艺型号` is migration debt and must be removed without compatibility.
+`masterdata_product_model` and `product-model` remain the product identity table/resource. Current UI, API contracts, menus, and tests use 产品型号 only; no compatibility alias remains.

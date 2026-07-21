@@ -852,7 +852,12 @@
       "file": "ruoyi-ui/src/views/masterdata/index.vue"
     },
     {
-      "code": "business:masterdata:status",
+      "code": "business:masterdata:edit",
+      "module": "masterdata",
+      "file": "ruoyi-ui/src/views/masterdata/index.vue"
+    },
+    {
+      "code": "business:masterdata:remove",
       "module": "masterdata",
       "file": "ruoyi-ui/src/views/masterdata/index.vue"
     },
@@ -865,6 +870,36 @@
       "code": "business:masterdata:remove",
       "module": "masterdata",
       "file": "ruoyi-ui/src/views/masterdata/index.vue"
+    },
+    {
+      "code": "business:masterdata:status",
+      "module": "masterdata",
+      "file": "ruoyi-ui/src/views/masterdata/index.vue"
+    },
+    {
+      "code": "business:masterdata:add",
+      "module": "masterdata",
+      "file": "ruoyi-ui/src/views/masterdata/option-config.vue"
+    },
+    {
+      "code": "business:masterdata:edit",
+      "module": "masterdata",
+      "file": "ruoyi-ui/src/views/masterdata/option-config.vue"
+    },
+    {
+      "code": "business:masterdata:remove",
+      "module": "masterdata",
+      "file": "ruoyi-ui/src/views/masterdata/option-config.vue"
+    },
+    {
+      "code": "business:masterdata:export",
+      "module": "masterdata",
+      "file": "ruoyi-ui/src/views/masterdata/option-config.vue"
+    },
+    {
+      "code": "business:masterdata:status",
+      "module": "masterdata",
+      "file": "ruoyi-ui/src/views/masterdata/option-config.vue"
     },
     {
       "code": "monitor:job:add",

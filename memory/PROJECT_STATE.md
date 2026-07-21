@@ -6,7 +6,7 @@ Prepare and execute R-12A as an independent breaking masterdata migration withou
 
 ## Status
 
-R-11 is published and CI-verified. R-12A review is approved, but implementation is paused before business code because its review package must first be present in a committed base and the user has forbidden automatic commits.
+R-11 is published and CI-verified. R-12A review was committed as immutable baseline `f28e3d12358bdc35ac1782fd50be7850f937bc1b`; the approved catalog/option implementation and local runtime acceptance are complete and remain uncommitted.
 
 ## Current Scope
 
@@ -21,7 +21,7 @@ R-11 is published and CI-verified. R-12A review is approved, but implementation 
 
 ## Latest Session
 
-`memory/sessions/2026-07-20-r-12a-pre-review.md`.
+`memory/sessions/2026-07-21-r-12a-runtime.md`.
 
 ## Phase Gates
 
@@ -30,9 +30,9 @@ R-11 is published and CI-verified. R-12A review is approved, but implementation 
 
 ## Next Actions
 
-- Wait for user authority for a review-only commit.
-- If authorized, establish the review commit as implementation base, implement R-12A, and run the complete migration/API/browser/rollback/reverse-audit matrix.
+- User reviews the uncommitted R-12A implementation and evidence.
+- Commit and push the implementation only after explicit user instruction; do not start R-12B.
 
 ## Last Verification
 
-R-12A pre-review: `check:review`, `check:file-weight`, and `git diff --check` passed. All runtime and closeout verification remains `[not-run]`.
+R-12A local evidence: focused Node 39/39, Java unit 65/65, MySQL integration 2/2, UI 7/7, Maven package, Vue production build, Strategy A migration/validation, API/browser acceptance, and rollback rehearsal passed. Full governance closeout is recorded in the active change verification.

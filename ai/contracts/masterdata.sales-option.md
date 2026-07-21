@@ -1,12 +1,13 @@
-# Masterdata Sales Option Contract
+# Masterdata Option Set Contract
 
-Status: superseded by the R-11 `OptionSet`/`OptionValue` contract in `engineering-core.domain.md`.
+Status: active R-12A option value-domain contract under `engineering-core.domain.md`.
 
 ## Current Decision
 
-- `OptionSet` represents one reusable customer-selectable dimension and selection cardinality.
+- `OptionSet` represents one reusable selectable value domain and owns required `selectionMode` (`SINGLE` or `MULTIPLE`).
 - `OptionValue` belongs to exactly one set and preserves stable code/label snapshots.
-- A `SALES` field may read from an option set through source mode `OPTION`.
-- `TECH` and `SYSTEM` fields are not sales options, even if their values are enumerated.
-- Applicability bindings may constrain choices by product/process context without copying or re-owning values.
-- Current `sales-option-category/value` tables, resource keys, APIs, pages, and labels are replaced destructively by the migration in `engineering-core.migration-plan.md`.
+- New set/value codes use `OS`/`OV`; migrated `SOC`/`SOV` codes remain immutable historical row identities.
+- Disabling a set does not cascade, but values under a disabled set are excluded from new-business options results.
+- Any non-deleted value, including a disabled value, blocks deletion of its owning set.
+- Option sets do not own SALES/TECH/SYSTEM field ownership, required/default/validation/display rules, formula, BOM, process version, or DXF behavior. Those concerns require later contracts and runtime changes.
+- Old sales-option tables, resource keys, APIs, pages, labels, permissions aliases, compatibility views, and dual read/write paths are absent after V007.

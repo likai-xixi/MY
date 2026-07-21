@@ -14,13 +14,16 @@ const VIEW = 'ruoyi-ui/src/views/masterdata/index.vue';
 const PRODUCT_CONFIG_VIEW = 'ruoyi-ui/src/views/masterdata/product-config.vue';
 const MATERIAL_CONFIG_VIEW = 'ruoyi-ui/src/views/masterdata/material-config.vue';
 const ACCESSORY_CONFIG_VIEW = 'ruoyi-ui/src/views/masterdata/accessory-config.vue';
-const SALES_OPTION_CONFIG_VIEW = 'ruoyi-ui/src/views/masterdata/sales-option-config.vue';
+const OPTION_CONFIG_VIEW = 'ruoyi-ui/src/views/masterdata/option-config.vue';
+const LEGACY_SALES_OPTION_CONFIG_VIEW = 'ruoyi-ui/src/views/masterdata/sales-option-config.vue';
 const FEATURE_DOC = 'features/masterdata.md';
 const UI_CONTRACT = 'ai/contracts/masterdata.ui.md';
 const VIEW_README = 'ruoyi-ui/src/views/masterdata/README.md';
 const VIEW_SCREEN = 'ruoyi-ui/src/views/masterdata/screen.md';
 const SCHEMA_SQL = 'sql/migrations/V20260628_005_masterdata_r10_schema.sql';
 const MENU_SQL = 'sql/migrations/V20260628_006_masterdata_r10_menu_permission.sql';
+const OPTION_MIGRATION_SQL = 'sql/migrations/V20260720_007_masterdata_option_set_breaking_migration.sql';
+const OPTION_VALIDATION_SQL = 'sql/validation/masterdata_option_set_validation.sql';
 const VALIDATION_SQL = 'sql/validation/masterdata_runtime_validation.sql';
 const OWNERSHIP_SQL = 'sql/masterdata.ownership.md';
 
@@ -32,8 +35,8 @@ const RESOURCE_PREFIXES = {
   'material-item': 'MI',
   'accessory-category': 'AC',
   'accessory-item': 'AI',
-  'sales-option-category': 'SOC',
-  'sales-option-value': 'SOV'
+  'option-set': 'OS',
+  'option-value': 'OV'
 };
 
 const RESOURCE_PATHS = Object.keys(RESOURCE_PREFIXES);
@@ -60,12 +63,12 @@ const RESOURCE_GROUPS = {
     component: 'masterdata/accessory-config',
     resources: ['accessory-category', 'accessory-item']
   },
-  'sales-option': {
-    wrapper: SALES_OPTION_CONFIG_VIEW,
-    routeName: 'MasterdataSalesOptionConfig',
-    menuName: '销售选项配置',
-    component: 'masterdata/sales-option-config',
-    resources: ['sales-option-category', 'sales-option-value']
+  option: {
+    wrapper: OPTION_CONFIG_VIEW,
+    routeName: 'MasterdataOptionConfig',
+    menuName: '选项配置',
+    component: 'masterdata/option-config',
+    resources: ['option-set', 'option-value']
   }
 };
 
@@ -77,6 +80,15 @@ const TABLES = [
   'masterdata_material_item',
   'masterdata_accessory_category',
   'masterdata_accessory_item',
+  'masterdata_option_set',
+  'masterdata_option_value'
+];
+
+const LEGACY_OPTION_SURFACES = [
+  'sales-option-category',
+  'sales-option-value',
+  'sales-option-config',
+  'MasterdataSalesOptionConfig',
   'masterdata_sales_option_category',
   'masterdata_sales_option_value'
 ];
@@ -159,7 +171,7 @@ const DXF_RUNTIME_PATHS = [
 ];
 
 function createTableNames(sql) {
-  return [...sql.matchAll(/\bcreate table if not exists\s+([a-z0-9_]+)/gi)].map((match) => match[1]);
+  return [...sql.matchAll(/\bcreate table\s+(?:if not exists\s+)?([a-z0-9_]+)/gi)].map((match) => match[1]);
 }
 
 function escaped(value) {
@@ -182,7 +194,7 @@ test('masterdata feature and module are registered', () => {
   assert.ok(alias.aliases.length > 0);
 });
 
-test('R-10D resource prefix map covers exactly the nine approved resources', () => {
+test('R-12A resource prefix map covers exactly the nine current resources', () => {
   const enumSource = readText(RESOURCE_ENUM);
   const service = readText(SERVICE);
 
@@ -194,7 +206,7 @@ test('R-10D resource prefix map covers exactly the nine approved resources', () 
   assert.equal(enumEntries.length, RESOURCE_PATHS.length);
 });
 
-test('nine masterdata resources can be added without caller supplied code', () => {
+test('all current masterdata resources can be added without caller supplied code', () => {
   const record = readText(RECORD);
   const controller = readText(CONTROLLER);
   const service = readText(SERVICE);
@@ -233,6 +245,37 @@ test('direct API add ignores user supplied code and does not generate from item 
   assert.doesNotMatch(generator, /itemName|nameColumn|getItemName/);
 });
 
+test('option-set and option-value use explicit modes and ownership fields', () => {
+  const record = readText(RECORD);
+  const enumSource = readText(RESOURCE_ENUM);
+  const service = readText(SERVICE);
+  const mapperXml = readText(MAPPER_XML);
+
+  assert.match(record, /private String selectionMode;/);
+  assert.match(record, /private Long optionSetId;/);
+  assert.match(record, /getSelectionMode\(\)/);
+  assert.match(record, /getOptionSetId\(\)/);
+  assert.match(enumSource, /OPTION_SET\("option-set", "选项集"/);
+  assert.match(enumSource, /OPTION_VALUE\("option-value", "选项值"/);
+  assert.match(service, /selectionMode/);
+  assert.match(service, /SINGLE/);
+  assert.match(service, /MULTIPLE/);
+  assert.doesNotMatch(service, /AT_MOST|EXACTLY|MIN_MAX/);
+  assert.match(service, /getOptionSetId\(\)/);
+  assert.match(mapperXml, /selection_mode/);
+  assert.match(mapperXml, /option_set_id/);
+});
+
+test('legacy sales-option API keys are not accepted by current runtime code', () => {
+  const currentRuntime = [RESOURCE_ENUM, RECORD, CONTROLLER, SERVICE, MAPPER, MAPPER_XML, API_CLIENT, VIEW, OPTION_CONFIG_VIEW]
+    .map(readText)
+    .join('\n');
+
+  assert.doesNotMatch(currentRuntime, /sales-option-category|sales-option-value/i);
+  assert.doesNotMatch(currentRuntime, /SALES_OPTION_CATEGORY|SALES_OPTION_VALUE/);
+  assert.doesNotMatch(currentRuntime, /masterdata_sales_option_category|masterdata_sales_option_value/i);
+});
+
 test('edit keeps existing code and ignores payload code changes', () => {
   const service = readText(SERVICE);
   const mapperXml = readText(MAPPER_XML);
@@ -247,11 +290,14 @@ test('edit keeps existing code and ignores payload code changes', () => {
 
 test('code uniqueness is still enforced by schema and duplicate-key retry', () => {
   const schemaSql = readText(SCHEMA_SQL);
+  const optionMigrationSql = readText(OPTION_MIGRATION_SQL);
   const service = readText(SERVICE);
 
-  for (const table of TABLES) {
+  for (const table of TABLES.slice(0, 7)) {
     assert.match(schemaSql, new RegExp(`unique key uk_${table}_code`));
   }
+  assert.match(optionMigrationSql, /unique key\s+uk_masterdata_option_set_code\s*\(option_set_code\)/i);
+  assert.match(optionMigrationSql, /unique key\s+uk_masterdata_option_value_set_code\s*\(option_set_id\s*,\s*option_value_code\)/i);
   assert.match(service, /import org\.springframework\.dao\.DuplicateKeyException/);
   assert.match(service, /catch \(DuplicateKeyException e\)/);
 });
@@ -266,11 +312,15 @@ test('bounded retry for generated code collisions is present', () => {
 
 test('frontend add dialog does not require or show code input', () => {
   const view = readText(VIEW);
+  const optionView = readText(OPTION_CONFIG_VIEW);
   const rulesBlock = view.match(/const rules = computed\(\(\) => \(\{[\s\S]*?\}\)\)/)?.[0] || '';
 
   assert.doesNotMatch(rulesBlock, /itemCode\s*:/);
   assert.match(view, /form\.value\.itemCode = form\.value\.id \? \(form\.value\.itemCode \|\| ''\)\.trim\(\)\.toUpperCase\(\) : undefined/);
   assert.match(view, /<el-form-item v-if="form\.id" label="编码" prop="itemCode">/);
+  assert.match(optionView, /<el-form-item v-if="form\.id" label="编码" prop="itemCode">/);
+  assert.match(optionView, /<el-input v-model="form\.itemCode"[^>]*disabled/);
+  assert.doesNotMatch(optionView, /<el-form-item v-else[^>]*label="编码"/);
 });
 
 test('product category list is configured as a tree table', () => {
@@ -285,7 +335,7 @@ test('product category list is configured as a tree table', () => {
   assert.doesNotMatch(view, /default-expand-all/);
   assert.match(view, /const treeProps = \{ children: 'children' \}/);
   assert.match(view, /const tableRows = computed\(\(\) => isTreeTable\.value \? buildTreeRows\(recordList\.value\) : recordList\.value\)/);
-  assert.match(view, /<el-table-column v-if="currentConfig\.parentEnabled && !isTreeTable" label="上级分类"/);
+  assert.match(view, /<el-table-column v-if="currentConfig\.parentEnabled && !isTreeTable" label="上级产品大类"/);
   assert.match(view, /delete params\.pageNum/);
   assert.match(view, /delete params\.pageSize/);
 });
@@ -310,7 +360,7 @@ test('hierarchical category selections use tree select from explicit resource co
   assert.match(view, /<el-tree-select v-if="categoryUsesTreeSelect"[\s\S]*v-model="form\.categoryId"[\s\S]*@change="handleFormCategoryChange"/);
   assert.match(view, /<el-tree-select v-if="categoryUsesTreeSelect"[\s\S]*v-model="queryParams\.categoryId"/);
   assert.match(view, /value: 'product-series', label: '产品系列', categoryResource: 'product-category'/);
-  assert.match(view, /value: 'product-model', label: '工艺型号', categoryResource: 'product-category'/);
+  assert.match(view, /value: 'product-model', label: '产品型号', categoryResource: 'product-category'/);
   assert.doesNotMatch(view, /default-expand-all/);
   assert.doesNotMatch(view, /default-expanded-keys/);
   assert.doesNotMatch(view, /defaultExpandedKeys/);
@@ -335,7 +385,7 @@ test('hierarchical tree selects allow parent nodes unless business rules disable
   }
 });
 
-test('masterdata grouped menu pages reuse one page implementation', () => {
+test('product material and accessory menu pages reuse the shared page while options use a dedicated page', () => {
   const view = readText(VIEW);
 
   assert.match(view, /const allResourceConfigs = \[/);
@@ -346,7 +396,7 @@ test('masterdata grouped menu pages reuse one page implementation', () => {
   assert.match(view, /useRoute\(\)/);
   assert.match(view, /watch\(activeResourceGroup/);
 
-  for (const [group, config] of Object.entries(RESOURCE_GROUPS)) {
+  for (const [group, config] of Object.entries(RESOURCE_GROUPS).filter(([name]) => name !== 'option')) {
     const wrapper = readText(config.wrapper);
     assert.match(wrapper, /import Masterdata from '\.\/index\.vue'/);
     assert.match(wrapper, new RegExp(`<Masterdata resource-group="${escaped(group)}" \\/>`));
@@ -358,14 +408,89 @@ test('masterdata grouped menu pages reuse one page implementation', () => {
   }
 
   assert.match(view, /product:\s*\{[\s\S]*resources: \['product-category', 'product-series', 'product-model'\]/);
-  assert.match(view, /value: 'product-model', label: '工艺型号'/);
-  assert.doesNotMatch(view, /label: '产品型号'/);
+  assert.match(view, /value: 'product-model', label: '产品型号'/);
+  assert.doesNotMatch(view, /label: '工艺型号'/);
   assert.doesNotMatch(view, /label: '产品分类'/);
   assert.match(view, /material:\s*\{[\s\S]*resources: \['material-category', 'material-item'\]/);
   assert.match(view, /value: 'material-item', label: '原材料档案'/);
   assert.doesNotMatch(view, /label: '物料档案'/);
   assert.match(view, /accessory:\s*\{[\s\S]*resources: \['accessory-category', 'accessory-item'\]/);
-  assert.match(view, /'sales-option':\s*\{[\s\S]*resources: \['sales-option-category', 'sales-option-value'\]/);
+  assert.doesNotMatch(view, /sales-option|option-set|option-value/);
+
+  const optionView = readText(OPTION_CONFIG_VIEW);
+  assert.match(optionView, /<script setup name="MasterdataOptionConfig">/);
+  assert.doesNotMatch(optionView, /import Masterdata from '\.\/index\.vue'/);
+  assert.match(optionView, /const OPTION_SET_RESOURCE = 'option-set'/);
+  assert.match(optionView, /const OPTION_VALUE_RESOURCE = 'option-value'/);
+});
+
+test('option configuration page owns the complete set and value operator flow', () => {
+  const view = readText(OPTION_CONFIG_VIEW);
+
+  assert.match(view, /<el-tab-pane label="选项集" :name="OPTION_SET_RESOURCE"/);
+  assert.match(view, /<el-tab-pane label="选项值" :name="OPTION_VALUE_RESOURCE"/);
+  assert.match(view, /const SELECTION_MODES = Object\.freeze\(\['SINGLE', 'MULTIPLE'\]\)/);
+  assert.match(view, /selectionMode: \[\{ required: true/);
+  assert.match(view, /SELECTION_MODES\.includes\(value\)/);
+  assert.match(view, /optionSetId: \[\{ required: true/);
+  assert.match(view, /v-model="form\.selectionMode"/);
+  assert.match(view, /v-model="form\.optionSetId"/);
+  assert.match(view, /:key="`\$\{activeResource\}:\$\{formRenderSequence\}`" v-model="form\.sortOrder"/);
+  assert.match(view, /formRenderSequence\.value \+= 1/);
+  assert.match(view, /const selectableOptionSets = computed/);
+  assert.match(view, /item\.status === '0' \|\| item\.id === form\.value\.optionSetId/);
+  assert.match(view, /function sortRecords\(rows\)/);
+  assert.match(view, /sortOrder[\s\S]*itemCode/);
+  assert.match(view, /handleAdd/);
+  assert.match(view, /handleUpdate/);
+  assert.match(view, /handleStatusChange/);
+  assert.match(view, /handleDelete/);
+  assert.match(view, /handleExport/);
+});
+
+test('option configuration page exposes honest async, permission, and failure states', () => {
+  const view = readText(OPTION_CONFIG_VIEW);
+
+  for (const state of [
+    'listLoading',
+    'relationLoading',
+    'detailLoading',
+    'submitLoading',
+    'deleteLoading',
+    'listError'
+  ]) {
+    assert.match(view, new RegExp(`const ${state} = ref\\(`));
+  }
+  assert.match(view, /const listRequestSequence = ref\(0\)/);
+  assert.match(view, /if \(requestId !== listRequestSequence\.value\) return/);
+  assert.match(view, /v-if="listError"/);
+  assert.match(view, /@click="retryList"/);
+  assert.match(view, /v-else-if="!listLoading && records\.length === 0"/);
+  assert.match(view, /const canEdit = computed\(\(\) => proxy\.\$auth\.hasPermi\('business:masterdata:edit'\)\)/);
+  assert.match(view, /const canChangeStatus = computed\(\(\) => proxy\.\$auth\.hasPermi\('business:masterdata:status'\)\)/);
+  assert.match(view, /<el-tag v-else[^>]*>{{ statusLabel\(scope\.row\.status\) }}<\/el-tag>/);
+  assert.match(view, /const previousStatus = row\.status === '0' \? '1' : '0'/);
+  assert.match(view, /row\.status = previousStatus/);
+  assert.doesNotMatch(view, /\.catch\(\(\) => \{\}\)/);
+});
+
+test('R-12A frontend has no legacy sales-option resource, wrapper, or redirect surface', () => {
+  assert.equal(fileExists(LEGACY_SALES_OPTION_CONFIG_VIEW), false);
+  const runtimeText = [
+    VIEW,
+    OPTION_CONFIG_VIEW,
+    API_CLIENT,
+    'ruoyi-ui/src/api/masterdata.contract.md',
+    VIEW_README,
+    VIEW_SCREEN
+  ].map(readText).join('\n');
+
+  for (const legacySurface of LEGACY_OPTION_SURFACES.slice(0, 4)) {
+    assert.doesNotMatch(runtimeText, new RegExp(escaped(legacySurface), 'i'));
+  }
+  assert.doesNotMatch(runtimeText, /销售选项配置|销售选项分类|销售选项值/);
+  assert.doesNotMatch(runtimeText, /redirect[\s\S]*sales-option/i);
+  assert.doesNotMatch(runtimeText, /工艺型号/);
 });
 
 test('material item is presented as base raw material archive only', () => {
@@ -432,7 +557,7 @@ test('product category maximum depth is three in backend and frontend', () => {
   assert.match(service, /private static final int PRODUCT_CATEGORY_MAX_DEPTH = 3/);
   assert.match(service, /validateProductCategoryHierarchy\(target, record, lockedHierarchy\);/);
   assert.match(service, /parentDepth \+ subtreeHeight > PRODUCT_CATEGORY_MAX_DEPTH/);
-  assert.match(service, /产品分类最多只允许3级/);
+  assert.match(service, /产品大类最多只允许3级/);
   assert.match(view, /const PRODUCT_CATEGORY_MAX_DEPTH = 3/);
   assert.match(view, /maxDepth: PRODUCT_CATEGORY_MAX_DEPTH/);
   assert.match(view, /resourceDepth\(resource, item\.id\) \+ ownHeight > maxDepth/);
@@ -452,9 +577,9 @@ test('editing product category cannot select itself as parent', () => {
   const view = readText(VIEW);
 
   assert.match(service, /id != null && id\.equals\(parentId\)/);
-  assert.match(service, /产品分类的上级分类不能选择自己/);
+  assert.match(service, /产品大类的上级大类不能选择自己/);
   assert.match(view, /item\.id === form\.value\.id/);
-  assert.match(view, /上级分类不能选择自己/);
+  assert.match(view, /上级产品大类不能选择自己/);
 });
 
 test('editing product category cannot select a descendant as parent', () => {
@@ -462,10 +587,10 @@ test('editing product category cannot select a descendant as parent', () => {
   const view = readText(VIEW);
 
   assert.match(service, /isDescendant\(parentId, id, childrenByParent\)/);
-  assert.match(service, /产品分类的上级分类不能选择自己的子级或后代/);
+  assert.match(service, /产品大类的上级大类不能选择自己的子级或后代/);
   assert.match(view, /resourceDescendantIds\(resource, form\.value\.id\)\.has\(item\.id\)/);
   assert.match(view, /resourceDescendantIds\(resource, form\.value\.id\)\.has\(form\.value\.parentId\)/);
-  assert.match(view, /上级分类不能选择自己的子级或后代/);
+  assert.match(view, /上级产品大类不能选择自己的子级或后代/);
 });
 
 test('pre-existing product category cycles fail closed and validation reports invalid trees', () => {
@@ -476,7 +601,7 @@ test('pre-existing product category cycles fail closed and validation reports in
   )?.[0] || '';
 
   assert.match(descendantTraversal, /Set<Long> visited = new HashSet<>\(\)/);
-  assert.match(descendantTraversal, /if \(!visited\.add\(currentId\)\)[\s\S]*?产品分类层级存在循环/);
+  assert.match(descendantTraversal, /if \(!visited\.add\(currentId\)\)[\s\S]*?产品大类层级存在循环/);
   assert.match(validationSql, /with recursive active_product_category_tree/i);
   assert.match(validationSql, /tree\.hierarchy_depth < 4/i);
   assert.match(validationSql, /invalid_product_category_hierarchy/i);
@@ -500,10 +625,12 @@ test('backend locks targets and rejects every active masterdata reference before
   assert.match(mapper, /countActiveByParentIds/);
   assert.match(mapper, /countActiveByCategoryIds/);
   assert.match(mapper, /countActiveBySeriesIds/);
+  assert.match(mapper, /countExistingByOptionSetIds/);
   assert.match(mapperXml, /<select id="selectRecordByIdForUpdate"[\s\S]*?for update[\s\S]*?<\/select>/i);
   assert.match(mapperXml, /<select id="countActiveByParentIds"[\s\S]*?parent_id[\s\S]*?del_flag = '0'[\s\S]*?<\/select>/i);
   assert.match(mapperXml, /<select id="countActiveByCategoryIds"[\s\S]*?category_id[\s\S]*?del_flag = '0'[\s\S]*?<\/select>/i);
   assert.match(mapperXml, /<select id="countActiveBySeriesIds"[\s\S]*?series_id[\s\S]*?del_flag = '0'[\s\S]*?<\/select>/i);
+  assert.match(mapperXml, /<select id="countExistingByOptionSetIds"[\s\S]*?option_set_id[\s\S]*?del_flag = '0'[\s\S]*?<\/select>/i);
 });
 
 test('masterdata reference matrix covers all seven owned parent-child edges', () => {
@@ -516,7 +643,7 @@ test('masterdata reference matrix covers all seven owned parent-child edges', ()
     ['PRODUCT_SERIES', 'PRODUCT_MODEL', 'series'],
     ['MATERIAL_CATEGORY', 'MATERIAL_ITEM', 'category'],
     ['ACCESSORY_CATEGORY', 'ACCESSORY_ITEM', 'category'],
-    ['SALES_OPTION_CATEGORY', 'SALES_OPTION_VALUE', 'category']
+    ['OPTION_SET', 'OPTION_VALUE', 'optionSet']
   ];
 
   for (const [parent, child, relation] of expectedEdges) {
@@ -529,7 +656,7 @@ test('masterdata reference matrix covers all seven owned parent-child edges', ()
     'orphan_product_model_series',
     'orphan_material_item_category',
     'orphan_accessory_item_category',
-    'orphan_sales_option_value_category'
+    'orphan_option_value_set'
   ]) {
     assert.match(validationSql, new RegExp(checkName));
   }
@@ -567,28 +694,38 @@ test('masterdata mutations use one deterministic resource-and-id lock order', ()
   assert.match(schemaSql, /category_id\s*,[\s\S]*?-1[\s\S]*?__MD_PRODUCT_CATEGORY_HIERARCHY_MUTEX__/i);
 });
 
-test('masterdata SQL creates exactly the nine MVP tables and permissions', () => {
+test('R-12A migration replaces only the two legacy option tables and preserves permissions', () => {
   const schemaSql = readText(SCHEMA_SQL);
+  const optionMigrationSql = readText(OPTION_MIGRATION_SQL);
+  const optionValidationSql = readText(OPTION_VALIDATION_SQL);
   const menuSql = readText(MENU_SQL);
-  const validationSql = readText(VALIDATION_SQL);
   const ownership = readText(OWNERSHIP_SQL);
-  assert.deepEqual(createTableNames(schemaSql).sort(), TABLES.toSorted());
-  for (const table of TABLES) {
+
+  assert.deepEqual(createTableNames(schemaSql).slice(0, 7).sort(), TABLES.slice(0, 7).toSorted());
+  assert.deepEqual(createTableNames(optionMigrationSql).filter((name) => TABLES.includes(name)).sort(), TABLES.slice(7).toSorted());
+  for (const table of TABLES.slice(0, 7)) {
     assert.match(schemaSql, new RegExp(table));
-    assert.match(validationSql, new RegExp(table));
     assert.match(ownership, new RegExp(table));
   }
-  for (const column of CODE_COLUMNS) {
-    assert.match(schemaSql, new RegExp(column));
+  for (const table of TABLES.slice(7)) {
+    assert.match(optionMigrationSql, new RegExp(table));
+    assert.match(optionValidationSql, new RegExp(table));
+    assert.match(ownership, new RegExp(table));
   }
+  assert.match(optionMigrationSql, /drop table\s+masterdata_sales_option_value\s*,\s*masterdata_sales_option_category/i);
+  assert.match(optionMigrationSql, /selection_mode[\s\S]*SINGLE[\s\S]*MULTIPLE/i);
+  assert.match(optionMigrationSql, /option_set_id/);
+  assert.match(optionValidationSql, /invalid_selection_mode/i);
+  assert.match(optionValidationSql, /orphan_option_value_set/i);
   for (const permission of PERMISSIONS) {
     assert.match(menuSql, new RegExp(escaped(permission)));
     assert.match(ownership, new RegExp(escaped(permission)));
   }
 });
 
-test('masterdata SQL creates four grouped menu pages without changing API permissions', () => {
+test('R-12A updates the existing option menu identity without changing API permissions', () => {
   const menuSql = readText(MENU_SQL);
+  const optionMigrationSql = readText(OPTION_MIGRATION_SQL);
   const ownership = readText(OWNERSHIP_SQL);
 
   assert.match(menuSql, /masterdata_menu\.menu_type = 'M'/);
@@ -596,20 +733,26 @@ test('masterdata SQL creates four grouped menu pages without changing API permis
   assert.match(menuSql, /masterdata_menu\.perms = ''/);
   assert.match(menuSql, /'主数据配置目录'/);
 
-  for (const config of Object.values(RESOURCE_GROUPS)) {
+  for (const config of Object.values(RESOURCE_GROUPS).filter((item) => item !== RESOURCE_GROUPS.option)) {
     assert.match(menuSql, new RegExp(`'${config.menuName}'`));
     assert.match(menuSql, new RegExp(`'${escaped(config.component)}'`));
     assert.match(menuSql, new RegExp(`'${config.routeName}'`));
     assert.match(menuSql, new RegExp(`'business:masterdata:list'`));
     assert.match(ownership, new RegExp(`业务管理 / 主数据配置 / ${config.menuName}`));
   }
-  assert.match(menuSql, /产品大类、产品系列、工艺型号/);
+  const optionConfig = RESOURCE_GROUPS.option;
+  assert.match(optionMigrationSql, new RegExp(`'${optionConfig.menuName}'`));
+  assert.match(optionMigrationSql, new RegExp(`'${escaped(optionConfig.component)}'`));
+  assert.match(optionMigrationSql, new RegExp(`'${optionConfig.routeName}'`));
+  assert.match(optionMigrationSql, /产品大类、产品系列、产品型号/);
+  assert.match(optionMigrationSql, /选项集、选项值/);
+  assert.match(ownership, /业务管理 \/ 主数据配置 \/ 选项配置/);
   assert.doesNotMatch(menuSql, /business:masterdata:product|business:masterdata:material|business:masterdata:accessory|business:masterdata:sales-option/);
 });
 
 test('masterdata frontend uses generic resource API', () => {
   const api = readText(API_CLIENT);
-  const view = readText(VIEW);
+  const view = [readText(VIEW), readText(OPTION_CONFIG_VIEW)].join('\n');
   for (const resource of RESOURCE_PATHS) {
     assert.match(view, new RegExp(`'${resource}'`));
   }

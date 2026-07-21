@@ -12,6 +12,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="parentId" column="parent_id" />
         <result property="categoryId" column="category_id" />
         <result property="seriesId" column="series_id" />
+        <result property="optionSetId" column="option_set_id" />
+        <result property="selectionMode" column="selection_mode" />
         <result property="spec" column="spec" />
         <result property="unit" column="unit" />
         <result property="status" column="status" />
@@ -41,6 +43,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <choose>
                 <when test="resource.seriesScoped">series_id,</when>
                 <otherwise>null as series_id,</otherwise>
+            </choose>
+            <choose>
+                <when test="resource.optionSetScoped">option_set_id,</when>
+                <otherwise>null as option_set_id,</otherwise>
+            </choose>
+            <choose>
+                <when test="resource.selectionModeEnabled">selection_mode,</when>
+                <otherwise>null as selection_mode,</otherwise>
             </choose>
             <choose>
                 <when test="resource.specEnabled">spec,</when>
@@ -76,8 +86,45 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="resource.seriesScoped and record != null and record.seriesId != null">
                 and series_id = #{record.seriesId}
             </if>
+            <if test="resource.optionSetScoped and record != null and record.optionSetId != null">
+                and option_set_id = #{record.optionSetId}
+            </if>
+            <if test="resource.selectionModeEnabled and record != null and record.selectionMode != null and record.selectionMode != ''">
+                and selection_mode = #{record.selectionMode}
+            </if>
         </where>
         order by sort_order asc, ${resource.idColumn} desc
+    </select>
+
+    <select id="selectEnabledOptionValues" resultMap="MasterDataRecordResult">
+        select
+            option_value.option_value_id as id,
+            'option-value' as resource,
+            option_value.option_value_code as item_code,
+            option_value.option_value_name as item_name,
+            null as parent_id,
+            null as category_id,
+            null as series_id,
+            option_value.option_set_id,
+            null as selection_mode,
+            null as spec,
+            null as unit,
+            option_value.status,
+            option_value.sort_order,
+            option_value.del_flag,
+            option_value.create_by,
+            option_value.create_time,
+            option_value.update_by,
+            option_value.update_time,
+            option_value.remark
+        from masterdata_option_value option_value
+        join masterdata_option_set option_set
+          on option_set.option_set_id = option_value.option_set_id
+         and option_set.del_flag = '0'
+         and option_set.status = '0'
+        where option_value.del_flag = '0'
+          and option_value.status = '0'
+        order by option_value.sort_order asc, option_value.option_value_id desc
     </select>
 
     <select id="selectRecordById" resultMap="MasterDataRecordResult">
@@ -164,6 +211,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
           and del_flag = '0'
     </select>
 
+    <select id="countExistingByOptionSetIds" resultType="int">
+        select count(1)
+        from ${resource.tableName}
+        where option_set_id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+          and del_flag = '0'
+    </select>
+
     <insert id="insertRecord">
         insert into ${resource.tableName}(
             ${resource.codeColumn},
@@ -171,6 +228,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="resource.parentScoped">parent_id,</if>
             <if test="resource.categoryScoped">category_id,</if>
             <if test="resource.seriesScoped">series_id,</if>
+            <if test="resource.optionSetScoped">option_set_id,</if>
+            <if test="resource.selectionModeEnabled">selection_mode,</if>
             <if test="resource.specEnabled">spec,</if>
             <if test="resource.unitEnabled">unit,</if>
             status, sort_order, del_flag, create_by, create_time, remark
@@ -180,6 +239,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="resource.parentScoped">#{record.parentId},</if>
             <if test="resource.categoryScoped">#{record.categoryId},</if>
             <if test="resource.seriesScoped">#{record.seriesId},</if>
+            <if test="resource.optionSetScoped">#{record.optionSetId},</if>
+            <if test="resource.selectionModeEnabled">#{record.selectionMode},</if>
             <if test="resource.specEnabled">#{record.spec},</if>
             <if test="resource.unitEnabled">#{record.unit},</if>
             #{record.status}, #{record.sortOrder}, #{record.delFlag}, #{record.createBy}, sysdate(), #{record.remark}
@@ -193,6 +254,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="resource.parentScoped">parent_id = #{record.parentId},</if>
             <if test="resource.categoryScoped">category_id = #{record.categoryId},</if>
             <if test="resource.seriesScoped">series_id = #{record.seriesId},</if>
+            <if test="resource.optionSetScoped">option_set_id = #{record.optionSetId},</if>
+            <if test="resource.selectionModeEnabled">selection_mode = #{record.selectionMode},</if>
             <if test="resource.specEnabled">spec = #{record.spec},</if>
             <if test="resource.unitEnabled">unit = #{record.unit},</if>
             status = #{record.status},

@@ -11,12 +11,16 @@ Feature ID: `masterdata`
 - `masterdata_material_item`
 - `masterdata_accessory_category`
 - `masterdata_accessory_item`
-- `masterdata_sales_option_category`
-- `masterdata_sales_option_value`
+- `masterdata_option_set`
+- `masterdata_option_value`
 
 ## Required Common Columns
 
 Every R-10B table includes a stable code column, display name column, `status`, `sort_order`, `del_flag`, `remark`, and RuoYi audit fields.
+
+`masterdata_option_set` additionally owns required `selection_mode`, constrained to `SINGLE` or `MULTIPLE`.
+
+`masterdata_option_value` additionally owns required `option_set_id`, a restrictive foreign key to `masterdata_option_set.option_set_id`, and a unique key on `(option_set_id, option_value_code)`. An option value cannot be orphaned.
 
 ## Code Rule
 
@@ -32,14 +36,16 @@ R-10D keeps the existing table structure and unique code keys. Codes are generat
 
 - `sql/migrations/V20260628_005_masterdata_r10_schema.sql`
 - `sql/migrations/V20260628_006_masterdata_r10_menu_permission.sql`
+- `sql/migrations/V20260720_007_masterdata_option_set_breaking_migration.sql`
 - `sql/validation/masterdata_runtime_validation.sql`
+- `sql/validation/masterdata_option_set_validation.sql`
 - `sql/masterdata.ownership.md`
 
 ## Delete Rule
 
 R-10B uses logical delete through `del_flag = '2'`. Future referenced master data must be disabled, archived, unpublished, or superseded rather than physically removed.
 
-All seven owned parent/reference edges are protected before logical deletion. Target rows and referenced parents use `SELECT ... FOR UPDATE`; locks are acquired by resource ordinal and then ascending id. Reference checks count every row with `del_flag = '0'`, including disabled rows. Delete affects exactly the normalized target count or the transaction fails. Status changes remain non-cascading; no child cascade delete is permitted.
+All seven owned parent/reference edges are protected before logical deletion. Target rows and referenced parents use `SELECT ... FOR UPDATE`; locks are acquired by resource ordinal and then ascending id. Reference checks count every row with `del_flag = '0'`, including disabled rows. The seventh edge is `masterdata_option_set.option_set_id -> masterdata_option_value.option_set_id`. Delete affects exactly the normalized target count or the transaction fails. Status changes remain non-cascading; no child cascade delete is permitted.
 
 `sql/validation/masterdata_runtime_validation.sql` checks the permanent hierarchy mutex, reports any active category that is unreachable from a root or exceeds three levels, contains read-only orphan queries for all seven edges, and includes the product-model/product-series category-consistency query. In the single-parent category model, an active cycle is necessarily unreachable from a root, so the hierarchy query detects cycles without unbounded recursion. Direct database writes remain outside the service lock protocol and must be followed by those validation queries.
 

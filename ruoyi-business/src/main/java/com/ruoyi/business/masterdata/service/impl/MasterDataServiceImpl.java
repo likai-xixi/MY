@@ -34,6 +34,8 @@ public class MasterDataServiceImpl implements IMasterDataService
     private static final String DELETED = "2";
     private static final int CODE_RETRY_LIMIT = 8;
     private static final int PRODUCT_CATEGORY_MAX_DEPTH = 3;
+    private static final String SELECTION_MODE_SINGLE = "SINGLE";
+    private static final String SELECTION_MODE_MULTIPLE = "MULTIPLE";
     private static final Pattern CODE_PATTERN = Pattern.compile("^[A-Z0-9_]+$");
     private static final Comparator<LockKey> LOCK_ORDER = Comparator
         .comparingInt((LockKey key) -> key.resource().ordinal())
@@ -60,9 +62,14 @@ public class MasterDataServiceImpl implements IMasterDataService
     @Override
     public List<MasterDataRecord> selectEnabledOptions(String resource)
     {
+        MasterDataResource target = resolve(resource);
+        if (target == MasterDataResource.OPTION_VALUE)
+        {
+            return masterDataMapper.selectEnabledOptionValues();
+        }
         MasterDataRecord query = new MasterDataRecord();
         query.setStatus(NORMAL);
-        return selectRecordList(resource, query);
+        return masterDataMapper.selectRecordList(target, query);
     }
 
     @Override
@@ -213,7 +220,7 @@ public class MasterDataServiceImpl implements IMasterDataService
         Long mutexId = masterDataMapper.selectProductCategoryHierarchyMutexForUpdate();
         if (mutexId == null)
         {
-            throw new ServiceException("产品分类层级互斥记录缺失，请先执行主数据迁移");
+            throw new ServiceException("产品大类层级互斥记录缺失，请先执行主数据迁移");
         }
         return masterDataMapper.selectActiveRecordsForUpdate(MasterDataResource.PRODUCT_CATEGORY);
     }
@@ -236,6 +243,10 @@ public class MasterDataServiceImpl implements IMasterDataService
         if (resource.isSeriesScoped() && record.getSeriesId() != null)
         {
             keys.add(new LockKey(MasterDataResource.PRODUCT_SERIES, record.getSeriesId()));
+        }
+        if (resource.isOptionSetScoped() && record.getOptionSetId() != null)
+        {
+            keys.add(new LockKey(MasterDataResource.OPTION_SET, record.getOptionSetId()));
         }
         return keys;
     }
@@ -306,6 +317,10 @@ public class MasterDataServiceImpl implements IMasterDataService
         record.setSpec(resource.isSpecEnabled() ? trimToNull(record.getSpec()) : null);
         record.setUnit(resource.isUnitEnabled() ? trimToNull(record.getUnit()) : null);
         record.setParentId(resource.isParentScoped() ? normalizeParentId(record.getParentId()) : null);
+        record.setCategoryId(resource.isCategoryScoped() ? record.getCategoryId() : null);
+        record.setSeriesId(resource.isSeriesScoped() ? record.getSeriesId() : null);
+        record.setOptionSetId(resource.isOptionSetScoped() ? record.getOptionSetId() : null);
+        record.setSelectionMode(resource.isSelectionModeEnabled() ? trimToNull(record.getSelectionMode()) : null);
         record.setStatus(defaultStatus(record.getStatus()));
         record.setDelFlag(create ? NORMAL : record.getDelFlag());
         if (record.getSortOrder() == null)
@@ -322,6 +337,10 @@ public class MasterDataServiceImpl implements IMasterDataService
             }
         }
         assertStatus(record.getStatus());
+        if (resource.isSelectionModeEnabled())
+        {
+            assertSelectionMode(record.getSelectionMode());
+        }
     }
 
     private int insertRecordWithGeneratedCode(MasterDataResource resource, MasterDataRecord record)
@@ -362,8 +381,8 @@ public class MasterDataServiceImpl implements IMasterDataService
             case MATERIAL_ITEM -> "MI";
             case ACCESSORY_CATEGORY -> "AC";
             case ACCESSORY_ITEM -> "AI";
-            case SALES_OPTION_CATEGORY -> "SOC";
-            case SALES_OPTION_VALUE -> "SOV";
+            case OPTION_SET -> "OS";
+            case OPTION_VALUE -> "OV";
         };
     }
 
@@ -391,6 +410,11 @@ public class MasterDataServiceImpl implements IMasterDataService
             {
                 throw new ServiceException("产品型号所属分类必须与所属系列一致");
             }
+        }
+        if (resource.isOptionSetScoped())
+        {
+            assertRequired(record.getOptionSetId(), "选项值所属选项集不能为空");
+            requiredLockedRecord(lockedRecords, MasterDataResource.OPTION_SET, record.getOptionSetId());
         }
     }
 
@@ -423,21 +447,21 @@ public class MasterDataServiceImpl implements IMasterDataService
         record.setParentId(parentId);
         if (id != null && id.equals(parentId))
         {
-            throw new ServiceException("产品分类的上级分类不能选择自己");
+            throw new ServiceException("产品大类的上级大类不能选择自己");
         }
 
         Map<Long, MasterDataRecord> byId = recordsById(categories);
         Map<Long, List<MasterDataRecord>> childrenByParent = childrenByParent(categories);
         if (id != null && parentId != null && isDescendant(parentId, id, childrenByParent))
         {
-            throw new ServiceException("产品分类的上级分类不能选择自己的子级或后代");
+            throw new ServiceException("产品大类的上级大类不能选择自己的子级或后代");
         }
 
         int parentDepth = parentId == null ? 0 : hierarchyDepth(parentId, byId);
         int subtreeHeight = id == null ? 1 : subtreeHeight(id, childrenByParent, new HashSet<>());
         if (parentDepth + subtreeHeight > PRODUCT_CATEGORY_MAX_DEPTH)
         {
-            throw new ServiceException("产品分类最多只允许3级");
+            throw new ServiceException("产品大类最多只允许3级");
         }
     }
 
@@ -449,26 +473,26 @@ public class MasterDataServiceImpl implements IMasterDataService
             {
                 assertNoActiveReference(
                     masterDataMapper.countActiveByParentIds(MasterDataResource.PRODUCT_CATEGORY, ids),
-                    "产品分类存在子分类，不能删除");
+                    "产品大类存在子级，不能删除");
                 assertNoActiveReference(
                     masterDataMapper.countActiveByCategoryIds(MasterDataResource.PRODUCT_SERIES, ids),
                     "产品大类已被产品系列引用，不能删除");
                 assertNoActiveReference(
                     masterDataMapper.countActiveByCategoryIds(MasterDataResource.PRODUCT_MODEL, ids),
-                    "产品大类已被工艺型号引用，不能删除");
+                    "产品大类已被产品型号引用，不能删除");
             }
             case PRODUCT_SERIES -> assertNoActiveReference(
                 masterDataMapper.countActiveBySeriesIds(MasterDataResource.PRODUCT_MODEL, ids),
-                "产品系列已被工艺型号引用，不能删除");
+                "产品系列已被产品型号引用，不能删除");
             case MATERIAL_CATEGORY -> assertNoActiveReference(
                 masterDataMapper.countActiveByCategoryIds(MasterDataResource.MATERIAL_ITEM, ids),
                 "物料分类已被原材料档案引用，不能删除");
             case ACCESSORY_CATEGORY -> assertNoActiveReference(
                 masterDataMapper.countActiveByCategoryIds(MasterDataResource.ACCESSORY_ITEM, ids),
                 "配件分类已被配件档案引用，不能删除");
-            case SALES_OPTION_CATEGORY -> assertNoActiveReference(
-                masterDataMapper.countActiveByCategoryIds(MasterDataResource.SALES_OPTION_VALUE, ids),
-                "销售选项分类已被销售选项值引用，不能删除");
+            case OPTION_SET -> assertNoActiveReference(
+                masterDataMapper.countExistingByOptionSetIds(MasterDataResource.OPTION_VALUE, ids),
+                "选项集已被选项值引用，不能删除");
             default ->
             {
             }
@@ -517,7 +541,7 @@ public class MasterDataServiceImpl implements IMasterDataService
             Long currentId = stack.removeFirst();
             if (!visited.add(currentId))
             {
-                throw new ServiceException("产品分类层级存在循环");
+                throw new ServiceException("产品大类层级存在循环");
             }
             for (MasterDataRecord child : childrenByParent.getOrDefault(currentId, List.of()))
             {
@@ -540,7 +564,7 @@ public class MasterDataServiceImpl implements IMasterDataService
         {
             if (!visited.add(currentId))
             {
-                throw new ServiceException("产品分类层级存在循环");
+                throw new ServiceException("产品大类层级存在循环");
             }
             MasterDataRecord current = byId.get(currentId);
             if (current == null)
@@ -557,7 +581,7 @@ public class MasterDataServiceImpl implements IMasterDataService
     {
         if (!visited.add(id))
         {
-            throw new ServiceException("产品分类层级存在循环");
+            throw new ServiceException("产品大类层级存在循环");
         }
         int height = 1;
         for (MasterDataRecord child : childrenByParent.getOrDefault(id, List.of()))
@@ -586,6 +610,14 @@ public class MasterDataServiceImpl implements IMasterDataService
         if (!NORMAL.equals(status) && !DISABLED.equals(status))
         {
             throw new ServiceException("状态只能为正常或停用");
+        }
+    }
+
+    private void assertSelectionMode(String selectionMode)
+    {
+        if (!SELECTION_MODE_SINGLE.equals(selectionMode) && !SELECTION_MODE_MULTIPLE.equals(selectionMode))
+        {
+            throw new ServiceException("选项集选择模式只能为SINGLE或MULTIPLE");
         }
     }
 

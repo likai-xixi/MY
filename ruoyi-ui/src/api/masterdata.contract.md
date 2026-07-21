@@ -17,10 +17,12 @@ The frontend uses `/business/masterdata/{resource}` where `{resource}` is one of
 - `material-item`
 - `accessory-category`
 - `accessory-item`
-- `sales-option-category`
-- `sales-option-value`
+- `option-set`
+- `option-value`
 
-Display labels may differ from resource keys. R-10I displays `product-category` as 产品大类 and `product-model` as 工艺型号; the API client and `/business/masterdata/{resource}` paths remain unchanged.
+Display labels may differ from resource keys. The frontend displays `product-category`, `product-series`, and `product-model` as 产品大类, 产品系列, and 产品型号. It displays the option resources as 选项集 and 选项值.
+
+The removed legacy option resource keys are rejected. There is no alias, redirect, fallback reader, or dual write.
 
 ## Operations
 
@@ -33,11 +35,21 @@ Display labels may differ from resource keys. R-10I displays `product-category` 
 - `DELETE /business/masterdata/{resource}/{ids}`
 - `POST /business/masterdata/{resource}/export`
 
-## R-10D Code Rule
+## Code Rule
 
 - `POST /business/masterdata/{resource}` does not require caller-supplied code.
 - If create payload contains `itemCode`, the backend ignores it and generates `prefix + yyyyMM + 6 digit monthly sequence`.
 - `PUT /business/masterdata/{resource}` keeps the existing code immutable.
+- New option-set and option-value codes use `OS` and `OV`. Preserved migrated codes remain immutable historical data.
+
+## Option Contract
+
+- `option-set.selectionMode` is required and accepts exactly `SINGLE` or `MULTIPLE`.
+- `option-value.optionSetId` is required and identifies its owning set; it never reuses `categoryId`.
+- Lists are ordered by `sortOrder` and then stable id/code.
+- Disabling a set does not cascade to values.
+- Deleting a set is rejected while any non-deleted value exists, including disabled values.
+- `option-value/options` excludes values owned by a disabled set. Maintenance list/detail may still show those existing values.
 
 ## R-10F Product Category Hierarchy
 

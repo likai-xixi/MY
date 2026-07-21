@@ -29,6 +29,10 @@ public class MasterDataRecord extends BaseEntity
 
     private Long seriesId;
 
+    private Long optionSetId;
+
+    private String selectionMode;
+
     @Excel(name = "规格")
     private String spec;
 
@@ -114,6 +118,26 @@ public class MasterDataRecord extends BaseEntity
         this.seriesId = seriesId;
     }
 
+    public Long getOptionSetId()
+    {
+        return optionSetId;
+    }
+
+    public void setOptionSetId(Long optionSetId)
+    {
+        this.optionSetId = optionSetId;
+    }
+
+    public String getSelectionMode()
+    {
+        return selectionMode;
+    }
+
+    public void setSelectionMode(String selectionMode)
+    {
+        this.selectionMode = selectionMode;
+    }
+
     public String getSpec()
     {
         return spec;
@@ -174,6 +198,8 @@ public class MasterDataRecord extends BaseEntity
             .append("itemName", getItemName())
             .append("categoryId", getCategoryId())
             .append("seriesId", getSeriesId())
+            .append("optionSetId", getOptionSetId())
+            .append("selectionMode", getSelectionMode())
             .append("status", getStatus())
             .append("sortOrder", getSortOrder())
             .toString();

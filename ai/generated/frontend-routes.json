@@ -82,18 +82,18 @@
     },
     {
       "module": "masterdata",
-      "route": "/masterdata/product-config",
+      "route": "/masterdata/option-config",
       "api": [],
       "states": [],
-      "file": "ruoyi-ui/src/views/masterdata/product-config.vue",
+      "file": "ruoyi-ui/src/views/masterdata/option-config.vue",
       "source": "ruoyi-view"
     },
     {
       "module": "masterdata",
-      "route": "/masterdata/sales-option-config",
+      "route": "/masterdata/product-config",
       "api": [],
       "states": [],
-      "file": "ruoyi-ui/src/views/masterdata/sales-option-config.vue",
+      "file": "ruoyi-ui/src/views/masterdata/product-config.vue",
       "source": "ruoyi-view"
     },
     {

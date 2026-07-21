@@ -1,11 +1,11 @@
 # Engineering Core Contract Index
 
 Change: `R-11 engineering-core roadmap rebaseline`
-Status: approved architecture contract; runtime not implemented.
+Status: approved architecture contract; R-12A catalog/option slice implemented, remaining engineering runtime blocked.
 
 ## Authority
 
-This R-11 package is the future-state authority for product configuration, engineering calculation, and release semantics. Current R-10 runtime ownership files (`masterdata.api.md`, `masterdata.db.md`, `masterdata.ui.md`, and `masterdata.permission.md`) remain truthful descriptions of the as-is runtime only until the destructive migration is executed.
+This R-11 package is the future-state authority for product configuration, engineering calculation, and release semantics. R-12A executed only the catalog semantic and option-set/value slice; the current masterdata ownership files now describe that as-is runtime.
 
 When an older R-09 concept conflicts with this package, R-11 wins. In particular:
 
@@ -37,16 +37,16 @@ When an older R-09 concept conflicts with this package, R-11 wins. In particular
 
 ## Readiness Meaning
 
-R-11 makes the architecture contract-ready, not runtime-ready. `engineering-core-ready` remains incomplete until later changes have:
+R-11 made the architecture contract-ready. R-12A completed item 1 only for the approved catalog/option boundary. `engineering-core-ready` remains incomplete until later changes have:
 
-1. Executed the destructive masterdata migration.
+1. Executed the destructive catalog/option migration. `[R-12A complete]`
 2. Implemented field definitions/schemes and process-plan versions.
 3. Implemented immutable version/release persistence and command APIs.
 4. Implemented the calculation I/O boundary without requiring formula or DXF engines.
 5. Passed both signed 9CM golden fixtures.
 6. Proved the five reverse-review checks in the contract-test matrix.
 
-`beforeSalesOrder` depends on `engineering-core-ready` and therefore remains blocked after R-11.
+`beforeSalesOrder` depends on `engineering-core-ready` and therefore remains blocked after R-12A.
 
 ## R-11 Non-goals
 

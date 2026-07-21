@@ -29,13 +29,13 @@ select 'table_exists:masterdata_accessory_item' as check_name, count(*) as actua
 from information_schema.tables
 where table_schema = database() and table_name = 'masterdata_accessory_item';
 
-select 'table_exists:masterdata_sales_option_category' as check_name, count(*) as actual
+select 'table_exists:masterdata_option_set' as check_name, count(*) as actual
 from information_schema.tables
-where table_schema = database() and table_name = 'masterdata_sales_option_category';
+where table_schema = database() and table_name = 'masterdata_option_set';
 
-select 'table_exists:masterdata_sales_option_value' as check_name, count(*) as actual
+select 'table_exists:masterdata_option_value' as check_name, count(*) as actual
 from information_schema.tables
-where table_schema = database() and table_name = 'masterdata_sales_option_value';
+where table_schema = database() and table_name = 'masterdata_option_value';
 
 select 'permission_exists:business:masterdata:list' as check_name, count(*) as actual
 from sys_menu where perms = 'business:masterdata:list';
@@ -117,17 +117,24 @@ where del_flag = '0'
 group by accessory_code
 having count(*) > 1;
 
-select 'duplicate_sales_option_category_code' as check_name, category_code as code, count(*) as actual
-from masterdata_sales_option_category
+select 'duplicate_option_set_code' as check_name, option_set_code as code, count(*) as actual
+from masterdata_option_set
 where del_flag = '0'
-group by category_code
+group by option_set_code
 having count(*) > 1;
 
-select 'duplicate_sales_option_value_code' as check_name, option_code as code, count(*) as actual
-from masterdata_sales_option_value
+select 'duplicate_option_value_set_code' as check_name,
+       option_set_id,
+       option_value_code as code,
+       count(*) as actual
+from masterdata_option_value
 where del_flag = '0'
-group by option_code
+group by option_set_id, option_value_code
 having count(*) > 1;
+
+select 'invalid_selection_mode' as check_name, option_set_id as row_id, selection_mode
+from masterdata_option_set
+where selection_mode not in ('SINGLE', 'MULTIPLE') or selection_mode is null;
 
 -- Expected: zero rows. Active records may reference only active masterdata parents.
 select 'orphan_product_category_parent' as check_name, child.category_id as row_id, child.parent_id as missing_parent_id
@@ -175,8 +182,10 @@ left join masterdata_accessory_category parent
   on parent.category_id = child.category_id and parent.del_flag = '0'
 where child.del_flag = '0' and parent.category_id is null;
 
-select 'orphan_sales_option_value_category' as check_name, child.option_id as row_id, child.category_id as missing_category_id
-from masterdata_sales_option_value child
-left join masterdata_sales_option_category parent
-  on parent.category_id = child.category_id and parent.del_flag = '0'
-where child.del_flag = '0' and parent.category_id is null;
+select 'orphan_option_value_set' as check_name,
+       child.option_value_id as row_id,
+       child.option_set_id as missing_option_set_id
+from masterdata_option_value child
+left join masterdata_option_set parent
+  on parent.option_set_id = child.option_set_id and parent.del_flag = '0'
+where child.del_flag = '0' and parent.option_set_id is null;

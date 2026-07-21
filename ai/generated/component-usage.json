@@ -3603,14 +3603,14 @@
       "source": "vue-template-global"
     },
     {
-      "file": "ruoyi-ui/src/views/masterdata/product-config.vue",
+      "file": "ruoyi-ui/src/views/masterdata/option-config.vue",
       "module": "masterdata",
-      "tag": "masterdata",
-      "componentId": "",
+      "tag": "right-toolbar",
+      "componentId": "ruoyi-right-toolbar-index",
       "source": "vue-template-global"
     },
     {
-      "file": "ruoyi-ui/src/views/masterdata/sales-option-config.vue",
+      "file": "ruoyi-ui/src/views/masterdata/product-config.vue",
       "module": "masterdata",
       "tag": "masterdata",
       "componentId": "",
@@ -3983,7 +3983,7 @@
     },
     {
       "tag": "masterdata",
-      "count": 4,
+      "count": 3,
       "warning": "global component tag is used frequently but is not registered in the component registry/catalog"
     },
     {

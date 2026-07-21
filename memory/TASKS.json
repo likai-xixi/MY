@@ -8,8 +8,8 @@
       "status": "in_progress",
       "owner": "Codex",
       "priority": "high",
-      "statusReason": "R-11 engineering-core roadmap rebaseline is committed, pushed, and verified by real GitHub Actions run 29745362302. Its governance, backend-tests, and frontend-build jobs all succeeded, and the clean-worktree after-push check passed. Runtime migration and signed golden execution remain unimplemented, so engineeringCoreReady and beforeSalesOrder remain blocked.",
-      "nextStep": "Finish and publish only CR-20260720T131603Z-r-11-post-push-handover-sync, prove local master equals origin/master with a clean worktree, then stop. Do not start R-12A until a separate explicit request, new change, and approved review; do not start sales-order, production, formula, calculation-engine, or DXF runtime.",
+      "statusReason": "R-11 is published and CI-verified. R-12A completed the destructive catalog/option slice locally, but field/process/version/release runtime and signed golden execution remain unimplemented, so engineeringCoreReady and beforeSalesOrder remain blocked.",
+      "nextStep": "Wait for user review and explicit commit/push authority for R-12A. Any later engineering-core slice requires its own change and review; do not start sales-order, production, formula, calculation-engine, or DXF runtime.",
       "blockedBy": [],
       "verification": [
         "CR-20260720T115859Z-r-11-engineering-core-roadmap-rebaseline review RV-20260720T120106Z-r-11-engineering-core-roadmap-rebaseline allows only governance/contract roots and excludes runtime",
@@ -470,14 +470,12 @@
       "id": "TASK-0012",
       "feature": "masterdata",
       "title": "Execute R-12A product semantics and option-set migration",
-      "status": "in_progress",
+      "status": "done",
       "owner": "Codex",
       "priority": "high",
-      "statusReason": "R-12A has an approved five-role review and deterministic Strategy A, but implementation requires a user-authorized review-only base commit under the repository anti-self-approval gate.",
-      "nextStep": "Wait for explicit review-only commit authorization; then refresh impact.baseRevision and implement only the approved R-12A masterdata slice.",
-      "blockedBy": [
-        "review-only-base-commit-authorization"
-      ],
+      "statusReason": "R-12A review is committed as immutable base f28e3d1; the bounded implementation, deterministic Strategy A migration, local API/browser/database acceptance, rollback rehearsal, and governance closeout are complete. The implementation remains intentionally uncommitted and unpushed for user review.",
+      "nextStep": "Wait for explicit user instruction before committing or pushing the R-12A implementation; do not start R-12B.",
+      "blockedBy": [],
       "verification": [
         "R-11 commit/push/post-push handover and successful scaffold-ci run 29745362302 reconfirmed",
         "R-12A review RV-20260720T134134Z-r-12a-option-set-option-value-masterdata contains Allow Implementation for the bounded design",
@@ -486,13 +484,17 @@
         "npm run check:review passed",
         "npm run check:file-weight passed",
         "git diff --check passed",
-        "R-12A business runtime and acceptance remain not-run",
-        "[not-run] npm run check for R-12A business implementation closeout"
+        "Review-only baseline f28e3d12358bdc35ac1782fd50be7850f937bc1b committed locally without push and bound as impact.baseRevision",
+        "Strategy A migrated 4 option sets and 2 option values with four SINGLE modes; old tables/menu/permission aliases are absent and validation is clean",
+        "Focused Node 39/39, Java unit 65/65, MySQL integration 2/2, UI 7/7, Maven package, Vue production build, API/browser acceptance, and rollback rehearsal passed",
+        "Review package diff and forbidden adjacent runtime diff are zero; engineeringCoreReady and beforeSalesOrder remain blocked",
+        "[not-run] R-12A implementation commit, push, and CI",
+        "npm run check"
       ],
-      "latestSession": "memory/sessions/2026-07-20-r-12a-pre-review.md",
+      "latestSession": "memory/sessions/2026-07-21-r-12a-runtime.md",
       "latestChange": "CR-20260720T134007Z-change",
       "handoverRequired": true,
-      "updatedAt": "2026-07-20"
+      "updatedAt": "2026-07-21"
     }
   ]
 }

@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-07-21 - masterdata/R-12A destructive catalog-option migration
+
+- Review-only authorization baseline: `f28e3d12358bdc35ac1782fd50be7850f937bc1b`; implementation base was refreshed to that commit and the review package remains unchanged.
+- Product catalog now consistently uses 产品大类、产品系列、产品型号; product-model owns no process, field, formula, BOM, production, or DXF behavior.
+- Replaced sales-option category/value API resources, tables, menu, route, and contracts with option-set/value and no compatibility path.
+- [runtime-local] Strategy A migrated 4/2 rows with four `SINGLE` modes; old tables/menu/permission aliases are absent, orphans/duplicates are zero, and rollback with matching old code was rehearsed.
+- [local] Focused Node 39/39, Java unit 65/65, MySQL integration 2/2, UI 7/7, Maven package, Vue production build, and scanners pass; full governance closeout is recorded in the active change.
+- `engineeringCoreReady` and `beforeSalesOrder` remain blocked. The implementation diff is uncommitted/unpushed and R-12B has not started.
+
 ## 2026-07-15 - governance/frontend-ci-and-esm-scanner-hardening
 
 - Change: `ai/changes/CR-20260714T114811Z-frontend-ci-and-esm-scanner-hardening`.

@@ -1005,8 +1005,12 @@
     "ai/reviews/RV-20260720T134134Z-r-12a-option-set-option-value-masterdata",
     "ai/context/current-context.md",
     "ai/context/current-context.json",
+    "ai/context/features/masterdata.md",
     "ai/contracts/engineering-core.index.md",
     "ai/contracts/engineering-core.migration-plan.md",
+    "ai/contracts/masterdata.product.md",
+    "ai/contracts/masterdata.sales-option.md",
+    "ai/contracts/masterdata.migration-plan.md",
     "ai/registry/migration-registry.json",
     "features/masterdata.md",
     "ruoyi-business/src/main/java/com/ruoyi/business/masterdata",
@@ -1084,5 +1088,5 @@
     "browser acceptance",
     "reverse audit"
   ],
-  "baseRevision": "09dce9dbd3d008afb517a0099c5a381a0298b19c"
+  "baseRevision": "f28e3d12358bdc35ac1782fd50be7850f937bc1b"
 }

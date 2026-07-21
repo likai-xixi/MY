@@ -140,13 +140,13 @@ public class MasterDataReferenceMySqlIT
             19006L
         ),
         new OrphanValidationFixture(
-            "orphan_sales_option_value_category",
-            "insert into masterdata_sales_option_value(option_id, category_id, option_code, option_name, "
+            "orphan_option_value_set",
+            "insert into masterdata_option_value(option_value_id, option_set_id, option_value_code, option_value_name, "
                 + "status, sort_order, del_flag, create_by, create_time) values "
-                + "(10007, 19007, 'SOV_IT_ORPHAN', 'Orphan sales option', '0', 0, '0', 'it', now())",
-            "delete from masterdata_sales_option_value where option_id = 10007",
+                + "(10007, 19007, 'OV_IT_ORPHAN', 'Orphan option value', '0', 0, '0', 'it', now())",
+            "delete from masterdata_option_value where option_value_id = 10007",
             10007L,
-            "missing_category_id",
+            "missing_option_set_id",
             19007L
         )
     );
@@ -204,14 +204,14 @@ public class MasterDataReferenceMySqlIT
             null
         ),
         new ReferenceDeleteCase(
-            "sales option category -> sales option value",
-            MasterDataResource.SALES_OPTION_CATEGORY,
+            "option set -> disabled option value",
+            MasterDataResource.OPTION_SET,
             900L,
-            "masterdata_sales_option_category",
-            "category_id",
+            "masterdata_option_set",
+            "option_set_id",
             901L,
-            "masterdata_sales_option_value",
-            "option_id",
+            "masterdata_option_value",
+            "option_value_id",
             null
         )
     );
@@ -239,6 +239,7 @@ public class MasterDataReferenceMySqlIT
                 }
                 applySql(connection, "sql/migrations/V20260628_005_masterdata_r10_schema.sql");
                 assertHierarchyMutexState(connection, "after repairing a corrupted mutex");
+                seedOptionMigrationInventoryAndMenus(connection);
                 try (Statement statement = connection.createStatement())
                 {
                     assertEquals(1, statement.executeUpdate(
@@ -255,6 +256,8 @@ public class MasterDataReferenceMySqlIT
                 {
                     applySql(connection, "sql/migrations/V20260628_005_masterdata_r10_schema.sql");
                     assertHierarchyMutexState(connection, "after restoring a deleted mutex");
+                    applySql(connection, "sql/migrations/V20260720_007_masterdata_option_set_breaking_migration.sql");
+                    assertOptionMigrationCutover(connection);
                 }
 
                 ExecutorService executor = Executors.newFixedThreadPool(2);
@@ -421,8 +424,13 @@ public class MasterDataReferenceMySqlIT
         {
             String validationSql = validationStatement(fixture.checkName);
             boolean inserted = false;
+            boolean foreignKeysDisabled = "orphan_option_value_set".equals(fixture.checkName);
             try (Statement statement = connection.createStatement())
             {
+                if (foreignKeysDisabled)
+                {
+                    statement.execute("set foreign_key_checks = 0");
+                }
                 int insertedRows = statement.executeUpdate(fixture.insertSql);
                 inserted = insertedRows > 0;
                 assertEquals(fixture.checkName + " fixture must insert exactly one invalid row", 1, insertedRows);
@@ -448,6 +456,13 @@ public class MasterDataReferenceMySqlIT
                     {
                         assertEquals(fixture.checkName + " fixture cleanup must remove one row", 1,
                             cleanup.executeUpdate(fixture.cleanupSql));
+                    }
+                }
+                if (foreignKeysDisabled)
+                {
+                    try (Statement constraints = connection.createStatement())
+                    {
+                        constraints.execute("set foreign_key_checks = 1");
                     }
                 }
             }
@@ -1015,16 +1030,70 @@ public class MasterDataReferenceMySqlIT
                     + "(801, 800, 'AI_IT_801', 'Referencing accessory item', '0', 0, '0', 'it', now())"
             );
             statement.executeUpdate(
-                "insert into masterdata_sales_option_category(category_id, category_code, category_name, status, "
+                "insert into masterdata_option_set(option_set_id, option_set_code, option_set_name, selection_mode, status, "
                     + "sort_order, del_flag, create_by, create_time) values "
-                    + "(900, 'SOC_IT_900', 'Referenced sales option category', '0', 0, '0', 'it', now())"
+                    + "(900, 'OS_IT_900', 'Referenced option set', 'SINGLE', '0', 0, '0', 'it', now())"
             );
             statement.executeUpdate(
-                "insert into masterdata_sales_option_value(option_id, category_id, option_code, option_name, "
+                "insert into masterdata_option_value(option_value_id, option_set_id, option_value_code, option_value_name, "
                     + "status, sort_order, del_flag, create_by, create_time) values "
-                    + "(901, 900, 'SOV_IT_901', 'Referencing sales option value', '0', 0, '0', 'it', now())"
+                    + "(901, 900, 'OV_IT_901', 'Referencing disabled option value', '1', 0, '0', 'it', now())"
             );
         }
+    }
+
+    private void seedOptionMigrationInventoryAndMenus(Connection connection) throws SQLException
+    {
+        try (Statement statement = connection.createStatement())
+        {
+            statement.executeUpdate(
+                "insert into masterdata_sales_option_category(category_id, category_code, category_name, status, "
+                    + "sort_order, del_flag, create_by, create_time, update_by, update_time, remark) values "
+                    + "(910, 'SOC_IT_910', 'Opening direction', '0', 1, '0', 'it', now(), 'it', now(), 'active set'),"
+                    + "(911, 'SOC_IT_911', 'Glass color', '1', 2, '0', 'it', now(), 'it', now(), 'disabled set'),"
+                    + "(912, 'SOC_IT_912', 'Handle color', '0', 3, '2', 'it', now(), 'it', now(), 'deleted set'),"
+                    + "(913, 'SOC_IT_913', 'Lock type', '1', 4, '2', 'it', now(), 'it', now(), null)"
+            );
+            statement.executeUpdate(
+                "insert into masterdata_sales_option_value(option_id, category_id, option_code, option_name, status, "
+                    + "sort_order, del_flag, create_by, create_time, update_by, update_time, remark) values "
+                    + "(920, 910, 'SOV_IT_920', 'Left opening', '0', 1, '0', 'it', now(), 'it', now(), 'active value'),"
+                    + "(921, 912, 'SOV_IT_921', 'Black handle', '1', 2, '2', 'it', now(), 'it', now(), 'deleted value')"
+            );
+            statement.executeUpdate(
+                "create table sys_menu ("
+                    + "menu_id bigint not null auto_increment, menu_name varchar(64) not null, parent_id bigint not null, "
+                    + "path varchar(128) default '', component varchar(255) default '', route_name varchar(128) default '', "
+                    + "perms varchar(128) default '', "
+                    + "remark varchar(500) default null, update_by varchar(64) default '', update_time datetime default null, "
+                    + "primary key (menu_id)) engine=innodb default charset=utf8mb4"
+            );
+            statement.executeUpdate(
+                "insert into sys_menu(menu_id, menu_name, parent_id, path, component, route_name, perms, remark) values "
+                    + "(1, '主数据配置', 0, 'masterdata', '', 'Masterdata', '', '主数据配置目录'),"
+                    + "(2, '产品配置', 1, 'product-config', 'masterdata/product-config', 'MasterdataProductConfig', "
+                    + "'business:masterdata:list', '产品大类、产品系列、工艺型号'),"
+                    + "(3, '销售选项配置', 1, 'sales-option-config', 'masterdata/sales-option-config', "
+                    + "'MasterdataSalesOptionConfig', 'business:masterdata:list', '销售选项分类、销售选项值')"
+            );
+        }
+    }
+
+    private void assertOptionMigrationCutover(Connection connection) throws SQLException
+    {
+        assertEquals(4, count(connection, "select count(*) from masterdata_option_set"));
+        assertEquals(2, count(connection, "select count(*) from masterdata_option_value"));
+        assertEquals(4, count(connection,
+            "select count(*) from masterdata_option_set where selection_mode = 'SINGLE'"));
+        assertEquals(0, count(connection,
+            "select count(*) from information_schema.tables where table_schema = database() "
+                + "and table_name in ('masterdata_sales_option_category', 'masterdata_sales_option_value')"));
+        assertEquals(1, count(connection,
+            "select count(*) from sys_menu where menu_name = '选项配置' and path = 'option-config' "
+                + "and component = 'masterdata/option-config' and route_name = 'MasterdataOptionConfig'"));
+        assertEquals(0, count(connection,
+            "select count(*) from sys_menu where path = 'sales-option-config' "
+                + "or component = 'masterdata/sales-option-config'"));
     }
 
     private Connection connect(MySQLContainer<?> mysql) throws SQLException
