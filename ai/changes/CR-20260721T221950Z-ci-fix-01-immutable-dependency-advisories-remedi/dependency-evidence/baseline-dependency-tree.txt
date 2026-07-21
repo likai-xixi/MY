@@ -1,0 +1,33 @@
+Command: npm --prefix ruoyi-ui ci
+Result: exit 0; added 282 packages; audited 283 packages; 1 high severity vulnerability.
+
+Command: npm --prefix ruoyi-ui audit --audit-level=moderate --include=dev
+Result: exit 1; one High vulnerability entry covering GHSA-v56q-mh7h-f735 and GHSA-xvcm-6775-5m9r.
+
+Command: npm --prefix ruoyi-ui ls immutable --all
+Result:
+ruoyi@3.9.2 D:\Project\MY\ruoyi-ui
++-- sass-embedded@1.97.2
+| `-- immutable@5.1.6
+`-- sass@1.97.2 extraneous
+  `-- immutable@5.1.6 deduped
+
+Command: npm --prefix ruoyi-ui explain immutable
+Result:
+immutable@5.1.6 dev
+node_modules/immutable
+  immutable@"^5.0.2" from sass@1.97.2
+  immutable@"^5.0.2" from sass-embedded@1.97.2
+
+Command: npm --prefix ruoyi-ui ls sass-embedded --all
+Result:
+ruoyi@3.9.2 D:\Project\MY\ruoyi-ui
++-- sass-embedded@1.97.2
+`-- vite@6.4.3
+  `-- sass-embedded@1.97.2 deduped
+
+Lockfile facts:
+- One immutable package node exists at node_modules/immutable.
+- It is marked dev=true and is not a production runtime dependency.
+- sass-embedded is a direct dev dependency and the production build compiles project SCSS through Vite, so this is a real production-build dependency path.
+- No application source imports the immutable package directly; matching application prose uses the ordinary English adjective only.

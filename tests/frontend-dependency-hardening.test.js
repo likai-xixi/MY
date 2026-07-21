@@ -42,6 +42,13 @@ function braceExpansionPatchedForGhsa3jxr9vmjr5cp(version) {
   return major >= 5 && versionAtLeast(version, '5.0.7');
 }
 
+function immutablePatchedFor2026Advisories(version) {
+  const [major] = versionTuple(version);
+  if (major === 4) return versionAtLeast(version, '4.3.9');
+  if (major === 5) return versionAtLeast(version, '5.1.8');
+  return major > 5;
+}
+
 function assertBalancedXmlTags(file, source) {
   const stack = [];
   const tags = source.match(/<\/?[A-Za-z][^>]*>/g) || [];
@@ -85,7 +92,7 @@ test('platform owns the regression and clean CI executes both controller and ful
   );
 });
 
-test('frontend dependency graph removes known vulnerable visualization, SVG, and brace-expansion packages', () => {
+test('frontend dependency graph removes known vulnerable visualization, SVG, brace-expansion, and immutable packages', () => {
   const pkg = readJson(UI_PACKAGE);
   const lock = readJson(UI_LOCK);
   const packages = lock.packages || {};
@@ -98,6 +105,9 @@ test('frontend dependency graph removes known vulnerable visualization, SVG, and
   assert.equal(packages['node_modules/@spiriit/vite-plugin-svg-spritemap']?.version, '6.0.0');
   assert.equal(packages['node_modules/svgo']?.version, '4.0.2');
   assert.equal(packages['node_modules/brace-expansion']?.version, '2.1.2');
+
+  const immutablePaths = Object.keys(packages).filter((packagePath) => /(?:^|\/)node_modules\/immutable$/.test(packagePath));
+  assert.equal(immutablePaths.length, 1, 'the frontend lockfile must resolve one auditable immutable node');
 
   for (const packagePath of Object.keys(packages)) {
     assert.doesNotMatch(packagePath, /(?:^|\/)node_modules\/(?:vite-plugin-svg-icons|svg-baker)$/);
@@ -113,6 +123,13 @@ test('frontend dependency graph removes known vulnerable visualization, SVG, and
         braceExpansionPatchedForGhsa3jxr9vmjr5cp(packages[packagePath].version),
         true,
         `${packagePath} must not resolve a version affected by GHSA-3jxr-9vmj-r5cp`
+      );
+    }
+    if (/(?:^|\/)node_modules\/immutable$/.test(packagePath)) {
+      assert.equal(
+        immutablePatchedFor2026Advisories(packages[packagePath].version),
+        true,
+        `${packagePath} must not resolve a version affected by GHSA-v56q-mh7h-f735 or GHSA-xvcm-6775-5m9r`
       );
     }
   }

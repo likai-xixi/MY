@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-07-22 - CI-FIX-01 Immutable dependency advisory remediation
+
+- Change: `ai/changes/CR-20260721T221950Z-ci-fix-01-immutable-dependency-advisories-remedi`; approved review: `RV-20260721T222047Z-ci-fix-01-immutable-dependency-advisorie`; review-only base: `4ac76926239e3300196c6a548024686ee8440e3d`.
+- Resolves npm `1124007` / `CVE-2026-59879` / `GHSA-v56q-mh7h-f735` and npm `1124017` / `CVE-2026-59880` / `GHSA-xvcm-6775-5m9r` by moving the single transitive `immutable` lock node from `5.1.6` to first-safe compatible `5.1.8`.
+- Keeps `sass-embedded@1.97.2`, `ruoyi-ui/package.json`, parent versions, overrides, workflow, business/runtime source, R-12A review, and both phase gates unchanged.
+- [local] Post-fix clean install/audit reports 0 vulnerabilities; focused dependency 5/5, UI 7/7, production build 2602 modules, R-12A Node 39/39, Java 65/65, and MySQL/Testcontainers 2/2 pass.
+- [local] Complete `npm run check` passes every gate with 491/491 root Node tests; exact finalization, scope, staging, and close checks bind the enclosing local implementation commit.
+- [not-run] Push, GitHub Actions, post-push handover, and R-12B.
+
 ## 2026-07-21 - R-12A post-push handover sync
 
 - Change: `ai/changes/CR-20260721T012310Z-r-12a-post-push-handover-sync`.
@@ -818,4 +827,10 @@
 
 - Change: `ai/changes/CR-20260721T125309Z-ci-fix-01-brace-expansion-audit-remediation`.
 - CI-FIX-01 remediates GHSA-3jxr-9vmj-r5cp with compatible brace-expansion 2.1.2 and focused regression coverage
+- Feature: `platform`.
+
+## 2026-07-22 - rule-change
+
+- Change: `ai/changes/CR-20260721T221950Z-ci-fix-01-immutable-dependency-advisories-remedi`.
+- CI-FIX-01 remediates immutable High advisories with compatible immutable 5.1.8 and focused regression coverage
 - Feature: `platform`.

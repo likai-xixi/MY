@@ -2,60 +2,59 @@
 
 ## Summary
 
-[local] CI-FIX-01 repairs the frontend audit blocker by resolving the existing transitive `brace-expansion` node from vulnerable `2.1.1` to patched `2.1.2`. The fix has an independent committed review and complete local frontend/backend regression evidence.
-[not-run] Push and remote CI verification; R-12A remains open.
+[local] CI-FIX-01 now has two independently reviewed and locally committed dependency-security repairs: `brace-expansion@2.1.2` and `immutable@5.1.8`. The Immutable extension has its own committed review, exact audit evidence, complete frontend/backend regression evidence, and complete repository governance evidence.
+[not-run] Neither CI-FIX implementation has been pushed, and no new GitHub Actions run or post-push closure exists. R-12A remains open; R-12B has not started.
 
 ## Impact
 
-- Current change: `CR-20260721T125309Z-ci-fix-01-brace-expansion-audit-remediation`.
-- Approved independent review: `RV-20260721T130701Z-ci-fix-01-brace-expansion-audit-remediat`.
-- Review-only commit/base: `6a9bfd57548160d85e28776f415b5883b6d92836`.
-- Exact advisory: npm `1123896`, `GHSA-3jxr-9vmj-r5cp`, `CVE-2026-13149`, high, affected 2.x `<2.1.2`.
-- One deduplicated node serves `js-beautify -> editorconfig -> minimatch`, `js-beautify -> glob -> minimatch`, and `unplugin-auto-import -> minimatch`.
-- No `package.json`, parent dependency, override, workflow, R-12A business/review, runtime source, migration, route, permission, API, SQL, registry, graph, roadmap, or phase-gate change.
+- Current change: `CR-20260721T221950Z-ci-fix-01-immutable-dependency-advisories-remedi`.
+- Approved immutable review: `RV-20260721T222047Z-ci-fix-01-immutable-dependency-advisorie`.
+- Immutable review-only commit/base: `4ac76926239e3300196c6a548024686ee8440e3d`.
+- Immutable advisories: npm `1124007` / `CVE-2026-59879` / `GHSA-v56q-mh7h-f735` and npm `1124017` / `CVE-2026-59880` / `GHSA-xvcm-6775-5m9r`; high; fixed in `5.1.8`.
+- Dependency chain remains `sass-embedded@1.97.2 -> immutable@5.1.8`; no package manifest, parent dependency, override, workflow, business/runtime, R-12A review, or phase-gate change.
 - `engineeringCoreReady=blocked`; `beforeSalesOrder=blocked`; R-12B has not started.
 
 ## Changed Files
 
-- `ai/changes/CR-20260721T125309Z-ci-fix-01-brace-expansion-audit-remediation/changed-files.json`
-- `ai/changes/CR-20260721T125309Z-ci-fix-01-brace-expansion-audit-remediation/dependency-evidence/lockfile-diff.md`
-- `ai/changes/CR-20260721T125309Z-ci-fix-01-brace-expansion-audit-remediation/dependency-evidence/post-fix-audit.json`
-- `ai/changes/CR-20260721T125309Z-ci-fix-01-brace-expansion-audit-remediation/dependency-evidence/post-fix-dependency-tree.txt`
-- `ai/changes/CR-20260721T125309Z-ci-fix-01-brace-expansion-audit-remediation/handover.md`
-- `ai/changes/CR-20260721T125309Z-ci-fix-01-brace-expansion-audit-remediation/impact.json`
-- `ai/changes/CR-20260721T125309Z-ci-fix-01-brace-expansion-audit-remediation/plan.md`
-- `ai/changes/CR-20260721T125309Z-ci-fix-01-brace-expansion-audit-remediation/verification.md`
+- `ai/changes/CR-20260721T221950Z-ci-fix-01-immutable-dependency-advisories-remedi/changed-files.json`
+- `ai/changes/CR-20260721T221950Z-ci-fix-01-immutable-dependency-advisories-remedi/dependency-evidence/baseline-audit.json`
+- `ai/changes/CR-20260721T221950Z-ci-fix-01-immutable-dependency-advisories-remedi/dependency-evidence/baseline-dependency-tree.txt`
+- `ai/changes/CR-20260721T221950Z-ci-fix-01-immutable-dependency-advisories-remedi/dependency-evidence/lockfile-diff.md`
+- `ai/changes/CR-20260721T221950Z-ci-fix-01-immutable-dependency-advisories-remedi/dependency-evidence/post-fix-audit-summary.md`
+- `ai/changes/CR-20260721T221950Z-ci-fix-01-immutable-dependency-advisories-remedi/dependency-evidence/post-fix-dependency-tree.txt`
+- `ai/changes/CR-20260721T221950Z-ci-fix-01-immutable-dependency-advisories-remedi/dependency-evidence/root-cause.md`
+- `ai/changes/CR-20260721T221950Z-ci-fix-01-immutable-dependency-advisories-remedi/handover.md`
+- `ai/changes/CR-20260721T221950Z-ci-fix-01-immutable-dependency-advisories-remedi/impact.json`
+- `ai/changes/CR-20260721T221950Z-ci-fix-01-immutable-dependency-advisories-remedi/verification.md`
 - `memory/CHANGELOG.md`
 - `memory/HANDOVER.md`
 - `memory/PROJECT_STATE.md`
 - `memory/TASKS.json`
-- `memory/sessions/2026-07-21-ci-fix-01.md`
+- `memory/sessions/2026-07-22-ci-fix-01-immutable.md`
 - `ruoyi-ui/package-lock.json`
 - `tests/frontend-dependency-hardening.test.js`
 
 ## Commands
 
-- [local] Baseline and post-fix clean installs, audit JSON, dependency tree/explain, usage/attack-path tracing, package compatibility diff, platform/UI builds, R-12A Node/Java/MySQL regressions, scans, review/phase/CI-declaration gates, and diff audits were run.
-- [local] Complete `npm run check` passed every governance gate and 491/491 root Node tests after two evidence-only heading/provenance corrections.
-- [local] Embedded and explicit `npm run close:change` plus `git diff --check` passed; scope audit reports both review diffs, forbidden runtime diff, and R-12B path count as zero.
-- [not-run] Push, GitHub Actions, after-push verification, and post-push handover require explicit authorization.
+- [local] Baseline/post-fix clean install, exact include-dev audits, tree/explain, regression red/green proof, UI tests/build, R-12A Node, Java, and MySQL/Testcontainers regressions, scans, review/phase/CI-declaration gates, and diff checks passed.
+- [local] Complete `npm run check` passed every gate with 491/491 root Node tests; embedded close passed, and explicit close plus exact scope/staging checks bind the enclosing Immutable implementation commit.
+- [not-run] Push, GitHub Actions, after-push verification, and post-push handover.
 
 ## Verification
 
+- [local] Complete `npm run check` passed every gate with 491/491 root Node tests.
 - [local] Post-fix `npm ci` and full include-dev audit report 0 vulnerabilities and exit code 0.
 - [local] Platform dependency 5/5, UI 7/7, production build 2602 modules, focused R-12A Node 39/39, Java 65/65 including masterdata 28/28, and MySQL integration 2/2 pass.
-- [local] R-12A review package diff=0, R-12A decision diff=0, forbidden runtime diff=0, and no R-12B path changed.
-- [local] Final `npm run check` passed every gate and 491/491 root Node tests.
-- [not-run] GitHub Actions execution for this fix; no remote release evidence exists.
+- [local] `ruoyi-ui/package.json` is unchanged; only the one Immutable lock node changes from `5.1.6` to `5.1.8` with resolved/integrity metadata.
+- [not-run] GitHub Actions execution for either unpushed CI-FIX implementation.
 
 ## Risks
 
-- Remote CI remains the only release blocker addressed by this batch that is still unverified. The real audit, frontend test/build, governance, and backend jobs must all pass after an authorized push.
-- A direct recursive-delete command for `ruoyi-ui/node_modules` was rejected by local execution policy; clean-install proof uses npm's `npm ci` removal/rebuild semantics.
+- Direct recursive deletion of `ruoyi-ui/node_modules` was execution-policy blocked; clean-install proof uses npm's own `npm ci` removal/rebuild semantics.
+- R-12A is not CI-green or release-successful until an authorized push and fully successful three-job workflow are recorded.
 
 ## Next Actions
 
-- Create local implementation commit `fix(ci): remediate frontend dependency audit failure` from this verified tree.
-- Stop before push and wait for explicit authorization.
-- If authorized, push both local commits, inspect the distinct GitHub Actions run and logs, then record post-push handover only after all three jobs succeed.
+- The Immutable local implementation commit is the commit containing this handover; stop before push.
+- Wait for explicit authorization before pushing any dependency-security commit.
 - Do not begin R-12B.

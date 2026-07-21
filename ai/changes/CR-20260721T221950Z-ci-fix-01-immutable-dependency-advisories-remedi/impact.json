@@ -3,7 +3,7 @@
   "mode": "rule-change",
   "changeType": "governance/rule-change",
   "workstream": "governance/dependency-security/ci-fix",
-  "baseRevision": "84963a0c04ca5482ff10c23efc4689c60febb060",
+  "baseRevision": "4ac76926239e3300196c6a548024686ee8440e3d",
   "reviewId": "RV-20260721T222047Z-ci-fix-01-immutable-dependency-advisorie",
   "feature": {
     "id": "platform",

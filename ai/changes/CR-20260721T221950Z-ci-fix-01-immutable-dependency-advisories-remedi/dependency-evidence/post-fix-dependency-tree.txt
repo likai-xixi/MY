@@ -1,0 +1,28 @@
+Command: npm --prefix ruoyi-ui ci
+Result: exit 0; added 282 packages; audited 283 packages; found 0 vulnerabilities.
+
+Command: npm --prefix ruoyi-ui ls immutable --all
+Result:
+ruoyi@3.9.2 D:\Project\MY\ruoyi-ui
++-- sass-embedded@1.97.2
+| `-- immutable@5.1.8
+`-- sass@1.97.2 extraneous
+  `-- immutable@5.1.8 deduped
+
+Command: npm --prefix ruoyi-ui explain immutable
+Result:
+immutable@5.1.8 dev
+node_modules/immutable
+  immutable@"^5.0.2" from sass@1.97.2
+  immutable@"^5.0.2" from sass-embedded@1.97.2
+
+Command: npm --prefix ruoyi-ui audit --audit-level=moderate --include=dev
+Result: exit 0; found 0 vulnerabilities.
+
+Command: npm --prefix ruoyi-ui audit --json
+Result: exit 0; total=0, high=0, critical=0.
+
+Compatibility results:
+- The clean lockfile contains one immutable node at 5.1.8.
+- Existing sass-embedded@1.97.2 and its immutable:^5.0.2 constraint are unchanged.
+- No affected immutable 5.x release remains.
